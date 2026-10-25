@@ -16,6 +16,9 @@ test('serves the real page, modules and three original GLBs on loopback', async 
     const html = await page.text();
     assert.match(html, /type="importmap"/);
     assert.match(html, /viewer.js/);
+    for (const id of ['variant', 'action', 'pause']) {
+      assert.match(html, new RegExp(`<[^>]+id="${id}"[^>]*\\bdisabled\\b`), `${id} must start disabled until WebGL initializes`);
+    }
     const map = JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
     const moduleUrl = new URL('./viewer.js', `${base}/viewer/index.html`);
     const moduleResponse = await fetch(moduleUrl);

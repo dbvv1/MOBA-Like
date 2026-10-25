@@ -4,12 +4,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MOBA original asset preview</title>
 <style>
-body{margin:0;background:#101c2d;color:#e8f4ff;font:16px system-ui}header{padding:16px 24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}h1{font-size:18px;margin:0}select,button{font:inherit;padding:6px;background:#243348;color:inherit;border:1px solid #7992ac;border-radius:4px}#stage{height:calc(100vh - 140px);min-height:320px}canvas{display:block;width:100%;height:100%}footer{padding:12px 24px;color:#b7ccdf}#status{margin-left:auto} .error{color:#ffbb9c}
+body{margin:0;background:#101c2d;color:#e8f4ff;font:16px system-ui}header{padding:16px 24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}h1{font-size:18px;margin:0}select,button{font:inherit;padding:6px;background:#243348;color:inherit;border:1px solid #7992ac;border-radius:4px}select:disabled,button:disabled{opacity:.5;cursor:not-allowed}#stage{height:calc(100vh - 140px);min-height:320px}canvas{display:block;width:100%;height:100%}footer{padding:12px 24px;color:#b7ccdf}#status{margin-left:auto} .error{color:#ffbb9c}
 </style>
 <script type="importmap">{"imports":{"three":"../validation/node_modules/three/build/three.module.js","three/addons/":"../validation/node_modules/three/examples/jsm/"}}</script>
 </head>
 <body>
-<header><h1>Original character · asset preview</h1><label>Variant <select id="variant"><option>blue</option><option>amber</option><option>blue-long</option></select></label><label>Action <select id="action"><option>idle</option><option>walk</option><option>attack</option></select></label><button id="pause" type="button">Pause</button><span id="status" role="status">Loading…</span></header>
+<header><h1>Original character · asset preview</h1><label>Variant <select id="variant" disabled><option>blue</option><option>amber</option><option>blue-long</option></select></label><label>Action <select id="action" disabled><option>idle</option><option>walk</option><option>attack</option></select></label><button id="pause" type="button" disabled>Pause</button><span id="status" role="status">Loading…</span></header>
 <div id="stage"></div>
 <footer>Standalone source-asset consumer — not a game. Walk is in place; attack timing is not a hit event.</footer>
 <script type="module" src="./viewer.js"></script>

@@ -22,6 +22,6 @@ npm --prefix asset-pipeline/viewer test  # 仅 HTTP 与文件检查，不创建�
 CHROMIUM_PATH=/usr/bin/chromium npm --prefix asset-pipeline/viewer run smoke
 ```
 
-当前已验证静态语法与 Node 回环 HTTP 正常／失败路径；真实浏览器因执行环境启动／连接限制尚未验证。
+已验证静态语法与 Node 回环 HTTP 正常／失败路径。已有云浏览器实际加载过此 HTTP 页面和 Three.js，但 WebGL 2 上下文创建失败；页面显示明确错误并禁用动作控件。三角色渲染、动作切换与暂停播放仍未验证，不把错误路径通过视为图形验收。
 
 smoke 自行启动临时回环 HTTP 服务，逐一加载三版本／三动作，比较固定时刻的实际画布像素、检查暂停／继续和非法参数拒绝；浏览器、控制台或资产请求失败即非零退出。截图与 JSON 仅保存到忽略的 `reports/`。该脚本必须在允许 Chromium 创建本地套接字的执行环境运行；仅 Node 静态检查不能替代 WebGL 验证。

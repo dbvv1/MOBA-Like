@@ -22,6 +22,8 @@ try {
   status.className = 'error';
   throw error;
 }
+// HTML starts disabled so unsupported WebGL never exposes inert controls.
+for (const control of [variantSelect, actionSelect, pauseButton]) control.disabled = false;
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 stage.appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight('#dff6ff', '#485268', 2.4));
