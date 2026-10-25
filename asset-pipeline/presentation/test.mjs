@@ -107,3 +107,23 @@ test('failed source load cleans partial geometry/material/texture, successful so
   let disposed=0; shared.addEventListener('dispose',()=>disposed++);
   disposeCharacterAssets({blue:{scene:other},amber:{scene:other}}); assert.equal(disposed,1);
 });
+
+test('render alpha interpolates real hero/minion ticks without changing endpoints or respawn position', () => {
+  const sim=simulation(); for(let i=0;i<245;i++)sim.step([]);
+  const first=deepFreeze(sim.snapshot()); const view=createPresentation({catalog:getContent(1),assets}); view.sync(first);
+  const hero=first.heroes[0]; sim.step([{type:'move',heroId:hero.id,point:{x:hero.position.x+4,z:hero.position.z}}]);
+  const next=deepFreeze(sim.snapshot()); view.sync(next); const immutable=JSON.stringify(next);
+  const actor=view.root.getObjectByName(`hero-${hero.id}`); const nextHero=next.heroes.find(h=>h.id===hero.id);
+  view.advance(0,0); assert.equal(actor.position.x,hero.position.x);
+  view.advance(0,.5); assert.ok(Math.abs(actor.position.x-(hero.position.x+nextHero.position.x)/2)<1e-10);
+  const middle=actor.position.clone(); view.sync(next); view.advance(0,.5); assert.ok(actor.position.equals(middle));
+  for(const entity of next.entities.filter(e=>e.kind==='minion')) {
+    const previous=first.entities.find(e=>e.id===entity.id); const proxy=view.root.getObjectByName(`entity-${entity.id}`);
+    assert.ok(Math.abs(proxy.position.x-(previous.position.x+entity.position.x)/2)<1e-10);
+  }
+  view.advance(0,1); assert.equal(actor.position.x,nextHero.position.x); assert.equal(JSON.stringify(next),immutable);
+  assert.throws(()=>view.advance(0,1.1),/alpha/); assert.throws(()=>view.advance(0,NaN),/alpha/);
+  const dead=structuredClone(next); dead.tick++; dead.heroes[0].alive=false; view.sync(dead);
+  const revived=structuredClone(dead); revived.tick++; revived.heroes[0].alive=true; revived.heroes[0].position.x+=20; view.sync(revived); view.advance(0,0);
+  assert.equal(actor.position.x,revived.heroes[0].position.x); assert.equal(view.inspect().heroes.find(h=>h.id===hero.id).action,'idle'); view.dispose();
+});

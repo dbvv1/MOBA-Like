@@ -19,7 +19,8 @@ const view = createPresentation({catalog: simulation.catalog, assets});
 scene.add(view.root);
 view.sync(simulation.snapshot());
 // 每次模拟步进后：view.sync(simulation.snapshot());
-// 每个绘制帧：view.advance(renderDeltaSeconds); renderer.render(scene, camera);
+// 每个绘制帧：view.advance(renderDeltaSeconds, accumulator / fixedStepSeconds);
+// renderer.render(scene, camera);
 const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.catalog);
 // 换对局或回放倒退先 view.reset()；离开场景 scene.remove(view.root); view.dispose();
 // 所有共享消费者释放后：disposeCharacterAssets(assets);
@@ -31,7 +32,7 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 
 - 角色用 `SkeletonUtils.clone` 克隆：独立骨架、AnimationMixer 和材质；共用只读几何与 clip。按 team 选蓝单鳍／橙双鳍，同阵营多个实例不会共用骨骼状态。当前不同英雄仍用同一占位模型。
 - 坐标从快照 `(x,z)` 原样落到 Three 地平面，单位米。只从相邻逻辑 tick 的位移选择 idle/walk 和朝向；无位移保留朝向，死亡隐藏，复活首 tick idle。没有攻击／命中事件时，不从冷却、castSlot 或目标推断攻击动作。
-- `sync` 同 tick 幂等；倒退 tick 要显式 `reset()`；`advance` 只驱动视觉混合器。地图边界、兵线宽、结构位置与半径取 catalog／snapshot；塔／基地／兵营／小兵是分类几何，不是最终场景美术。对象根的 `userData.simEntityId` 可供输入层拾取后找到模拟实体。
+- `sync` 同 tick 幂等；倒退 tick 要显式 `reset()`；`advance(seconds, alpha=1)` 只推进视觉混合器并在最近两个快照端点间插值位置；alpha 取固定步长累加器比例 0–1，使用时表现比模拟最新端点晚一逻辑 tick。默认 1 保持直接采用最新位置。死亡／复活和首次出现重置插值起点，倒退需 reset，重复 render 不改端点。地图边界、兵线宽、结构位置与半径取 catalog／snapshot；塔／基地／兵营／小兵是分类几何，不是最终场景美术。对象根的 `userData.simEntityId` 可供输入层拾取后找到模拟实体。
 - `abilityViewModel` 从 catalog 的能力定义取语义，不固定 QWER 映射。v1 首英雄覆盖四类；v2 的方向弹道没有专用图标，返回 `icon:null`，由 UI 显示技能名而非沿用错误指向图标。冷却原字段是 tick，输出同时保留 `cooldownTicks` 和按 `rules.tickRate` 换算的秒。死亡、眩晕、施法、冷却、法力只提供已知禁用原因；目标、距离、朝向等合法性仍由模拟裁决。
 - `view.dispose()` 只释放自己克隆的材质／骨架和地图几何，不释放共用 GLB 源。所有消费者释放后，由持有 `assets` 的调用方用 `disposeCharacterAssets(assets)` 统一释放源几何、材质、骨架和纹理。加载器等待两项结束，任一失败或缺必需 clip 时清理已加载源。
 

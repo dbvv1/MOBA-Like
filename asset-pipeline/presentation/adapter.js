@@ -68,6 +68,7 @@ export function createPresentation({catalog, assets}) {
   root.name = 'SnapshotPresentation';
   const heroes = new Map();
   const entities = new Map();
+  const entityPositions = new Map();
   const owned = new Set();
   let lastTick = null;
   let disposed = false;
@@ -93,7 +94,7 @@ export function createPresentation({catalog, assets}) {
     assertOpen();
     for (const actor of heroes.values()) { root.remove(actor.root); actor.dispose(); }
     for (const proxy of entities.values()) root.remove(proxy);
-    heroes.clear(); entities.clear(); lastTick = null;
+    heroes.clear(); entities.clear(); entityPositions.clear(); lastTick = null;
   }
   function sync(snapshot) {
     assertOpen();
@@ -116,7 +117,9 @@ export function createPresentation({catalog, assets}) {
       const dx = old ? hero.position.x-old.x : 0;
       const dz = old ? hero.position.z-old.z : 0;
       const moving = hero.alive && !hero.stunned && old?.alive && Math.hypot(dx,dz) > 1e-5;
-      actor.root.position.set(hero.position.x, 0, hero.position.z);
+      actor.to = new THREE.Vector3(hero.position.x, 0, hero.position.z);
+      actor.from = old?.alive && hero.alive ? new THREE.Vector3(old.x, 0, old.z) : actor.to.clone();
+      actor.root.position.copy(actor.to);
       actor.root.visible = hero.alive;
       // GLB's forward is +Z after Blender -Y -> glTF conversion. No facing on snapshot.
       if (moving) actor.root.rotation.y = Math.atan2(dx,dz);
@@ -133,16 +136,27 @@ export function createPresentation({catalog, assets}) {
       let proxy = entities.get(entity.id);
       if (!proxy) { proxy = new THREE.Mesh(geometry[kind], materials[entity.team]); proxy.name = `entity-${entity.id}`; proxy.userData.simEntityId = entity.id; entities.set(entity.id, proxy); root.add(proxy); }
       proxy.geometry = geometry[kind]; proxy.material = materials[entity.team];
-      proxy.position.set(entity.position.x, entity.radius * (kind === 'barracks' ? 0.5 : kind === 'minion' ? 0.75 : 1), entity.position.z);
+      const to = new THREE.Vector3(entity.position.x, entity.radius * (kind === 'barracks' ? 0.5 : kind === 'minion' ? 0.75 : 1), entity.position.z);
+      const previous = entityPositions.get(entity.id);
+      entityPositions.set(entity.id, {to, from: previous?.alive && entity.alive ? previous.to.clone() : to.clone(), alive: entity.alive});
+      proxy.position.copy(to);
       proxy.scale.setScalar(entity.radius); proxy.visible = entity.alive;
     }
-    for (const [id, proxy] of entities) if (!seenEntities.has(id)) { root.remove(proxy); entities.delete(id); }
+    for (const [id, proxy] of entities) if (!seenEntities.has(id)) { root.remove(proxy); entities.delete(id); entityPositions.delete(id); }
     lastTick = snapshot.tick; root.updateMatrixWorld(true);
   }
-  function advance(seconds) {
+  function advance(seconds, alpha = 1) {
     assertOpen();
     if (!Number.isFinite(seconds) || seconds < 0) throw new Error('Invalid render delta');
-    for (const actor of heroes.values()) if (actor.root.visible) actor.mixer.update(seconds);
+    if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) throw new Error('Interpolation alpha must be between 0 and 1');
+    for (const actor of heroes.values()) {
+      actor.root.position.lerpVectors(actor.from, actor.to, alpha);
+      if (actor.root.visible) actor.mixer.update(seconds);
+    }
+    for (const [id, proxy] of entities) {
+      const position = entityPositions.get(id);
+      proxy.position.lerpVectors(position.from, position.to, alpha);
+    }
     root.updateMatrixWorld(true);
   }
   return {root, sync, advance, reset,
