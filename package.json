@@ -1,0 +1,26 @@
+{
+  "name": "moba-like",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic, headless MOBA-lane simulation for the MOBA-Like vertical slice.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx tools/sim.ts --games 1 --seed 1",
+    "build": "tsc -p tsconfig.build.json && tsx tools/copy-navmesh.ts",
+    "test": "vitest run",
+    "sim": "tsx tools/sim.ts",
+    "bake:nav": "tsx tools/bake-navmesh.ts"
+  },
+  "dependencies": {
+    "recast-navigation": "0.43.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}
