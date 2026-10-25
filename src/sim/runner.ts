@@ -81,8 +81,11 @@ export interface ReplayVerification {
 }
 
 export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerification {
-  if (replay.formatVersion !== 1) {
+  if (replay.formatVersion !== 1 && replay.formatVersion !== 2) {
     throw new Error(`unsupported replay format version: ${String(replay.formatVersion)}`);
+  }
+  if (replay.formatVersion === 1 && replay.commands.some(entry => entry.command.type === 'attackMove')) {
+    throw new Error('attackMove requires replay format version 2');
   }
   if (replay.contentVersion !== 1 && replay.contentVersion !== 2) {
     throw new Error(`unknown replay content version: ${String(replay.contentVersion)}`);

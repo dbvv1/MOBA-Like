@@ -249,7 +249,7 @@ export class Simulation {
 
   createReplay(timedCommands: Replay['commands']): Replay {
     return {
-      formatVersion: 1,
+      formatVersion: timedCommands.some(entry => entry.command.type === 'attackMove') ? 2 : 1,
       contentVersion: this.catalog.version,
       seed: this.seed,
       heroesPerTeam: this.config.heroesPerTeam,
@@ -505,9 +505,16 @@ export class Simulation {
     switch (command.type) {
       case 'move':
         return this.commandMove(hero, command.point, fail);
+      case 'attackMove': {
+        const result = this.commandMove(hero, command.point, fail);
+        if (!result.accepted) return result;
+        hero.attackMoveGoal = copyVec(hero.moveGoal!);
+        return { command: { ...command, point: copyVec(command.point) }, accepted: true, reason: null };
+      }
       case 'attack':
         return this.commandAttack(hero, command.targetId, fail);
       case 'stop':
+        delete hero.attackMoveGoal;
         hero.targetId = null;
         hero.moveGoal = null;
         hero.path = [];
@@ -545,6 +552,7 @@ export class Simulation {
       this.state.diagnostics.pathFailures += 1;
       return fail('pathNotFound');
     }
+    delete hero.attackMoveGoal;
     hero.targetId = null;
     hero.moveGoal = snapped;
     hero.path = path.points;
@@ -571,6 +579,7 @@ export class Simulation {
     if (target.kind === 'structure' && target.invulnerable) {
       return fail('targetInvulnerable');
     }
+    delete hero.attackMoveGoal;
     hero.targetId = targetId;
     hero.moveGoal = null;
     hero.path = [];
@@ -1178,6 +1187,7 @@ export class Simulation {
     target.pathIndex = 0;
     target.statuses = [];
     if (target.kind === 'hero') {
+      delete target.attackMoveGoal;
       target.cast = null;
       target.shield = 0;
       target.deaths += 1;
@@ -1294,6 +1304,7 @@ export class Simulation {
         entity.targetRefreshTick = this.state.tick + 6;
       }
 
+      if (entity.kind === 'hero' && entity.attackMoveGoal) this.updateAttackMove(entity);
       this.validateTarget(entity);
       const target = entity.targetId === null ? null : this.getEntityById(entity.targetId);
       if (target && target.alive) {
@@ -1338,6 +1349,34 @@ export class Simulation {
         this.moveAlongPath(entity);
       }
     }
+  }
+
+  private updateAttackMove(hero: HeroEntity): void {
+    const goal = hero.attackMoveGoal;
+    if (!goal) return;
+    const acquireRange = hero.stats.attackRange + 2;
+    let nearest: Entity | null = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+    for (const candidate of this.state.entities) {
+      if (!candidate.alive || candidate.team === hero.team ||
+          (candidate.kind === 'structure' && candidate.invulnerable)) continue;
+      const d = distance(hero.position, candidate.position);
+      if (d <= acquireRange + candidate.radius &&
+          (d < bestDistance || (d === bestDistance && candidate.id < (nearest?.id ?? Infinity)))) {
+        nearest = candidate;
+        bestDistance = d;
+      }
+    }
+    hero.targetId = nearest?.id ?? null;
+    if (nearest) return;
+    if (distance(hero.position, goal) <= 0.15) {
+      delete hero.attackMoveGoal;
+      hero.moveGoal = null;
+      hero.path = [];
+      hero.pathIndex = 0;
+      return;
+    }
+    this.ensureChasePath(hero, goal);
   }
 
   private refreshMinionTarget(minion: MinionEntity): void {
@@ -1629,6 +1668,7 @@ export class Simulation {
       entity.shield = 0;
       entity.shieldExpiresTick = 0;
       entity.statuses = [];
+      delete entity.attackMoveGoal;
       entity.targetId = null;
       entity.moveGoal = null;
       entity.path = [];

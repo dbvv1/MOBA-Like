@@ -13,6 +13,7 @@ export type SimStatus = 'running' | 'blueWin' | 'redWin' | 'timeout';
 
 export type SimCommand =
   | { type: 'move'; heroId: number; point: Vec2 }
+  | { type: 'attackMove'; heroId: number; point: Vec2 }
   | { type: 'attack'; heroId: number; targetId: number }
   | { type: 'stop'; heroId: number }
   | {
@@ -37,7 +38,7 @@ export interface TimedCommand {
 }
 
 export interface Replay {
-  formatVersion: 1;
+  formatVersion: 1 | 2;
   contentVersion: ContentVersion;
   seed: number;
   heroesPerTeam: number;
@@ -90,6 +91,7 @@ interface EntityBase {
 
 export interface HeroEntity extends EntityBase {
   kind: 'hero';
+  attackMoveGoal?: Vec2;
   definitionId: string;
   slotIndex: number;
   level: number;
