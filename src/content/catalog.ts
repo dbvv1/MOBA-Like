@@ -594,7 +594,7 @@ function catalog(version: ContentVersion): ContentCatalog {
     };
   }
 
-  if (version === 2) {
+  if (version === 2 || version === 3) {
     return {
       version,
       heroes: { veyra: veyra(veyraQProjectile), morrow },
@@ -611,7 +611,7 @@ function catalog(version: ContentVersion): ContentCatalog {
       items,
       minions,
       map,
-      rules,
+      rules: version === 3 ? { ...rules, botRecovery: { enterHpFraction: 0.35, exitHpFraction: 0.45, threatRadius: 18 } } : rules,
       difficulty,
       defaultHeroId: 'veyra',
     };
@@ -620,10 +620,10 @@ function catalog(version: ContentVersion): ContentCatalog {
   throw new Error(`unknown content version: ${String(version)}`);
 }
 
-export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2] as const;
+export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2, 3] as const;
 
 export function getContent(version: ContentVersion): ContentCatalog {
-  if (version !== 1 && version !== 2) {
+  if (version !== 1 && version !== 2 && version !== 3) {
     throw new Error(`unknown content version: ${String(version)}`);
   }
   return catalog(version);

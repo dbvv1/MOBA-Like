@@ -1,5 +1,5 @@
 export type TeamId = 0 | 1;
-export type ContentVersion = 1 | 2;
+export type ContentVersion = 1 | 2 | 3;
 export type AbilitySlot = 'Q' | 'W' | 'E' | 'R';
 export type DamageType = 'physical' | 'magic' | 'true';
 export type Difficulty = 'low' | 'normal' | 'high';
@@ -151,6 +151,7 @@ export interface MatchRules {
   tickRate: number;
   maxMatchSeconds: number;
   waves: WaveRules;
+  botRecovery?: { enterHpFraction: number; exitHpFraction: number; threatRadius: number };
   minionAggroRange: number;
   towerAggroMemorySeconds: number;
   towerAggroRadius: number;

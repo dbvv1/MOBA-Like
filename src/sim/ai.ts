@@ -39,6 +39,7 @@ export class HeroBot {
 
   private readonly rng: SeededRng;
   private nextDecisionTick = 0;
+  private recovering = false;
   private intent: Intent = 'advance';
   private firstSeen = new Map<number, number>();
   private tracked = new Map<number, TrackedPosition>();
@@ -63,6 +64,7 @@ export class HeroBot {
   think(sim: Simulation): SimCommand[] {
     const hero = sim.getHero(this.team, this.slotIndex);
     if (!hero || !hero.alive || sim.status !== 'running') {
+      this.recovering = false;
       return [];
     }
     const tuning = sim.catalog.difficulty[this.difficulty];
@@ -85,12 +87,28 @@ export class HeroBot {
       return commands;
     }
     this.nextDecisionTick = tick + Math.max(1, tuning.decisionTicks);
+    const recovery = sim.catalog.rules.botRecovery;
+    let recoveryEligible = false;
+    if (recovery) {
+      const fraction = hero.hp / hero.stats.maxHp;
+      const base = this.ownBase(sim);
+      const goal = base ? add(base.position, { x: hero.team === 0 ? 12 : -12, z: 0 }) : null;
+      const unsafe = !base?.alive || !goal || sim.state.entities.some(entity =>
+        entity.alive && entity.team !== hero.team && entity.kind !== 'structure' &&
+        distance(entity.position, goal) <= recovery.threatRadius &&
+        (entity.kind !== 'hero' || this.isReactionReady(entity.id, tick)));
+      if (unsafe || fraction >= recovery.exitHpFraction) this.recovering = false;
+      recoveryEligible = !unsafe && fraction < recovery.enterHpFraction;
+    }
     if (this.rng.next() < tuning.mistakeChance) {
       const choices: Intent[] = ['retreat', 'fight', 'farm', 'push', 'defend', 'advance'];
       this.intent = this.rng.pick(choices);
+    } else if (this.recovering) {
+      this.intent = 'retreat';
     } else {
       this.intent = this.chooseIntent(sim, hero, tick);
     }
+    if (recoveryEligible && this.intent === 'retreat') this.recovering = true;
 
     switch (this.intent) {
       case 'retreat':
@@ -243,7 +261,8 @@ export class HeroBot {
 
   private retreat(sim: Simulation, hero: HeroEntity): SimCommand[] {
     const commands: SimCommand[] = [];
-    const threats = this.enemyHeroes(sim, 14);
+    const threats = this.enemyHeroes(sim, 14).filter(enemy =>
+      !sim.catalog.rules.botRecovery || this.isReactionReady(enemy.id, sim.state.tick));
     const nearest = threats.sort((a, b) => distance(a.position, hero.position) - distance(b.position, hero.position))[0];
     if (nearest) {
       const away = normalize(sub(hero.position, nearest.position));
