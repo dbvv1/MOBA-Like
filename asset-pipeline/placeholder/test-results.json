@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "cases": [
+    "normal weapon-length revision accepted",
+    "real off-scope torso edit rejected",
+    "missing source rejected by Blender",
+    "real file without walk rejected"
+  ]
+}
