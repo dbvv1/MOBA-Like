@@ -2,3 +2,7 @@
 __pycache__/
 *.blend1
 .cache/
+
+validation.json
+test-results.json
+previews/

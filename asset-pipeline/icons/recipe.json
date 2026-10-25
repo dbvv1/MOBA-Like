@@ -1,0 +1,7 @@
+{
+  "sizes": [32, 48],
+  "variants": {
+    "bright": {"ink": "#15304B", "accent": "#086E85", "stroke_width": 4, "preview_background": "#F1F5F9"},
+    "dark": {"ink": "#F1F5F9", "accent": "#70E6E1", "stroke_width": 4.5, "preview_background": "#101C2D"}
+  }
+}

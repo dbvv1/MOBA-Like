@@ -1,3 +1,8 @@
 .test-work/
 __pycache__/
 *.blend1
+
+# Reproducible inspection output stays local.
+derived/report.json
+derived/test-results.json
+source-status.json

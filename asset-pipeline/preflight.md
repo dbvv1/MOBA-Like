@@ -23,7 +23,7 @@ blender -b --factory-startup --disable-autoexec --python-exit-code 1 --python as
 | `scripts/preflight.py` | 实际调用 Blender 解析、改色、导出并重导入的脚本；仅支持单骨架 Blend、非贴图连接的 Principled Base Color |
 | `derived/first.glb` | 未改色的首版导出 |
 | `derived/blue.blend`、`derived/blue.glb` | 可继续编辑的二改工程和 GLB |
-| `derived/report.json`、`derived/test-results.json` | 实际运行结果；测试日志留在忽略的 `.test-work/` |
+| `derived/report.json`、`derived/test-results.json` | 本地生成、Git 忽略的运行结果；测试日志也留在忽略的 `.test-work/` |
 
 源单位为米、Z 向上，夹具手臂向 +X；包围盒为 `[-0.3,-0.2,0]` 至 `[1.1,0.2,1.4]`，glTF 导出转换为 Y 向上。重导入恢复同样包围盒。GLB 顶点因面法线／UV 接缝从 16 拆为 48，三角形不变；动作名增加骨架后缀且关键帧烘焙，不要求跨格式字节或 FCurve 数相同。导入时保持 30 fps，避免默认 24 fps 使动作帧号变化；比较两次 GLB 的结构与采样变形，并核源与导出的动作帧范围、骨数、三角形和尺寸。
 
@@ -41,6 +41,6 @@ blender -b --factory-startup --disable-autoexec --python-exit-code 1 --python as
 | [Quaternius Ultimate Animated Character](https://quaternius.com/packs/ultimatedanimatedcharacter.html) | 2019-11；52 模型、CC0；范围较大；其官方页云端取回 403，停止 |
 | [Kenney Mini Characters](https://kenney.nl/assets/mini-characters)／[Protagonists](https://kenney.nl/assets/animated-characters-protagonists) | 官方列 CC0；分别 1.0／2024／25 文件和 1.0／2020／8 文件。Mini 战斗动作覆盖未知，Protagonists 主题偏现代；后者官方页云端取回 403，停止 |
 
-以上均为官方页面调查，核实日期 2026-10-25 UTC；不按宣传或星数作品质排名。[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)允许修改、分发及商用，不授予商标／专利／第三方人格权，也不保证无第三方权利。本轮没有第三方源文件、包内许可或哈希，精确请求结果见 `source-status.json`。三次被拒的取回动作均保持停止，没有改走镜像或不同传输方式取得同一资产。
+以上均为官方页面调查，核实日期 2026-10-25 UTC；不按宣传或星数作品质排名。[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)允许修改、分发及商用，不授予商标／专利／第三方人格权，也不保证无第三方权利。本轮没有第三方源文件、包内许可或哈希，精确请求结果保留在历史版本的 `source-status.json`，不作为运行资产提交。三次被拒的取回动作均保持停止，没有改走镜像或不同传输方式取得同一资产。
 
 恢复后只需接续原任务：取得一个官方角色与所需动作及包内许可，冻结来源，再依据其材质和骨架接口适配现有脚本。若素材是图集，当前单色配方会拒绝连接的 Base Color；不能整张替换而改变肤色，也不能假设动作包与角色骨架自动兼容。
