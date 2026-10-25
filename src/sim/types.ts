@@ -325,6 +325,16 @@ export interface Snapshot {
     readonly team: TeamId;
     readonly abilityId: string;
     readonly position: Readonly<Vec2>;
+    readonly direction: Readonly<Vec2>;
+    readonly width: number;
+  }[];
+  readonly delayedAreas: readonly {
+    readonly id: number;
+    readonly team: TeamId;
+    readonly abilityId: string;
+    readonly position: Readonly<Vec2>;
+    readonly radius: number;
+    readonly triggerTick: number;
   }[];
   readonly zones: readonly {
     readonly id: number;

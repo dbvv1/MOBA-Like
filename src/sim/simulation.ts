@@ -324,6 +324,16 @@ export class Simulation {
         team: projectile.team,
         abilityId: projectile.abilityId,
         position: copyVec(projectile.position),
+        direction: copyVec(projectile.direction),
+        width: projectile.width,
+      })),
+      delayedAreas: this.state.delayedAreas.map((area) => ({
+        id: area.id,
+        team: area.team,
+        abilityId: area.abilityId,
+        position: copyVec(area.position),
+        radius: area.radius,
+        triggerTick: area.triggerTick,
       })),
       zones: this.state.zones.map((zone) => ({
         id: zone.id,
