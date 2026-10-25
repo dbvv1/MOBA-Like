@@ -141,10 +141,12 @@ export class HeroBot {
     if (!ownHero) {
       return;
     }
+    const seen = new Set<number>();
     for (const entity of sim.state.entities) {
       if (!entity.alive || entity.team === this.team || entity.kind === 'structure') {
         continue;
       }
+      seen.add(entity.id);
       if (entity.kind === 'hero') {
         if (distance(entity.position, ownHero.position) <= 16) {
           if (!this.firstSeen.has(entity.id)) {
@@ -166,6 +168,11 @@ export class HeroBot {
         }
       }
       this.tracked.set(entity.id, { position: copyVec(entity.position), velocity, tick });
+    }
+    for (const id of this.tracked.keys()) {
+      if (!seen.has(id)) {
+        this.tracked.delete(id);
+      }
     }
   }
 

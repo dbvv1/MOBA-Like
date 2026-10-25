@@ -31,6 +31,7 @@ import type {
   CastState,
   CommandResult,
   DelayedAreaEntity,
+  Diagnostics,
   Entity,
   HeroEntity,
   HeroSnapshot,
@@ -87,6 +88,35 @@ function makeMatchStats(catalog: ContentCatalog): MatchStats {
     heroKills: [0, 0],
     structureKills: [0, 0],
     deaths: [0, 0],
+  };
+}
+
+function copyMatchStats(stats: MatchStats): MatchStats {
+  const abilities: Record<string, AbilityStats> = {};
+  for (const [id, ability] of Object.entries(stats.abilities)) {
+    abilities[id] = { ...ability };
+  }
+  return {
+    abilities,
+    basicAttackDamage: stats.basicAttackDamage,
+    basicAttackHeroDamage: stats.basicAttackHeroDamage,
+    damageByTeam: [stats.damageByTeam[0], stats.damageByTeam[1]],
+    minionKills: [stats.minionKills[0], stats.minionKills[1]],
+    heroKills: [stats.heroKills[0], stats.heroKills[1]],
+    structureKills: [stats.structureKills[0], stats.structureKills[1]],
+    deaths: [stats.deaths[0], stats.deaths[1]],
+  };
+}
+
+function copyDiagnostics(diagnostics: Diagnostics): Diagnostics {
+  return {
+    pathFailures: diagnostics.pathFailures,
+    commandRejections: diagnostics.commandRejections,
+    rejectionReasons: { ...diagnostics.rejectionReasons },
+    stuckEvents: diagnostics.stuckEvents.map((event) => ({
+      ...event,
+      position: copyVec(event.position),
+    })),
   };
 }
 
@@ -303,8 +333,8 @@ export class Simulation {
         radius: zone.radius,
         expiresTick: zone.expiresTick,
       })),
-      stats: this.state.stats,
-      diagnostics: this.state.diagnostics,
+      stats: copyMatchStats(this.state.stats),
+      diagnostics: copyDiagnostics(this.state.diagnostics),
     };
   }
 
@@ -1714,9 +1744,17 @@ export class Simulation {
   }
 
   private cleanup(): void {
-    this.state.entities = this.state.entities.filter(
-      (entity) => entity.kind !== 'minion' || entity.alive || entity.hp <= 0,
-    );
+    const removedEntityIds: number[] = [];
+    this.state.entities = this.state.entities.filter((entity) => {
+      if (entity.kind === 'minion' && !entity.alive) {
+        removedEntityIds.push(entity.id);
+        return false;
+      }
+      return true;
+    });
+    for (const id of removedEntityIds) {
+      this.stuckSince.delete(id);
+    }
     this.state.projectiles = this.state.projectiles.filter((projectile) => projectile.alive);
   }
 

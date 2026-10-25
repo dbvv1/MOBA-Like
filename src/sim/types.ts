@@ -233,63 +233,105 @@ export interface SimState {
 }
 
 export interface HeroSnapshot {
-  id: number;
-  team: TeamId;
-  definitionId: string;
-  name: string;
-  position: Vec2;
-  hp: number;
-  maxHp: number;
-  mana: number;
-  maxMana: number;
-  shield: number;
-  level: number;
-  xp: number;
-  gold: number;
-  items: string[];
-  alive: boolean;
-  respawnAtTick: number;
-  cooldowns: Record<AbilitySlot, number>;
-  castSlot: AbilitySlot | null;
-  targetId: number | null;
-  moveGoal: Vec2 | null;
-  stunned: boolean;
-  slowed: number;
-  kills: number;
-  deaths: number;
+  readonly id: number;
+  readonly team: TeamId;
+  readonly definitionId: string;
+  readonly name: string;
+  readonly position: Readonly<Vec2>;
+  readonly hp: number;
+  readonly maxHp: number;
+  readonly mana: number;
+  readonly maxMana: number;
+  readonly shield: number;
+  readonly level: number;
+  readonly xp: number;
+  readonly gold: number;
+  readonly items: readonly string[];
+  readonly alive: boolean;
+  readonly respawnAtTick: number;
+  readonly cooldowns: Readonly<Record<AbilitySlot, number>>;
+  readonly castSlot: AbilitySlot | null;
+  readonly targetId: number | null;
+  readonly moveGoal: Readonly<Vec2> | null;
+  readonly stunned: boolean;
+  readonly slowed: number;
+  readonly kills: number;
+  readonly deaths: number;
 }
 
 export interface EntitySnapshot {
-  id: number;
-  team: TeamId;
-  kind: Entity['kind'];
-  structureKind?: StructureKind;
-  minionKind?: MinionKind;
-  name: string;
-  position: Vec2;
-  radius: number;
-  hp: number;
-  maxHp: number;
-  alive: boolean;
-  invulnerable: boolean;
+  readonly id: number;
+  readonly team: TeamId;
+  readonly kind: Entity['kind'];
+  readonly structureKind?: StructureKind;
+  readonly minionKind?: MinionKind;
+  readonly name: string;
+  readonly position: Readonly<Vec2>;
+  readonly radius: number;
+  readonly hp: number;
+  readonly maxHp: number;
+  readonly alive: boolean;
+  readonly invulnerable: boolean;
+}
+
+export interface SnapshotAbilityStats {
+  readonly casts: number;
+  readonly hitCasts: number;
+  readonly heroHits: number;
+  readonly damage: number;
+  readonly heroDamage: number;
+}
+
+export interface SnapshotMatchStats {
+  readonly abilities: Readonly<Record<string, SnapshotAbilityStats>>;
+  readonly basicAttackDamage: number;
+  readonly basicAttackHeroDamage: number;
+  readonly damageByTeam: readonly [number, number];
+  readonly minionKills: readonly [number, number];
+  readonly heroKills: readonly [number, number];
+  readonly structureKills: readonly [number, number];
+  readonly deaths: readonly [number, number];
+}
+
+export interface SnapshotStuckEvent {
+  readonly tick: number;
+  readonly entityId: number;
+  readonly entityName: string;
+  readonly team: TeamId;
+  readonly position: Readonly<Vec2>;
+  readonly secondsStationary: number;
+}
+
+export interface SnapshotDiagnostics {
+  readonly pathFailures: number;
+  readonly commandRejections: number;
+  readonly rejectionReasons: Readonly<Record<string, number>>;
+  readonly stuckEvents: readonly SnapshotStuckEvent[];
 }
 
 export interface Snapshot {
-  tick: number;
-  timeSeconds: number;
-  status: SimStatus;
-  winner: TeamId | null;
-  endReason: string;
-  contentVersion: ContentVersion;
-  heroes: HeroSnapshot[];
-  entities: EntitySnapshot[];
-  projectiles: {
-    id: number;
-    team: TeamId;
-    abilityId: string;
-    position: Vec2;
+  readonly tick: number;
+  readonly timeSeconds: number;
+  readonly status: SimStatus;
+  readonly winner: TeamId | null;
+  readonly endReason: string;
+  readonly contentVersion: ContentVersion;
+  readonly heroes: readonly HeroSnapshot[];
+  readonly entities: readonly EntitySnapshot[];
+  readonly projectiles: readonly {
+    readonly id: number;
+    readonly team: TeamId;
+    readonly abilityId: string;
+    readonly position: Readonly<Vec2>;
   }[];
-  zones: { id: number; team: TeamId; abilityId: string; position: Vec2; radius: number; expiresTick: number }[];
-  stats: MatchStats;
-  diagnostics: Diagnostics;
+  readonly zones: readonly {
+    readonly id: number;
+    readonly team: TeamId;
+    readonly abilityId: string;
+    readonly position: Readonly<Vec2>;
+    readonly radius: number;
+    readonly expiresTick: number;
+  }[];
+  readonly stats: SnapshotMatchStats;
+  readonly diagnostics: SnapshotDiagnostics;
 }

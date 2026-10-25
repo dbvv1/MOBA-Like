@@ -81,6 +81,12 @@ export interface ReplayVerification {
 }
 
 export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerification {
+  if (replay.formatVersion !== 1) {
+    throw new Error(`unsupported replay format version: ${String(replay.formatVersion)}`);
+  }
+  if (replay.contentVersion !== 1 && replay.contentVersion !== 2) {
+    throw new Error(`unknown replay content version: ${String(replay.contentVersion)}`);
+  }
   const simulation = new Simulation({
     seed: replay.seed,
     contentVersion: replay.contentVersion,

@@ -594,31 +594,38 @@ function catalog(version: ContentVersion): ContentCatalog {
     };
   }
 
-  return {
-    version,
-    heroes: { veyra: veyra(veyraQProjectile), morrow },
-    abilities: {
-      [veyraQProjectile.id]: veyraQProjectile,
-      [veyraW.id]: veyraW,
-      [veyraE.id]: veyraE,
-      [veyraR.id]: veyraR,
-      [morrowQ.id]: morrowQ,
-      [morrowW.id]: morrowW,
-      [morrowE.id]: morrowE,
-      [morrowR.id]: morrowR,
-    },
-    items,
-    minions,
-    map,
-    rules,
-    difficulty,
-    defaultHeroId: 'veyra',
-  };
+  if (version === 2) {
+    return {
+      version,
+      heroes: { veyra: veyra(veyraQProjectile), morrow },
+      abilities: {
+        [veyraQProjectile.id]: veyraQProjectile,
+        [veyraW.id]: veyraW,
+        [veyraE.id]: veyraE,
+        [veyraR.id]: veyraR,
+        [morrowQ.id]: morrowQ,
+        [morrowW.id]: morrowW,
+        [morrowE.id]: morrowE,
+        [morrowR.id]: morrowR,
+      },
+      items,
+      minions,
+      map,
+      rules,
+      difficulty,
+      defaultHeroId: 'veyra',
+    };
+  }
+
+  throw new Error(`unknown content version: ${String(version)}`);
 }
 
 export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2] as const;
 
 export function getContent(version: ContentVersion): ContentCatalog {
+  if (version !== 1 && version !== 2) {
+    throw new Error(`unknown content version: ${String(version)}`);
+  }
   return catalog(version);
 }
 
