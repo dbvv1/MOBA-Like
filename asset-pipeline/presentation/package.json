@@ -1,0 +1,14 @@
+{
+  "name": "moba-asset-presentation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --import tsx --test test.mjs"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15"
+  }
+}

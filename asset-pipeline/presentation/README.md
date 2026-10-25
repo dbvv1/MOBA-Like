@@ -1,0 +1,38 @@
+# 只读快照 → Three 资产表现
+
+`createPresentation` 将真实 `Simulation.snapshot()` 接到现有角色 GLB、阵营几何标记和地图轮廓；不包含 renderer、输入、模拟推进或新游戏框架。模块只读快照，全部写入自己的 Three 对象。
+
+## 游戏入口接线
+
+从本目录安装锁定依赖，应用打包器须解析 `three` 和 `three/addons/`：
+
+```sh
+npm --prefix asset-pipeline/presentation ci --ignore-scripts --no-audit --no-fund
+npm --prefix asset-pipeline/presentation test
+```
+
+```js
+import {loadCharacterAssets, createPresentation, disposeCharacterAssets} from './asset-pipeline/presentation/adapter.js';
+import {abilityViewModel} from './asset-pipeline/presentation/icons.js';
+const assets = await loadCharacterAssets(); // GLTFLoader，URL 相对模块定位已有 GLB
+const view = createPresentation({catalog: simulation.catalog, assets});
+scene.add(view.root);
+view.sync(simulation.snapshot());
+// 每次模拟步进后：view.sync(simulation.snapshot());
+// 每个绘制帧：view.advance(renderDeltaSeconds); renderer.render(scene, camera);
+const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.catalog);
+// 换对局或回放倒退先 view.reset()；离开场景 scene.remove(view.root); view.dispose();
+// 所有共享消费者释放后：disposeCharacterAssets(assets);
+```
+
+初始化、`step(commands)`、相机和输入属于游戏入口。现模拟可通过获取 navmesh 字节、`createDetourNavigation(bytes)`、`new Simulation(...)` 初始化；本模块不取代模拟 owner 的入口。测试读取真实 v1/v2 catalog 和真实 Simulation 快照，运动夹具使用直线路径对象，不冒充 Detour／完整对局验证。
+
+## 表现合同
+
+- 角色用 `SkeletonUtils.clone` 克隆：独立骨架、AnimationMixer 和材质；共用只读几何与 clip。按 team 选蓝单鳍／橙双鳍，同阵营多个实例不会共用骨骼状态。当前不同英雄仍用同一占位模型。
+- 坐标从快照 `(x,z)` 原样落到 Three 地平面，单位米。只从相邻逻辑 tick 的位移选择 idle/walk 和朝向；无位移保留朝向，死亡隐藏，复活首 tick idle。没有攻击／命中事件时，不从冷却、castSlot 或目标推断攻击动作。
+- `sync` 同 tick 幂等；倒退 tick 要显式 `reset()`；`advance` 只驱动视觉混合器。地图边界、兵线宽、结构位置与半径取 catalog／snapshot；塔／基地／兵营／小兵是分类几何，不是最终场景美术。对象根的 `userData.simEntityId` 可供输入层拾取后找到模拟实体。
+- `abilityViewModel` 从 catalog 的能力定义取语义，不固定 QWER 映射。v1 首英雄覆盖四类；v2 的方向弹道没有专用图标，返回 `icon:null`，由 UI 显示技能名而非沿用错误指向图标。冷却原字段是 tick，输出同时保留 `cooldownTicks` 和按 `rules.tickRate` 换算的秒。死亡、眩晕、施法、冷却、法力只提供已知禁用原因；目标、距离、朝向等合法性仍由模拟裁决。
+- `view.dispose()` 只释放自己克隆的材质／骨架和地图几何，不释放共用 GLB 源。所有消费者释放后，由持有 `assets` 的调用方用 `disposeCharacterAssets(assets)` 统一释放源几何、材质、骨架和纹理。加载器等待两项结束，任一失败或缺必需 clip 时清理已加载源。
+
+纯 Three 数值测试不创建 WebGL：核真实 GLB 的独立克隆、整角色变换、快照不变、状态移除、重置、释放与图标语义。当前云浏览器 WebGL 2 上下文不可用；真实游戏接入、3D 画面、移动滑步、动作衔接与视觉辨识待验。报告仅放本地忽略的 `reports/`。
