@@ -1,0 +1,42 @@
+[
+  {
+    "case": "generate",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "case": "normal",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "case": "missing",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "case": "corrupt",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "case": "wrong-material",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "case": "make-no-actions",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "case": "no-actions",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "case": "failed-rerun",
+    "exit_code": 1,
+    "expected": 1
+  }
+]

@@ -1,0 +1,6 @@
+The synthetic fixture.blend and its generated mesh, rig, materials and animation
+were created for this preflight, not downloaded from a third-party asset pack.
+They and their derived .blend/.glb assets are dedicated under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+The scripts are original work for this repository. No third-party character is
+included and no visual quality or game-readiness claim is made.

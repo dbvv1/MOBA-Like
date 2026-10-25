@@ -1,26 +1,46 @@
-# 角色供给预检入口
+# 可运行的配色二改预检
 
-当前只完成候选与许可入口核对，尚无通过资产验收的供给起点。下一次实际验证优先选 Quaternius Animated Knight：单个近战角色及配件，比 52 模型全集更贴近镜像英雄切片；先验证其 Idle／Walk／Run／Attack／Death，再决定技能动作缺口。此选择依据官方内容说明，不代表品质排名或动作已存在于下载文件。
+已用 **自有合成夹具** 跑通 Blender 4.3.2：两个网格（合计 16 顶点／24 三角形）、两根骨骼、两个材质和两段真实使网格变形的动作。只将 `Accent` 从红色改蓝色；源字节、拓扑、UV、蒙皮、骨架、动作关键帧／采样变形及另一个材质保持。首版与二改 GLB 都能重新导入。**第三方角色尚未取得，角色供给起点仍缺；这些方块不能代表真人形动作或美术品质。**
 
-| 官方候选 | 页面可读事实 | 对当前切片的取舍 |
-|---|---|---|
-| [Animated Knight](https://quaternius.com/packs/knightcharacter.html) | 2018-07；CC0；FBX、OBJ、Blend；骑士与剑、头盔等配件 | 优先小样；角色风格更接近近战英雄，实际包内结构待验 |
-| [Ultimate Animated Character](https://quaternius.com/packs/ultimatedanimatedcharacter.html) | 2019-11；52 模型；CC0；FBX、OBJ、Blend | 比本次一名镜像英雄所需范围大，不下载全集 |
-| [Mini Characters](https://kenney.nl/assets/mini-characters) | 1.0，2024；25 文件；CC0；标注 Animation | 小人轮廓值得比较；网页没有证明战斗动作覆盖 |
-| [Animated Characters Protagonists](https://kenney.nl/assets/animated-characters-protagonists) | 1.0，2020；8 文件；CC0；现代人物主题 | 美术主题较远，且具体骨架／动作接口未验 |
+从仓库根运行（只需已安装的 Blender 4.3.2 和 Python 3，无 pip/npm 依赖）：
 
-来源核实：2026-10-25 UTC，浏览工具读取上述官方页面；[作者发布页](https://quaternius.itch.io/lowpoly-animated-knight)列 Idle、Death、Jump、Roll、Run、Walk、Attack，仍属说明而非解析结果。版本未给修订号的候选只能以成功下载后的 SHA-256 冻结，不能把网页月份当文件版本。
+```sh
+blender -b --factory-startup --disable-autoexec --python-exit-code 1 --python asset-pipeline/scripts/preflight.py -- --source asset-pipeline/source/fixture.blend --output asset-pipeline/derived --source-kind own_synthetic_fixture
+python3 asset-pipeline/scripts/test_preflight.py
+```
 
-[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)允许复制、修改、分发和商用；不授予商标、专利或第三方人格权，不保证无第三方权利。官方资产页声明 CC0，但本轮未取得包内许可，不把页面许可替代包内核对。[Kenney 导入文档](https://kenney.nl/knowledge-base/game-assets-3d/importing-characters-and-animations)说明该系列模型、皮肤、动画可分文件；适用范围有限，不能据此断言 Mini Characters 结构相同。
+从程序重新生成源夹具：
 
-## 恢复后的最小实际实验
+```sh
+blender -b --factory-startup --disable-autoexec --python-exit-code 1 --python asset-pipeline/scripts/make_fixture.py -- asset-pipeline/source/fixture.blend
+```
 
-所有源文件、依赖配置、脚本和派生物留在本目录；不读取或改写模拟工程接口。无引擎集成依赖。
+重新保存 Blend 的字节哈希可能随 Blender 序列化改变；以本次 `derived/report.json` 的源／派生哈希为准，不把重新生成的哈希不同视为几何不同。
 
-1. 取得一个作者提供的小包，记录下载 URL、日期、字节数及 SHA-256，保留原始许可；只提取一个角色、必要贴图与动作。`source/` 保持原字节；`derived/` 才放转换结果。
-2. 用已有 Blender 4.3.2 的后台 Python API 实际加载源 Blend 或 FBX，报告网格顶点／三角形、材质及纹理路径、骨骼层级、蒙皮权重、Action 名称与帧范围。记录单位、对象变换、世界包围盒及朝向；不要凭文件扩展名判通过。禁用源文件 Python 自动执行。
-3. 首版导出 GLB 后重新导入，验证实际网格、蒙皮与动作。选一个明确命名的衣甲材质做蓝队配色，只改该材质 Base Color；若为图集则先核 UV 和颜色区域再决定配方，不整张替换导致肤色变化。
-4. 二改前后比较拓扑、顶点、骨骼静止矩阵、蒙皮、动作关键帧／采样姿态和未改材质；把允许变化列表限定为选中材质。分别保存可编辑 Blend 与运行候选 GLB；导出器可能重排数据，跨格式不能仅比文件哈希。
-5. 脚本正常路径、缺失源、损坏源和不符合骨架／动作接口都要实际跑；缺失输入应非零退出。取得真实源文件前不提交猜测字段的“通过”脚本。
+| 文件 | 角色 |
+|---|---|
+| `scripts/make_fixture.py`、`source/fixture.blend` | 自有、可重新生成的源夹具；源许可见 `source/LICENSE.txt`，CC0 |
+| `scripts/preflight.py` | 实际调用 Blender 解析、改色、导出并重导入的脚本；仅支持单骨架 Blend、非贴图连接的 Principled Base Color |
+| `derived/first.glb` | 未改色的首版导出 |
+| `derived/blue.blend`、`derived/blue.glb` | 可继续编辑的二改工程和 GLB |
+| `derived/report.json`、`derived/test-results.json` | 实际运行结果；测试日志留在忽略的 `.test-work/` |
 
-这份配方不是已实现脚本。当前没有源资产、哈希、首版、二改或验收产物。工具探测 `blender --version` 成功（4.3.2）；未安装依赖、未付费、未下载权重。实际游戏集成、动画观感、团战可读性、运行性能均未知。
+源单位为米、Z 向上，夹具手臂向 +X；包围盒为 `[-0.3,-0.2,0]` 至 `[1.1,0.2,1.4]`，glTF 导出转换为 Y 向上。重导入恢复同样包围盒。GLB 顶点因面法线／UV 接缝从 16 拆为 48，三角形不变；动作名增加骨架后缀且关键帧烘焙，不要求跨格式字节或 FCurve 数相同。导入时保持 30 fps，避免默认 24 fps 使动作帧号变化；比较两次 GLB 的结构与采样变形，并核源与导出的动作帧范围、骨数、三角形和尺寸。
+
+未改部分的严格比对发生在同格式的二改前后；这不是任意 Blend→GLB 无损转换证明。脚本对缺失／损坏源、缺动作、缺目标材质真实非零退出；失败重跑会移除旧通过报告，可能保留旧或部分输出文件，只有本次退出 0 且存在匹配哈希的报告才是通过；动作抽样为首、中、末三处，并非完整运动质量检查。Blender 无 Draco 库提示不影响未压缩导出，本轮不验证压缩。没有渲染、试听或运行游戏；动画观感、真实角色蒙皮、俯视可读性及游戏集成均未知。无付费、无依赖安装、无模型权重下载；全部源与派生资产约 200 KB，CPU 后台单轮约两秒（不含调查和编码）。
+
+## 第三方选择与剩余缺口
+
+暂选 **KayKit Adventurers** 作为下一次独立来源验证对象：官方 GitHub 包描述四个人形冒险者和战斗相关动作／配件，比骷髅主题更贴近当前镜像英雄。官网当前版与 GitHub 1.0 的内容描述存在差异，下载后必须固定 commit 和文件 SHA-256，不能混用两版数量。该候选没有通过真实资产解析。
+
+| 官方来源 | 可读证据与取舍 |
+|---|---|
+| [KayKit Adventurers 官方 GitHub](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)／[作者发布页](https://kaylousberg.itch.io/kaykit-adventurers) | 不同作者的独立来源；仓库描述四角色、75 动作、FBX／glTF、CC0。作者当前发布页表示基础移动动作及额外免费动作包；本轮不将其等同于仓库 1.0。官方文件树 API 云端请求 403，未取得源码或 LICENSE.txt |
+| [KayKit Skeletons 官方 GitHub](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0) | 官方描述四个骷髅、90+ 动作、CC0；题材较偏，不为本次扩下载量 |
+| [Quaternius Animated Knight](https://quaternius.com/packs/knightcharacter.html) | 2018-07；官方列 CC0、FBX／OBJ／Blend、骑士和配件。原候选未验，保留作对照 |
+| [Quaternius Ultimate Animated Character](https://quaternius.com/packs/ultimatedanimatedcharacter.html) | 2019-11；52 模型、CC0；范围较大；其官方页云端取回 403，停止 |
+| [Kenney Mini Characters](https://kenney.nl/assets/mini-characters)／[Protagonists](https://kenney.nl/assets/animated-characters-protagonists) | 官方列 CC0；分别 1.0／2024／25 文件和 1.0／2020／8 文件。Mini 战斗动作覆盖未知，Protagonists 主题偏现代；后者官方页云端取回 403，停止 |
+
+以上均为官方页面调查，核实日期 2026-10-25 UTC；不按宣传或星数作品质排名。[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)允许修改、分发及商用，不授予商标／专利／第三方人格权，也不保证无第三方权利。本轮没有第三方源文件、包内许可或哈希，精确请求结果见 `source-status.json`。三次被拒的取回动作均保持停止，没有改走镜像或不同传输方式取得同一资产。
+
+恢复后只需接续原任务：取得一个官方角色与所需动作及包内许可，冻结来源，再依据其材质和骨架接口适配现有脚本。若素材是图集，当前单色配方会拒绝连接的 Base Color；不能整张替换而改变肤色，也不能假设动作包与角色骨架自动兼容。
