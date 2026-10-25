@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img">
+<title>Control</title>
+<g fill="none" stroke="#15304B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M20 27V20A12 12 0 0 1 44 20V27"/><rect x="14" y="27" width="36" height="27" rx="5" fill="#086E85"/><path d="M28 35V46 M36 35V46" stroke="#F1F5F9"/>
+</g>
+</svg>
