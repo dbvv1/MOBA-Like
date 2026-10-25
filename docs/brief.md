@@ -45,6 +45,16 @@
 - 同一种子和命令序列重放两次，状态哈希一致；
 - 输出每个技能的施放次数、命中率和伤害占比，作为数值修改前后的对照。
 
+验收时显式启用目标检查，统计报告始终保留，任何适用项失败都返回非零；不带开关的探索运行成功不代表目标已通过：
+
+```sh
+npm run sim -- --games 200 --seed 1 --verify-targets normal
+npm run sim -- --games 500 --seed 201 --verify-targets mirror
+npm run sim -- --games 200 --seed 1 --blue-difficulty high --red-difficulty low --verify-targets difficulty
+```
+
+三个 profile 分别检查正常链、镜像对称和高低难度；单个 profile 通过不代替另外两组。镜像按连续不同种子运行，未终局始终留在分母；回放检查需实际执行，`--replay-count 0` 不能通过验收。
+
 ## 里程碑
 
 1. **可玩**：1 名玩家英雄对 1 名机器人英雄，小兵、塔、基地、成长和胜负完整；自动和浏览器验收通过，手感与画面进入待人工验收。顺序：先做模拟层和无画面 `sim`，再接占位几何渲染和操作，最后换正式素材。

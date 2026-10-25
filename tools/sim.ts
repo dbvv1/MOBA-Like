@@ -1,3 +1,5 @@
+import { verifyTargets } from './sim-targets.js';
+import type { TargetProfile, TargetVerification } from './sim-targets.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +24,7 @@ interface CliOptions {
   replayCount: number;
   dumpReplay: string | null;
   json: boolean;
+  verifyTargets: TargetProfile | null;
 }
 
 interface GameRecord {
@@ -41,6 +44,7 @@ interface GameRecord {
 }
 
 interface AggregateResult {
+  verification?: TargetVerification;
   options: CliOptions;
   attempted: number;
   completed: number;
@@ -90,6 +94,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
     replayCount: 3,
     dumpReplay: null,
     json: false,
+    verifyTargets: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -137,6 +142,14 @@ function parseArgs(argv: readonly string[]): CliOptions {
       case '--dump-replay':
         options.dumpReplay = next();
         break;
+      case '--verify-targets': {
+        const profile = next();
+        if (profile !== 'normal' && profile !== 'mirror' && profile !== 'difficulty') {
+          throw new Error('--verify-targets must be normal, mirror or difficulty');
+        }
+        options.verifyTargets = profile;
+        break;
+      }
       case '--json':
         options.json = true;
         break;
@@ -189,6 +202,8 @@ function printHelp(): void {
   --replay-count <N>       verify this many replays (default 3)
   --dump-replay <path>     write the first match replay as JSON
   --json                   emit machine-readable output
+  --verify-targets <normal|mirror|difficulty>
+                           enforce brief targets (200/500/200 games); failures exit 1
 `);
 }
 
@@ -245,7 +260,8 @@ function aggregate(
   }
 
   let highDifficultyWinRate: number | null = null;
-  if (options.blueDifficulty !== options.redDifficulty) {
+  if ((options.blueDifficulty === 'high' && options.redDifficulty === 'low') ||
+      (options.blueDifficulty === 'low' && options.redDifficulty === 'high')) {
     const highSide = options.blueDifficulty === 'high' ? 0 : 1;
     const highWins = records.filter((record) => record.winner === highSide).length;
     highDifficultyWinRate = attempted > 0 ? highWins / attempted : 0;
@@ -529,12 +545,19 @@ async function main(): Promise<void> {
     stuckSamples,
     rejectionSamples,
   );
+  if (options.verifyTargets) result.verification = verifyTargets(result, options.verifyTargets);
   if (options.json) {
     console.log(JSON.stringify(result, null, 2));
   } else {
     printReport(result);
+    if (result.verification) {
+      console.log(`targets (${result.verification.profile}): ${result.verification.passed ? 'PASS' : 'FAIL'}`);
+      for (const check of result.verification.checks) {
+        console.log(`  ${check.passed ? 'PASS' : 'FAIL'} ${check.target}: ${check.actual}; required ${check.required}`);
+      }
+    }
   }
-  if (result.errors > 0 || result.replayMismatches > 0) {
+  if (result.verification?.passed === false || result.errors > 0 || result.replayMismatches > 0) {
     process.exitCode = 1;
   }
 }
