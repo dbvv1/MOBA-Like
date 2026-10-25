@@ -1,0 +1,11 @@
+{
+  "name": "Beacon Guard",
+  "version": 1,
+  "fps": 30,
+  "blade_length": 0.75,
+  "revised_blade_length": 1.05,
+  "teams": {
+    "blue": {"color": [0.025, 0.34, 0.72, 1.0], "marker": "single_fin"},
+    "amber": {"color": [0.95, 0.23, 0.025, 1.0], "marker": "twin_fins"}
+  }
+}

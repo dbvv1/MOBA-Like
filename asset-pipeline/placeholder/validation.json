@@ -1,0 +1,979 @@
+{
+  "status": "passed",
+  "kind": "original_placeholder_not_final_art",
+  "blender": "4.3.2",
+  "variants": {
+    "blue": {
+      "source": {
+        "meshes": {
+          "Pelvis": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGrip": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 12,
+            "triangles": 20
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 105
+          },
+          "idle": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 105
+          },
+          "walk": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 105
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.126765,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.235
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "glb": {
+        "meshes": {
+          "Boot_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Pelvis": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 36,
+            "triangles": 20
+          },
+          "WeaponGrip": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 96,
+            "triangles": 44
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack_GuardRig": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 150
+          },
+          "idle_GuardRig": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 150
+          },
+          "walk_GuardRig": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 150
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.126765,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.235
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "min_sampled_world_z": 0.0,
+      "max_roundtrip_vertex_error_m": 2.409384600091903e-06
+    },
+    "amber": {
+      "source": {
+        "meshes": {
+          "Pelvis": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamMarker_1": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGrip": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 12,
+            "triangles": 20
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 105
+          },
+          "idle": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 105
+          },
+          "walk": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 105
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.126765,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.145
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "glb": {
+        "meshes": {
+          "Boot_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Pelvis": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamMarker_1": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 36,
+            "triangles": 20
+          },
+          "WeaponGrip": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 96,
+            "triangles": 44
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack_GuardRig": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 150
+          },
+          "idle_GuardRig": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 150
+          },
+          "walk_GuardRig": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 150
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.126765,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.145
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "min_sampled_world_z": 0.0,
+      "max_roundtrip_vertex_error_m": 2.409384600091903e-06
+    },
+    "blue-long": {
+      "source": {
+        "meshes": {
+          "Pelvis": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_L": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGrip": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 24,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 12,
+            "triangles": 20
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 105
+          },
+          "idle": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 105
+          },
+          "walk": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 105
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.423845,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.235
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "glb": {
+        "meshes": {
+          "Boot_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Boot_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ChestPlate": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Coat": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "FaceVisor": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ForearmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "HandMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Helmet": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Neck": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Pelvis": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ShinMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "Shoulder_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamBand": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "TeamMarker_0": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "ThighMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_L": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "UpperArmMesh_R": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponBlade": {
+            "vertices": 36,
+            "triangles": 20
+          },
+          "WeaponGrip": {
+            "vertices": 96,
+            "triangles": 44
+          },
+          "WeaponGuard": {
+            "vertices": 96,
+            "triangles": 44
+          }
+        },
+        "rigs": {
+          "GuardRig": 15
+        },
+        "actions": {
+          "attack_GuardRig": {
+            "frames": [
+              1.0,
+              36.0
+            ],
+            "fcurves": 150
+          },
+          "idle_GuardRig": {
+            "frames": [
+              1.0,
+              31.0
+            ],
+            "fcurves": 150
+          },
+          "walk_GuardRig": {
+            "frames": [
+              1.0,
+              33.0
+            ],
+            "fcurves": 150
+          }
+        },
+        "materials": [
+          "Armor",
+          "Blade",
+          "Grip",
+          "Team",
+          "Trim",
+          "Visor"
+        ],
+        "world_bounds": [
+          [
+            -0.7,
+            -1.423846,
+            0.0
+          ],
+          [
+            0.765,
+            0.22,
+            2.235
+          ]
+        ],
+        "unit_scale": 1.0,
+        "fps": 30
+      },
+      "min_sampled_world_z": 0.0,
+      "max_roundtrip_vertex_error_m": 3.1110255928668065e-06
+    }
+  },
+  "verified": [
+    "15-bone rig and idle/walk/attack in all 6 files",
+    "every fourth frame plus loop endpoints sampled",
+    "source-to-GLB deformed points within 0.2 mm",
+    "weapon hand weights",
+    "team changes limited to Team material and marker geometry",
+    "length revision only WeaponBlade vertices; other source/export data and sampled poses unchanged"
+  ],
+  "limits": [
+    "not a continuous collision test",
+    "not a gameplay/engine test",
+    "no final art or accessibility certification",
+    "visual observations are separate from these assertions"
+  ],
+  "files": {
+    "assets/amber.blend": {
+      "sha256": "5bc096f27aa895a829d54f87ff6b9ee09781ab8658706ff1eecb1ad22838ce20",
+      "bytes": 124961
+    },
+    "assets/amber.glb": {
+      "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032",
+      "bytes": 199712
+    },
+    "assets/blue-long.blend": {
+      "sha256": "311c4c6175699a4d6526887c7a165b31c87af4670f9604d2229dc7660b54919f",
+      "bytes": 124841
+    },
+    "assets/blue-long.glb": {
+      "sha256": "306ab11e5e04ab220b71147283869c6b4d2855e0686f55466cff050028893830",
+      "bytes": 193732
+    },
+    "assets/blue.blend": {
+      "sha256": "7c9904da8061fbfe1b932f3f2317092ee8b027cf78e84945b7ea720460842fc0",
+      "bytes": 123888
+    },
+    "assets/blue.glb": {
+      "sha256": "cb563f407fe8252479a216411b585ea245286df77186317a8fef96d63a742b28",
+      "bytes": 193732
+    }
+  }
+}

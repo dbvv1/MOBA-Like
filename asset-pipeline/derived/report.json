@@ -1,0 +1,137 @@
+{
+  "status": "passed",
+  "source_kind": "own_synthetic_fixture",
+  "third_party_asset_verified": false,
+  "blender": "4.3.2",
+  "source_sha256": "cfc9c0dd8033055f6b80379a945d749c33a12c868548102fbd8d6477e6b3258f",
+  "source": "fixture.blend",
+  "first": {
+    "meshes": {
+      "Body": {
+        "vertices": 8,
+        "triangles": 12
+      },
+      "ArmMesh": {
+        "vertices": 8,
+        "triangles": 12
+      }
+    },
+    "rigs": {
+      "FixtureRig": 2
+    },
+    "actions": {
+      "Fixture_Idle": {
+        "frames": [
+          1.0,
+          30.0
+        ],
+        "fcurves": 3
+      },
+      "Fixture_Swing": {
+        "frames": [
+          1.0,
+          30.0
+        ],
+        "fcurves": 3
+      }
+    },
+    "materials": [
+      "Accent",
+      "Neutral"
+    ],
+    "world_bounds": [
+      [
+        -0.3,
+        -0.2,
+        0.0
+      ],
+      [
+        1.1,
+        0.2,
+        1.4
+      ]
+    ],
+    "unit_scale": 1.0,
+    "fps": 30
+  },
+  "roundtrip": {
+    "meshes": {
+      "ArmMesh": {
+        "vertices": 24,
+        "triangles": 12
+      },
+      "Body": {
+        "vertices": 24,
+        "triangles": 12
+      }
+    },
+    "rigs": {
+      "FixtureRig": 2
+    },
+    "actions": {
+      "Fixture_Idle_FixtureRig": {
+        "frames": [
+          1.0,
+          30.0
+        ],
+        "fcurves": 20
+      },
+      "Fixture_Swing_FixtureRig": {
+        "frames": [
+          1.0,
+          30.0
+        ],
+        "fcurves": 20
+      }
+    },
+    "materials": [
+      "Accent",
+      "Neutral"
+    ],
+    "world_bounds": [
+      [
+        -0.3,
+        -0.2,
+        0.0
+      ],
+      [
+        1.1,
+        0.2,
+        1.4
+      ]
+    ],
+    "unit_scale": 1.0,
+    "fps": 30
+  },
+  "source_axes": "Blender Z up; fixture arm extends +X",
+  "export_axes": "glTF Y up via Blender exporter",
+  "unchanged": [
+    "source bytes",
+    "mesh topology and vertices",
+    "UV",
+    "skin weights",
+    "rig rest matrices",
+    "action keyframes",
+    "sampled deformed vertices",
+    "other materials"
+  ],
+  "invariant_scope": "source before versus after color edit; first GLB versus revised GLB, not binary equality across formats",
+  "allowed_changes": [
+    "Accent.Principled BSDF.Base Color",
+    "Accent.diffuse_color"
+  ],
+  "artifacts": {
+    "blue.blend": {
+      "sha256": "615d08990f974f554474d5c9de7255ce51c5f7f666faeba1f409155c45b49dbd",
+      "bytes": 88073
+    },
+    "blue.glb": {
+      "sha256": "d263da5863bbb2a8b49d69407d752bfc48ba58e9fcc03c0c6527ef83640fc8c0",
+      "bytes": 9928
+    },
+    "first.glb": {
+      "sha256": "4abce6627b35a9fb68fc85925f20997109e1b3a83b7b8972fe5dc24461135036",
+      "bytes": 9928
+    }
+  }
+}
