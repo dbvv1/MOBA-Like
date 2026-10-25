@@ -1,0 +1,21 @@
+{
+  "checked_utc_date": "2026-10-25",
+  "status": "blocked_before_asset_download",
+  "preferred_candidate": "https://quaternius.com/packs/knightcharacter.html",
+  "preference_status": "provisional_official_content_comparison_only",
+  "source_files": [],
+  "derived_files": [],
+  "asset_sha256": null,
+  "paid_cost": 0,
+  "installed_dependencies": [],
+  "available_parser": "Blender 4.3.2",
+  "failed_requests": [
+    {"url": "https://quaternius.com/packs/ultimatedanimatedcharacter.html", "action": "curl -fsSL official HTML", "http_status": 403, "exit_code": 22},
+    {"url": "https://kenney.nl/assets/animated-characters-protagonists", "action": "curl -fsSL official HTML", "http_status": 403, "exit_code": 22}
+  ],
+  "failure_origin": "HTTP refusal; server versus network intermediary unknown; not an auto-review rejection",
+  "retry_state": "stopped; no mirror or alternative transport download attempted",
+  "restore_condition": "new relevant authorization or access evidence for the refused retrieval; then resume the existing task once, preserving source and license",
+  "actual_asset_validation": "none",
+  "game_execution": "not run"
+}
