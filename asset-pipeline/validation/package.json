@@ -1,0 +1,14 @@
+{
+  "name": "moba-placeholder-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node validate.mjs",
+    "test": "node --test test.mjs consumer-test.mjs",
+    "consumer": "node consumer.mjs"
+  },
+  "dependencies": {
+    "gltf-validator": "2.0.0-dev.3.10",
+    "three": "0.186.1"
+  }
+}

@@ -15,7 +15,7 @@ asset-pipeline/icons/.venv/bin/python asset-pipeline/icons/export.py
 asset-pipeline/icons/.venv/bin/python asset-pipeline/icons/test_export.py
 ```
 
-`exported/preview.png` 以实际 32／48 像素并排展示两套图标。导出需要 Python 3.11+、系统 Cairo 及 requirements 中的依赖；使用已交付 SVG／PNG 不需这些工具。无时间戳、网络取材或随机生成；同一渲染依赖环境内可逐字节重建。测试核尺寸、透明边缘、viewBox、重建一致、非法参数及缺失输入失败。
+导出时在本地生成、Git 忽略的 `exported/preview.png` 以实际 32／48 像素并排展示两套图标。导出需要 Python 3.11+、系统 Cairo 及 requirements 中的依赖；使用已交付 SVG／PNG 不需这些工具。无时间戳、网络取材或随机生成；同一渲染依赖环境内可逐字节重建。测试核尺寸、透明边缘、viewBox、重建一致、非法参数及缺失输入失败。
 
 ## 来源与接入边界
 
