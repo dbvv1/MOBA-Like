@@ -8,11 +8,11 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "tsx tools/sim.ts --games 1 --seed 1",
-    "build": "tsc -p tsconfig.build.json && tsx tools/copy-navmesh.ts",
+    "dev": "node --import tsx tools/sim.ts --games 1 --seed 1",
+    "build": "tsc -p tsconfig.build.json && node --import tsx tools/copy-navmesh.ts",
     "test": "vitest run",
-    "sim": "tsx tools/sim.ts",
-    "bake:nav": "tsx tools/bake-navmesh.ts"
+    "sim": "node --import tsx tools/sim.ts",
+    "bake:nav": "node --import tsx tools/bake-navmesh.ts"
   },
   "dependencies": {
     "recast-navigation": "0.43.1"
