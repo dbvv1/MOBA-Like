@@ -1,0 +1,9 @@
+{
+  "source": "https://kenney.nl/assets/particle-pack",
+  "version": "1.1",
+  "license": "CC0-1.0",
+  "archiveSha256": "b631d4b07f7002549fdcf155f01141ad482f79f3440e4e301eed49ce5f1d8958",
+  "textures": {
+    "trace_02.png": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+  }
+}

@@ -32,3 +32,14 @@ describe('actual impact first presentation frame',()=>{
   fx.sync({...snapshot,events});fx.sync({...snapshot,events});const root=scene.getObjectByName('battle-feedback')!;expect(root.children).toHaveLength(48);fx.draw(.25);expect(root.children).toHaveLength(48);fx.draw(.1);fx.draw(.1);expect(root.children).toHaveLength(0);fx.dispose();expect(scene.children).toHaveLength(0);
  });
 });
+
+it('uses shared source textures without taking their ownership or changing release endpoints',async()=>{
+ const sim=await makeSim(10,61),snapshot=sim.snapshot(),scene=new THREE.Scene();
+ const release=new THREE.Texture();let releases=0;release.addEventListener('dispose',()=>releases++);
+ const textures={release,dispose(){release.dispose();}},fx=createImpacts(scene,textures);
+ const source=snapshot.heroes[0]!,target=snapshot.heroes[1]!;
+ fx.sync({...snapshot,events:[{type:'basicAttack',tick:snapshot.tick,ordinal:0,sourceId:source.id,targetId:target.id}]});fx.draw(.25);
+ const streak=scene.getObjectByName('hero-release-streak') as THREE.Mesh;expect((streak.material as THREE.MeshBasicMaterial).map).toBe(release);
+ streak.updateMatrixWorld(true);expect(streak.localToWorld(new THREE.Vector3(0,0,1)).distanceTo(new THREE.Vector3(target.position.x,1.2,target.position.z))).toBeLessThan(1e-6);
+ fx.dispose();expect(releases).toBe(0);textures.dispose();expect(releases).toBe(1);
+});
