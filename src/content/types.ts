@@ -1,5 +1,5 @@
 export type TeamId = 0 | 1;
-export type ContentVersion = 1 | 2 | 7 | 8 | 9;
+export type ContentVersion = 1 | 2 | 7 | 8 | 9 | 10;
 export type AbilitySlot = 'Q' | 'W' | 'E' | 'R';
 export type DamageType = 'physical' | 'magic' | 'true';
 export type Difficulty = 'low' | 'normal' | 'high';
@@ -153,6 +153,7 @@ export interface MatchRules {
   /** A new life must reacquire targets before its difficulty reaction timer is ready. */
   resetReactionOnDeath?: boolean;
   stagedUnitPhase?: boolean;
+  minionContactSpacing?: boolean;
   tickRate: number;
   maxMatchSeconds: number;
   waves: WaveRules;

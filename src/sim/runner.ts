@@ -87,7 +87,7 @@ export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerif
   if (replay.formatVersion === 1 && replay.commands.some(entry => entry.command.type === 'attackMove')) {
     throw new Error('attackMove requires replay format version 2');
   }
-  if (replay.contentVersion !== 1 && replay.contentVersion !== 2 && replay.contentVersion !== 7 && replay.contentVersion !== 8 && replay.contentVersion !== 9) {
+  if (replay.contentVersion !== 1 && replay.contentVersion !== 2 && replay.contentVersion !== 7 && replay.contentVersion !== 8 && replay.contentVersion !== 9 && replay.contentVersion !== 10) {
     throw new Error(`unknown replay content version: ${String(replay.contentVersion)}`);
   }
   const simulation = new Simulation({

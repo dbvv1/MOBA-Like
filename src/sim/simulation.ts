@@ -1,3 +1,4 @@
+import { minionSpacing } from './minion-spacing.js';
 import type {
   AbilitySlot,
   CombatEffect,
@@ -237,6 +238,7 @@ export class Simulation {
     this.advanceZones();
     this.advanceDelayedAreas();
     this.updateUnits();
+    if(this.catalog.rules.minionContactSpacing)this.resolveMinionContacts();
     this.updateStructures();
     this.updateRespawns();
     this.updateEconomy();
@@ -1342,6 +1344,28 @@ export class Simulation {
       hero.mana = Math.min(nextStats.maxMana, hero.mana + (nextStats.maxMana - oldStats.maxMana));
       hero.armor = nextStats.armor;
       hero.magicResist = nextStats.magicResist;
+    }
+  }
+
+  private resolveMinionContacts(): void {
+    const units=this.state.entities.filter((entity):entity is MinionEntity=>entity.kind==='minion'&&entity.alive);
+    const maxDisplacement=2*this.dt;
+    const offsets=minionSpacing(units.map(entity=>({id:entity.id,position:entity.position,radius:entity.radius,movable:!this.isStunned(entity)})),maxDisplacement);
+    for(const entity of units){
+      const offset=offsets.get(entity.id)!;
+      if(Math.hypot(offset.x,offset.z)<1e-8)continue;
+      const desired=add(entity.position,offset),projected=this.navigation.closestPoint(desired);
+      // Bound the correction on the shipped convex lane. The existing path
+      // wrapper filters tiny corners: this is not a general obstacle sweep.
+      // A rejected correction remains an overlap.
+      if(!projected||distance(entity.position,projected)>maxDisplacement+1e-5||distance(desired,projected)>.05)continue;
+      const route=this.navigation.findPath(entity.position,projected);
+      if(!route.success||!route.points.length||distance(route.points[route.points.length-1]!,projected)>.05)continue;
+      let routeLength=distance(entity.position,route.points[0]!);
+      for(let i=1;i<route.points.length;i++)routeLength+=distance(route.points[i-1]!,route.points[i]!);
+      if(routeLength>maxDisplacement+.05)continue;
+      if(route.points.some(point=>distanceToSegment(point,entity.position,projected)>1e-5))continue;
+      entity.position=copyVec(projected);
     }
   }
 

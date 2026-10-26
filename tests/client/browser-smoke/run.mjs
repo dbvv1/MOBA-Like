@@ -31,7 +31,7 @@ try {
   stage='context';
   report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER)}:null;});
   assert.ok(report.webgl2,'A live WebGL2 context is required');
-  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,8,'Integrated browser entry must use accepted v8 content, not frozen v2 or experimental v9');
+  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,10,'Integrated browser entry must use v10 minion-spacing content');
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
   const canvas=page.locator('#stage canvas');const box=await canvas.boundingBox();assert.ok(box,'Canvas visible');

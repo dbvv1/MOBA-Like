@@ -1,6 +1,6 @@
 # Browser smoke
 
-From the repository root, `npm run smoke` builds the web client, starts a temporary loopback-only server, launches Playwright Chromium, and requires a live Three/WebGL2 canvas, accepted v8 simulation advancing, a keyboard/mouse E cast with a real snapshot zone and matching Three effect objects, pointer movement and stop commands, camera controls, HUD, varied canvas pixels, and no browser errors. A fallback or initialization failure exits nonzero. It does not grade animation quality or game balance.
+From the repository root, `npm run smoke` builds the web client, starts a temporary loopback-only server, launches Playwright Chromium, and requires a live Three/WebGL2 canvas, v10 simulation advancing, a keyboard/mouse E cast with a real snapshot zone and matching Three effect objects, pointer movement and stop commands, camera controls, HUD, varied canvas pixels, and no browser errors. A fallback or initialization failure exits nonzero. It does not grade animation quality or game balance.
 
 Install Chromium through `npx playwright install chromium` in an authorized environment, or explicitly set `MOBA_SMOKE_CHROMIUM` to an existing absolute executable path. The default keeps the Chromium sandbox enabled and uses software WebGL flags. `MOBA_SMOKE_CLOUD_NO_SANDBOX=1` is an explicit option only for an environment where that mode is authorized; the harness never retries with it automatically. Do not use overrides to work around an access denial.
 

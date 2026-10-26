@@ -13,7 +13,7 @@ import {createHud} from './ui/hud.js';
 
 function element<T extends HTMLElement>(id:string):T {const result=document.getElementById(id);if(!result)throw new Error(`Missing ${id}`);return result as T;}
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
-const contentVersion=8 as const;
+const contentVersion=10 as const;
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion));
 let cleanup:()=>void=()=>{};let booting=false;let soundEnabled=true;
 async function boot(){
