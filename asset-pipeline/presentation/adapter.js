@@ -42,10 +42,26 @@ function character(asset) {
   const root = clone(asset.scene);
   const materials = new Set();
   const skeletons = new Set();
+  const materialClones = new Map();
+  function materialClone(source) {
+    if (!materialClones.has(source)) materialClones.set(source, source.clone());
+    return materialClones.get(source);
+  }
   root.traverse(node => {
-    if (node.isSkinnedMesh) skeletons.add(node.skeleton);
+    if (node.isSkinnedMesh) {
+      const candidate = node.skeleton;
+      // SkeletonUtils clones per mesh. Reuse only exactly equivalent bindings
+      // inside this actor, never across actors or with the source asset.
+      const equivalent = [...skeletons].find(skeleton =>
+        skeleton.bones.length === candidate.bones.length &&
+        skeleton.boneInverses.length === candidate.boneInverses.length &&
+        skeleton.bones.every((bone, index) => bone === candidate.bones[index]) &&
+        skeleton.boneInverses.every((inverse, index) => inverse.equals(candidate.boneInverses[index])));
+      if (equivalent && equivalent !== candidate) { node.skeleton = equivalent; candidate.dispose(); }
+      else skeletons.add(candidate);
+    }
     if (node.isMesh) {
-      node.material = Array.isArray(node.material) ? node.material.map(m => m.clone()) : node.material.clone();
+      node.material = Array.isArray(node.material) ? node.material.map(materialClone) : materialClone(node.material);
       for (const material of Array.isArray(node.material) ? node.material : [node.material]) materials.add(material);
     }
   });

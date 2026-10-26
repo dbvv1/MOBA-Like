@@ -37,3 +37,12 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 - `view.dispose()` 只释放自己克隆的材质／骨架和地图几何，不释放共用 GLB 源。所有消费者释放后，由持有 `assets` 的调用方用 `disposeCharacterAssets(assets)` 统一释放源几何、材质、骨架和纹理。加载器等待两项结束，任一失败或缺必需 clip 时清理已加载源。
 
 纯 Three 数值测试不创建 WebGL：核真实 GLB 的独立克隆、整角色变换、快照不变、状态移除、重置、释放与图标语义。当前云浏览器 WebGL 2 上下文不可用；真实游戏接入、3D 画面、移动滑步、动作衔接与视觉辨识待验。报告仅放本地忽略的 `reports/`。
+
+
+## 资源共享与显式预算
+
+同一角色内部仅在骨骼对象序列与逆绑定矩阵逐项相同时共享 skeleton；保留每个 mesh 的 bindMatrix。原来共用同一个源材质的 mesh 在该角色内共用一份克隆材质，不同源材质不合并；不同角色的材质、骨架和 mixer 仍独立。需要给同一角色的某个 mesh 单独改材质时，调用方应另行 clone 并负责该新材质释放。资源由角色集合统一释放，不逐 mesh 销毁共享对象。
+
+`resources.js` 提供只读 `resourceInventory({roots, clips})` 与 `assertResourceBudget(inventory, limits)`。将所有共享源及消费者根一并传入，按对象身份去重 geometry/material/skeleton，按实际 ArrayBuffer 身份去重 typed-array backing bytes；同一缓冲的多个切片不会重复计算整块内存。clip 的 times/values 和骨架矩阵包含在统计中。`typedArrayViewBytes` 是不同视图长度之和，可能重叠，不可当总内存；`typedArrayBackingBytes` 包含视图保留的整个底层缓冲。
+
+预算必须由调用方显式给出，例如 `{geometries: sourceInventory.geometries}` 可阻止克隆意外复制几何。未知指标、空预算、不合法上限及超额均抛错。纹理只统计直接材质属性引用数量，不估算图像、shader uniform 内纹理、GPU 上传、mixer/JS 对象或驱动内存；它不是设备显存预算或帧率保证。Node 测试同时核实际 GLB 全部 clip 的蒙皮点、共享去重、错误预算及多消费者释放；输出走 stdout，保存时放本地 `reports/`。
