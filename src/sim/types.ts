@@ -240,6 +240,7 @@ export interface HeroSnapshot {
   readonly definitionId: string;
   readonly name: string;
   readonly position: Readonly<Vec2>;
+  readonly facing: Readonly<Vec2>;
   readonly hp: number;
   readonly maxHp: number;
   readonly mana: number;

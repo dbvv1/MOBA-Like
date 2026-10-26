@@ -73,10 +73,13 @@ try {
   await canvas.focus();await page.keyboard.press('e');
   await page.mouse.click(box.x+box.width*.58,box.y+box.height*.52);
   await page.waitForFunction(()=>{
-    const snapshot=window.mobaClient.snapshot(),effects=window.mobaClient.state().effects;
+    const snapshot=window.mobaClient.snapshot(),state=window.mobaClient.state(),effects=state.effects;
     const player=snapshot.heroes.find(hero=>hero.team===0);
+    const actor=state.motions.find(actor=>actor.id===player.id);
+    if(!actor?.attached||!actor.visible||!actor.actions.some(action=>action.clip==='attack.upper'&&action.tracks>0&&action.weight>0))return false;
     return player.cooldowns.E>0 && snapshot.zones.some(zone=>zone.team===0 && effects.some(effect=>effect.name===`zone-${zone.id}`&&effect.visible&&effect.meshes>=2));
   });
+  report.motion=await page.evaluate(()=>window.mobaClient.state().motions);
   report.effect=await page.evaluate(()=>{
     const snapshot=window.mobaClient.snapshot(),effects=window.mobaClient.state().effects;
     const zone=snapshot.zones.find(zone=>zone.team===0&&effects.some(effect=>effect.name===`zone-${zone.id}`));

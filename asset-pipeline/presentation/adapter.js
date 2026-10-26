@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
-import {reuseReactionClips,reactionClip} from './reactions.js';
+import {reuseReactionClips} from './reactions.js';
+import {createMotion} from './motion.js';
+import {createMotionState} from './motion-state.js';
 
 export const assetUrls = Object.freeze({
   blue: new URL('../characters/beacon-guard/assets/blue-reactions.glb', import.meta.url).href,
@@ -60,7 +62,7 @@ export async function loadCharacterAssets(load = url => new GLTFLoader().loadAsy
   return signal ? Promise.race([completion, aborted]) : completion;
 }
 
-function character(asset) {
+function character(asset, motionOptions) {
   const root = clone(asset.scene);
   const materials = new Set();
   const skeletons = new Set();
@@ -99,26 +101,15 @@ function character(asset) {
       for (const material of Array.isArray(node.material) ? node.material : [node.material]) materials.add(material);
     }
   });
-  const mixer = new THREE.AnimationMixer(root);
-  const deathClip=reactionClip(asset,'death');
-  let action = null;
-  function play(name) {
-    if (action === name) return;
-    mixer.stopAllAction();
-    const clip=name==='death'?deathClip:asset.animations.find(clip=>clip.name===name);
-    const next=mixer.clipAction(clip).reset();
-    if(name==='death'){next.setLoop(THREE.LoopOnce,1);next.clampWhenFinished=true;}
-    else{next.setLoop(THREE.LoopRepeat,Infinity);next.clampWhenFinished=false;}
-    next.play();
-    action = name;
-  }
-  play('idle');
-  return {root, mixer, materials, play, deathDuration:deathClip?.duration??0, poseDeath(seconds){if(deathClip){const a=mixer.clipAction(deathClip);a.time=Math.min(seconds,deathClip.duration);a.paused=true;mixer.update(0);}}, get action() { return action; },
-    dispose() { mixer.stopAllAction(); mixer.uncacheRoot(root); for (const material of materials) material.dispose(); for (const skeleton of skeletons) skeleton.dispose(); }};
+  const motion=createMotion(root,asset,motionOptions);
+  motion.sample({time:0});
+  return {root,materials,motion,deathDuration:motion.deathDuration,
+    get action(){return motion.action;},
+    dispose(){motion.dispose();for(const material of materials)material.dispose();for(const skeleton of skeletons)skeleton.dispose();}};
 }
 
 /** Read-only Snapshot consumer. No renderer, input, simulation stepping or hit-event inference. */
-export function createPresentation({catalog, assets}) {
+export function createPresentation({catalog, assets, motionOptions}) {
   const root = new THREE.Group();
   root.name = 'SnapshotPresentation';
   const heroes = new Map();
@@ -126,6 +117,7 @@ export function createPresentation({catalog, assets}) {
   const entityPositions = new Map();
   const owned = new Set();
   let lastTick = null;
+  let latestTime=0;
   let disposed = false;
   const own = value => (owned.add(value), value);
   const world = catalog.map.world;
@@ -149,7 +141,7 @@ export function createPresentation({catalog, assets}) {
     assertOpen();
     for (const actor of heroes.values()) { root.remove(actor.root); actor.dispose(); }
     for (const proxy of entities.values()) root.remove(proxy);
-    heroes.clear(); entities.clear(); entityPositions.clear(); lastTick = null;
+    heroes.clear(); entities.clear(); entityPositions.clear(); lastTick = null;latestTime=0;
   }
   function sync(snapshot) {
     assertOpen();
@@ -164,8 +156,9 @@ export function createPresentation({catalog, assets}) {
       let actor = heroes.get(hero.id);
       if (actor && actor.team !== hero.team) { root.remove(actor.root); actor.dispose(); heroes.delete(hero.id); actor = null; }
       if (!actor) {
-        actor = character(hero.team === 0 ? assets.blue : assets.amber);
-        actor.team = hero.team; actor.previous = null;
+        actor = character(hero.team === 0 ? assets.blue : assets.amber,motionOptions);
+        actor.events=createMotionState(hero.id,catalog);
+        actor.team = hero.team; actor.previous = null;actor.visualTime=snapshot.timeSeconds;
         actor.root.name = `hero-${hero.id}`; actor.root.userData.simEntityId = hero.id; heroes.set(hero.id, actor); root.add(actor.root);
       }
       const old = actor.previous;
@@ -179,13 +172,18 @@ export function createPresentation({catalog, assets}) {
       // snapshots do not fabricate a death event; corpse visuals never affect sim/HUD.
       if(old?.alive && !hero.alive)actor.deathStarted=snapshot.timeSeconds;
       if(hero.alive)actor.deathStarted=null;
-      const deadElapsed=actor.deathStarted==null?Infinity:Math.max(0,snapshot.timeSeconds-actor.deathStarted);
+      if(hero.alive&&old?.alive===false){actor.events.reset();actor.motion.reset();}
+      actor.events.consume(snapshot.events??[],snapshot.timeSeconds,hero.alive);
+      if(snapshot.status!=='running')actor.events.finish(snapshot.timeSeconds);
+      const deadElapsed=actor.deathStarted==null?Infinity:Math.max(0,actor.visualTime-actor.deathStarted);
       actor.root.visible = hero.alive || (actor.deathDuration>0 && deadElapsed<actor.deathDuration+1);
       actor.deadElapsed=deadElapsed;
-      // GLB's forward is +Z after Blender -Y -> glTF conversion. No facing on snapshot.
-      if (moving) actor.root.rotation.y = Math.atan2(dx,dz);
-      actor.play(!hero.alive&&actor.deathDuration>0&&actor.deathStarted!=null?'death':moving?'walk':'idle');
-      if(actor.action==='death')actor.poseDeath(deadElapsed);
+      // GLB forward is +Z. Read authoritative facing, never derive attack aim
+      // from an input pointer, target guess, or an unrelated movement delta.
+      if(hero.facing&&Number.isFinite(hero.facing.x)&&Number.isFinite(hero.facing.z)&&Math.hypot(hero.facing.x,hero.facing.z)>1e-8)actor.root.rotation.y=Math.atan2(hero.facing.x,hero.facing.z);
+      else if(moving)actor.root.rotation.y=Math.atan2(dx,dz); // legacy snapshots without facing
+      actor.motion.play(moving&&snapshot.status==='running'?'walk':'idle');
+      actor.motion.sample({time:actor.visualTime,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:deadElapsed});
       actor.previous = {x: hero.position.x, z: hero.position.z, alive: hero.alive};
     }
     for (const [id, actor] of heroes) if (!seen.has(id)) { root.remove(actor.root); actor.dispose(); heroes.delete(id); }
@@ -205,15 +203,21 @@ export function createPresentation({catalog, assets}) {
       proxy.scale.setScalar(entity.radius); proxy.visible = entity.alive;
     }
     for (const [id, proxy] of entities) if (!seenEntities.has(id)) { root.remove(proxy); entities.delete(id); entityPositions.delete(id); }
-    lastTick = snapshot.tick; root.updateMatrixWorld(true);
+    lastTick = snapshot.tick;latestTime=snapshot.timeSeconds; root.updateMatrixWorld(true);
   }
-  function advance(seconds, alpha = 1) {
+  function advance(seconds, alpha) {
+    const synchronized=alpha!==undefined;alpha??=1;
     assertOpen();
     if (!Number.isFinite(seconds) || seconds < 0) throw new Error('Invalid render delta');
     if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) throw new Error('Interpolation alpha must be between 0 and 1');
     for (const actor of heroes.values()) {
       actor.root.position.lerpVectors(actor.from, actor.to, alpha);
-      if(actor.root.visible){if(actor.action==='death'){actor.deadElapsed+=seconds;actor.poseDeath(actor.deadElapsed);if(actor.deadElapsed>=actor.deathDuration+1)actor.root.visible=false;}else actor.mixer.update(seconds);}
+      if(actor.root.visible){
+        const time=synchronized?Math.max(actor.visualTime,Math.max(0,latestTime-(1-alpha)/catalog.rules.tickRate)):actor.visualTime+seconds;
+        actor.motion.advance(time-actor.visualTime);actor.visualTime=time;
+        if(actor.deathStarted!=null){actor.deadElapsed=Math.max(0,time-actor.deathStarted);if(actor.deadElapsed>=actor.deathDuration+1)actor.root.visible=false;}
+        actor.motion.sample({time:actor.visualTime,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:actor.deadElapsed});
+      }
     }
     for (const [id, proxy] of entities) {
       const position = entityPositions.get(id);
@@ -222,6 +226,7 @@ export function createPresentation({catalog, assets}) {
     root.updateMatrixWorld(true);
   }
   return {root, sync, advance, reset,
+    motionState(){return [...heroes].map(([id,actor])=>({id,attached:actor.root.parent===root&&root.parent!==null,visible:root.visible&&actor.root.visible,actions:actor.motion.inspect()}));},
     inspect() { return {tick:lastTick, heroes:[...heroes].map(([id,a])=>({id,action:a.action,team:a.team,visible:a.root.visible})), entities:entities.size}; },
     dispose() { if (disposed) return; reset(); for (const resource of owned) resource.dispose(); root.clear(); disposed = true; },
   };

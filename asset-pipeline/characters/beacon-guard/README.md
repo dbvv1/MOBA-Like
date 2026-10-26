@@ -28,10 +28,12 @@ fall, retaining the six-frame hold and the other four actions. Do not rename the
 15-bone rig or change its bind transforms if amber will reuse the tracks. Review
 the result, then deliberately replace `assets/`; generated-next is local-only.
 
-The game currently adopts **death only** from these new reactions: an observed
+The presentation adopts death from these new reactions: an observed
 alive→dead snapshot starts the clip, followed by a one-second visual hold, then
 hides the corpse. Initial dead snapshots do not invent a death transition.
 Respawn/restart discards the old pose. Simulation death, HUD, targeting and respawn
-timing remain authoritative and do not wait for animation. Hurt and attack are
-available source clips, **not yet driven by gameplay events**. The renderer does
-not infer hits from HP deltas or cooldowns.
+timing remain authoritative and do not wait for animation. Attack is driven by authoritative cast/basicAttack events; hurt requires actual
+hpDamage events (shield-only absorption does not fake body damage). See
+[the presentation contract](../../presentation/README.md) for track masks, priorities
+and a source-reusing second requirement edit. The renderer does not infer hits
+from HP deltas or cooldowns. New browser/action perception acceptance is separate.

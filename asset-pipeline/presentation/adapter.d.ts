@@ -11,7 +11,8 @@ export interface Presentation {
   sync(snapshot:Snapshot):void;
   advance(seconds:number,alpha?:number):void;
   reset():void;
+  motionState():Array<{id:number;attached:boolean;visible:boolean;actions:Array<{clip:string;tracks:number;weight:number;time:number}>}>;
   dispose():void;
   inspect():{tick:number|null;heroes:Array<{id:number;action:string;team:number;visible:boolean}>;entities:number};
 }
-export function createPresentation(options:{catalog:ContentCatalog;assets:CharacterAssets}):Presentation;
+export function createPresentation(options:{catalog:ContentCatalog;assets:CharacterAssets;motionOptions?:{hurtRegion?:'upper'|'full';strike?:number;recovery?:number}}):Presentation;

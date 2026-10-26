@@ -293,6 +293,7 @@ export class Simulation {
         definitionId: entity.definitionId,
         name: entity.name,
         position: copyVec(entity.position),
+        facing: copyVec(entity.facing),
         hp: entity.hp,
         maxHp: entity.maxHp,
         mana: entity.mana,

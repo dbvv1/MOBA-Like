@@ -58,7 +58,7 @@ async function boot(){
     animation=requestAnimationFrame(frame);
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
-    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',camera:world.cameraState(),effects:world.effectState(),targeting:world.targetingState(),tick:sim.snapshot().tick,status:sim.status})}});
+    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',camera:world.cameraState(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
   }catch(error){cleanup();stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
   finally{booting=false;}
 }
