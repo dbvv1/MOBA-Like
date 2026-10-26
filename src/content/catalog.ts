@@ -594,7 +594,7 @@ function catalog(version: ContentVersion): ContentCatalog {
     };
   }
 
-  if (version === 2 || version === 7 || version === 8) {
+  if (version === 2 || version === 7 || version === 8 || version === 9) {
     return {
       version,
       heroes: { veyra: veyra(veyraQProjectile), morrow },
@@ -611,7 +611,7 @@ function catalog(version: ContentVersion): ContentCatalog {
       items,
       minions,
       map,
-      rules: version === 8 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true } : version === 7 ? { ...rules, liveTowerAnchors: true } : rules,
+      rules: version === 9 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, stagedUnitPhase: true } : version === 8 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true } : version === 7 ? { ...rules, liveTowerAnchors: true } : rules,
       difficulty,
       defaultHeroId: 'veyra',
     };
@@ -620,10 +620,10 @@ function catalog(version: ContentVersion): ContentCatalog {
   throw new Error(`unknown content version: ${String(version)}`);
 }
 
-export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2, 7, 8] as const;
+export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2, 7, 8, 9] as const;
 
 export function getContent(version: ContentVersion): ContentCatalog {
-  if (version !== 1 && version !== 2 && version !== 7 && version !== 8) {
+  if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9) {
     throw new Error(`unknown content version: ${String(version)}`);
   }
   return catalog(version);

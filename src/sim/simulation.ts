@@ -47,6 +47,8 @@ import type {
   ZoneEntity,
 } from './types.js';
 
+interface UnitAttackIntent { sourceId: number; targetId: number; damage: number; }
+
 export interface SimulationOptions {
   seed: number;
   contentVersion: ContentVersion;
@@ -1186,6 +1188,12 @@ export class Simulation {
   }
 
   private handleDeath(target: Entity, source: Entity): void {
+    if (!target.alive) return;
+    this.markDeath(target);
+    this.awardDeathRewards(target, source);
+  }
+
+  private markDeath(target: Entity): void {
     if (!target.alive) {
       return;
     }
@@ -1218,17 +1226,20 @@ export class Simulation {
       this.state.stats.minionKills[otherTeam(target.team)] += 1;
     }
 
+  }
+
+  private awardDeathRewards(target: Entity, source: Entity, keepDeadHpZero = false): void {
     const sourceHero = source.kind === 'hero' ? source : null;
     if (target.kind === 'hero') {
       this.state.stats.heroKills[otherTeam(target.team)] += 1;
       if (sourceHero) {
         sourceHero.kills += 1;
         sourceHero.gold += 280 + target.level * 20;
-        this.grantXp(sourceHero, 160 + target.level * 12);
+        this.grantXp(sourceHero, 160 + target.level * 12, keepDeadHpZero);
       } else {
         for (const hero of this.heroesOfTeam(otherTeam(target.team))) {
           hero.gold += 150;
-          this.grantXp(hero, 100);
+          this.grantXp(hero, 100, keepDeadHpZero);
         }
       }
       return;
@@ -1238,7 +1249,7 @@ export class Simulation {
       const def = this.catalog.minions[target.minionKind];
       if (sourceHero) {
         sourceHero.gold += def.bountyGold;
-        this.grantXp(sourceHero, def.bountyXp);
+        this.grantXp(sourceHero, def.bountyXp, keepDeadHpZero);
         this.grantNearbyXp(target, sourceHero, def.bountyXp * 0.5);
       } else {
         this.grantNearbyXp(target, null, def.bountyXp);
@@ -1250,12 +1261,12 @@ export class Simulation {
       const def = this.structureDefinition(target.definitionId);
       if (sourceHero) {
         sourceHero.gold += def.bountyGold;
-        this.grantXp(sourceHero, def.bountyXp);
+        this.grantXp(sourceHero, def.bountyXp, keepDeadHpZero);
       }
       for (const hero of this.heroesOfTeam(otherTeam(target.team))) {
         if (hero !== sourceHero) {
           hero.gold += 60;
-          this.grantXp(hero, 60);
+          this.grantXp(hero, 60, keepDeadHpZero);
         }
       }
     }
@@ -1275,7 +1286,7 @@ export class Simulation {
     }
   }
 
-  private grantXp(hero: HeroEntity, amount: number): void {
+  private grantXp(hero: HeroEntity, amount: number, keepDeadHpZero = false): void {
     hero.xp += amount;
     while (hero.level < this.catalog.rules.xpLevels.length) {
       const nextThreshold = this.catalog.rules.xpLevels[hero.level];
@@ -1287,7 +1298,7 @@ export class Simulation {
       const nextStats = this.computeHeroStats(hero.definitionId, hero.level, hero.items);
       hero.stats = nextStats;
       hero.maxHp = nextStats.maxHp;
-      hero.hp = Math.min(nextStats.maxHp, hero.hp + (nextStats.maxHp - oldStats.maxHp));
+      if (!keepDeadHpZero || hero.alive) hero.hp = Math.min(nextStats.maxHp, hero.hp + (nextStats.maxHp - oldStats.maxHp));
       hero.mana = Math.min(nextStats.maxMana, hero.mana + (nextStats.maxMana - oldStats.maxMana));
       hero.armor = nextStats.armor;
       hero.magicResist = nextStats.magicResist;
@@ -1295,6 +1306,7 @@ export class Simulation {
   }
 
   private updateUnits(): void {
+    if (this.catalog.rules.stagedUnitPhase) { this.updateUnitsStaged(); return; }
     for (const entity of this.state.entities) {
       if (!entity.alive || entity.kind === 'structure') {
         continue;
@@ -1361,13 +1373,153 @@ export class Simulation {
     }
   }
 
-  private updateAttackMove(hero: HeroEntity): void {
+  private unitPhaseCopy(entity: Entity): Entity {
+    // Only these nested values can be changed by planning; paths/statuses are replaced,
+    // not edited, and no rewards or commands run until every plan has been collected.
+    return { ...entity, position: copyVec(entity.position), facing: copyVec(entity.facing) };
+  }
+
+  private updateUnitsStaged(): void {
+    const readEntities = this.state.entities.map(entity => this.unitPhaseCopy(entity)).sort((a, b) => a.id - b.id);
+    const readById = new Map(readEntities.map(entity => [entity.id, entity]));
+    const liveById = new Map(this.state.entities.map(entity => [entity.id, entity]));
+    const attacks: UnitAttackIntent[] = [];
+    // Planning order deliberately follows storage order; eligibility only reads the
+    // canonical entry snapshot, so reversing this order must not change the result.
+    const plans: Entity[] = [];
+    for (const live of this.state.entities) {
+      if (!live.alive || live.kind === 'structure') continue;
+      const planned = this.unitPhaseCopy(readById.get(live.id)!);
+      this.planUnitPhase(planned, readEntities, readById, attacks);
+      plans.push(planned);
+    }
+    for (const planned of plans) {
+      const live = liveById.get(planned.id)!;
+      Object.assign(live, planned);
+      // Object.assign does not propagate deletion of an optional order field.
+      if (live.kind === 'hero' && planned.kind === 'hero' && !planned.attackMoveGoal) delete live.attackMoveGoal;
+    }
+
+    const damage = new Map<number, { hp: number; shield: number; killerId: number | null }>();
+    // A target's contenders are enemies from one team: this preserves stable
+    // effective-hit crossing-zero credit, not a largest-contribution economy.
+    attacks.sort((a, b) => a.sourceId - b.sourceId || a.targetId - b.targetId);
+    for (const attack of attacks) {
+      const source = liveById.get(attack.sourceId)!;
+      const target = readById.get(attack.targetId)!;
+      if (!target.alive || (target.kind === 'structure' && target.invulnerable) || attack.damage <= 0) continue;
+      let tally = damage.get(target.id);
+      if (!tally) {
+        tally = { hp: target.hp, shield: target.kind === 'hero' && target.shieldExpiresTick > this.state.tick ? target.shield : 0, killerId: null };
+        damage.set(target.id, tally);
+      }
+      // All committed swings consume cooldown, but later impacts on an already
+      // lethally damaged target do not add corpse damage or replace the last hit.
+      if (tally.hp <= 0) continue;
+      const mitigated = attack.damage * (100 / (100 + Math.max(0, target.armor)));
+      this.state.stats.damageByTeam[source.team] += mitigated;
+      if (source.kind === 'hero') {
+        this.state.stats.basicAttackDamage += mitigated;
+        if (target.kind === 'hero') this.state.stats.basicAttackHeroDamage += mitigated;
+      }
+      const absorbed = Math.min(tally.shield, mitigated);
+      tally.shield -= absorbed;
+      tally.hp -= mitigated - absorbed;
+      if (tally.hp <= 0) tally.killerId = source.id;
+      const liveTarget = liveById.get(target.id)!;
+      if (source.kind === 'hero' && liveTarget.kind === 'hero') this.notifyTowerAggro(source, liveTarget);
+    }
+    const deaths: { live: Entity; rewardTarget: Entity; source: Entity }[] = [];
+    for (const [id, tally] of [...damage].sort(([a], [b]) => a - b)) {
+      const live = liveById.get(id)!;
+      live.hp = tally.hp;
+      if (live.kind === 'hero') live.shield = tally.shield;
+      if (tally.killerId !== null) {
+        // Freeze victim level/bounty data before any kill reward can level another
+        // victim. XP-aura positions are sampled after the common movement commit.
+        deaths.push({ live, rewardTarget: { ...readById.get(id)!, position: copyVec(live.position) }, source: liveById.get(tally.killerId)! });
+      }
+    }
+    for (const death of deaths) this.markDeath(death.live);
+    for (const death of deaths) this.awardDeathRewards(death.rewardTarget, death.source, true);
+  }
+
+  private planUnitPhase(entity: Entity, readEntities: readonly Entity[], readById: ReadonlyMap<number, Entity>, attacks: UnitAttackIntent[]): void {
+      if (!entity.alive || entity.kind === 'structure') {
+        return;
+      }
+      this.cleanupStatuses(entity);
+      entity.attackCooldown = Math.max(0, entity.attackCooldown - 1);
+
+      if (this.isStunned(entity)) {
+        return;
+      }
+      if (entity.kind === 'hero' && entity.cast) {
+        return;
+      }
+
+      if (entity.kind === 'minion' && this.state.tick >= entity.targetRefreshTick) {
+        this.refreshMinionTarget(entity, readEntities);
+        entity.targetRefreshTick = this.state.tick + 6;
+      }
+
+      if (entity.kind === 'hero' && entity.attackMoveGoal) {
+        this.updateAttackMove(entity, readEntities);
+      }
+
+      this.validateTarget(entity, readEntities);
+      const target = entity.targetId === null ? null : readById.get(entity.targetId) ?? null;
+      if (target && target.alive) {
+        const range = this.attackRange(entity);
+        const reachable = range + target.radius;
+        if (distance(entity.position, target.position) <= reachable) {
+          entity.path = [];
+          entity.pathIndex = 0;
+          entity.facing = normalize(sub(target.position, entity.position));
+          if (entity.attackCooldown <= 0) {
+            attacks.push({ sourceId: entity.id, targetId: target.id, damage: this.basicAttackDamage(entity, target) });
+            entity.attackCooldown = this.basicAttackIntervalTicks(entity);
+          }
+          return;
+        }
+        if (entity.kind === 'hero') {
+          this.ensureChasePath(entity, target.position);
+        } else {
+          this.ensureChasePath(entity, target.position);
+        }
+        this.moveAlongPath(entity);
+        return;
+      }
+
+      if (entity.kind === 'minion') {
+        const objective = this.minionObjective(entity, readEntities);
+        if (objective) {
+          if (distance(entity.position, objective.position) <= this.attackRange(entity) + objective.radius) {
+            entity.targetId = objective.id;
+            return;
+          }
+          this.ensureChasePath(entity, objective.position);
+        }
+      }
+
+      if (entity.moveGoal && entity.pathIndex >= entity.path.length) {
+        entity.moveGoal = null;
+      }
+      if (entity.pathIndex < entity.path.length) {
+        this.moveAlongPath(entity);
+      } else if (entity.kind === 'hero' && entity.moveGoal) {
+        this.ensureChasePath(entity, entity.moveGoal);
+        this.moveAlongPath(entity);
+      }
+  }
+
+  private updateAttackMove(hero: HeroEntity, readEntities: readonly Entity[] = this.state.entities): void {
     const goal = hero.attackMoveGoal;
     if (!goal) return;
     const acquireRange = hero.stats.attackRange + 2;
     let nearest: Entity | null = null;
     let bestDistance = Number.POSITIVE_INFINITY;
-    for (const candidate of this.state.entities) {
+    for (const candidate of readEntities) {
       if (!candidate.alive || candidate.team === hero.team ||
           (candidate.kind === 'structure' && candidate.invulnerable)) continue;
       const d = distance(hero.position, candidate.position);
@@ -1389,11 +1541,11 @@ export class Simulation {
     this.ensureChasePath(hero, goal);
   }
 
-  private refreshMinionTarget(minion: MinionEntity): void {
+  private refreshMinionTarget(minion: MinionEntity, readEntities: readonly Entity[] = this.state.entities): void {
     let best: Entity | null = null;
     let bestDistance = Number.POSITIVE_INFINITY;
     const aggroRange = this.catalog.rules.minionAggroRange;
-    for (const entity of this.state.entities) {
+    for (const entity of readEntities) {
       if (
         !entity.alive ||
         entity.team === minion.team ||
@@ -1411,15 +1563,15 @@ export class Simulation {
       minion.targetId = best.id;
       return;
     }
-    const objective = this.minionObjective(minion);
+    const objective = this.minionObjective(minion, readEntities);
     if (objective && distance(minion.position, objective.position) <= this.attackRange(minion) + objective.radius) {
       minion.targetId = objective.id;
     }
   }
 
-  private minionObjective(minion: MinionEntity): StructureEntity | null {
+  private minionObjective(minion: MinionEntity, readEntities: readonly Entity[] = this.state.entities): StructureEntity | null {
     for (const id of this.catalog.map.pushOrder[minion.team]) {
-      const entity = this.state.entities.find(
+      const entity = readEntities.find(
         (candidate): candidate is StructureEntity =>
           candidate.kind === 'structure' && candidate.definitionId === id,
       );
@@ -1500,11 +1652,11 @@ export class Simulation {
     structure.targetId = (bestMinion ?? bestHero)?.id ?? null;
   }
 
-  private validateTarget(entity: Entity): void {
+  private validateTarget(entity: Entity, readEntities: readonly Entity[] = this.state.entities): void {
     if (entity.targetId === null) {
       return;
     }
-    const target = this.getEntityById(entity.targetId);
+    const target = readEntities.find(candidate => candidate.id === entity.targetId);
     if (
       !target ||
       !target.alive ||
@@ -1516,11 +1668,13 @@ export class Simulation {
   }
 
   private basicAttack(source: Entity, target: Entity): void {
-    if (source.kind === 'structure') {
-      return;
-    }
-    const damage =
-      source.kind === 'hero'
+    if (source.kind === 'structure') return;
+    this.dealDamage(source, target, this.basicAttackDamage(source, target), 'physical', null);
+    source.attackCooldown = this.basicAttackIntervalTicks(source);
+  }
+
+  private basicAttackDamage(source: Entity, target: Entity): number {
+    return source.kind === 'hero'
         ? source.stats.attackDamage
         : source.kind === 'minion'
           ? this.catalog.minions[source.minionKind].attackDamage *
@@ -1529,12 +1683,14 @@ export class Simulation {
               ? this.catalog.minions[source.minionKind].structureDamageMultiplier
               : 1)
           : 0;
-    this.dealDamage(source, target, damage, 'physical', null);
+  }
+
+  private basicAttackIntervalTicks(source: HeroEntity | MinionEntity): number {
     const interval =
       source.kind === 'hero'
         ? source.stats.attackInterval
         : this.catalog.minions[source.minionKind].attackInterval;
-    source.attackCooldown = Math.max(1, Math.ceil(interval * this.tickRate));
+    return Math.max(1, Math.ceil(interval * this.tickRate));
   }
 
   private attackRange(entity: Entity): number {
