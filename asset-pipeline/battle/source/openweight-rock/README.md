@@ -8,6 +8,15 @@
 ## 当前状态（2026-10-27）
 
 **阻塞：拿不到官方权重，也没有可用的 TripoSG 依赖环境；推理一次都没跑。**
+
+继续前先修提取路径：`diso==0.1.4` 的[上游许可](https://github.com/SarahWeiii/diso/blob/main/LICENSE)
+为 CC BY-NC 4.0，不属于 TripoSG 的 MIT。暂不采用该依赖制作产品，也不推断生成输出
+自动继承该许可。固定上游已支持 `use_flash_decoder=False`，调用
+`hierarchical_extract_geometry` 内 `scikit-image.measure.marching_cubes`；其顶层 diso
+import 仍需最小延迟导入修正。接收端先交该可审 patch、上游基 SHA 与 patch hash，
+让 runner 验证真实修订代码而非假称 clean 上游；显式关闭 flash，再测实际内存和结果。
+此路径尚未实现/运行，当前 runner 仍是原 flash 调用骨架，不可直接作为许可已清的产品路线。
+下面 Toolkit 资料只是独立编译途径，不是继续安装 diso 的许可结论。
 因此没有原始生成 mesh、没有 Blender 采用源、没有旧/新同视角图，也没有质量结论。
 
 1. **本机官方 Hub TLS 未建立。** 接收端记录 ClientHello 后未收到 ServerHello，
