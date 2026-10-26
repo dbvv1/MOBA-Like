@@ -60,7 +60,7 @@ test('death, removal, reset and repeated ticks do not fabricate attacks or leak 
   const sim=simulation(); const view=createPresentation({catalog:getContent(1),assets}); const snap=sim.snapshot(); view.sync(snap);
   const id=snap.heroes[0].id;
   const changed=structuredClone(snap); changed.tick++; changed.heroes[0].alive=false; changed.heroes[0].castSlot='R'; view.sync(changed);
-  assert.deepEqual(view.inspect().heroes.find(h=>h.id===id),{id,action:'idle',team:0,visible:false});
+  assert.deepEqual(view.inspect().heroes.find(h=>h.id===id),{id,action:'death',team:0,visible:true});
   view.sync(changed); assert.equal(view.inspect().heroes.length,4);
   const reduced=structuredClone(changed); reduced.tick++; reduced.heroes=[]; reduced.entities=[]; view.sync(reduced);
   assert.equal(view.inspect().heroes.length,0); assert.equal(view.inspect().entities,0);

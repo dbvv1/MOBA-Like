@@ -5,6 +5,7 @@ import type {Snapshot} from '../sim/types.js';
 import type {Aim} from '../input/commands.js';
 import {createHealthBars} from './health.js';
 import {createEffects} from './effects.js';
+import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 
 export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
@@ -33,15 +34,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   function setPointer(clientX:number,clientY:number){const box=renderer.domElement.getBoundingClientRect();cursor.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);pointerInside=true;}
   function aim():Aim{
     ray.setFromCamera(cursor,camera);const point=ray.ray.intersectPlane(plane,hit);
-    let entityId:number|null=null;
-    for(const intersection of ray.intersectObjects(presentation.root.children,true)){
-      let node:THREE.Object3D|null=intersection.object;
-      // Raycaster may intersect invisible ancestors: ignore hidden actors.
-      let visible=true;for(let parent:THREE.Object3D|null=node;parent;parent=parent.parent)if(!parent.visible)visible=false;
-      if(!visible)continue;
-      while(node){const id:unknown=node.userData['simEntityId'];if(typeof id==='number'){entityId=id;break;}node=node.parent;}
-      if(entityId!==null)break;
-    }
+    const entityId=pickLivingEntity(ray.intersectObjects(presentation.root.children,true),snapshot);
     return {point:point?{x:point.x,z:point.z}:null,entityId};
   }
   function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);effects.sync(next);health.sync(next,presentation.root);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}

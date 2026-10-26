@@ -9,7 +9,7 @@ import {startServer} from './server.mjs';
 const output=new URL('./reports/',import.meta.url);
 await mkdir(output,{recursive:true});
 for (const name of ['page.png','canvas.png','failure.png','report.json']) await rm(new URL(name,output),{force:true});
-const report={startedAt:new Date().toISOString(),passed:false,consoleErrors:[],pageErrors:[],httpErrors:[],requestFailures:[],warnings:[]};
+const report={startedAt:new Date().toISOString(),passed:false,consoleErrors:[],pageErrors:[],httpErrors:[],requestFailures:[],warnings:[],characterAssets:[]};
 const resources={};let page,stage='configure';
 try {
   const options=launchOptions();report.launch=options;
@@ -19,7 +19,7 @@ try {
   page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());else if(message.type()==='warning')report.warnings.push(message.text());});
   page.on('pageerror',error=>report.pageErrors.push(String(error)));
   page.on('requestfailed',request=>report.requestFailures.push({url:request.url(),error:request.failure()?.errorText}));
-  page.on('response',response=>{if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
+  page.on('response',response=>{if(response.ok()&&new URL(response.url()).pathname.endsWith('.glb'))report.characterAssets.push(new URL(response.url()).pathname);if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
   await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
   stage='navigate';const response=await page.goto(origin,{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
   stage='initialize';
@@ -27,6 +27,7 @@ try {
   const notice=await page.locator('#notice').textContent();
   assert.equal(await page.locator('#notice').isVisible(),false,notice || 'Initialization failed');
   assert.equal(await page.evaluate(()=>window.mobaClient.state().backend),'three-webgl2');
+  assert.ok(report.characterAssets.some(path=>/\/blue-reactions-[^/]+\.glb$/.test(path)),'The adopted reaction GLB must load successfully in the real build');
   stage='context';
   report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER)}:null;});
   assert.ok(report.webgl2,'A live WebGL2 context is required');
