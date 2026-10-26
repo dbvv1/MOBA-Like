@@ -37,6 +37,8 @@ describe('requested skill aim from real catalog, not predicted acceptance',()=>{
     const positions=line.geometry.getAttribute('position');const box=new THREE.Box3();for(let i=0;i<line.geometry.drawRange.count;i++)box.expandByPoint(new THREE.Vector3().fromBufferAttribute(positions,i));
     expect(box.max.z).toBeCloseTo(plan.point!.z);expect(box.min.z).toBeCloseTo(hero.position.z);
     expect(box.max.x-box.min.x).toBeCloseTo(Math.max(plan.width*2,Math.min(.8,plan.length*.2)*2));
+    expect(view.inspect()).toMatchObject({visible:true});scene.remove(view.root);expect(view.inspect().visible).toBe(false);scene.add(view.root);
+    const diagnostic=view.inspect();diagnostic.lines[0]!.vertices=999;expect(view.inspect().lines[0]!.vertices).toBe(96);
     const geometry=line.geometry;view.update(plan);expect(line.geometry).toBe(geometry);
     view.update(targetingPlan(hero,'E',{point:{x:100,z:100},entityId:null},snapshot,catalog));
     expect(line.geometry.drawRange.count).toBe(48*2+4);

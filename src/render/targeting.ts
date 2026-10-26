@@ -56,5 +56,5 @@ export function createTargeting(scene:THREE.Scene){
       if(plan.outside)values.push(p.x-.35,.1,p.z-.35,p.x+.35,.1,p.z+.35,p.x-.35,.1,p.z+.35,p.x+.35,.1,p.z-.35);
     }
     target.material=plan.outside?danger:material;segments(target,values);
-  },dispose(){if(disposed)return;disposed=true;scene.remove(root);range.geometry.dispose();target.geometry.dispose();material.dispose();danger.dispose();}};
+  },inspect(){return {visible:root.parent===scene&&root.visible,lines:root.children.map(object=>{const line=object as THREE.LineSegments;return {name:line.name,visible:line.visible,vertices:line.geometry.drawRange.count};})};},dispose(){if(disposed)return;disposed=true;scene.remove(root);range.geometry.dispose();target.geometry.dispose();material.dispose();danger.dispose();}};
 }

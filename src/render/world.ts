@@ -59,6 +59,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
     effectState(){return effects.inspect();},
+    targetingState(){return targeting.inspect();},
     setTargeting(slot:AbilitySlot|null){targetingSlot=slot;if(slot===null)targeting.update(null);},
     cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
     leavePointer(){pointerInside=false;},setLocked(value:boolean){locked=value;},

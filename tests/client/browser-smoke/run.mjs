@@ -55,6 +55,19 @@ try {
   assert.equal(await page.locator('[data-lock]').isChecked(),true);
   assert.equal(await page.locator('[data-skills] button').count(),4);
   assert.match(await page.locator('[data-hero]').textContent(),/HP .*Mana/);
+  // Inspect actual attached Three line geometry after normal Q/E selection and cancellation.
+  // No simulation injection or synthetic mode label is accepted as evidence.
+  stage='targeting';await page.mouse.move(box.x+box.width*.58,box.y+box.height*.52);
+  await canvas.focus();await page.keyboard.press('q');
+  await page.waitForFunction(()=>{const aim=window.mobaClient.state().targeting;return aim.visible&&aim.lines.some(line=>line.name==='requested-target'&&line.visible&&line.vertices===12);});
+  const direction=await page.evaluate(()=>window.mobaClient.state().targeting);
+  await page.keyboard.press('e');
+  await page.waitForFunction(()=>{const aim=window.mobaClient.state().targeting;return aim.visible&&aim.lines.some(line=>line.name==='requested-target'&&line.visible&&line.vertices>=96);});
+  const area=await page.evaluate(()=>window.mobaClient.state().targeting);
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>!window.mobaClient.state().targeting.visible);
+  report.targeting={direction,area,cancelled:true};
+  stage='input';
   // Trigger an actual persistent effect through normal controls, not a debug command API.
   await canvas.focus();await page.keyboard.press('e');
   await page.mouse.click(box.x+box.width*.58,box.y+box.height*.52);
