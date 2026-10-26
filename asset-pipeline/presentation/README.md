@@ -51,3 +51,12 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 ## 加载取消与所有权
 
 `loadCharacterAssets(customLoad, {signal})` 接受可选 AbortSignal；使用默认 GLTFLoader 时可传 `undefined` 作为第一个参数。预先取消不启动加载；中途取消立即拒绝并释放已完成部分，未完成源稍后返回时也释放。它是**消费取消与资源回收**，不承诺底层 GLTFLoader 网络 I/O 会中断；传输层真正中断由 customLoad 自己实现。成功返回后所有权已转移，之后取消 signal 不销毁仍被消费者使用的源，仍由调用方在全部 view 退出后统一 dispose。每次加载须交付本次调用拥有的源，不把其他存活消费者的共享源交给它回收。
+
+
+## 动画 bounds 与拾取
+
+英雄克隆中的 SkinnedMesh 使用 `frustumCulled=false`，源 GLB、地图与普通实体代理不改。Three 首次计算的 idle 球不能覆盖后续 walk 姿态；少量英雄先选择不依赖该缓存做剔除，代价是离屏英雄也可能被提交绘制，不声称更快。没有每绘制帧扫描所有蒙皮顶点。
+
+每个克隆 skinned mesh 的 `raycast` 包装器在真正的 `Raycaster.intersectObject(s)` 派发时计算当前姿态 box，再从 box 得到保守 sphere，然后调用原 Three raycast。此时只做一次全顶点 bounds 扫描；调用方仍须先通过 `sync/advance` 更新世界矩阵。相比预采样 clip 的静态界，避免了未采样旋转极值／后续姿态超界的假保守保证；相比逐帧动态界，将这项 CPU 工作放在实际拾取时。大量角色或高频拾取应另评估粗代理／完整保守界，不把该策略推广成通用性能结论。
+
+Node 回归用真实 idle→walk，构造包含逃出旧球顶点的正交相机 Frustum，证实旧球会误剔除；同时经真正 Raycaster 派发验证更新后的 bounds 与原 Three 几何交点一致。GPU 绘制、离屏成本和用户视觉表现仍待实际环境验证。

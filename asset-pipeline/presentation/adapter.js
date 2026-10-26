@@ -69,6 +69,18 @@ function character(asset) {
   }
   root.traverse(node => {
     if (node.isSkinnedMesh) {
+      // Cached idle bounds are not safe for later poses. For this small hero
+      // consumer, keep animated skins visible without a per-frame vertex scan.
+      node.frustumCulled = false;
+      const raycast = node.raycast;
+      node.raycast = function (raycaster, hits) {
+        // Picking is on demand: refresh a conservative sphere from the posed
+        // box in one vertex pass, rather than trusting a prior animation pose.
+        this.computeBoundingBox();
+        this.boundingSphere ??= new THREE.Sphere();
+        this.boundingBox.getBoundingSphere(this.boundingSphere);
+        return raycast.call(this, raycaster, hits);
+      };
       const candidate = node.skeleton;
       // SkeletonUtils clones per mesh. Reuse only exactly equivalent bindings
       // inside this actor, never across actors or with the source asset.
