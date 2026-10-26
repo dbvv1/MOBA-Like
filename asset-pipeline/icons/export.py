@@ -1,4 +1,4 @@
-"""Export four original SVG masters through one shared theme recipe."""
+"""Export original SVG masters through one shared theme recipe."""
 import argparse
 import io
 import json
@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-NAMES = ('targeted', 'displacement', 'persistent-effect', 'control')
+NAMES = ('targeted', 'displacement', 'persistent-effect', 'control', 'directional-projectile')
 ROOT = Path(__file__).resolve().parent
 
 
@@ -41,12 +41,13 @@ def export(recipe, output):
     import cairosvg
     from PIL import Image, ImageDraw
     output = Path(output)
-    sheet = Image.new('RGB', (640, 400), '#CBD5E1')
+    width=160*len(NAMES)
+    sheet = Image.new('RGB', (width, 400), '#CBD5E1')
     draw = ImageDraw.Draw(sheet)
     for row, (variant, theme) in enumerate(config['variants'].items()):
         folder = output / variant
         folder.mkdir(parents=True, exist_ok=True)
-        draw.rectangle((0, row * 200, 639, row * 200 + 199), fill=theme['preview_background'])
+        draw.rectangle((0, row * 200, width-1, row * 200 + 199), fill=theme['preview_background'])
         draw.text((12, row * 200 + 8), variant + ' / actual pixels: 32, 48', fill=theme['ink'])
         for col, name in enumerate(NAMES):
             svg = themed((ROOT / 'source' / f'{name}.svg').read_text(), theme)

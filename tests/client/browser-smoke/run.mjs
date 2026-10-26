@@ -55,6 +55,13 @@ try {
   await page.waitForFunction(id=>{const state=window.mobaClient.state();const hero=window.mobaClient.snapshot().heroes.find(h=>h.id===id);return state.camera.locked && Math.abs(state.camera.position.x-hero.position.x)<.01;},hero.id);
   assert.equal(await page.locator('[data-lock]').isChecked(),true);
   assert.equal(await page.locator('[data-skills] button').count(),4);
+  // A catalog-mapped source icon must actually decode in the live HUD, not just exist in a model.
+  const projectileIcon=page.locator('[data-skills] button').filter({hasText:'Q Rift Lancet'}).locator('img');
+  await projectileIcon.waitFor({state:'visible'});
+  await projectileIcon.evaluate(image=>image.decode());
+  report.projectileIcon=await projectileIcon.evaluate(image=>({width:image.naturalWidth,height:image.naturalHeight,complete:image.complete}));
+  assert.deepEqual(report.projectileIcon,{width:64,height:64,complete:true});
+
   assert.match(await page.locator('[data-hero]').textContent(),/HP .*Mana/);
   // Inspect actual attached Three line geometry after normal Q/E selection and cancellation.
   // No simulation injection or synthetic mode label is accepted as evidence.

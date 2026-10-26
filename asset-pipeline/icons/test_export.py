@@ -17,8 +17,8 @@ class ExportTest(unittest.TestCase):
             export.export(export.ROOT / 'recipe.json', out)
             second = Path(temp) / 'second'
             export.export(export.ROOT / 'recipe.json', second)
-            self.assertEqual(len(list(out.rglob('*.svg'))), 8)
-            self.assertEqual(len(list(out.rglob('*.png'))), 17)
+            self.assertEqual(len(list(out.rglob('*.svg'))), 10)
+            self.assertEqual(len(list(out.rglob('*.png'))), 21)
             for path in out.rglob('*'):
                 if path.is_file():
                     self.assertEqual(path.read_bytes(), (second / path.relative_to(out)).read_bytes())
@@ -26,7 +26,7 @@ class ExportTest(unittest.TestCase):
                         self.assertEqual(path.read_bytes(), (export.ROOT / 'exported' / path.relative_to(out)).read_bytes())
                     else:
                         with Image.open(path) as preview:
-                            self.assertEqual(preview.size, (640, 400))
+                            self.assertEqual(preview.size, (800, 400))
                 if path.suffix == '.svg':
                     root = ET.fromstring(path.read_text())
                     self.assertEqual(root.attrib['viewBox'], '0 0 64 64')

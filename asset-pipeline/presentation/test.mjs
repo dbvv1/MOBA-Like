@@ -6,7 +6,7 @@ import { Vector3, Group, Mesh, BoxGeometry, MeshStandardMaterial, Texture } from
 import { getContent } from '../../src/content/catalog.ts';
 import { Simulation } from '../../src/sim/simulation.ts';
 import { createPresentation, loadCharacterAssets, disposeCharacterAssets } from './adapter.js';
-import { abilityViewModel, iconUrl } from './icons.js';
+import { abilityViewModel, abilitySemantic, iconUrl } from './icons.js';
 
 const assets = await loadCharacterAssets(async url => {
   const bytes = await readFile(new URL(url));
@@ -82,7 +82,18 @@ test('icons use catalog delivery, actual cooldown/cast/death states, never fixed
   const sim=simulation(); const hero=sim.snapshot().heroes[0]; const icons=abilityViewModel(hero,getContent(1));
   assert.deepEqual(icons.map(i=>i.semantic),['targeted','displacement','persistent-effect','control']);
   for(const icon of icons) assert.match(await readFile(new URL(icon.icon),'utf8'),/<svg/);
-  const v2=abilityViewModel(hero,getContent(2)); assert.equal(v2[0].icon,null); assert.equal(v2[0].semantic,null);
+  for (const version of [2,8,9]) {
+    const projectile=abilityViewModel(hero,getContent(version))[0];
+    assert.equal(projectile.semantic,'directional-projectile');
+    assert.match(await readFile(new URL(projectile.icon),'utf8'),/<title>Directional projectile<\/title>/);
+  }
+  const remapped=structuredClone(getContent(8));
+  const abilities=remapped.heroes[hero.definitionId].abilities;
+  [abilities.Q,abilities.R]=[abilities.R,abilities.Q];
+  assert.deepEqual(abilityViewModel(hero,remapped).map(i=>i.semantic),['control','displacement','persistent-effect','directional-projectile']);
+  const projectile=getContent(8).abilities[getContent(8).heroes[hero.definitionId].abilities.Q];
+  assert.equal(abilitySemantic({...projectile,targetType:'point'}),null);
+  assert.equal(abilitySemantic({...projectile,delivery:'self'}),null);
   sim.step([{type:'cast',heroId:hero.id,slot:'W',targetId:null,point:null,direction:{x:1,z:0}}]);
   const castHero=sim.snapshot().heroes.find(h=>h.id===hero.id);
   const castIcon=abilityViewModel(castHero,getContent(1)).find(i=>i.slot==='W');
