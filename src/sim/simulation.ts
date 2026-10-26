@@ -38,6 +38,7 @@ import type {
   MatchStats,
   MinionEntity,
   ProjectileEntity,
+  PresentationEvent,
   Replay,
   SimCommand,
   SimState,
@@ -128,6 +129,8 @@ export class Simulation {
   readonly seed: number;
   readonly config: SimulationConfigSummary;
   readonly state: SimState;
+
+  private stepEvents: PresentationEvent[] = [];
 
   private readonly rng: SeededRng;
   private readonly maxMatchSeconds: number;
@@ -220,6 +223,7 @@ export class Simulation {
       }));
     }
 
+    this.stepEvents = [];
     this.state.tick += 1;
     this.state.timeSeconds = this.state.tick / this.tickRate;
 
@@ -243,6 +247,18 @@ export class Simulation {
     this.updateStuckDiagnostics();
 
     return results;
+  }
+
+  private emit(event: PresentationEvent extends infer E ? E extends PresentationEvent ? Omit<E, 'tick' | 'ordinal'> : never : never): void {
+    this.stepEvents.push({ ...event, tick: this.state.tick, ordinal: this.stepEvents.length } as PresentationEvent);
+  }
+
+  private castEvent(hero: HeroEntity, cast: CastState, type: 'castStarted' | 'castResolved'): void {
+    this.emit({ type, castId: cast.id, heroId: hero.id, abilityId: cast.abilityId, slot: cast.slot });
+  }
+
+  private cancelledCast(hero: HeroEntity, cast: CastState | null, reason: Extract<PresentationEvent, { type: 'castCancelled' }>['reason']): void {
+    if (cast) this.emit({ type: 'castCancelled', castId: cast.id, heroId: hero.id, abilityId: cast.abilityId, slot: cast.slot, reason });
   }
 
   finalHash(): string {
@@ -300,6 +316,7 @@ export class Simulation {
     }
 
     return {
+      events: this.stepEvents.map(event => ({ ...event })),
       tick: this.state.tick,
       timeSeconds: this.state.timeSeconds,
       status: this.state.status,
@@ -688,6 +705,7 @@ export class Simulation {
     const stats = this.ensureAbilityStats(ability.id);
     stats.casts += 1;
 
+    this.castEvent(hero, cast, 'castStarted');
     if (cast.remainingTicks <= 0) {
       this.resolveCast(hero, cast);
     } else {
@@ -742,6 +760,7 @@ export class Simulation {
         continue;
       }
       if (this.isStunned(entity)) {
+        this.cancelledCast(entity, entity.cast, 'stunned');
         entity.cast = null;
         continue;
       }
@@ -756,10 +775,12 @@ export class Simulation {
 
   private resolveCast(hero: HeroEntity, cast: CastState): void {
     if (!hero.alive || this.isStunned(hero)) {
+      this.cancelledCast(hero, cast, hero.alive ? 'stunned' : 'dead');
       return;
     }
     const ability = this.catalog.abilities[cast.abilityId];
     if (!ability) {
+      this.cancelledCast(hero, cast, 'missingAbility');
       return;
     }
     const stats = this.ensureAbilityStats(ability.id);
@@ -774,8 +795,10 @@ export class Simulation {
           (target.kind === 'structure' && target.invulnerable) ||
           distance(hero.position, target.position) > ability.range + target.radius + 1
         ) {
+          this.cancelledCast(hero, cast, 'invalidTarget');
           return;
         }
+        this.castEvent(hero, cast, 'castResolved');
         hero.facing = normalize(sub(target.position, hero.position));
         const tracker = { hit: false, hitHero: false };
         this.applyEffects(hero, target, ability.effects, ability.id, cast.id, tracker);
@@ -785,6 +808,7 @@ export class Simulation {
         return;
       }
       case 'projectile': {
+        this.castEvent(hero, cast, 'castResolved');
         const direction = cast.direction ? normalize(cast.direction) : hero.facing;
         hero.facing = direction;
         const projectile: ProjectileEntity = {
@@ -810,6 +834,7 @@ export class Simulation {
         const desired = this.clampToWorld(add(hero.position, scale(direction, ability.maxDistance)));
         const destination = this.navigation.closestPoint(desired);
         if (destination) {
+          this.castEvent(hero, cast, 'castResolved');
           hero.position = destination;
           hero.facing = direction;
           hero.path = [];
@@ -817,14 +842,17 @@ export class Simulation {
           hero.moveGoal = null;
           stats.hitCasts += 1;
         } else {
+          this.cancelledCast(hero, cast, 'invalidDestination');
           this.state.diagnostics.pathFailures += 1;
         }
         return;
       }
       case 'zone': {
         if (!cast.point) {
+          this.cancelledCast(hero, cast, 'missingPoint');
           return;
         }
+        this.castEvent(hero, cast, 'castResolved');
         const zone: ZoneEntity = {
           id: this.state.nextZoneId++,
           team: hero.team,
@@ -844,8 +872,10 @@ export class Simulation {
       }
       case 'delayedArea': {
         if (!cast.point) {
+          this.cancelledCast(hero, cast, 'missingPoint');
           return;
         }
+        this.castEvent(hero, cast, 'castResolved');
         const delayed: DelayedAreaEntity = {
           id: this.state.nextDelayedId++,
           team: hero.team,
@@ -862,12 +892,14 @@ export class Simulation {
         return;
       }
       case 'self': {
+        this.castEvent(hero, cast, 'castResolved');
         const tracker = { hit: false, hitHero: false };
         this.applyEffects(hero, hero, ability.effects, ability.id, cast.id, tracker);
         stats.hitCasts += 1;
         return;
       }
       case 'instant': {
+        this.castEvent(hero, cast, 'castResolved');
         return;
       }
       default: {
@@ -1072,6 +1104,7 @@ export class Simulation {
               sourceId: source.id,
             });
             if (target.kind === 'hero') {
+              this.cancelledCast(target, target.cast, 'stunned');
               target.cast = null;
               target.path = [];
               target.pathIndex = 0;
@@ -1147,15 +1180,20 @@ export class Simulation {
       }
     }
 
+    const hpBefore = target.hp;
+    let shieldAbsorbed = 0;
     let remaining = mitigated;
     if (target.kind === 'hero' && target.shield > 0 && target.shieldExpiresTick > this.state.tick) {
       const absorbed = Math.min(target.shield, remaining);
+      shieldAbsorbed = absorbed;
       target.shield -= absorbed;
       remaining -= absorbed;
     }
     if (remaining > 0) {
       target.hp -= remaining;
     }
+
+    if (target.kind === 'hero') this.emit({ type: 'heroDamaged', targetId: target.id, sourceId: source.id, hpDamage: Math.min(Math.max(0, hpBefore), remaining), shieldAbsorbed, abilityId });
 
     if (source.kind === 'hero' && target.kind === 'hero' && source.team !== target.team) {
       this.notifyTowerAggro(source, target);
@@ -1206,6 +1244,7 @@ export class Simulation {
     target.statuses = [];
     if (target.kind === 'hero') {
       delete target.attackMoveGoal;
+      this.cancelledCast(target, target.cast, 'dead');
       target.cast = null;
       target.shield = 0;
       target.deaths += 1;
@@ -1406,6 +1445,7 @@ export class Simulation {
     attacks.sort((a, b) => a.sourceId - b.sourceId || a.targetId - b.targetId);
     for (const attack of attacks) {
       const source = liveById.get(attack.sourceId)!;
+      this.emit({ type: 'basicAttack', sourceId: attack.sourceId, targetId: attack.targetId });
       const target = readById.get(attack.targetId)!;
       if (!target.alive || (target.kind === 'structure' && target.invulnerable) || attack.damage <= 0) continue;
       let tally = damage.get(target.id);
@@ -1423,6 +1463,7 @@ export class Simulation {
         if (target.kind === 'hero') this.state.stats.basicAttackHeroDamage += mitigated;
       }
       const absorbed = Math.min(tally.shield, mitigated);
+      if (target.kind === 'hero') this.emit({ type: 'heroDamaged', targetId: target.id, sourceId: source.id, hpDamage: Math.min(tally.hp, mitigated - absorbed), shieldAbsorbed: absorbed, abilityId: null });
       tally.shield -= absorbed;
       tally.hp -= mitigated - absorbed;
       if (tally.hp <= 0) tally.killerId = source.id;
@@ -1601,6 +1642,7 @@ export class Simulation {
         if (distance(entity.position, target.position) <= entity.attackRange + target.radius) {
           entity.facing = normalize(sub(target.position, entity.position));
           if (entity.attackCooldown <= 0) {
+            this.emit({ type: 'basicAttack', sourceId: entity.id, targetId: target.id });
             this.dealDamage(entity, target, entity.attackDamage, 'physical', null);
             entity.attackCooldown = Math.max(1, Math.ceil(entity.attackInterval * this.tickRate));
           }
@@ -1669,6 +1711,7 @@ export class Simulation {
 
   private basicAttack(source: Entity, target: Entity): void {
     if (source.kind === 'structure') return;
+    this.emit({ type: 'basicAttack', sourceId: source.id, targetId: target.id });
     this.dealDamage(source, target, this.basicAttackDamage(source, target), 'physical', null);
     source.attackCooldown = this.basicAttackIntervalTicks(source);
   }
