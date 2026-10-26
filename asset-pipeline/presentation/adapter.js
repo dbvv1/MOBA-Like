@@ -7,7 +7,7 @@ export const assetUrls = Object.freeze({
   amber: new URL('../placeholder/assets/amber.glb', import.meta.url).href,
 });
 
-export function disposeCharacterAssets(assets) {
+function assetResources(assets) {
   const resources = new Set();
   for (const asset of Object.values(assets)) asset?.scene?.traverse(node => {
     if (node.geometry) resources.add(node.geometry);
@@ -17,25 +17,45 @@ export function disposeCharacterAssets(assets) {
       for (const value of Object.values(material)) if (value?.isTexture) resources.add(value);
     }
   });
-  for (const resource of resources) resource.dispose();
+  return resources;
 }
 
-export async function loadCharacterAssets(load = url => new GLTFLoader().loadAsync(url)) {
-  const results = await Promise.allSettled([assetUrls.blue, assetUrls.amber].map(url => Promise.resolve().then(() => load(url))));
-  const loaded = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-  try {
-    const failed = results.find(r => r.status === 'rejected');
+export function disposeCharacterAssets(assets) {
+  for (const resource of assetResources(assets)) resource.dispose();
+}
+
+export async function loadCharacterAssets(load = url => new GLTFLoader().loadAsync(url), {signal} = {}) {
+  const abortError = () => signal?.reason ?? new DOMException('Asset loading cancelled', 'AbortError');
+  if (signal?.aborted) throw abortError();
+  const loaded = new Set(), released = new WeakSet();
+  const releaseAssets = assets => { for (const resource of assetResources(assets)) if (!released.has(resource)) { released.add(resource); resource.dispose(); } };
+  let cancelled = false, rejectAbort;
+  const aborted = new Promise((resolve, reject) => { rejectAbort = reject; });
+  const releaseLoaded = () => { const values = [...loaded]; loaded.clear(); releaseAssets(values); };
+  const onAbort = () => {
+    cancelled = true;
+    try { releaseLoaded(); } finally { rejectAbort(abortError()); }
+  };
+  signal?.addEventListener('abort', onAbort, {once:true});
+  const completion = Promise.allSettled([assetUrls.blue, assetUrls.amber].map(url => Promise.resolve().then(() => {
+    if (cancelled) throw abortError();
+    return load(url);
+  }).then(asset => {
+    if (cancelled) { releaseAssets([asset]); throw abortError(); }
+    loaded.add(asset); return asset;
+  }))).then(results => {
+    if (cancelled) throw abortError();
+    const failed = results.find(result => result.status === 'rejected');
     if (failed) throw failed.reason;
-    for (const asset of loaded) {
-      for (const name of ['idle', 'walk']) {
-        if (!asset.animations.some(clip => clip.name === name)) throw new Error(`Missing clip: ${name}`);
-      }
+    const assets = results.map(result => result.value);
+    for (const asset of assets) for (const name of ['idle', 'walk']) {
+      if (!asset.animations.some(clip => clip.name === name)) throw new Error(`Missing clip: ${name}`);
     }
-    return {blue: loaded[0], amber: loaded[1]};
-  } catch (error) {
-    disposeCharacterAssets(loaded);
-    throw error;
-  }
+    return {blue:assets[0], amber:assets[1]};
+  }).catch(error => { releaseLoaded(); throw error; }).finally(() => signal?.removeEventListener('abort', onAbort));
+  // Cancellation returns promptly even if a transport never settles. Each late
+  // successful asset is still disposed above; this does not claim to abort I/O.
+  return signal ? Promise.race([completion, aborted]) : completion;
 }
 
 function character(asset) {

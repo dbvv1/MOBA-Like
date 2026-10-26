@@ -46,3 +46,8 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 `resources.js` 提供只读 `resourceInventory({roots, clips})` 与 `assertResourceBudget(inventory, limits)`。将所有共享源及消费者根一并传入，按对象身份去重 geometry/material/skeleton，按实际 ArrayBuffer 身份去重 typed-array backing bytes；同一缓冲的多个切片不会重复计算整块内存。clip 的 times/values 和骨架矩阵包含在统计中。`typedArrayViewBytes` 是不同视图长度之和，可能重叠，不可当总内存；`typedArrayBackingBytes` 包含视图保留的整个底层缓冲。
 
 预算必须由调用方显式给出，例如 `{geometries: sourceInventory.geometries}` 可阻止克隆意外复制几何。未知指标、空预算、不合法上限及超额均抛错。纹理只统计直接材质属性引用数量，不估算图像、shader uniform 内纹理、GPU 上传、mixer/JS 对象或驱动内存；它不是设备显存预算或帧率保证。Node 测试同时核实际 GLB 全部 clip 的蒙皮点、共享去重、错误预算及多消费者释放；输出走 stdout，保存时放本地 `reports/`。
+
+
+## 加载取消与所有权
+
+`loadCharacterAssets(customLoad, {signal})` 接受可选 AbortSignal；使用默认 GLTFLoader 时可传 `undefined` 作为第一个参数。预先取消不启动加载；中途取消立即拒绝并释放已完成部分，未完成源稍后返回时也释放。它是**消费取消与资源回收**，不承诺底层 GLTFLoader 网络 I/O 会中断；传输层真正中断由 customLoad 自己实现。成功返回后所有权已转移，之后取消 signal 不销毁仍被消费者使用的源，仍由调用方在全部 view 退出后统一 dispose。每次加载须交付本次调用拥有的源，不把其他存活消费者的共享源交给它回收。
