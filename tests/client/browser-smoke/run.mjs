@@ -94,6 +94,37 @@ try {
   });
   assert.equal(report.effect.consumer.position.x,report.effect.zone.position.x);
   assert.equal(report.effect.consumer.position.z,report.effect.zone.position.z);
+  report.initialMatchFinalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
+  // Next-match selection must not mutate a live hero; exercise real DOM, controls and restart.
+  stage='hero-selection';
+  await page.locator('#hero-select').selectOption('morrow');
+  assert.equal(await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0).definitionId),'veyra');
+  await page.locator('#restart').click();
+  await page.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.snapshot().heroes.find(h=>h.team===0)?.definitionId==='morrow');
+  assert.equal(await page.locator('#hero-select').inputValue(),'morrow');
+  assert.match(await page.locator('[data-hero]').textContent(),/Morrow/);
+  assert.match(await page.locator('[data-skills]').textContent(),/Barkguard/);
+  const morrowCanvas=page.locator('#stage canvas'),morrowBox=await morrowCanvas.boundingBox();assert.ok(morrowBox);
+  await morrowCanvas.focus();await page.keyboard.press('w');
+  await page.waitForFunction(()=>{const h=window.mobaClient.snapshot().heroes.find(h=>h.team===0);return h.shield>0&&h.cooldowns.W>0&&h.mana<h.maxMana;});
+  for(const slot of ['q','e','r']){
+    await morrowCanvas.focus();await page.keyboard.press(slot);
+    await page.mouse.click(morrowBox.x+morrowBox.width*.55,morrowBox.y+morrowBox.height*.51);
+    await page.waitForFunction(slot=>{const s=window.mobaClient.snapshot(),h=s.heroes.find(h=>h.team===0);return h.cooldowns[slot.toUpperCase()]>0&&s.stats.abilities[`morrow.${slot}`]?.casts===1;},slot);
+    // Let the accepted cast resolve before asking for the next one.
+    await page.waitForFunction(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0).castSlot===null);
+  }
+  report.heroSelection={selected:'morrow',played:await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0))};
+  assert.ok(await page.evaluate(()=>window.mobaClient.snapshot().zones.some(z=>z.team===0&&z.abilityId==='morrow.e')),'Morrow E must produce its actual zone');
+  await page.locator('#restart').click();
+  await page.waitForFunction(()=>{const h=window.mobaClient?.snapshot().heroes.find(h=>h.team===0);return h?.definitionId==='morrow'&&h.mana===h.maxMana&&Object.values(h.cooldowns).every(x=>x===0);});
+  assert.equal(await page.locator('#hero-select').inputValue(),'morrow');
+  await page.locator('#hero-select').selectOption('veyra');await page.locator('#restart').click();
+  await page.waitForFunction(()=>window.mobaClient?.snapshot().heroes.find(h=>h.team===0)?.definitionId==='veyra');
+  await page.waitForFunction(()=>window.mobaClient.snapshot().tick>5);
+  assert.match(await page.locator('[data-skills]').textContent(),/Slipstream/);
+  assert.equal(await page.locator('#stage canvas').count(),1,'Restarts must replace, not accumulate, renderers');
+  report.heroSelection.restartPreserved=true;report.heroSelection.changedBack=true;
   report.finalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
   await page.screenshot({path:fileURLToPath(new URL('page.png',output))});
   stage='pixels';
