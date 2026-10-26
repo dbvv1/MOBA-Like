@@ -4,10 +4,27 @@ import type {Snapshot} from '../sim/types.js';
 export function createImpacts(scene:THREE.Scene){
   const root=new THREE.Group();root.name='battle-feedback';scene.add(root);
   const geometry=new THREE.RingGeometry(.62,1,20),swingGeometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3(0,0,1)]);
-  type Burst={object:THREE.Object3D;material:THREE.Material;age:number;duration:number};const bursts:Burst[]=[];
+  // A short instantaneous release streak, not a simulated travelling projectile.
+  // Two narrow geometric layers stay legible where a one-pixel line disappears.
+  function streakGeometry(color:number){
+    const positions:number[]=[],colors:number[]=[];
+    function layer(width:number,y:number,tint:number){
+      const c=new THREE.Color(tint),points=[[-width/2,y,0],[width/2,y,0],[width*.16,y,.86],[-width*.16,y,.86],[0,y,1]];
+      for(const index of [0,1,2,0,2,3,3,2,4]){positions.push(...points[index]!);colors.push(c.r,c.g,c.b);}
+    }
+    layer(.16,0,0x203b36);layer(.075,.004,color);
+    const value=new THREE.BufferGeometry();value.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));value.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));return value;
+  }
+  const heroStreaks=[streakGeometry(0xd8fff0),streakGeometry(0xffd0af)];
+  type Burst={object:THREE.Object3D;material:THREE.Material;age:number;duration:number;drawn:boolean};const bursts:Burst[]=[];
   let tick=-1,ordinal=-1;
   function remove(burst:Burst){root.remove(burst.object);burst.material.dispose();}
   function sync(snapshot:Snapshot){
+    const deaths=new Map(snapshot.events.filter(event=>event.type==='minionDied').map(event=>[event.entityId,event]));
+    function endpoint(id:number){
+      const live=snapshot.entities.find(entity=>entity.id===id);if(live)return live;
+      const dead=deaths.get(id);return dead?{kind:'minion' as const,team:dead.team,position:dead.position}:undefined;
+    }
     for(const event of snapshot.events){
       if(event.tick<tick||(event.tick===tick&&event.ordinal<=ordinal))continue;tick=event.tick;ordinal=event.ordinal;
       if(event.type==='heroDamaged'){
@@ -16,20 +33,22 @@ export function createImpacts(scene:THREE.Scene){
         const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false});
         const mesh=new THREE.Mesh(geometry,material);mesh.rotation.x=-Math.PI/2;mesh.position.set(target.position.x,.15,target.position.z);root.add(mesh);
         if(bursts.length>=48){const old=bursts.shift();if(old)remove(old);}
-        bursts.push({object:mesh,material,age:0,duration:shield?.3:.2});
+        bursts.push({object:mesh,material,age:0,drawn:false,duration:shield?.3:.2});
       }else if(event.type==='basicAttack'){
-        const source=snapshot.entities.find(entity=>entity.id===event.sourceId),target=snapshot.entities.find(entity=>entity.id===event.targetId);
+        const source=endpoint(event.sourceId),target=endpoint(event.targetId);
         if(!source||!target)continue;
         const tower=source.kind==='structure'&&source.structureKind==='tower';
-        const material=new THREE.LineBasicMaterial({color:tower?0xffb36a:source.team===0?0xbce8ce:0xf4b29a,transparent:true,opacity:.65,depthWrite:false});
-        const line=new THREE.Line(swingGeometry,material),dx=target.position.x-source.position.x,dz=target.position.z-source.position.z;
+        const hero=source.kind==='hero';
+        const material=hero?new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false}):new THREE.LineBasicMaterial({color:tower?0xffb36a:source.team===0?0xbce8ce:0xf4b29a,transparent:true,opacity:.65,depthWrite:false});
+        const line=hero?new THREE.Mesh(heroStreaks[source.team]!,material):new THREE.Line(swingGeometry,material),dx=target.position.x-source.position.x,dz=target.position.z-source.position.z;
+        line.name=hero?'hero-release-streak':'unit-release-trail';
         const startY=source.kind==='structure'?4.3:source.kind==='hero'?1.2:.7;
         const endY=target.kind==='hero'?1.2:target.kind==='structure'?2:.7;
         line.position.set(source.position.x,startY,source.position.z);line.lookAt(target.position.x,endY,target.position.z);line.scale.z=Math.hypot(dx,dz,endY-startY);root.add(line);
         if(bursts.length>=48){const old=bursts.shift();if(old)remove(old);}
-        bursts.push({object:line,material,age:0,duration:tower?.22:.10});
+        bursts.push({object:line,material,age:0,drawn:false,duration:tower?.22:hero?.16:.10});
       }
     }
   }
-  return {sync,draw(seconds:number){for(let i=bursts.length-1;i>=0;i--){const b=bursts[i]!;b.age+=Math.min(Math.max(seconds,0),.1);if(b.age>=b.duration){remove(b);bursts.splice(i,1);continue;}const remaining=1-b.age/b.duration;(b.material as THREE.MeshBasicMaterial).opacity=remaining*.8;if((b.object as THREE.Mesh).isMesh)b.object.scale.setScalar(.6+b.age*3);}},dispose(){for(const b of bursts)remove(b);bursts.length=0;scene.remove(root);geometry.dispose();swingGeometry.dispose();}};
+  return {sync,draw(seconds:number){for(let i=bursts.length-1;i>=0;i--){const b=bursts[i]!;if(b.drawn)b.age+=Math.min(Math.max(seconds,0),.1);else b.drawn=true;if(b.age>=b.duration){remove(b);bursts.splice(i,1);continue;}const remaining=1-b.age/b.duration;(b.material as THREE.MeshBasicMaterial).opacity=remaining*.8;if((b.object as THREE.Mesh).isMesh&&b.object.name!=='hero-release-streak')b.object.scale.setScalar(.6+b.age*3);}},dispose(){for(const b of bursts)remove(b);bursts.length=0;scene.remove(root);geometry.dispose();swingGeometry.dispose();for(const value of heroStreaks)value.dispose();}};
 }

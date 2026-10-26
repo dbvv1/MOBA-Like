@@ -317,7 +317,7 @@ export type PresentationEvent = Readonly<{ tick: number; ordinal: number } & (
   | { type: 'castStarted' | 'castResolved'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot }
   | { type: 'castCancelled'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot;
       reason: 'stunned' | 'dead' | 'missingAbility' | 'invalidTarget' | 'missingPoint' | 'invalidDestination' }
-  | { type: 'minionDied'; entityId: number; position: Readonly<Vec2> }
+  | { type: 'minionDied'; entityId: number; team: TeamId; position: Readonly<Vec2> }
   | { type: 'basicAttack'; sourceId: number; targetId: number }
   | { type: 'heroDamaged'; targetId: number; sourceId: number; hpDamage: number; shieldAbsorbed: number; abilityId: string | null }
 )>;

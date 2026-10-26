@@ -2021,7 +2021,7 @@ export class Simulation {
     const removedEntityIds: number[] = [];
     this.state.entities = this.state.entities.filter((entity) => {
       if (entity.kind === 'minion' && !entity.alive) {
-        this.emit({ type: 'minionDied', entityId: entity.id, position: copyVec(entity.position) });
+        this.emit({ type: 'minionDied', entityId: entity.id, team: entity.team, position: copyVec(entity.position) });
         removedEntityIds.push(entity.id);
         return false;
       }
