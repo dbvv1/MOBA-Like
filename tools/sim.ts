@@ -115,8 +115,8 @@ function parseArgs(argv: readonly string[]): CliOptions {
         break;
       case '--content-version': {
         const version = positiveInt(next(), '--content-version');
-        if (version !== 1 && version !== 2 && version !== 7 && version !== 8) {
-          throw new Error('--content-version must be 1, 2, 7 or 8');
+        if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9) {
+          throw new Error('--content-version must be 1, 2, 7, 8 or 9');
         }
         options.contentVersion = version;
         break;
@@ -193,7 +193,7 @@ function printHelp(): void {
 
   --games <N>              number of headless matches (default 1)
   --seed <S>               base seed (default 1)
-  --content-version <1|2|7|8>  content catalog (default 8)
+  --content-version <1|2|7|8|9>  content catalog (default 8)
   --blue-difficulty <low|normal|high>
   --red-difficulty <low|normal|high>
   --blue-hero <id>         default veyra
