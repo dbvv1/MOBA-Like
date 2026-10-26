@@ -54,7 +54,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
       }
       actor.from.copy(actor.to);actor.to.set(entity.position.x,0,entity.position.z);actor.root.position.copy(actor.to);
       const dx=actor.to.x-actor.from.x,dz=actor.to.z-actor.from.z;
-      if(Math.hypot(dx,dz)>1e-5)actor.root.rotation.y=Math.atan2(dx,dz);
+      if(Math.hypot(dx,dz)>1e-5&&snapshot.timeSeconds>=actor.attackUntil)actor.root.rotation.y=Math.atan2(dx,dz);
       const attack=snapshot.events.find(event=>event.type==='basicAttack'&&event.sourceId===entity.id);
       if(entity.kind==='minion'&&attack?.type==='basicAttack'){
         const target=snapshot.entities.find(value=>value.id===attack.targetId);

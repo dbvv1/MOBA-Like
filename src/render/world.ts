@@ -1,3 +1,4 @@
+import {createTowerReach} from './tower-reach.js';
 import {loadBattleAssets,type BattleAssets} from './battle-assets.js';
 import {createBattlefield} from './battlefield.js';
 import {createImpacts} from './impact.js';
@@ -28,7 +29,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   const loadedAssets=assets, presentation=view;
   const battlefield=createBattlefield(catalog,loadedAssets);const actors=new THREE.Group();actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
-  scene.add(actors);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
+  scene.add(actors);const reach=createTowerReach(scene,catalog);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
   const cursor=new THREE.Vector2(0,0);let pointerInside=false;let locked=true;let snapshot:Snapshot|null=null;let playerId:number|null=null;
   const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#d8fbff',side:THREE.DoubleSide,depthWrite:false}));
@@ -43,12 +44,12 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     const entityId=pickLivingEntity(ray.intersectObjects(actors.children,true),snapshot);
     return {point:point?{x:point.x,z:point.z}:null,entityId};
   }
-  function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
+  function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);reach.sync(next,id);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
   function draw(seconds:number,alpha:number){
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
     // While playing, actions share the snapshot interpolation clock. After the
     // terminal snapshot, cosmetic tails may finish without advancing simulation.
-    presentation.advance(seconds,snapshot?.status==='running'?alpha:undefined);battlefield.advance(seconds,alpha);effects.draw(alpha);impacts.draw(seconds);
+    presentation.advance(seconds,snapshot?.status==='running'?alpha:undefined);battlefield.advance(seconds,alpha);effects.draw(alpha);impacts.draw(seconds);reach.draw(seconds);
     const playerRoot=player?presentation.root.getObjectByName(`hero-${player.id}`):null;
     if(locked && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
     else if(pointerInside){const speed=24*seconds;if(cursor.x>.88)focus.x+=speed;if(cursor.x<-.88)focus.x-=speed;if(cursor.y>.88)focus.z-=speed;if(cursor.y<-.88)focus.z+=speed;}
@@ -67,7 +68,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
     leavePointer(){pointerInside=false;},setLocked(value:boolean){locked=value;},
     groundPoint():Vec2|null{return aim().point;},
-    dispose(){window.removeEventListener('resize',onResize);health.dispose();effects.dispose();impacts.dispose();targeting.dispose();presentation.dispose();battlefield.dispose();loadedAssets.dispose();marker.geometry.dispose();marker.material.dispose();renderer.dispose();renderer.domElement.remove();}
+    dispose(){window.removeEventListener('resize',onResize);reach.dispose();health.dispose();effects.dispose();impacts.dispose();targeting.dispose();presentation.dispose();battlefield.dispose();loadedAssets.dispose();marker.geometry.dispose();marker.material.dispose();renderer.dispose();renderer.domElement.remove();}
   };
 }
 export type GameWorld=Awaited<ReturnType<typeof createWorld>>;

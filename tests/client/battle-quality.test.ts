@@ -34,7 +34,11 @@ describe('basic battle read-only consumers',()=>{
     field.sync({...snapshot,tick:snapshot.tick+1,events:[{type:'basicAttack',tick:snapshot.tick+1,ordinal:0,sourceId:tower.id,targetId:snapshot.heroes[0]!.id}]});
     expect(towerRoot.rotation.y).toBe(heading);
     const troop=snapshot.entities.find(entity=>entity.kind==='minion')!;
-    const changed={...snapshot,tick:snapshot.tick+2,entities:snapshot.entities.map(entity=>entity.id===troop.id?{...entity,alive:false}:entity)};field.sync(changed);expect(field.root.getObjectByName(`entity-${troop.id}`)).toBeUndefined();
+    field.sync({...snapshot,tick:snapshot.tick+2,timeSeconds:snapshot.timeSeconds+1/30,events:[{type:'basicAttack',tick:snapshot.tick+2,ordinal:0,sourceId:troop.id,targetId:snapshot.heroes[1]!.id}]});
+    const troopRoot=field.root.getObjectByName(`entity-${troop.id}`)!,strikeHeading=troopRoot.rotation.y;
+    field.sync({...snapshot,tick:snapshot.tick+3,timeSeconds:snapshot.timeSeconds+2/30,events:[],entities:snapshot.entities.map(entity=>entity.id===troop.id?{...entity,position:{x:entity.position.x,z:entity.position.z+.05}}:entity)});
+    expect(troopRoot.rotation.y).toBe(strikeHeading); // contact displacement must not turn the committed swing sideways
+    const changed={...snapshot,tick:snapshot.tick+4,entities:snapshot.entities.map(entity=>entity.id===troop.id?{...entity,alive:false}:entity)};field.sync(changed);expect(field.root.getObjectByName(`entity-${troop.id}`)).toBeUndefined();
     field.dispose();
     const moving=createBattlefield(getContent(8),assets);moving.sync(sim.snapshot());sim.step([]);
     const moved=sim.snapshot().entities.find(entity=>entity.id===troop.id)!;expect(moved.position.x).not.toBe(troop.position.x);

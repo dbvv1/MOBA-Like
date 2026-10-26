@@ -13,23 +13,23 @@
       "forward": "+Z",
       "groundY": 0,
       "nominalHeight": 5.3,
-      "footprintRadius": 2.1,
-      "bytes": 158176,
-      "sha256": "ef8919e09e88b7efca369b143628a84a78acc5015a3a15b3aee103a5693b3330",
-      "triangles": 2894,
+      "footprintRadius": 2.18,
+      "bytes": 160360,
+      "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425",
+      "triangles": 2922,
       "bounds": {
         "min": [
-          -1.2545,
+          -2.18,
           0.0,
-          -1.95187
+          -2.18
         ],
         "max": [
-          1.2545,
+          2.18,
           5.3,
-          1.5651
+          2.18
         ]
       },
-      "materials": 3,
+      "materials": 4,
       "team": "teal"
     },
     {
@@ -97,23 +97,23 @@
       "forward": "+Z",
       "groundY": 0,
       "nominalHeight": 5.3,
-      "footprintRadius": 2.1,
-      "bytes": 158136,
-      "sha256": "694ae3ed424b8b0f4171c29b840361817bd583539279563ba8e118bc752247c8",
-      "triangles": 2893,
+      "footprintRadius": 2.18,
+      "bytes": 160320,
+      "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41",
+      "triangles": 2921,
       "bounds": {
         "min": [
-          -1.2545,
+          -2.18,
           0.0,
-          -1.95187
+          -2.18
         ],
         "max": [
-          1.2545,
+          2.18,
           5.3,
-          1.5651
+          2.18
         ]
       },
-      "materials": 3,
+      "materials": 4,
       "team": "rust"
     },
     {

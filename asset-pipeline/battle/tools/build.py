@@ -58,9 +58,10 @@ def export(id,kind,height,radius,source,team=None,clips=None):
  if clips:row['clips']=clips
  entries.append(row)
 
-def buildings():
+def buildings(landmarks_only=False):
  for team,col in [('teal','green'),('rust','red')]:
   for kind,stem,height,radius,xy in [('tower','building_tower_catapult',5.3,2.1,1),('barracks','building_barracks',3,2.2,1),('base','building_castle',6,3.9,1.65)]:
+   if landmarks_only and kind!='tower':continue
    reset();src=ROOT/'source/kaykit/buildings'/col/f'{stem}_{col}.gltf';bpy.ops.import_scene.gltf(filepath=str(src))
    obs=[o for o in bpy.context.scene.objects if o.type=='MESH'];pts=[o.matrix_world @ v.co for o in obs for v in o.data.vertices];h=max(v.z for v in pts);s=height/h
    # Bake transforms into meshes; source atlas/UV remain editable and intact.
@@ -76,7 +77,14 @@ def buildings():
     x=-1.05;top=2.9 if kind=='barracks' else 5.1;rod('standard-pole',(x,0,top-1.3),(x,0,top),.035,'wood')
     pts=[(x,0,top-.05),(x+.72,0,top-.05),(x+.72,0,top-.48),(x,0,top-.48)] if team=='teal' else [(x,0,top-.05),(x+.80,0,top-.26),(x,0,top-.52)]
     mesh('team-standard',pts,[(0,1,2,3)] if team=='teal' else [(0,1,2)],team)
+   if kind=='tower':
+    # Shallow, walkable paving at the existing tower foot; not a range ring.
+    # Retain the original KayKit tower, UV and atlas rather than replacing it.
+    PALETTE['foundation']=(.25,.275,.235,1)
+    rings('worn-foundation',[(.006,2.18,2.18,0,0),(.035,2.13,2.13,0,0)],'foundation',n=8)
+    radius=2.18
    export(f'{kind}-{team}',kind,height,radius,'https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38',team)
+ if landmarks_only:return
  for name,height,radius in [('tree_single_A',4.2,1.2),('rock_single_C',1.1,1.2)]:
   reset();bpy.ops.import_scene.gltf(filepath=str(ROOT/'source/kaykit/decoration/nature'/f'{name}.gltf'))
   obs=[o for o in bpy.context.scene.objects if o.type=='MESH'];pts=[o.matrix_world @ v.co for o in obs for v in o.data.vertices];lo=min(p.z for p in pts);s=height/(max(p.z for p in pts)-lo)
@@ -194,14 +202,19 @@ def ground():
  export('lane-ground','ground',.002,8.6,'https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py')
 
 if __name__=='__main__':
- (ROOT/'manifest.json').unlink(missing_ok=True)
+ landmarks_only='--landmarks-only' in sys.argv
+ previous=json.loads((ROOT/'manifest.json').read_text()) if landmarks_only else None
  provenance=json.loads((ROOT/'source/provenance.json').read_text())
  for item in provenance['kaykit']['files']:
   assert hashlib.sha256((ROOT/'source'/item['path']).read_bytes()).hexdigest()==item['sha256'],'changed KayKit source'
  assert hashlib.sha256((ROOT/'source/guard-rig-actions.blend').read_bytes()).hexdigest()==provenance['guard']['sha256'],'changed original rig source'
- buildings()
- for t in ['teal','rust']:
-  for r in ['hero','melee','ranged']:character(t,r)
+ buildings(landmarks_only)
+ if not landmarks_only:
+  for t in ['teal','rust']:
+   for r in ['hero','melee','ranged']:character(t,r)
  ground()
+ if previous:
+  changed={row['id']:row for row in entries}
+  entries=[changed.get(row['id'],row) for row in previous['assets']]
  (ROOT/'manifest.json').write_text(json.dumps({'schemaVersion':1,'style':'日照石径·青绿守望 vs 赭红入侵','qualityStatus':'candidate-needs-integrated-battle-review','coordinateSystem':'glTF Y-up, +Z forward, metres','assets':entries},ensure_ascii=False,indent=2)+'\n')
  print('BATTLE_EXPORT',len(entries),sum(x['bytes'] for x in entries))

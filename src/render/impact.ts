@@ -20,13 +20,14 @@ export function createImpacts(scene:THREE.Scene){
       }else if(event.type==='basicAttack'){
         const source=snapshot.entities.find(entity=>entity.id===event.sourceId),target=snapshot.entities.find(entity=>entity.id===event.targetId);
         if(!source||!target)continue;
-        const material=new THREE.LineBasicMaterial({color:source.team===0?0xbce8ce:0xf4b29a,transparent:true,opacity:.65,depthWrite:false});
+        const tower=source.kind==='structure'&&source.structureKind==='tower';
+        const material=new THREE.LineBasicMaterial({color:tower?0xffb36a:source.team===0?0xbce8ce:0xf4b29a,transparent:true,opacity:.65,depthWrite:false});
         const line=new THREE.Line(swingGeometry,material),dx=target.position.x-source.position.x,dz=target.position.z-source.position.z;
         const startY=source.kind==='structure'?4.3:source.kind==='hero'?1.2:.7;
         const endY=target.kind==='hero'?1.2:target.kind==='structure'?2:.7;
         line.position.set(source.position.x,startY,source.position.z);line.lookAt(target.position.x,endY,target.position.z);line.scale.z=Math.hypot(dx,dz,endY-startY);root.add(line);
         if(bursts.length>=48){const old=bursts.shift();if(old)remove(old);}
-        bursts.push({object:line,material,age:0,duration:.10});
+        bursts.push({object:line,material,age:0,duration:tower?.22:.10});
       }
     }
   }

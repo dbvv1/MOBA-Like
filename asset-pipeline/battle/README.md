@@ -51,3 +51,10 @@ blender -b --factory-startup --threads 4 --python-exit-code 1 --python asset-pip
 主战斗品质参照按产品 brief 最新约定为《英雄联盟》的基础交战响应与可读性；Thronefall 在本资源目录仅是低多边形形色光层级的辅助，不是作品品质终点。未使用 Riot 的模型、纹理、音效或品牌资源。
 
 真实 Three.js 首帧发现浅绿矩形与每 12 米拼接的暗缝：原土台草面与外场草地同为 -0.035、材质又不一致。此次只去掉重复土台／草面／侧面，石路端点轻微重叠并打破直边；其余十四个运行 GLB 不变。相同相机的软件 WebGL 真帧已复拍，整合者与源作者实看确认这两类缺陷消失；这只闭合地表连续性，不代表整段战斗品质通过。
+
+
+### 塔前片段的塔脚
+
+保现成 KayKit 炮塔／图集，只加薄的低饱和石质塔脚；塔高仍 5.3 m，视觉 footprint 从 2.1 改为 2.18 m，未修改模拟碰撞／射程。已取得的 KayKit `hex_road_A`／`hex_road_J`／`hex_grass` 真模型对照后未采用：厚六角块会把连续交战区变成展示台。软渐变路肩的真实 Three 复评也未胜出，整齐发糊的光晕削弱了地表质量，因此路面恢复 `8972ebf` 的不齐硬边原件；不以接缝修复宣称地表品质提升。
+
+当前仅两座塔 GLB 相对 `8972ebf` 改变；其余十三个运行 GLB、原骨架／动作与导航字节不变。`blender -b --factory-startup --threads 2 --python-exit-code 1 --python asset-pipeline/battle/tools/build.py -- --landmarks-only` 可重导塔脚与原路面，默认全量制作入口不变。`tools/preview.py -- --output <目录> --landmarks-only --label <名字>` 使用同一 45° 视野和摆位；`--assets-root <旧资源目录>` 读取旧树。Cycles 源预览不替代真实 Three 交战，塔前受火／撤退与整体品质由产品整合后评估。
