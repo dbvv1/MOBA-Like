@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import {createPresentation,loadCharacterAssets,disposeCharacterAssets,type Presentation,type CharacterAssets} from '../../asset-pipeline/presentation/adapter.js';
-import type {ContentCatalog,Vec2} from '../content/types.js';
+import type {AbilitySlot,ContentCatalog,Vec2} from '../content/types.js';
 import type {Snapshot} from '../sim/types.js';
 import type {Aim} from '../input/commands.js';
 import {createHealthBars} from './health.js';
 import {createEffects} from './effects.js';
+import {createTargeting,targetingPlan} from './targeting.js';
 
 export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   let renderer:THREE.WebGLRenderer;
@@ -20,7 +21,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   try{assets=await loadCharacterAssets();view=createPresentation({catalog,assets});}
   catch(error){if(assets)disposeCharacterAssets(assets);renderer.dispose();throw error;}
   const loadedAssets=assets, presentation=view;
-  scene.add(presentation.root);const health=createHealthBars(scene);const effects=createEffects(scene);host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
+  scene.add(presentation.root);const health=createHealthBars(scene);const effects=createEffects(scene);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
   const cursor=new THREE.Vector2(0,0);let pointerInside=false;let locked=true;let snapshot:Snapshot|null=null;let playerId:number|null=null;
   const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#f5f0ae',side:THREE.DoubleSide,depthWrite:false}));
@@ -52,14 +53,18 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     else if(pointerInside){const speed=24*seconds;if(cursor.x>.88)focus.x+=speed;if(cursor.x<-.88)focus.x-=speed;if(cursor.y>.88)focus.z-=speed;if(cursor.y<-.88)focus.z+=speed;}
     focus.x=THREE.MathUtils.clamp(focus.x,catalog.map.world.minX,catalog.map.world.maxX);
     focus.z=THREE.MathUtils.clamp(focus.z,catalog.map.world.minZ,catalog.map.world.maxZ);
-    positionCamera();if(playerRoot&&player?.alive)marker.position.set(playerRoot.position.x,.04,playerRoot.position.z);health.draw(camera);renderer.render(scene,camera);
+    positionCamera();if(playerRoot&&player?.alive)marker.position.set(playerRoot.position.x,.04,playerRoot.position.z);health.draw(camera);
+    targeting.update(player&&snapshot&&pointerInside&&targetingSlot?targetingPlan(player,targetingSlot,aim(),snapshot,catalog):null);
+    renderer.render(scene,camera);
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
     effectState(){return effects.inspect();},
+    targetingState(){return targeting.inspect();},
+    setTargeting(slot:AbilitySlot|null){targetingSlot=slot;if(slot===null)targeting.update(null);},
     cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
     leavePointer(){pointerInside=false;},setLocked(value:boolean){locked=value;},
     groundPoint():Vec2|null{return aim().point;},
-    dispose(){window.removeEventListener('resize',onResize);health.dispose();effects.dispose();presentation.dispose();disposeCharacterAssets(loadedAssets);marker.geometry.dispose();marker.material.dispose();renderer.dispose();renderer.domElement.remove();}
+    dispose(){window.removeEventListener('resize',onResize);health.dispose();effects.dispose();targeting.dispose();presentation.dispose();disposeCharacterAssets(loadedAssets);marker.geometry.dispose();marker.material.dispose();renderer.dispose();renderer.domElement.remove();}
   };
 }
 export type GameWorld=Awaited<ReturnType<typeof createWorld>>;
