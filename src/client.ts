@@ -1,3 +1,4 @@
+import {createBattleAudio} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
 import {Simulation} from './sim/simulation.js';
@@ -14,7 +15,7 @@ function element<T extends HTMLElement>(id:string):T {const result=document.getE
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
 const contentVersion=8 as const;
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion));
-let cleanup:()=>void=()=>{};let booting=false;
+let cleanup:()=>void=()=>{};let booting=false;let soundEnabled=true;
 async function boot(){
   if(booting)return;booting=true;restart.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
   const lifetime=createLifetime();cleanup=()=>{const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};
@@ -24,6 +25,12 @@ async function boot(){
     if(!response.ok)throw new Error(`Navigation asset failed: HTTP ${response.status}`);
     const navigation=await createDetourNavigation(new Uint8Array(await response.arrayBuffer()));lifetime.defer(()=>navigation.destroy());
     const sim=new Simulation({seed:1,contentVersion,navigation,heroesPerTeam:1,heroIdsByTeam});
+    const sound=createBattleAudio(soundEnabled);lifetime.defer(()=>sound.dispose());
+    const soundButton=element<HTMLButtonElement>('sound-toggle');const soundEvents=new AbortController();lifetime.defer(()=>soundEvents.abort());
+    soundButton.textContent=soundEnabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundEnabled));
+    soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
+    window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
+    window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
     const bot=new HeroBot({team:1,slotIndex:0,difficulty:'normal',seed:1002});
     const world=await createWorld(stage,sim.catalog);lifetime.defer(()=>world.dispose());
     let snapshot=sim.snapshot();const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
@@ -50,7 +57,7 @@ async function boot(){
           const alpha=clock.advance(delta,()=>{
             if(sim.isComplete())return;
             const issued=commands.splice(0);const results=sim.step([...issued,...bot.think(sim)]);
-            snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);
+            snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.say(`Command rejected: ${rejection.reason??'unknown reason'}`);
             if(sim.isComplete())hud.say(`Match ended: ${snapshot.status} (${snapshot.endReason}). Restart to play again.`);

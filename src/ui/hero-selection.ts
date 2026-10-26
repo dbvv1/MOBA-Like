@@ -14,7 +14,7 @@ export function createHeroSelection(select:HTMLSelectElement,details:HTMLElement
   const choices=heroChoices(catalog);
   select.replaceChildren(...choices.map(hero=>{const option=document.createElement('option');option.value=hero.id;option.textContent=hero.name;return option;}));
   select.value='veyra';
-  const update=()=>{const hero=choices.find(hero=>hero.id===select.value);details.textContent=hero?`${hero.title} · ${hero.skills}. Applies when you restart; current match is unchanged.`:'';};
+  const update=()=>{const hero=choices.find(hero=>hero.id===select.value);details.textContent=hero?`${hero.title} · Selection applies on Restart.`:'';select.title=hero?`${hero.skills}. Current match is unchanged until Restart.`:'';};
   select.addEventListener('change',update);update();
   return {read:()=>matchHeroes(catalog,select.value),setBusy:(busy:boolean)=>{select.disabled=busy;}};
 }

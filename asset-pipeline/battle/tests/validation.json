@@ -1,0 +1,67 @@
+{
+  "checkedDate": "2026-10-26",
+  "blender": "4.3.2",
+  "assetCount": 15,
+  "runtimeBytes": 2460044,
+  "manifestSha256": "83a6234210f3cd337fe5d866de1c851a3d91442573a1fd2a578aa89a521af562",
+  "pythonTests": {
+    "passed": 5,
+    "includesNegativeChecks": [
+      "stale SHA-256",
+      "missing actual animation clip"
+    ]
+  },
+  "animationRoundTrip": [
+    {
+      "id": "hero-teal",
+      "maxSampleErrorMetres": 0.0026076809620811723,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    },
+    {
+      "id": "hero-rust",
+      "maxSampleErrorMetres": 0.0026076809620811723,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    },
+    {
+      "id": "melee-teal",
+      "maxSampleErrorMetres": 0.00014142135623732336,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    },
+    {
+      "id": "melee-rust",
+      "maxSampleErrorMetres": 0.00014142135623732336,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    },
+    {
+      "id": "ranged-teal",
+      "maxSampleErrorMetres": 0.00014142135623732336,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    },
+    {
+      "id": "ranged-rust",
+      "maxSampleErrorMetres": 0.00014142135623732336,
+      "sampledActions": 5,
+      "samplesPerAction": 6
+    }
+  ],
+  "tolerancesMetres": {
+    "integerFrame": 0.0003,
+    "halfFrame": 0.005
+  },
+  "qualityStatus": "ground continuity patch after actual Three.js frame; same-camera recheck pending",
+  "notRun": [
+    "hardware GPU",
+    "full playable battle quality acceptance"
+  ],
+  "groundContinuity": {
+    "removed": "coplanar grass slab and tile side faces",
+    "tileStrideMetres": 12,
+    "endOverlapMetres": 0.03,
+    "unchangedOtherRuntimeAssets": 14
+  }
+}

@@ -1,0 +1,9 @@
+Original battle knight, spear guard, ranger, pennants and stone-path geometry,
+materials, derived Blend/GLB assets and renders created for MOBA-Like are dedicated
+to the public domain under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+The original fifteen-bone Beacon Guard rig and source actions are separately
+covered by GUARD-LICENSE.txt. KayKit meshes and gradient atlas are separately
+covered by KAYKIT-LICENSE.txt. This is a resource dedication, not a blanket license
+for repository code. Third-party reference screenshots are not included.

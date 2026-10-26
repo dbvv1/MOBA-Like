@@ -27,7 +27,7 @@ try {
   const notice=await page.locator('#notice').textContent();
   assert.equal(await page.locator('#notice').isVisible(),false,notice || 'Initialization failed');
   assert.equal(await page.evaluate(()=>window.mobaClient.state().backend),'three-webgl2');
-  assert.ok(report.characterAssets.some(path=>/\/blue-reactions-[^/]+\.glb$/.test(path)),'The adopted reaction GLB must load successfully in the real build');
+  for(const id of ['hero-teal','hero-rust','melee-teal','ranged-rust','tower-teal','lane-ground'])assert.ok(report.characterAssets.some(path=>new RegExp(`/${id}-[^/]+\\.glb$`).test(path)),`Adopted battle GLB ${id} must load successfully in the real build`);
   stage='context';
   report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER)}:null;});
   assert.ok(report.webgl2,'A live WebGL2 context is required');

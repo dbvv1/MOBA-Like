@@ -1,0 +1,124 @@
+{
+  "kaykit": {
+    "url": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+    "commit": "84fa4e91af6a88989be7c99e0891cede11f2ca38",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "kaykit/buildings/green/building_tower_catapult_green.gltf",
+        "sha256": "5897198b0f5caf37ea614365be1272dc7eba9aa05502e1e1157ff174117878d7"
+      },
+      {
+        "path": "kaykit/buildings/green/building_tower_catapult_green.bin",
+        "sha256": "5903461ea3fe0c2887a915cf46cbfaf89871e0c10125f8ceceb3e40b7b350277"
+      },
+      {
+        "path": "kaykit/buildings/green/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/buildings/green/building_barracks_green.gltf",
+        "sha256": "60c13c9844f88f96c7d1261aa4605ea9356b0a1cd820a23bdb9d2f6381174a1e"
+      },
+      {
+        "path": "kaykit/buildings/green/building_barracks_green.bin",
+        "sha256": "3f0f2bf64bb51fa16eeab8c5a5fdbc7c7dea9b248c12a6ee0bcdb0f490ac04fb"
+      },
+      {
+        "path": "kaykit/buildings/green/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/buildings/green/building_castle_green.gltf",
+        "sha256": "6739f651daf33b406c0abb0b91af49315059a0e70012bd01b77b30695f4bd98c"
+      },
+      {
+        "path": "kaykit/buildings/green/building_castle_green.bin",
+        "sha256": "80dde2497fdd208a8a9b29b8168533b1cbef7ae05962b408459dcc6a0abcd8fe"
+      },
+      {
+        "path": "kaykit/buildings/green/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/buildings/red/building_tower_catapult_red.gltf",
+        "sha256": "338440a8120a9180f166e43504c9638d5cc743ae922c486df76b250fe64f5169"
+      },
+      {
+        "path": "kaykit/buildings/red/building_tower_catapult_red.bin",
+        "sha256": "a0ae8566b37251199e31347350126ea23e5090961e86a632a6ac47b8c3e696fc"
+      },
+      {
+        "path": "kaykit/buildings/red/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/buildings/red/building_barracks_red.gltf",
+        "sha256": "3a10bf352be40343281658a0cffa28cef84bb452636c08fe1cc68e35af1b2665"
+      },
+      {
+        "path": "kaykit/buildings/red/building_barracks_red.bin",
+        "sha256": "9968c3176de8c0c3d16c7efc59306183a531802b9728ef42c58c584538653b15"
+      },
+      {
+        "path": "kaykit/buildings/red/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/buildings/red/building_castle_red.gltf",
+        "sha256": "a9006907e13955578e803f0230a8b641d20bc499aeb6e4ead546e6e6894f4e9c"
+      },
+      {
+        "path": "kaykit/buildings/red/building_castle_red.bin",
+        "sha256": "41423a51068adeadbb1630503d55c4088498200f12ff8286e949c316ab5cdada"
+      },
+      {
+        "path": "kaykit/buildings/red/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/decoration/nature/tree_single_A.gltf",
+        "sha256": "ac913af6eaed6f15d26a2b75a877aa8dd10de90f26298f3f953abad86a4b4606"
+      },
+      {
+        "path": "kaykit/decoration/nature/tree_single_A.bin",
+        "sha256": "437deac68f35338bb309b01e4d346dd4be37557d7a2f033d04765f63e1b88825"
+      },
+      {
+        "path": "kaykit/decoration/nature/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/decoration/nature/rock_single_C.gltf",
+        "sha256": "4cbf4a67fa176d2374b4863348fddf7879b892e612dd455ad14173f17172d45b"
+      },
+      {
+        "path": "kaykit/decoration/nature/rock_single_C.bin",
+        "sha256": "7d63c76a9f576bda17a63c77d8f7c9f617e11ed57e3459d9c8d5da7ebdf0b8f1"
+      },
+      {
+        "path": "kaykit/decoration/nature/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "kaykit/tiles/base/hex_grass.gltf",
+        "sha256": "9197814431b5becf69b22bb7a20e340d63155c4aeddfb3a678c3f041ca585e41"
+      },
+      {
+        "path": "kaykit/tiles/base/hex_grass.bin",
+        "sha256": "a0a3b96bc755cb0a7b0520e7e5fbc94a4e26663d818450d6c4328d86d386745e"
+      },
+      {
+        "path": "kaykit/tiles/base/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      }
+    ]
+  },
+  "guard": {
+    "source": "asset-pipeline/characters/beacon-guard/assets/blue-reactions.blend",
+    "commit": "083183c245c2e8f4bd3dbbfa7e3d7c75a0357b3b",
+    "sha256": "b40eb1f0912c28856414bef2ce4320f1aa9394c66b5d310181a5d8c58cafb8e9",
+    "use": "15-bone rest rig and five animation actions only; all visible geometry rebuilt",
+    "license": "CC0-1.0"
+  }
+}

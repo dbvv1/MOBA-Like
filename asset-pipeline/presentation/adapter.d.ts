@@ -15,4 +15,4 @@ export interface Presentation {
   dispose():void;
   inspect():{tick:number|null;heroes:Array<{id:number;action:string;team:number;visible:boolean}>;entities:number};
 }
-export function createPresentation(options:{catalog:ContentCatalog;assets:CharacterAssets;motionOptions?:{hurtRegion?:'upper'|'full';strike?:number;recovery?:number}}):Presentation;
+export function createPresentation(options:{catalog:ContentCatalog;assets:CharacterAssets;heroesOnly?:boolean;motionOptions?:{hurtRegion?:'upper'|'full';strike?:number;recovery?:number}}):Presentation;

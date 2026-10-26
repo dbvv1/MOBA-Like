@@ -97,6 +97,7 @@ function character(asset, motionOptions) {
       else skeletons.add(candidate);
     }
     if (node.isMesh) {
+      node.castShadow = true; node.receiveShadow = true;
       node.material = Array.isArray(node.material) ? node.material.map(materialClone) : materialClone(node.material);
       for (const material of Array.isArray(node.material) ? node.material : [node.material]) materials.add(material);
     }
@@ -109,7 +110,7 @@ function character(asset, motionOptions) {
 }
 
 /** Read-only Snapshot consumer. No renderer, input, simulation stepping or hit-event inference. */
-export function createPresentation({catalog, assets, motionOptions}) {
+export function createPresentation({catalog, assets, motionOptions, heroesOnly = false}) {
   const root = new THREE.Group();
   root.name = 'SnapshotPresentation';
   const heroes = new Map();
@@ -124,11 +125,11 @@ export function createPresentation({catalog, assets, motionOptions}) {
   const ground = new THREE.Mesh(own(new THREE.PlaneGeometry(world.maxX-world.minX, world.maxZ-world.minZ)), own(new THREE.MeshStandardMaterial({color: '#192c2d'})));
   ground.rotation.x = -Math.PI/2;
   ground.position.set((world.minX+world.maxX)/2, -0.03, (world.minZ+world.maxZ)/2);
-  ground.name = 'map-bounds'; root.add(ground);
+  ground.name = 'map-bounds'; if(!heroesOnly)root.add(ground);
   const lane = new THREE.Mesh(own(new THREE.PlaneGeometry(world.maxX-world.minX, catalog.map.laneWidth)), own(new THREE.MeshStandardMaterial({color: '#35413a'})));
   lane.rotation.x = -Math.PI/2;
   lane.position.set(ground.position.x, -0.02, ground.position.z);
-  lane.name = 'lane'; root.add(lane);
+  lane.name = 'lane'; if(!heroesOnly)root.add(lane);
   const geometry = {
     tower: own(new THREE.CylinderGeometry(0.65, 1, 2, 8)),
     base: own(new THREE.BoxGeometry(2, 2, 2)),
@@ -188,7 +189,7 @@ export function createPresentation({catalog, assets, motionOptions}) {
     }
     for (const [id, actor] of heroes) if (!seen.has(id)) { root.remove(actor.root); actor.dispose(); heroes.delete(id); }
     const seenEntities = new Set();
-    for (const entity of snapshot.entities) {
+    for (const entity of heroesOnly ? [] : snapshot.entities) {
       if (entity.kind === 'hero') continue;
       seenEntities.add(entity.id);
       const kind = entity.kind === 'minion' ? 'minion' : entity.structureKind;

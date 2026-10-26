@@ -1,0 +1,6 @@
+Beacon Guard is an original procedural placeholder created for this repository.
+No third-party models, animations, textures or character designs are included.
+The generated meshes, rigs, animations, materials, Blend/GLB assets and preview
+renders are dedicated under CC0 1.0 Universal:
+https://creativecommons.org/publicdomain/zero/1.0/
+The Python generators and recipes are original repository code.

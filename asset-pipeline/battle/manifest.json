@@ -1,0 +1,467 @@
+{
+  "schemaVersion": 1,
+  "style": "日照石径·青绿守望 vs 赭红入侵",
+  "qualityStatus": "candidate-needs-integrated-battle-review",
+  "coordinateSystem": "glTF Y-up, +Z forward, metres",
+  "assets": [
+    {
+      "id": "tower-teal",
+      "url": "/asset-pipeline/battle/exported/tower-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "tower",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 5.3,
+      "footprintRadius": 2.1,
+      "bytes": 158176,
+      "sha256": "ef8919e09e88b7efca369b143628a84a78acc5015a3a15b3aee103a5693b3330",
+      "triangles": 2894,
+      "bounds": {
+        "min": [
+          -1.2545,
+          0.0,
+          -1.95187
+        ],
+        "max": [
+          1.2545,
+          5.3,
+          1.5651
+        ]
+      },
+      "materials": 3,
+      "team": "teal"
+    },
+    {
+      "id": "barracks-teal",
+      "url": "/asset-pipeline/battle/exported/barracks-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "barracks",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 3,
+      "footprintRadius": 2.2,
+      "bytes": 243936,
+      "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647",
+      "triangles": 4037,
+      "bounds": {
+        "min": [
+          -1.31704,
+          0.0,
+          -1.31704
+        ],
+        "max": [
+          1.31704,
+          3.0,
+          1.54764
+        ]
+      },
+      "materials": 3,
+      "team": "teal"
+    },
+    {
+      "id": "base-teal",
+      "url": "/asset-pipeline/battle/exported/base-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "base",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 6,
+      "footprintRadius": 3.9,
+      "bytes": 324632,
+      "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621",
+      "triangles": 5659,
+      "bounds": {
+        "min": [
+          -2.45735,
+          0.0,
+          -2.80671
+        ],
+        "max": [
+          2.45735,
+          6.0,
+          2.80671
+        ]
+      },
+      "materials": 1,
+      "team": "teal"
+    },
+    {
+      "id": "tower-rust",
+      "url": "/asset-pipeline/battle/exported/tower-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "tower",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 5.3,
+      "footprintRadius": 2.1,
+      "bytes": 158136,
+      "sha256": "694ae3ed424b8b0f4171c29b840361817bd583539279563ba8e118bc752247c8",
+      "triangles": 2893,
+      "bounds": {
+        "min": [
+          -1.2545,
+          0.0,
+          -1.95187
+        ],
+        "max": [
+          1.2545,
+          5.3,
+          1.5651
+        ]
+      },
+      "materials": 3,
+      "team": "rust"
+    },
+    {
+      "id": "barracks-rust",
+      "url": "/asset-pipeline/battle/exported/barracks-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "barracks",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 3,
+      "footprintRadius": 2.2,
+      "bytes": 243900,
+      "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6",
+      "triangles": 4036,
+      "bounds": {
+        "min": [
+          -1.31704,
+          0.0,
+          -1.31704
+        ],
+        "max": [
+          1.31704,
+          3.0,
+          1.54764
+        ]
+      },
+      "materials": 3,
+      "team": "rust"
+    },
+    {
+      "id": "base-rust",
+      "url": "/asset-pipeline/battle/exported/base-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "base",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 6,
+      "footprintRadius": 3.9,
+      "bytes": 324628,
+      "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84",
+      "triangles": 5659,
+      "bounds": {
+        "min": [
+          -2.45735,
+          0.0,
+          -2.80671
+        ],
+        "max": [
+          2.45735,
+          6.0,
+          2.80671
+        ]
+      },
+      "materials": 1,
+      "team": "rust"
+    },
+    {
+      "id": "tree",
+      "url": "/asset-pipeline/battle/exported/tree.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "decoration",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 4.2,
+      "footprintRadius": 1.2,
+      "bytes": 9640,
+      "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7",
+      "triangles": 50,
+      "bounds": {
+        "min": [
+          -1.00936,
+          0.0,
+          -1.05914
+        ],
+        "max": [
+          1.00552,
+          4.2,
+          0.86107
+        ]
+      },
+      "materials": 1
+    },
+    {
+      "id": "rock",
+      "url": "/asset-pipeline/battle/exported/rock.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "kind": "decoration",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 1.1,
+      "footprintRadius": 1.2,
+      "bytes": 8264,
+      "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8",
+      "triangles": 40,
+      "bounds": {
+        "min": [
+          -1.04627,
+          0.0,
+          -1.0279
+        ],
+        "max": [
+          0.89588,
+          1.1,
+          0.91594
+        ]
+      },
+      "materials": 1
+    },
+    {
+      "id": "hero-teal",
+      "url": "/asset-pipeline/battle/exported/hero-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "hero",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 2.28,
+      "footprintRadius": 0.55,
+      "bytes": 169036,
+      "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd",
+      "triangles": 1085,
+      "bounds": {
+        "min": [
+          -0.88,
+          0.0,
+          -0.45
+        ],
+        "max": [
+          0.77,
+          2.275,
+          1.24212
+        ]
+      },
+      "materials": 5,
+      "team": "teal",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "melee-teal",
+      "url": "/asset-pipeline/battle/exported/melee-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "minion",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 1.2,
+      "footprintRadius": 0.45,
+      "bytes": 164592,
+      "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d",
+      "triangles": 1042,
+      "bounds": {
+        "min": [
+          -0.57416,
+          0.0,
+          -0.14354
+        ],
+        "max": [
+          0.4134,
+          1.19713,
+          0.71318
+        ]
+      },
+      "materials": 5,
+      "team": "teal",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "ranged-teal",
+      "url": "/asset-pipeline/battle/exported/ranged-teal.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "minion",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 1.28,
+      "footprintRadius": 0.45,
+      "bytes": 157556,
+      "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464",
+      "triangles": 964,
+      "bounds": {
+        "min": [
+          -0.4134,
+          0.0,
+          -0.16651
+        ],
+        "max": [
+          0.67391,
+          1.27751,
+          0.48159
+        ]
+      },
+      "materials": 5,
+      "team": "teal",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "hero-rust",
+      "url": "/asset-pipeline/battle/exported/hero-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "hero",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 2.28,
+      "footprintRadius": 0.55,
+      "bytes": 169896,
+      "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0",
+      "triangles": 1093,
+      "bounds": {
+        "min": [
+          -0.88,
+          0.0,
+          -0.45
+        ],
+        "max": [
+          0.77,
+          2.275,
+          1.24212
+        ]
+      },
+      "materials": 5,
+      "team": "rust",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "melee-rust",
+      "url": "/asset-pipeline/battle/exported/melee-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "minion",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 1.2,
+      "footprintRadius": 0.45,
+      "bytes": 164608,
+      "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244",
+      "triangles": 1042,
+      "bounds": {
+        "min": [
+          -0.57416,
+          0.0,
+          -0.14354
+        ],
+        "max": [
+          0.4134,
+          1.19713,
+          0.71318
+        ]
+      },
+      "materials": 5,
+      "team": "rust",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "ranged-rust",
+      "url": "/asset-pipeline/battle/exported/ranged-rust.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "minion",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 1.28,
+      "footprintRadius": 0.45,
+      "bytes": 157568,
+      "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449",
+      "triangles": 964,
+      "bounds": {
+        "min": [
+          -0.4134,
+          0.0,
+          -0.16651
+        ],
+        "max": [
+          0.67391,
+          1.27751,
+          0.48159
+        ]
+      },
+      "materials": 5,
+      "team": "rust",
+      "clips": {
+        "idle": "idle",
+        "walk": "walk",
+        "attack": "attack",
+        "hurt": "hurt",
+        "death": "death"
+      }
+    },
+    {
+      "id": "lane-ground",
+      "url": "/asset-pipeline/battle/exported/lane-ground.glb",
+      "license": "CC0-1.0",
+      "source": "https://github.com/dbvv1/MOBA-Like/tree/main/asset-pipeline/battle/tools/build.py",
+      "kind": "ground",
+      "forward": "+Z",
+      "groundY": 0,
+      "nominalHeight": 0.002,
+      "footprintRadius": 8.6,
+      "bytes": 5476,
+      "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce",
+      "triangles": 26,
+      "bounds": {
+        "min": [
+          -6.03,
+          0.0,
+          -6.05
+        ],
+        "max": [
+          6.03,
+          0.002,
+          5.95
+        ]
+      },
+      "materials": 2
+    }
+  ]
+}
