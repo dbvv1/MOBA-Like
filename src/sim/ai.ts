@@ -740,7 +740,8 @@ export class HeroBot {
     return (
       sim.state.entities.find(
         (entity): entity is StructureEntity =>
-          entity.kind === 'structure' && entity.definitionId === id,
+          entity.kind === 'structure' && entity.definitionId === id &&
+          (!sim.catalog.rules.liveTowerAnchors || entity.alive),
       ) ?? null
     );
   }
