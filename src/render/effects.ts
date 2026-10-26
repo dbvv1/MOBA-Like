@@ -18,7 +18,7 @@ export function createEffects(scene:THREE.Scene){
   warningGeometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
   const zoneGeometry=new THREE.CircleGeometry(1,48);
   const outlineGeometry=new THREE.RingGeometry(.97,1,48);
-  const materials=[0x70d9ff,0xffbd60].map(color=>({
+  const materials=[0x70d9ff,0xf45b67].map(color=>({
     projectile:new THREE.MeshBasicMaterial({color}),
     fill:new THREE.MeshBasicMaterial({color,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}),
     outline:new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,depthWrite:false})

@@ -31,7 +31,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   scene.add(actors);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
   const cursor=new THREE.Vector2(0,0);let pointerInside=false;let locked=true;let snapshot:Snapshot|null=null;let playerId:number|null=null;
-  const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#f5f0ae',side:THREE.DoubleSide,depthWrite:false}));
+  const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#d8fbff',side:THREE.DoubleSide,depthWrite:false}));
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
   function positionCamera(){camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
   function fit(){const width=Math.max(host.clientWidth,1),height=Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();}
@@ -43,7 +43,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     const entityId=pickLivingEntity(ray.intersectObjects(actors.children,true),snapshot);
     return {point:point?{x:point.x,z:point.z}:null,entityId};
   }
-  function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
+  function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
   function draw(seconds:number,alpha:number){
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
     // While playing, actions share the snapshot interpolation clock. After the
