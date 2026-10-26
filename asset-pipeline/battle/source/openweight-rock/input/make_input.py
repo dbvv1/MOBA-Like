@@ -7,12 +7,11 @@ baked colour key), one object only, no text, no glow, no flags and no cast
 shadow. It is the input to ``tools/openweight-rock/run_triposg.py``; it is not
 a game asset and is never loaded by the renderer.
 
-The cluster is kept near 2:1 width-to-height so that, after the mesh is scaled
+The cluster is kept near 1.47:1 width-to-height so that, after the mesh is scaled
 to the required 1.1 m nominal height, its footprint can still fit the 1.2 m
 radius budget.
 
-Requires Pillow and SciPy (both present in the TripoSG environment through its
-``transformers``/``scikit-image`` dependencies). The committed PNG is
+Requires NumPy, Pillow and SciPy explicitly; model inference is not needed. The committed PNG is
 authoritative; this script explains how it was made.
 
 Run:
@@ -28,7 +27,7 @@ import numpy as np
 from PIL import Image, ImageChops, ImageDraw
 from scipy.spatial import ConvexHull
 
-# Wide-low cluster, near 2:1: three masses of unequal height meeting at the feet.
+# Wide-low cluster, near 1.47:1: three masses of unequal height meeting at the feet.
 # (centre x, centre z, footprint radius, height)
 MASSES = [
     (-0.38, 0.06, 0.32, 0.44),

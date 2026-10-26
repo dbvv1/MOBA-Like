@@ -28,14 +28,13 @@ import argparse
 import hashlib
 import json
 import platform
+import os
+import re
+import importlib.metadata
 import subprocess
 import sys
 import time
 from pathlib import Path
-
-import numpy as np
-import torch
-from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from png_rgba import read_rgba, validate_alpha  # noqa: E402
@@ -62,6 +61,8 @@ def prepare_foreground(image_path, out_path):
     Matches the framing of upstream ``image_process.load_image`` without any
     background-removal fallback.
     """
+    from PIL import Image
+
     width, height, rgba = read_rgba(image_path)
     stats = validate_alpha(width, height, rgba)
     min_x, min_y, max_x, max_y = stats["bbox"]
@@ -103,6 +104,8 @@ def weights_fingerprint(directory):
             )
     # Relative file names only: run.json is a committed provenance artifact and
     # must not embed the receiver's absolute filesystem layout.
+    if not any(item["path"].endswith((".safetensors", ".bin", ".pt", ".pth")) for item in files):
+        raise FileNotFoundError("local weights contain no model tensor files")
     return {"files": files}
 
 
@@ -144,16 +147,43 @@ def verify_source_commit(source_dir=None):
             f"TripoSG checkout HEAD is {head}, expected the pinned {SOURCE_COMMIT}; "
             "check out the pinned commit instead of recording a different source"
         )
-    return head
+    dirty = subprocess.run(
+        ["git", "-C", top, "status", "--porcelain", "--untracked-files=all"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    if dirty:
+        raise SystemExit("TripoSG checkout is dirty; use a clean pinned checkout")
+    return Path(top).resolve(), head
+
+
+def verify_imported_source(source_root, module_file):
+    """The code imported must be the checkout whose commit was checked."""
+    try:
+        Path(module_file).resolve().relative_to(source_root / "triposg")
+    except (ValueError, TypeError):
+        raise SystemExit("imported TripoSG pipeline is outside the verified checkout")
+
+
+def validate_revision(revision):
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("--revision must be the exact 40-character official Hub commit")
+
+
+def create_output(directory):
+    directory = Path(directory)
+    if directory.exists() and any(directory.iterdir()):
+        raise FileExistsError("output directory is nonempty; preserve the earlier attempt")
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights", required=True, help="local copy of the official TripoSG repo")
-    parser.add_argument("--revision", default="", help="Hub revision/commit the weights came from")
+    parser.add_argument("--revision", required=True, help="Hub revision/commit the weights came from")
     parser.add_argument(
         "--source-dir",
-        default=None,
+        required=True,
         help="pinned TripoSG checkout on PYTHONPATH; HEAD must match SOURCE_COMMIT",
     )
     parser.add_argument("--image", required=True)
@@ -164,17 +194,27 @@ def main():
     parser.add_argument("--device", default="cuda:0")
     args = parser.parse_args()
 
+    validate_revision(args.revision)
+    source_root, source_commit = verify_source_commit(args.source_dir)
+    # No implicit Hub downloads, including nested component loads.
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["TRANSFORMERS_OFFLINE"] = "1"
+    sys.path.insert(0, str(source_root))
+    import numpy as np
+    import torch
+
     if not torch.cuda.is_available():
         raise SystemExit("CUDA is not available; TripoSG needs a CUDA GPU")
 
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = create_output(args.out_dir)
     prepared_path = out_dir / "prepared-input.png"
     prepared, alpha_stats = prepare_foreground(args.image, prepared_path)
     fingerprint = weights_fingerprint(args.weights)
 
     try:
-        from triposg.pipelines.pipeline_triposg import TripoSGPipeline
+        from triposg.pipelines import pipeline_triposg
+        TripoSGPipeline = pipeline_triposg.TripoSGPipeline
+        verify_imported_source(source_root, pipeline_triposg.__file__)
     except ImportError as exc:
         raise SystemExit(
             "TripoSG source is not importable. Clone the pinned commit and put its "
@@ -182,16 +222,15 @@ def main():
             "script does not vendor model code."
         ) from exc
 
-    source_commit = verify_source_commit(args.source_dir)
-
     device = torch.device(args.device)
     dtype = torch.float16
     torch.cuda.reset_peak_memory_stats(device)
     free_before, total = torch.cuda.mem_get_info(device)
 
     load_start = time.time()
-    pipe = TripoSGPipeline.from_pretrained(args.weights)
+    pipe = TripoSGPipeline.from_pretrained(args.weights, local_files_only=True, torch_dtype=dtype)
     pipe = pipe.to(device, dtype)
+    torch.cuda.synchronize(device)
     load_seconds = time.time() - load_start
 
     generator = torch.Generator(device=device).manual_seed(args.seed)
@@ -203,6 +242,7 @@ def main():
             num_inference_steps=args.num_inference_steps,
             guidance_scale=args.guidance_scale,
         ).samples[0]
+    torch.cuda.synchronize(device)
     infer_seconds = time.time() - infer_start
     peak_allocated = torch.cuda.max_memory_allocated(device)
     peak_reserved = torch.cuda.max_memory_reserved(device)
@@ -250,6 +290,8 @@ def main():
         },
         "runtime": {
             "python": platform.python_version(),
+            "packages": {name: importlib.metadata.version(name) for name in
+                         ("diffusers", "transformers", "numpy", "Pillow", "trimesh", "diso")},
             "torch": torch.__version__,
             "torchCuda": torch.version.cuda,
             "deviceName": torch.cuda.get_device_name(device),

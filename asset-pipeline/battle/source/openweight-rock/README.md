@@ -10,18 +10,15 @@
 **阻塞：拿不到官方权重，也没有可用的 TripoSG 依赖环境；推理一次都没跑。**
 因此没有原始生成 mesh、没有 Blender 采用源、没有旧/新同视角图，也没有质量结论。
 
-1. **权重访问被网络阻断。** 本机到 `huggingface.co` 的 TLS 握手在 ClientHello 后
-   收不到 ServerHello；同样请求走 Python `ssl` 是 `UNEXPECTED_EOF_WHILE_READING`。
-   `huggingface_hub.snapshot_download("VAST-AI/TripoSG")` 实际返回
-   `LocalEntryNotFoundError`，根因 `ConnectError: EOF occurred in violation of
-   protocol`。同一时段 GitHub、PyPI、`download.pytorch.org` 均正常，说明不是账号或
-   文件问题，而是本网络对 Hub 的访问被拒。补充实测查询：Hugging Face 上
-   `VAST-AI/TripoSG` 返回 404（该组织名下没有此仓库）；ModelScope 上能取得
-   `VAST-AI-Research/TripoSG`（license=mit，约 7.9 GB，含 `model_index.json`、
-   transformer/vae/image_encoder_dinov2 的 safetensors，模型卡链接回官方 GitHub）
-   与 `stabilityai/TripoSR`（MIT，`model.ckpt` 约 1.68 GB）。这些是替代分发／镜像，
-   不是本次使用的来源，其 revision 与文件 hash 也未核；按任务“不换镜像、代理或
-   下载站”的约定没有使用。
+1. **本机官方 Hub TLS 未建立。** 接收端记录 ClientHello 后未收到 ServerHello，
+   Python `ssl` 为 `UNEXPECTED_EOF_WHILE_READING`，`snapshot_download` 抛
+   `LocalEntryNotFoundError`，内层 `ConnectError: EOF occurred in violation of protocol`。
+   这是接收端报告，仓库未附完整请求日志；不足以判断服务器权限拒绝、证书错误或网络策略。
+   其他站点可达也不能证明根因。云端于 2026-10-26 可读
+   [官方模型卡](https://huggingface.co/VAST-AI/TripoSG)（MIT）；先前“仓库不存在”的
+   断言撤回，不能把 TLS EOF 当作仓库 404。云端读页面不证明本机能下载权重。
+   保持同一官方来源和 TLS 验证；不换镜像、代理、凭据，不关闭验证。仅在已确认未执行且
+   有网络恢复新证据时作一次受限同源检查；若出现明确平台拒绝，停止该动作并记录恢复条件。
 2. **依赖环境不完整。** 官方 `requirements.txt` 未钉版本的 `diso` 只有 sdist，
    构建时要编译 CUDA 扩展；本机没有 CUDA Toolkit（`cuda_runtime.h` 不存在），
    `diso==0.1.4` 构建失败，`TripoSGPipeline` 导入终止在
@@ -31,14 +28,13 @@
    剩 5115 MiB，释放后剩 11035 MiB。没有为腾显存关闭他人进程，也没有跑推理，
    所以“8 GB 能否跑通”仍未知。
 
-恢复条件：在允许访问官方 Hub 的网络取得 `VAST-AI/TripoSG` 权重并记录 revision/hash；
-另装 CUDA Toolkit 12.8（或提供可用的预编译 `diso`）。二者满足后按下面命令继续。
+恢复条件：本机标准 TLS 能完成官方 Hub 握手并取得公开模型的固定 revision；
+另在任务隔离环境里使 CUDA 扩展可构建。TLS EOF 的具体根因仍未知，不能擅自安装证书、
+改系统安全或要求新凭据。原复审的“8 条问题”全文未入仓；接收端须取回原审查逐项回应，
+当前云端修正不等于原 8 条全部关闭。
 
-低成本回退 TripoSR 也在 Hugging Face 权重处被同一阻断：官方源码与权重均为 MIT，
-commit `107cefdc244c39106fa830359024f6a2f1c78871`，默认约 6 GB 显存；权重发布在
-`stabilityai/TripoSR`，ModelScope 上另有同名副本（MIT，`model.ckpt` 约 1.68 GB），
-属于替代分发／镜像，按约定未使用、revision/hash 未核。没有跑它，也没有为了跑通改换
-fork、镜像或下载站。
+低成本回退仍是官方 TripoSR（源码固定 `107cefdc244c39106fa830359024f6a2f1c78871`），
+权重 `stabilityai/TripoSR`。接收端报告其同样受 TLS 阻断，未运行；不以回退绕过同一拒绝。
 
 权重可达后按上游方式跑时必须带 `--no-remove-bg`：默认路径会调用
 `remove_background`／`rembg`，那是本任务禁止引入的背景模型。输入合同是已合成的灰底
@@ -82,19 +78,23 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 | 依赖（实测安装） | diffusers 0.41.0、transformers 5.20.2、trimesh 5.2.0、numpy 1.26.4、Pillow 12.3.0、scikit-image 0.25.2、torchvision 0.24.1+cu128 |
 
 `transformers` 已到 5.x，导入时提示 `BitImageProcessor` 需要 torchvision（已装）而回退；
-官方 `requirements.txt` 只钉了 `numpy==1.22.3`，其余依赖未钉；上表是实测 import 成功的
-组合（numpy 1.26.4 + scikit-image 0.25.2 + transformers 5.20.2 等）。恢复时固定这套
-（或明确偏离官方 pin 并先验证），不能把 `pip install -r requirements.txt` 后“能 import”
+官方 `requirements.txt` 只钉了 `numpy==1.22.3`，其余依赖未钉；上表是接收端报告安装的
+组合，完整 pipeline 导入仍因 diso 失败（numpy 1.26.4 + scikit-image 0.25.2 + transformers 5.20.2 等）。这些版本不作为已验证可复现环境；恢复时导出实际环境并逐包核版本
+（偏离官方 pin 须解释并先验证），不能把 `pip install -r requirements.txt` 后“能 import”
 当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 记录的实测组合。
 
 ## 恢复后的制作顺序
 
 1. 放进官方权重，记录 revision 与每个权重文件的 SHA-256；RMBG 不下载。
-2. 建 Python 3.10/3.11 环境，装 `torch==2.9.1+cu128`、CUDA Toolkit 12.8；按实测组合
-   固定 `numpy==1.26.4`、`diffusers==0.41.0`、`transformers==5.20.2`、`trimesh==5.2.0`、
-   `Pillow==12.3.0`、`scikit-image==0.25.2`、`torchvision==0.24.1+cu128`，再补官方
-   `requirements.txt` 的其余未钉依赖（不要让它的 `numpy==1.22.3` 覆盖上表）。把源码
-   checkout 到固定 commit `fc5c4099…` 并放到 `PYTHONPATH`。
+2. 在任务专用 prefix 建 Python 3.10 环境，先核既有 MSVC `cl`、`nvcc`、
+   `CUDA_HOME` 与 torch CUDA 版本。NVIDIA [12.8 Windows 安装文档](https://docs.nvidia.com/cuda/archive/12.8.0/cuda-installation-guide-microsoft-windows/index.html#using-conda-to-install-the-cuda-software)
+   给出官方 Conda Toolkit 和版本 label；可先 dry-run `cuda=12.8` 的隔离安装方案，
+   只允许 user-space compiler/headers/libraries，不装或更新驱动、不改系统 PATH/安全设置。
+   若缺 host compiler，记录该独立阻塞，不静默跑系统安装器。PyTorch CUDA wheel 能运行
+   不代表含 `nvcc`；pip runtime 也不是完整编译工具链，未找到经验证的 Windows diso wheel。
+   成功构建 diso 后先测 import 和小 CUDA 网格提取，再尝试完整 pipeline。
+   上表环境是历史报告，不盲钉尚未核对的组合；固定实际可安装的版本与 wheel/source hash，
+   保留与上游 numpy pin 的差异。源码使用干净固定 checkout，避免 editable 导入别处代码。
 3. 运行（相对仓库根，`--source-dir` 指向上面那个 checkout）：
    ```sh
    python asset-pipeline/battle/tools/openweight-rock/run_triposg.py \
@@ -105,7 +105,8 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
    ```
    产物为 `prepared-input.png`（alpha 校验后按 `a > 0` 包围盒裁剪并白底合成）、未改动
    的 `raw.glb` / `raw-mesh.npz`，以及记录输入/权重/耗时/峰值显存/源 HEAD 的
-   `run.json`。脚本会核 `--source-dir` 的 `git rev-parse HEAD` 必须等于 `fc5c4099…`，
+   `run.json`。revision 必须是完整 Hub commit；输出目录必须空。脚本会核干净源码 HEAD 与
+   实际导入模块路径，HEAD 必须等于 `fc5c4099…`，
    不一致即失败；输入 alpha 不合格时也以明确错误退出，不会改走背景模型。
 4. 后处理另存：减面到 ≤2,000 三角形、≤2 材质、GLB ≤500 KB；无贴图或一张 ≤512²
    图集；粗糙非金属；保存可编辑 Blender 源。重导后逐条核对：
@@ -118,8 +119,9 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 
    再对同一件做一次局部二改（例如降低最高石尖）验证能重导。
 5. 只在通过资产检查、消费者测试、web build 和真实 Three 交战同视角旧/新对比后，
-   才替换 `exported/rock.glb` 并更新 `manifest.json` 的 `rock` 条目。manifest 只改
-   `sha256` / `bounds` / `bytes`（`triangles` 若与实际几何不符也须改正），并保留
+   才替换 `exported/rock.glb` 并更新 `manifest.json` 的 `rock` 条目。manifest 同步改
+   实际 hash / bounds / bytes / triangles 以及此生成件的 source / license / provenance，
+   不能保留旧 KayKit 来源标签，并保留
    `id: rock`、`url`、`kind: decoration`、`forward: +Z`、`groundY: 0` 五个字段；
    名义高与 footprint 预算按合同不动。现有 `tools/build.py` 的全量入口仍会从 KayKit
    重导 rock，接入时只改 rock 的源读取入口，其他生成函数与其余 14 个 GLB 不动；
@@ -127,8 +129,7 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 
 ## 权利说明
 
-- TripoSG 代码 MIT，commit 固定为 `fc5c4099…`；权重按上游模型卡为 MIT。本次没能
-  打开 Hub 复核模型卡，故这一条只按任务给定信息记录，未独立验证。
+- TripoSG 代码 MIT，commit 固定为 `fc5c4099…`；权重模型卡 MIT 已由云端在 2026-10-26 复核；本机尚未取得权重文件。
 - RMBG-1.4 不在本链路里，不随输入或输出分发。
 - 输入图由本仓库脚本原创生成，按 CC0-1.0 提供；它不是 KayKit 资产。
 - 生成输出是另一层权利，生成后单独记录；不自动标成 KayKit CC0，也不因输入是
@@ -151,3 +152,6 @@ alpha、全不透明 alpha、过小前景和坏 PNG 的拒绝。`run_triposg.py`
 
 未验证：权重下载、TripoSG 推理、简化/重导、GLB 合同、Three 加载与释放、真实交战
 截图对比、性能与最终品质。
+
+CPU 修正检查：`python asset-pipeline/battle/tools/openweight-rock/test_runner.py` 5 项通过，
+原输入合同 5 项通过，`--help` 无需 torch；只验证输入与来源/输出保护，不证明推理可运行。
