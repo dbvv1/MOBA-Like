@@ -21,6 +21,17 @@ export function commandForCast(hero:HeroSnapshot, slot:AbilitySlot, aim:Aim, sna
     }
   }
 }
+// Contextual right click: choose the picked enemy, never a nearest-target substitute.
+// A stale/protected enemy click is a no-op, not a move into that enemy.
+export function commandForRightClick(hero:HeroSnapshot,aim:Aim,snapshot:Snapshot):SimCommand|null {
+  if(!hero.alive||snapshot.status!=='running')return null;
+  if(aim.entityId!==null){
+    const target=snapshot.entities.find(entity=>entity.id===aim.entityId);
+    if(!target||!target.alive)return null;
+    if(target.team!==hero.team)return target.invulnerable?null:{type:'attack',heroId:hero.id,targetId:target.id};
+  }
+  return moveCommand(hero.id,aim.point);
+}
 export function validPoint(point:Vec2|null):point is Vec2 {return point!==null && Number.isFinite(point.x)&&Number.isFinite(point.z);}
 export function moveCommand(heroId:number,point:Vec2|null):SimCommand|null {return validPoint(point)?{type:'move',heroId,point:{...point}}:null;}
 export function isInputElement(target:EventTarget|null):boolean {
