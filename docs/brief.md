@@ -23,7 +23,7 @@
 | 镜头与输入 | [05 §8](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/05-gameplay-architecture.md#8-相机先让玩家看懂并控得住再增加镜头语言)、[04 菜单与改键](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/04-client-modules.md#接入手柄暂停与多人菜单) | 俯视镜头、施放指示、改键与设置保存 |
 | 局内成长 | [05 局内奖励](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/05-gameplay-architecture.md#reward-choice) | 借用其中的奖励节奏判断；等级与装备曲线 a1dbv 还没有专节，跑通后回填 |
 | 性能 | [04 性能诊断](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/04-client-modules.md#压低卡顿与设备耗用) | 满兵线、技能齐放时的帧时间与归因 |
-| 制作链 | [3D](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/3d.md)、[动画](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/animation.md)、[技能特效](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/materials.md#把候选交成整招而不是一段漂亮特效)、[音频](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/audio.md)、[2D 图标](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/2d.md) | 英雄模型与动作、整招特效、技能音效、技能图标从制作到接入，再做一次修改 |
+| 制作链（可玩版合入后） | [3D](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/3d.md)、[动画](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/animation.md)、[技能特效](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/materials.md#把候选交成整招而不是一段漂亮特效)、[音频](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/audio.md)、[2D 图标](https://github.com/dbvv1/a1dbv/blob/main/domains/game-dev/assets/2d.md) | 英雄模型与动作、整招特效、技能音效、技能图标从制作到接入，再做一次修改 |
 
 ## 技术默认
 
