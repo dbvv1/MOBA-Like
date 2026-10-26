@@ -8,6 +8,8 @@ import {startServer} from './server.mjs';
 describe('strict browser smoke helpers (no browser launched)',()=>{
   it('defaults to sandbox; explicit binary/sandbox options never silently fall back',()=>{
     expect(launchOptions({}).chromiumSandbox).toBe(true);
+    expect(launchOptions({}).ignoreDefaultArgs).toEqual(['--enable-unsafe-swiftshader']);
+    expect(launchOptions({}).args).toEqual(['--use-angle=swiftshader']);
     expect(launchOptions({MOBA_SMOKE_CHROMIUM:'/example/chromium'}).executablePath).toBe('/example/chromium');
     expect(launchOptions({MOBA_SMOKE_CLOUD_NO_SANDBOX:'1'}).chromiumSandbox).toBe(false);
     expect(()=>launchOptions({MOBA_SMOKE_CHROMIUM:'chromium'})).toThrow('absolute');

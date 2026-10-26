@@ -8,6 +8,7 @@ export function launchOptions(env = process.env) {
   if (sandboxOverride !== undefined && sandboxOverride !== '1') throw new Error('MOBA_SMOKE_CLOUD_NO_SANDBOX must be unset or 1');
   return {headless:true, chromiumSandbox:sandboxOverride !== '1', timeout:30000,
     args:['--use-angle=swiftshader'],
+    ignoreDefaultArgs:['--enable-unsafe-swiftshader'],
     ...(executablePath ? {executablePath} : {})};
 }
 
