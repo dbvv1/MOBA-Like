@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
+import {reuseReactionClips,reactionClip} from './reactions.js';
 
 export const assetUrls = Object.freeze({
-  blue: new URL('../placeholder/assets/blue.glb', import.meta.url).href,
+  blue: new URL('../characters/beacon-guard/assets/blue-reactions.glb', import.meta.url).href,
   amber: new URL('../placeholder/assets/amber.glb', import.meta.url).href,
 });
 
@@ -51,6 +52,7 @@ export async function loadCharacterAssets(load = url => new GLTFLoader().loadAsy
     for (const asset of assets) for (const name of ['idle', 'walk']) {
       if (!asset.animations.some(clip => clip.name === name)) throw new Error(`Missing clip: ${name}`);
     }
+    if(assets[0].animations.some(clip=>clip.name==='death'))reuseReactionClips(assets[0],assets[1]);
     return {blue:assets[0], amber:assets[1]};
   }).catch(error => { releaseLoaded(); throw error; }).finally(() => signal?.removeEventListener('abort', onAbort));
   // Cancellation returns promptly even if a transport never settles. Each late
@@ -98,15 +100,20 @@ function character(asset) {
     }
   });
   const mixer = new THREE.AnimationMixer(root);
+  const deathClip=reactionClip(asset,'death');
   let action = null;
   function play(name) {
     if (action === name) return;
     mixer.stopAllAction();
-    mixer.clipAction(asset.animations.find(clip => clip.name === name)).reset().play();
+    const clip=name==='death'?deathClip:asset.animations.find(clip=>clip.name===name);
+    const next=mixer.clipAction(clip).reset();
+    if(name==='death'){next.setLoop(THREE.LoopOnce,1);next.clampWhenFinished=true;}
+    else{next.setLoop(THREE.LoopRepeat,Infinity);next.clampWhenFinished=false;}
+    next.play();
     action = name;
   }
   play('idle');
-  return {root, mixer, materials, play, get action() { return action; },
+  return {root, mixer, materials, play, deathDuration:deathClip?.duration??0, poseDeath(seconds){if(deathClip){const a=mixer.clipAction(deathClip);a.time=Math.min(seconds,deathClip.duration);a.paused=true;mixer.update(0);}}, get action() { return action; },
     dispose() { mixer.stopAllAction(); mixer.uncacheRoot(root); for (const material of materials) material.dispose(); for (const skeleton of skeletons) skeleton.dispose(); }};
 }
 
@@ -168,10 +175,17 @@ export function createPresentation({catalog, assets}) {
       actor.to = new THREE.Vector3(hero.position.x, 0, hero.position.z);
       actor.from = old?.alive && hero.alive ? new THREE.Vector3(old.x, 0, old.z) : actor.to.clone();
       actor.root.position.copy(actor.to);
-      actor.root.visible = hero.alive;
+      // Trigger only on an observed alive -> dead transition. Initial dead
+      // snapshots do not fabricate a death event; corpse visuals never affect sim/HUD.
+      if(old?.alive && !hero.alive)actor.deathStarted=snapshot.timeSeconds;
+      if(hero.alive)actor.deathStarted=null;
+      const deadElapsed=actor.deathStarted==null?Infinity:Math.max(0,snapshot.timeSeconds-actor.deathStarted);
+      actor.root.visible = hero.alive || (actor.deathDuration>0 && deadElapsed<actor.deathDuration+1);
+      actor.deadElapsed=deadElapsed;
       // GLB's forward is +Z after Blender -Y -> glTF conversion. No facing on snapshot.
       if (moving) actor.root.rotation.y = Math.atan2(dx,dz);
-      actor.play(moving ? 'walk' : 'idle');
+      actor.play(!hero.alive&&actor.deathDuration>0&&actor.deathStarted!=null?'death':moving?'walk':'idle');
+      if(actor.action==='death')actor.poseDeath(deadElapsed);
       actor.previous = {x: hero.position.x, z: hero.position.z, alive: hero.alive};
     }
     for (const [id, actor] of heroes) if (!seen.has(id)) { root.remove(actor.root); actor.dispose(); heroes.delete(id); }
@@ -199,7 +213,7 @@ export function createPresentation({catalog, assets}) {
     if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) throw new Error('Interpolation alpha must be between 0 and 1');
     for (const actor of heroes.values()) {
       actor.root.position.lerpVectors(actor.from, actor.to, alpha);
-      if (actor.root.visible) actor.mixer.update(seconds);
+      if(actor.root.visible){if(actor.action==='death'){actor.deadElapsed+=seconds;actor.poseDeath(actor.deadElapsed);if(actor.deadElapsed>=actor.deathDuration+1)actor.root.visible=false;}else actor.mixer.update(seconds);}
     }
     for (const [id, proxy] of entities) {
       const position = entityPositions.get(id);

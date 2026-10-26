@@ -26,17 +26,17 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 // 所有共享消费者释放后：disposeCharacterAssets(assets);
 ```
 
-初始化、`step(commands)`、相机和输入属于游戏入口。现模拟可通过获取 navmesh 字节、`createDetourNavigation(bytes)`、`new Simulation(...)` 初始化；本模块不取代模拟 owner 的入口。测试读取真实 v1/v2 catalog 和真实 Simulation 快照，运动夹具使用直线路径对象，不冒充 Detour／完整对局验证。
+初始化、`step(commands)`、相机和输入属于游戏入口。现模拟可通过获取 navmesh 字节、`createDetourNavigation(bytes)`、`new Simulation(...)` 初始化；本模块不取代模拟 owner 的入口。测试读取真实 v1/v2/v8 catalog 和真实 Simulation 快照，运动夹具使用直线路径对象，不冒充 Detour／完整对局验证。
 
 ## 表现合同
 
 - 角色用 `SkeletonUtils.clone` 克隆：独立骨架、AnimationMixer 和材质；共用只读几何与 clip。按 team 选蓝单鳍／橙双鳍，同阵营多个实例不会共用骨骼状态。当前不同英雄仍用同一占位模型。
-- 坐标从快照 `(x,z)` 原样落到 Three 地平面，单位米。只从相邻逻辑 tick 的位移选择 idle/walk 和朝向；无位移保留朝向，死亡隐藏，复活首 tick idle。没有攻击／命中事件时，不从冷却、castSlot 或目标推断攻击动作。
+- 坐标从快照 `(x,z)` 原样落到 Three 地平面，单位米。只从相邻逻辑 tick 的位移选择 idle/walk 和朝向；无位移保留朝向，观察到alive→dead时播放同源death并保持一秒，随后隐藏；初始就是dead不补造死亡动作，复活首tick取消旧动作并回idle。没有攻击／命中事件时，不从冷却、castSlot 或目标推断攻击动作。
 - `sync` 同 tick 幂等；倒退 tick 要显式 `reset()`；`advance(seconds, alpha=1)` 只推进视觉混合器并在最近两个快照端点间插值位置；alpha 取固定步长累加器比例 0–1，使用时表现比模拟最新端点晚一逻辑 tick。默认 1 保持直接采用最新位置。死亡／复活和首次出现重置插值起点，倒退需 reset，重复 render 不改端点。地图边界、兵线宽、结构位置与半径取 catalog／snapshot；塔／基地／兵营／小兵是分类几何，不是最终场景美术。对象根的 `userData.simEntityId` 可供输入层拾取后找到模拟实体。
 - `abilityViewModel` 从 catalog 的能力定义取语义，不固定 QWER 映射。v1 首英雄覆盖四类；v2 的方向弹道没有专用图标，返回 `icon:null`，由 UI 显示技能名而非沿用错误指向图标。冷却原字段是 tick，输出同时保留 `cooldownTicks` 和按 `rules.tickRate` 换算的秒。死亡、眩晕、施法、冷却、法力只提供已知禁用原因；目标、距离、朝向等合法性仍由模拟裁决。
 - `view.dispose()` 只释放自己克隆的材质／骨架和地图几何，不释放共用 GLB 源。所有消费者释放后，由持有 `assets` 的调用方用 `disposeCharacterAssets(assets)` 统一释放源几何、材质、骨架和纹理。加载器等待两项结束，任一失败或缺必需 clip 时清理已加载源。
 
-纯 Three 数值测试不创建 WebGL：核真实 GLB 的独立克隆、整角色变换、快照不变、状态移除、重置、释放与图标语义。当前云浏览器 WebGL 2 上下文不可用；真实游戏接入、3D 画面、移动滑步、动作衔接与视觉辨识待验。报告仅放本地忽略的 `reports/`。
+纯 Three 数值测试不创建 WebGL：核真实 GLB 的独立克隆、整角色变换、快照不变、状态移除、重置、释放与图标语义。原可玩版已有软件WebGL 2验收；本次新增death姿态的浏览器接入与动作观感仍待验。报告仅放本地忽略的 `reports/`。
 
 
 ## 资源共享与显式预算
@@ -60,3 +60,7 @@ const buttons = abilityViewModel(simulation.snapshot().heroes[0], simulation.cat
 每个克隆 skinned mesh 的 `raycast` 包装器在真正的 `Raycaster.intersectObject(s)` 派发时计算当前姿态 box，再从 box 得到保守 sphere，然后调用原 Three raycast。此时只做一次全顶点 bounds 扫描；调用方仍须先通过 `sync/advance` 更新世界矩阵。相比预采样 clip 的静态界，避免了未采样旋转极值／后续姿态超界的假保守保证；相比逐帧动态界，将这项 CPU 工作放在实际拾取时。大量角色或高频拾取应另评估粗代理／完整保守界，不把该策略推广成通用性能结论。
 
 Node 回归用真实 idle→walk，构造包含逃出旧球顶点的正交相机 Frustum，证实旧球会误剔除；同时经真正 Raycaster 派发验证更新后的 bounds 与原 Three 几何交点一致。GPU 绘制、离屏成本和用户视觉表现仍待实际环境验证。
+
+## 原创 reaction 供给
+
+蓝方改用[Beacon Guard 可复现五动作源](../characters/beacon-guard/README.md)；橙方保留双鳍几何/材质，仅在骨骼对象归属、顺序、层级、local/world矩阵、每个蒙皮的bind/inverse绑定逐项等价时复用hurt/death轨道。不是通用重定向。新reaction轨的第一键归零，既有idle/walk/attack不重写。仅death当前采用，hurt/attack待模拟显式事件；不从HP差或冷却制造受击。尸体视觉不改变sim存活、HUD、碰撞或复活时间。

@@ -1,0 +1,12 @@
+{
+  "source_sha256": "7c9904da8061fbfe1b932f3f2317092ee8b027cf78e84945b7ea720460842fc0",
+  "original_actions": {
+    "idle": "1a2f35925a05d5a85417245e70dfc8ae0e34d11eb9646c992398af0734b8dbda",
+    "walk": "99760d1a32539a20a64b077668c7109198aa0ca978f7a638ce580757931693c4",
+    "attack": "e809c8c0aecec834e08bc885870859b31bb7c89b8aa190fc44dfa0465354af4f"
+  },
+  "original_structure": "73c622bc9c4ff0fa55c54eefb2df7258bf2d57cb1af572e2671e0dea7d624a0c",
+  "fall_frames": 24,
+  "hurt_seconds": 0.6,
+  "death_seconds": 1.0
+}
