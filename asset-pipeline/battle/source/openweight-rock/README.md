@@ -1,23 +1,17 @@
-# 开放权重岩簇候选（TripoSG）
+# 开放权重岩簇候选（TripoSG / TripoSR）
 
 服务基本战斗的路外 `rock` 装饰：用开放权重图生 3D 得到低矮风化岩簇，替换现有 KayKit
 `rock_single_C` 派生件。候选尚未接入；`exported/rock.glb`、`manifest.json` 的 `rock`
-条目、其余 14 个运行 GLB 都未改动。本页记录已做过的输入与工具准备、实际环境结果和
-恢复条件，不代表生成成功或品质达标。
+条目、其余 14 个运行 GLB 都未改动。本页记录输入、工具、许可路径和实际环境结果，不代表
+生成成功或品质达标。
 
-## 当前状态（2026-10-27）
+## 当前状态（2026-10-27，接收端续修）
 
-**阻塞：拿不到官方权重，也没有可用的 TripoSG 依赖环境；推理一次都没跑。**
-
-继续前先修提取路径：`diso==0.1.4` 的[上游许可](https://github.com/SarahWeiii/diso/blob/main/LICENSE)
-为 CC BY-NC 4.0，不属于 TripoSG 的 MIT。暂不采用该依赖制作产品，也不推断生成输出
-自动继承该许可。固定上游已支持 `use_flash_decoder=False`，调用
-`hierarchical_extract_geometry` 内 `scikit-image.measure.marching_cubes`；其顶层 diso
-import 仍需最小延迟导入修正。接收端先交该可审 patch、上游基 SHA 与 patch hash，
-让 runner 验证真实修订代码而非假称 clean 上游；显式关闭 flash，再测实际内存和结果。
-此路径尚未实现/运行，当前 runner 仍是原 flash 调用骨架，不可直接作为许可已清的产品路线。
-下面 Toolkit 资料只是独立编译途径，不是继续安装 diso 的许可结论。
-因此没有原始生成 mesh、没有 Blender 采用源、没有旧/新同视角图，也没有质量结论。
+**阻塞：拿不到官方权重；推理一次都没跑。** 代码与许可路径已推进到“只差权重和 12 GB
+实机”：TripoSR 低成本路线有独立薄调用脚本，TripoSG 官方 nonflash 窄对照路径有可审的
+最小 `diso` 延迟导入 patch（基 SHA 与 patch hash 见下），两者都不下载、不初始化
+RMBG/rembg。仍没有原始生成 mesh、没有 Blender 采用源、没有旧/新同视角图，也没有质量
+结论。
 
 1. **本机官方 Hub TLS 未建立。** 接收端记录 ClientHello 后未收到 ServerHello，
    Python `ssl` 为 `UNEXPECTED_EOF_WHILE_READING`，`snapshot_download` 抛
@@ -26,34 +20,105 @@ import 仍需最小延迟导入修正。接收端先交该可审 patch、上游�
    其他站点可达也不能证明根因。云端于 2026-10-26 可读
    [官方模型卡](https://huggingface.co/VAST-AI/TripoSG)（MIT）；先前“仓库不存在”的
    断言撤回，不能把 TLS EOF 当作仓库 404。云端读页面不证明本机能下载权重。
+   2026-10-27 复测 `https://huggingface.co/VAST-AI/TripoSG` 仍是 schannel 握手失败
+   （未取得 HTTP 状态），因此没有做权重下载。
    保持同一官方来源和 TLS 验证；不换镜像、代理、凭据，不关闭验证。仅在已确认未执行且
    有网络恢复新证据时作一次受限同源检查；若出现明确平台拒绝，停止该动作并记录恢复条件。
-2. **依赖环境不完整。** 官方 `requirements.txt` 未钉版本的 `diso` 只有 sdist，
-   构建时要编译 CUDA 扩展；本机没有 CUDA Toolkit（`cuda_runtime.h` 不存在），
-   `diso==0.1.4` 构建失败，`TripoSGPipeline` 导入终止在
-   `ModuleNotFoundError: No module named 'diso'`。官方 `requirements.txt` 里
-   `numpy==1.22.3` 也不支持 Python 3.13，实际需要另建 3.10/3.11 环境。
+2. **TripoSG 依赖。** 官方 `requirements.txt` 未钉版本的 `diso` 只有 sdist，构建时要
+   编译 CUDA 扩展；本机没有 CUDA Toolkit（`cuda_runtime.h` 不存在），`diso==0.1.4`
+   构建失败。但非 flash 提取不需要 `diso`：官方 `use_flash_decoder=False` 分支走
+   `hierarchical_extract_geometry` 和 `scikit-image.measure.marching_cubes`。上游在
+   `inference_utils.py` 顶层 import `diso`，用本页记录的窄 patch 延迟到 flash 函数后，
+   任务 venv（无 `diso`）已实测能导入 `TripoSGPipeline` 与 `hierarchical_extract_geometry`，
+   并用 dummy SDF 在 GPU 上跑通小尺寸 nonflash 提取（`diso` 未加载，输出 6,104 面，
+   峰值 1.7 MiB；不是真实模型推理）。
+   `diso` 的 [上游 LICENSE](https://github.com/SarahWeiii/diso/blob/main/LICENSE) 与
+   PyPI 均为 CC BY-NC 4.0，不随 TripoSG MIT 改变；产品路径不用 flash，也不推断生成输出
+   继承该许可。
 3. **显存条件。** 官方要求 >8 GB。实测 RTX 5070 共 12227 MiB：桌面程序占用时
    剩 5115 MiB，释放后剩 11035 MiB。没有为腾显存关闭他人进程，也没有跑推理，
    所以“8 GB 能否跑通”仍未知。
+4. **TripoSR 提取依赖未装成。** 官方 `torchmcubes`（MPL-2.0，git `a9ac95a…`）是
+   编译扩展。本机有 host MSVC 14.44，但没有 CUDA Toolkit / `nvcc` / `cuda_runtime.h`。
+   在任务 venv 实测：先缺 CMake/pybind11，补齐后 CMake 报
+   `NO CUDA INSTALLATION FOUND, TRYING TO INSTALL CPU VERSION ONLY!`，随后因已装
+   `torch 2.9.1+cu128` 的 Caffe2 需要 CUDA 库而配置失败。没有换 torch、没有另造提取
+   框架。恢复条件：在任务隔离的 CUDA torch 环境装 CUDA Toolkit 12.8 的 user-space
+   compiler/headers/libraries，使官方 `torchmcubes` 可构建并与该 torch 的 ABI/版本匹配。
+   `run_triposr.py` 在 `torch.cuda.is_available()` 为 False 时直接退出，所以 CPU-only
+   torch 环境只能用于单独构建/验证 `torchmcubes`，构建产物不能在该环境运行 runner；
+   权重仍需 HF。
 
-恢复条件：本机标准 TLS 能完成官方 Hub 握手并取得公开模型的固定 revision；
-另在任务隔离环境里使 CUDA 扩展可构建。TLS EOF 的具体根因仍未知，不能擅自安装证书、
-改系统安全或要求新凭据。原复审的“8 条问题”全文未入仓；接收端须取回原审查逐项回应，
-当前云端修正不等于原 8 条全部关闭。
+恢复条件：本机标准 TLS 能完成官方 Hub 握手并取得公开模型的固定 revision；另在任务
+隔离的 CUDA torch 环境里使 CUDA 扩展可构建。TLS EOF 的具体根因仍未知，不能擅自安装证书、
+改系统安全或要求新凭据。
 
-低成本回退仍是官方 TripoSR（源码固定 `107cefdc244c39106fa830359024f6a2f1c78871`），
-权重 `stabilityai/TripoSR`。接收端报告其同样受 TLS 阻断，未运行；不以回退绕过同一拒绝。
+## 原独立审查 8 条逐项回应
 
-权重可达后按上游方式跑时必须带 `--no-remove-bg`：默认路径会调用
-`remove_background`／`rembg`，那是本任务禁止引入的背景模型。输入合同是已合成的灰底
-RGB（把 alpha 合到中性灰底、不带 alpha 通道），不是本仓库的 RGBA 原图：
+下列是接收端 Workflow 独立复审在上一轮修正后留下的 8 条（不是首轮的 8 条；复审原文由
+接收端取回，未入仓）。逐项状态如下：
+
+| # | 原问题 | 本轮处理 | 证据 |
+|---|---|---|---|
+| 1 | 把 HF 404 误挂到官方 Hub | 已撤回该断言；只记录本机 TLS EOF，并说明云端能读官方模型卡不等于本机能下载 | 本节状态 1；2026-10-27 复测仍为握手失败，未出现 HTTP 404 |
+| 2 | 接入步骤未要求改 manifest 的 `source`/`license` | 接入步骤明确同步改 hash/bounds/bytes/triangles/source/license/provenance，保留五个运行字段；若最终许可不是 CC0-1.0，同时把 `test_assets.py` 的全资产许可断言改成显式允许值并保留其余检查（当前尚未接入，未先改测试） | 下文“恢复后的制作顺序”第 5 步 |
+| 3 | TripoSR 回退被 `run.py` 顶层 `import rembg` 阻断，且没写裁剪/灰底合同 | 新增 `run_triposr.py`：直接 import `tsr.system.TSR`，不经过 `run.py`；输入按 `a > 0` 裁剪、方形化并按 0.85 前景占比留边、合成到中性灰 0.5，输出无 alpha 的 RGB；运行后断言 `rembg`/`tsr.bake_texture` 未被导入 | `run_triposr.py`；`test_runner.py` 的 `TripoSRGuards` 4 项 |
+| 4 | `--weights` 示例与帮助把权重目录和源码 checkout 混用 | docstring、`--weights` help 和 README 命令统一为“权重目录（含 `model_index.json`）+ `--source-dir` 源码 checkout” | `run_triposg.py --help` |
+| 5 | `run.json` 未记录实际依赖版本 | `runtime.packages` 记录 diffusers/transformers/numpy/Pillow/trimesh/scikit-image/torchvision/diso，未安装项写 `null`；TripoSR sidecar 另记 torchmcubes | `package_versions()`；`test_package_versions_mark_missing` |
+| 6 | `--source-dir` 只核 HEAD，未绑定实际 import | 导入后核 `pipeline_triposg`、`inference_utils` 和 TripoSR `tsr.system` 的 `__file__` 都在已核 checkout 下，否则明确失败 | `verify_imported_modules`；`test_import_must_come_from_verified_checkout` |
+| 7 | 缺少可复现的后处理/转换脚本 | 新增 `postprocess.py`：减面、接地、缩到 1.1 m、单粗糙非金属材质、GLB 导出、全顶点 footprint/三角面/材质/字节合同检查；材质与贴图数从导出 GLB 的 JSON chunk 实测，不写死；写 `postprocess.json` | 合成 20,480 面网格实跑：减到 2,000 面、36,956 B、高 1.1 m、半径 0.331 m、实测 1 材质 / 0 贴图 / OPAQUE；带贴图与 3 材质导出被拒绝 |
+| 8 | 缺旧/新差距二改与云端补图退路 | 制作顺序第 5 步和“验证”补：取同视角旧/新图后列最大 1–2 处差距并对同一件二改复评；本机取不到实际游戏图时保留工程候选，明确由云端产品 owner 补真图，离线 Blender 图不算运行品质 | 下文“恢复后的制作顺序”第 5 步 |
+
+## 两条生成路线
+
+先在任务环境里核 TripoSR：`torchmcubes`（MPL-2.0）能在 CUDA torch 下构建/加载时，它是
+首选的低成本路线（官方源码与权重 MIT，默认单图约 6 GB）。TripoSG nonflash 只作许可已清
+的窄对照/后备，不先于 TripoSR 执行。
+
+### TripoSR（首选低成本路线；torchmcubes/CUDA 依赖可构建时）
+
+适用条件：任务隔离环境里的 CUDA torch 能构建/加载官方 `torchmcubes`，且能取得官方权重。
+满足时先跑这条路线；依赖链仍不可用才转下一节的 TripoSG nonflash 窄对照，不另造提取框架。
+
+官方源码与权重均为 MIT；源码固定 `107cefdc244c39106fa830359024f6a2f1c78871`，权重
+`stabilityai/TripoSR`。`run_triposr.py` 不调用 `run.py`：
 
 ```sh
-python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
+python asset-pipeline/battle/tools/openweight-rock/run_triposr.py \
+  --weights <本地 TripoSR 权重目录（config.yaml + model.ckpt）> \
+  --revision <完整 Hub commit> \
+  --source-dir <固定 commit 的 TripoSR checkout> \
+  --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
+  --out-dir asset-pipeline/battle/source/openweight-rock/generated-triposr
 ```
 
-不安装、不下载、不初始化 `rembg` 或 RMBG；该路径需在权重可达后另行验证。
+输入合同对应上游 `--no-remove-bg`：真实 alpha 只用于离线裁剪/合成，最终交给模型的是
+中性灰 0.5 底的 RGB，不带 alpha；`rembg` 不安装、不导入、不初始化，`tsr.bake_texture`
+（xatlas）也不导入。提取仍用官方 `torchmcubes`，不另写 marching cubes。它当前因缺
+CUDA Toolkit 不能构建（见状态 4），所以这条路线是“代码与许可就绪、依赖阻塞”，不是已跑通。
+
+### TripoSG nonflash（许可已清的窄对照/后备）
+
+适用条件：TripoSR 的依赖链仍不可用，或需要同输入的官方 nonflash 窄对照，且官方权重
+可取得。它是窄对照/后备，不是默认先跑的产品路线。
+
+上游固定 commit `fc5c4099…` 的官方非 flash 分支走
+`hierarchical_extract_geometry` → `scikit-image` marching cubes，代码路径不依赖 `diso`。
+`patches/triposg-nonflash.patch` 只做一件事：把 `triposg/inference_utils.py` 顶层的
+`from diso import DiffDMC` 移进 `flash_extract_geometry` 的 `try` 块，非 flash 路径不再
+触发 CC BY-NC 依赖。
+
+- 基 commit：`fc5c40990181e2a756c4e0b1c2f4d6b5202faf8c`
+- patch：`tools/openweight-rock/patches/triposg-nonflash.patch`
+- patch SHA-256：`32bec58f6c3cd4dd06fdeb50ba19be3f148d3d0dcf7d81f08b8ef55223589b71`
+- runner 不把打过 patch 的树称为 clean 上游：它要求 checkout HEAD 等于基 commit、
+  `git diff HEAD` 的字节 hash 等于上面的 patch hash、且没有未跟踪文件；`run.json`
+  记录 `baseCommit`、`patched: true`、patch 文件名与 hash。
+- 已实测（任务 venv，没有装 `diso`）：`git apply --check` 通过，应用后
+  `git diff` 的 hash 与 patch hash 相同；`from triposg.pipelines.pipeline_triposg import
+  TripoSGPipeline` 与 `hierarchical_extract_geometry` 导入成功，`'diso' in sys.modules`
+  为 False。
+- 仍未实测：12 GB 实机峰值显存与真实推理，因为没有权重。flash 模式只作对照，不是产品路径。
 
 ## 已准备的文件
 
@@ -61,18 +126,22 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 |---|---|
 | `source/openweight-rock/input/rock-cluster.png` | 1024²、8-bit RGBA 的自制输入；真实 alpha，单物体，无文字/发光/旗帜/硬阴影 |
 | `source/openweight-rock/input/make_input.py` | 确定性重画脚本；三块不等高、约 1.5:1 宽的切面岩体，暖灰石＋少量暗绿苔斑与细裂 |
-| `source/openweight-rock/README.md` 的权利说明 | 输入、模型、权重与输出权利分开记录 |
-| `tools/openweight-rock/png_rgba.py` | 无第三方依赖的 RGBA PNG 读取与 alpha 合同；空/全不透明/过小 alpha 明确报错 |
-| `tools/openweight-rock/run_triposg.py` | 薄调用 `TripoSGPipeline`；只吃本地权重，不下载权重，不导入/初始化 RMBG；保留原始 mesh；核源 checkout 的 HEAD 等于固定 commit |
+| `source/openweight-rock/README.md` 的权利说明 | 输入、代码、权重、依赖与输出权利分开记录 |
+| `tools/openweight-rock/png_rgba.py` | 无第三方依赖的 RGBA PNG 读取、alpha 合同与 RGB PNG 写出；空/全不透明/过小 alpha 明确报错 |
+| `tools/openweight-rock/run_triposg.py` | TripoSG 薄调用：nonflash 为默认；只吃本地权重；核基 commit + 已审 patch；核实际 import 路径；断言非 flash 没导入 `diso`；保留原始 mesh；不下载权重/背景模型 |
+| `tools/openweight-rock/patches/triposg-nonflash.patch` | 官方 `fc5c4099` 上的最小 `diso` 延迟导入 patch（SHA-256 `32bec58f…`） |
+| `tools/openweight-rock/run_triposr.py` | TripoSR 薄调用：直接 import `TSR`，跳过 `run.py` 的 `rembg`；灰底 RGB 输入；保留原始 mesh；不下载 |
+| `tools/openweight-rock/postprocess.py` | 可重复的 raw→final 转换：减面、接地/缩放、单材质、从导出 GLB 实测材质/贴图/alphaMode 的合同检查、GLB 与 sidecar |
+| `tools/openweight-rock/test_runner.py` | 19 项 CPU-only 检查：原来源/输出保护 6 项 + nonflash patch/TripoSR/后处理 13 项 |
 | `tests/test_openweight_input.py` | 输入合同与坏输入拒绝（5 项，纯 Python） |
 
 输入图 SHA-256：`6139b5ba738ee39848bf0ef2358477e42607e65ee53aace19c768c92b0d31b9f`。
 含抗锯齿边缘的全 alpha 前景覆盖约 22.2% 画布（其中全不透明像素 21.5%，1–254 的软边
 像素 0.67%）；裁剪与报告都用 `a > 0` 的包围盒 742×504（宽高比 1.47），全不透明核心
 的 bbox 为 736×496。
-生成后仍需在 Blender 里缩到名义高 1.1 m。若生成件保持输入的宽高比，投影半宽约
-0.81 m；深度不受输入剪影约束，若深度≈宽度则最大半径约 1.15 m，仍低于 1.2 m 上限，
-但必须按全部顶点复算，不能用包围盒单轴代替。
+生成后仍需缩到名义高 1.1 m。若生成件保持输入的宽高比，投影半宽约 0.81 m；深度不受输入
+剪影约束，若深度≈宽度则最大半径约 1.15 m，仍低于 1.2 m 上限，但必须按全部顶点复算，
+不能用包围盒单轴代替。
 
 ## 实际跑过的环境探测
 
@@ -80,66 +149,109 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 |---|---|
 | GPU | NVIDIA GeForce RTX 5070，12227 MiB，驱动 617.14 / CUDA UMD 13.4 |
 | PyTorch | `2.9.1+cu128`，`torch.cuda.is_available()=True`，capability `(12, 0)` |
-| CUDA / cuDNN | 12.8 / 9.10.2 |
+| CUDA / cuDNN | 12.8 / 9.10.2；无 CUDA Toolkit，`nvcc`/`cuda_runtime.h` 不存在 |
+| 主机编译器 | MSVC 14.44.35207（Visual Studio 2022 Community），未加入 PATH |
 | 冒烟矩阵乘 | 4096² fp16 连续 5 次，约 3.4 ms/次；峰值分配 232 MiB |
-| 推理 | 未运行（权重与 `diso` 均不可用） |
-| 源码 | TripoSG commit `fc5c40990181e2a756c4e0b1c2f4d6b5202faf8c`（固定） |
+| 推理 | 未运行（权重不可达） |
+| TripoSG 源码 | commit `fc5c40990181e2a756c4e0b1c2f4d6b5202faf8c`（固定） |
+| TripoSG nonflash 导入/提取 | 打 patch 后任务 venv（无 `diso`）导入成功；dummy SDF（bounds ±1，depth 4→5）提取返回 6,104 面，峰值 1.7 MiB，`diso` 未加载 |
+| TripoSR 源码 | commit `107cefdc244c39106fa830359024f6a2f1c78871`（固定） |
+| torchmcubes | git `a9ac95aa329957ba646e7bb057f825f5dfa77f38`，MPL-2.0；CMake 找 CUDA 失败，未构建 |
+| fast-simplification | 0.2.0，MIT（后处理减面用） |
 | 依赖（实测安装） | diffusers 0.41.0、transformers 5.20.2、trimesh 5.2.0、numpy 1.26.4、Pillow 12.3.0、scikit-image 0.25.2、torchvision 0.24.1+cu128 |
 
 `transformers` 已到 5.x，导入时提示 `BitImageProcessor` 需要 torchvision（已装）而回退；
 官方 `requirements.txt` 只钉了 `numpy==1.22.3`，其余依赖未钉；上表是接收端报告安装的
-组合，完整 pipeline 导入仍因 diso 失败（numpy 1.26.4 + scikit-image 0.25.2 + transformers 5.20.2 等）。这些版本不作为已验证可复现环境；恢复时导出实际环境并逐包核版本
-（偏离官方 pin 须解释并先验证），不能把 `pip install -r requirements.txt` 后“能 import”
-当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 记录的实测组合。
+组合，完整 flash pipeline 导入仍因 diso 失败（numpy 1.26.4 + scikit-image 0.25.2 +
+transformers 5.20.2 等）。这些版本不作为已验证可复现环境；恢复时导出实际环境并逐包核
+版本（偏离官方 pin 须解释并先验证），不能把 `pip install -r requirements.txt` 后“能
+import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 记录的实测组合。
 
 ## 恢复后的制作顺序
 
 1. 放进官方权重，记录 revision 与每个权重文件的 SHA-256；RMBG 不下载。
-2. 在任务专用 prefix 建 Python 3.10 环境，先核既有 MSVC `cl`、`nvcc`、
+2. 在任务专用 prefix 建 Python 3.10 的 CUDA torch 环境（CPU-only torch 只能单独
+   构建/验证 `torchmcubes`，不能运行 `run_triposr.py`），先核既有 MSVC `cl`、`nvcc`、
    `CUDA_HOME` 与 torch CUDA 版本。NVIDIA [12.8 Windows 安装文档](https://docs.nvidia.com/cuda/archive/12.8.0/cuda-installation-guide-microsoft-windows/index.html#using-conda-to-install-the-cuda-software)
    给出官方 Conda Toolkit 和版本 label；可先 dry-run `cuda=12.8` 的隔离安装方案，
    只允许 user-space compiler/headers/libraries，不装或更新驱动、不改系统 PATH/安全设置。
    若缺 host compiler，记录该独立阻塞，不静默跑系统安装器。PyTorch CUDA wheel 能运行
-   不代表含 `nvcc`；pip runtime 也不是完整编译工具链，未找到经验证的 Windows diso wheel。
-   成功构建 diso 后先测 import 和小 CUDA 网格提取，再尝试完整 pipeline。
-   上表环境是历史报告，不盲钉尚未核对的组合；固定实际可安装的版本与 wheel/source hash，
-   保留与上游 numpy pin 的差异。源码使用干净固定 checkout，避免 editable 导入别处代码。
-3. 运行（相对仓库根，`--source-dir` 指向上面那个 checkout）：
+   不代表含 `nvcc`；pip runtime 也不是完整编译工具链，未找到经验证的 Windows
+   `torchmcubes`/`diso` wheel。上表环境是历史报告，不盲钉尚未核对的组合；固定实际可
+   安装的版本与 wheel/source hash，保留与上游 numpy pin 的差异。源码使用干净固定
+   checkout，避免 editable 导入别处代码。
+3. 按依赖条件选路线，优先跑 TripoSR（相对仓库根）：
+
+   - **首选：TripoSR**（官方 `torchmcubes` 在该 CUDA torch 环境可构建/加载时）：
+     ```sh
+     python asset-pipeline/battle/tools/openweight-rock/run_triposr.py \
+       --weights <本地 TripoSR 权重目录（config.yaml + model.ckpt）> \
+       --revision <完整 Hub commit> \
+       --source-dir <固定 commit 的 TripoSR checkout> \
+       --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
+       --out-dir asset-pipeline/battle/source/openweight-rock/generated-triposr
+     ```
+     产物为 `prepared-input.png`（`a > 0` 裁剪后合成到中性灰 0.5 的 RGB，无 alpha）、
+     未改动的 `raw.glb` / `raw-mesh.npz`，以及记录输入/权重/耗时/峰值显存/依赖版本的
+     `run.json`。revision 必须是完整 Hub commit；输出目录必须空。`rembg` 和
+     `tsr.bake_texture` 被导入时 runner 明确失败。
+   - **仅当 TripoSR 依赖链仍不可用时：TripoSG nonflash 窄对照/后备**（`--source-dir`
+     指向固定 commit 的 checkout，并在其上应用本页 patch；runner 会自己核 patch hash）：
+     ```sh
+     python asset-pipeline/battle/tools/openweight-rock/run_triposg.py \
+       --weights <本地官方权重目录> --revision <完整 Hub commit> \
+       --source-dir <固定 commit + 已审 patch 的 TripoSG checkout> \
+       --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
+       --out-dir asset-pipeline/battle/source/openweight-rock/generated
+     ```
+     产物为 `prepared-input.png`（alpha 校验后按 `a > 0` 包围盒裁剪并白底合成）、未改动
+     的 `raw.glb` / `raw-mesh.npz`，以及记录输入/权重/耗时/峰值显存/基 commit/patch/依赖
+     版本的 `run.json`。revision 必须是完整 Hub commit；输出目录必须空。显式 nonflash；
+     若 `diso` 被导入，runner 以明确错误退出，不把该次运行记为许可已清。12 GB 下若需降
+     `--dense-octree-depth` / `--hierarchical-octree-depth`，必须把值、峰值显存和画质
+     变化一起记录，不靠无限重试。
+4. 后处理另存（`--raw` 取上一步首选或后备路线的 `raw.glb`）：
    ```sh
-   python asset-pipeline/battle/tools/openweight-rock/run_triposg.py \
-     --weights <本地官方权重目录> --revision <hub revision> \
-     --source-dir <固定 commit 的 TripoSG checkout> \
-     --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
-     --out-dir asset-pipeline/battle/source/openweight-rock/generated
+   python asset-pipeline/battle/tools/openweight-rock/postprocess.py \
+     --raw asset-pipeline/battle/source/openweight-rock/generated-triposr/raw.glb \
+     --out-dir asset-pipeline/battle/source/openweight-rock/final
    ```
-   产物为 `prepared-input.png`（alpha 校验后按 `a > 0` 包围盒裁剪并白底合成）、未改动
-   的 `raw.glb` / `raw-mesh.npz`，以及记录输入/权重/耗时/峰值显存/源 HEAD 的
-   `run.json`。revision 必须是完整 Hub commit；输出目录必须空。脚本会核干净源码 HEAD 与
-   实际导入模块路径，HEAD 必须等于 `fc5c4099…`，
-   不一致即失败；输入 alpha 不合格时也以明确错误退出，不会改走背景模型。
-4. 后处理另存：减面到 ≤2,000 三角形、≤2 材质、GLB ≤500 KB；无贴图或一张 ≤512²
-   图集；粗糙非金属；保存可编辑 Blender 源。重导后逐条核对：
+   脚本减面到 ≤2,000 三角形、建单个粗糙非金属材质、接地并缩到名义高 1.1 m，按全部顶点
+   复算最大 `sqrt(x²+z²)` ≤1.2 m；导出后从 GLB 的 JSON chunk 实测材质/贴图/图片数与
+   alphaMode，材质 >2、出现贴图/图片或非 OPAQUE 材质即报错，并检查 GLB ≤500 KB，写
+   `postprocess.json`。可编辑 Blender 源固定放 `source/openweight-rock/rock.blend`，从
+   `raw.glb`/最终 GLB 在 Blender 里另存；本机没有 Blender，这一步未生成、未验证。重导后逐条核对：
    - 朝向仍为 `+Z`，正面不是背面；
-   - 按全部顶点把最低点落到 `y=0`，缩到名义高 1.1 m，并用所有顶点（不只包围盒
-     单轴的半宽）复算最大 footprint 半径 ≤1.2 m；
+   - 最低点 `y=0`，名义高 1.1 m，最大 footprint 半径按所有顶点复算；
    - 保持可重打光：不烘焙硬阴影、不把环境光遮蔽烘进顶点色或贴图；
    - 无透明大面、无特效面片、无外链纹理；
    - 不把细节噪声或面数增加当成品质提升。
-
-   再对同一件做一次局部二改（例如降低最高石尖）验证能重导。
+   脚本的 `manualChecks` 列出无法从顶点自动判断的项，必须人工过一遍。再对同一件做一次
+   局部二改（例如降低最高石尖），用同一脚本重导，确认可复现。
 5. 只在通过资产检查、消费者测试、web build 和真实 Three 交战同视角旧/新对比后，
    才替换 `exported/rock.glb` 并更新 `manifest.json` 的 `rock` 条目。manifest 同步改
-   实际 hash / bounds / bytes / triangles 以及此生成件的 source / license / provenance，
-   不能保留旧 KayKit 来源标签，并保留
+   实际 hash / bounds / bytes / triangles 以及此生成件的 `source` / `license` /
+   provenance，不能保留旧 KayKit 来源标签，并保留
    `id: rock`、`url`、`kind: decoration`、`forward: +Z`、`groundY: 0` 五个字段；
-   名义高与 footprint 预算按合同不动。现有 `tools/build.py` 的全量入口仍会从 KayKit
-   重导 rock，接入时只改 rock 的源读取入口，其他生成函数与其余 14 个 GLB 不动；
-   否则重跑会覆盖新件。
+   名义高与 footprint 预算按合同不动。若最终许可不是 `CC0-1.0`，把
+   `tests/test_assets.py` 的全资产许可断言改为该件的显式允许值，保留其余 hash/尺寸/
+   材质/自包含检查，不删断言让候选过关。
+   现有 `tools/build.py` 的全量入口仍会从 KayKit 重导 rock，接入时只改 rock 的源读取
+   入口，其他生成函数与其余 14 个 GLB 不动；否则重跑会覆盖新件。
+   实际相机/灯光下的旧/新同视角图到手后，列最大的 1–2 处差距（例如轮廓不规则度、
+   接地阴影或遮挡），针对同一件二改后同视角复评。本机若拿不到实际游戏图，保留资产
+   工程候选并明确由云端产品 owner 补真图；离线 Blender 图不算运行品质。
 
 ## 权利说明
 
-- TripoSG 代码 MIT，commit 固定为 `fc5c4099…`；权重模型卡 MIT 已由云端在 2026-10-26 复核；本机尚未取得权重文件。
-- RMBG-1.4 不在本链路里，不随输入或输出分发。
+- TripoSG 代码 MIT，commit 固定为 `fc5c4099…`；权重模型卡 MIT 已由云端在 2026-10-26
+  复核；本机尚未取得权重文件。
+- `diso==0.1.4` 为 CC BY-NC 4.0，不是 TripoSG MIT 的一部分。产品路径不用 flash，
+  也不使用 `diso`；非 flash patch 只把它的 import 延后，不改变其许可。
+- TripoSR 源码与权重 MIT（commit `107cefdc…`，`stabilityai/TripoSR`）；`torchmcubes`
+  为 MPL-2.0，编译/分发依赖代码须守其条款。
+- `fast-simplification` 0.2.0 为 MIT，只在后处理减面时使用。
+- RMBG-1.4 不在本链路里，不随输入或输出分发；`rembg` 同样不安装/不导入。
 - 输入图由本仓库脚本原创生成，按 CC0-1.0 提供；它不是 KayKit 资产。
 - 生成输出是另一层权利，生成后单独记录；不自动标成 KayKit CC0，也不因输入是
   CC0 就推定输出无约束。
@@ -147,20 +259,42 @@ python run.py <gray-bg-rgb.png> --output-dir <out> --no-remove-bg
 
 ## 验证
 
-已跑：
+已跑（2026-10-27）：
 
 ```sh
+PYTHONUTF8=1 python asset-pipeline/battle/tools/openweight-rock/test_runner.py
+PYTHONUTF8=1 python asset-pipeline/battle/tests/test_openweight_input.py
 PYTHONUTF8=1 python asset-pipeline/battle/tests/test_assets.py
-python asset-pipeline/battle/tests/test_openweight_input.py
 ```
 
-前者 5 项通过（Windows 默认 GBK 读含非 ASCII 的 manifest 会报 UnicodeDecodeError，
-需 `PYTHONUTF8=1`；这是既有测试的宿主编码问题，未改测试）；后者 5 项通过，含空
-alpha、全不透明 alpha、过小前景和坏 PNG 的拒绝。`run_triposg.py` 只验过 `--help`
-与输入预处理（prepared 890×890），完整推理未验证。
+- `test_runner.py`：19 项通过（原 6 项来源/输出保护 + 13 项 nonflash patch、TripoSR
+  灰底/rembg、后处理合同）。
+- `test_openweight_input.py`：5 项通过，含空 alpha、全不透明 alpha、过小前景和坏 PNG
+  的拒绝。
+- `test_assets.py`：5 项通过（Windows 默认 GBK 读含非 ASCII 的 manifest 会报
+  UnicodeDecodeError，需 `PYTHONUTF8=1`；这是既有测试的宿主编码问题，未改测试）。
+- TripoSG patch：`git apply --check` 通过；应用后 `git diff HEAD` 的 SHA-256 等于
+  `32bec58f…`；任务 venv（无 `diso`）导入 `TripoSGPipeline` 和
+  `hierarchical_extract_geometry` 成功。用 dummy SDF 在 GPU 上跑小尺寸 nonflash 提取，
+  得到 3,054 顶点 / 6,104 面，峰值 1.7 MiB，`diso` 未加载。撤销 patch 后 checkout 恢复
+  干净；clean 模式也会拒绝已打 patch 的树。该提取测试不涉及真实权重或 12 GB 模型。
+- 后处理：用合成 20,480 面网格跑 `postprocess.py`，输出 2,000 面、36,956 B、高 1.1 m、
+  最大半径 0.331 m；从导出 GLB 实测 1 材质、0 贴图、0 图片、`alphaMode=OPAQUE` 并写入
+  `postprocess.json`。另有从真实导出的 GLB 检查带贴图件和 3 材质件被合同拒绝的测试。
+  该网格不是岩簇，只证明脚本可重复执行和合同检查生效。
+- TripoSR 依赖：`torchmcubes` 从官方 git 构建，CMake 报无 CUDA 安装、CPU 回退又因
+  `torch+cu128` 的 Caffe2 缺 CUDA 库失败；未安装成功。`run_triposr.py` 用真实输入和
+  占位权重跑到依赖边界：生成 872×872、colour type 2（无 alpha）的 `prepared-input.png`，
+  随后在 `tsr.system` 导入处退出，实际输出为
+  `TripoSR source is not importable: No module named 'torchmcubes'.`（缺失模块名来自
+  import 异常），失败路径也复核了 `rembg`/`tsr.bake_texture` 未导入。
+- `run_triposg.py --help`、`run_triposr.py --help` 正常；两者在解析参数前不导入 torch。
+- 缺权重失败：两个 runner 用空权重目录实跑，都在权重检查处以明确错误退出
+  （`model_index.json` / `config.yaml` missing），没有发起任何下载。
+- `npm test`：35 个文件 / 178 项通过；`npm run build:web` 成功（仅有既有 chunk
+  >500 kB 警告）。本次只改资产工具与文档，未改 `src/`、sim/nav、角色或运行 GLB。
+- 未跑 `npm run smoke`：候选尚未替换 `rock.glb`，没有新的运行资产可载入。
 
-未验证：权重下载、TripoSG 推理、简化/重导、GLB 合同、Three 加载与释放、真实交战
-截图对比、性能与最终品质。
-
-CPU 修正检查：`python asset-pipeline/battle/tools/openweight-rock/test_runner.py` 5 项通过，
-原输入合同 5 项通过，`--help` 无需 torch；只验证输入与来源/输出保护，不证明推理可运行。
+未验证：权重下载、TripoSG/TripoSR 推理、真实 12 GB 峰值显存、Blender 重导与 `.blend`
+采用源、GLB 合同在真实生成件上的结果、Three 加载与释放、旧/新交战截图对比、二改复评、
+性能与最终品质。整体仍为 blocked，不是“已生成”。

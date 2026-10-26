@@ -155,6 +155,42 @@ def alpha_stats(width, height, rgba):
     }
 
 
+def write_rgb_png(path, width, height, rgb):
+    """Write an 8-bit RGB (colour type 2) PNG, no alpha, no third-party code.
+
+    ``rgb`` is packed ``R,G,B`` bytes of length ``width * height * 3``. Used by
+    the TripoSR route, whose ``--no-remove-bg`` input contract is a gray
+    background RGB image rather than an RGBA matte.
+    """
+    rgb = bytes(rgb)
+    if width < 1 or height < 1:
+        raise PngError("image dimensions must be positive")
+    if len(rgb) != width * height * 3:
+        raise PngError("RGB data length does not match dimensions")
+
+    def chunk(kind, body):
+        return (
+            struct.pack(">I", len(body))
+            + kind + body
+            + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    raw = bytearray()
+    stride = width * 3
+    for row in range(height):
+        raw.append(0)  # filter type None
+        raw += rgb[row * stride:(row + 1) * stride]
+    data = (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(bytes(raw), 9))
+        + chunk(b"IEND", b"")
+    )
+    with open(path, "wb") as handle:
+        handle.write(data)
+
+
 def validate_alpha(width, height, rgba):
     """Return stats or raise ValueError with an explicit, actionable reason.
 

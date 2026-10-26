@@ -6,19 +6,32 @@ Differences from ``scripts/inference_triposg.py`` upstream, all deliberate:
   ``png_rgba`` and composited over white here; RMBG-1.4 is never imported,
   downloaded or initialised. An empty/opaque/malformed alpha fails loudly.
 * Weights are never downloaded from this script. ``--weights`` must point at a
-  local copy of the official ``VAST-AI/TripoSG`` repository; the caller is
-  responsible for the revision and records it via ``--revision``.
+  local weights directory (``model_index.json`` plus the transformer/vae
+  tensors) for the official ``VAST-AI/TripoSG`` model; it is not the source
+  checkout. The caller records the revision via ``--revision`` and names the
+  source with ``--source-dir``.
 * The TripoSG checkout on ``PYTHONPATH`` is verified against the pinned
   commit with ``git rev-parse HEAD`` (pass ``--source-dir`` to name it); a
   different checkout fails instead of being recorded under the pinned SHA.
+* Nonflash extraction is the only product-eligible mode. It uses the official
+  ``use_flash_decoder=False`` branch (``hierarchical_extract_geometry`` ->
+  ``scikit-image.measure.marching_cubes``) and therefore never needs
+  ``diso``. Upstream still imports ``diso`` at module top level, so the
+  reviewed ``--patch`` (see ``patches/triposg-nonflash.patch``) is required;
+  its base commit and SHA-256 are recorded. A patched tree is never recorded
+  as clean upstream.
+* Flash extraction is available only as a comparison and imports ``diso``,
+  whose upstream license is CC BY-NC 4.0. It is not a product path.
 * The raw generated mesh is exported unchanged (``raw.glb`` plus
-  ``raw-mesh.npz``). Decimation, re-grounding and material work belong to the
-  separate Blender source pass so the raw output stays auditable.
+  ``raw-mesh.npz``). Decimation, re-grounding and material work belong to
+  ``postprocess.py`` so the raw output stays auditable.
 * A ``run.json`` sidecar records the exact versions, hashes and timings.
 
 Run (after the official weights have been placed locally):
     python asset-pipeline/battle/tools/openweight-rock/run_triposg.py \
-        --weights <local TripoSG checkout> --revision <hf commit> \
+        --weights <local weights directory containing model_index.json> \
+        --revision <hf commit> \
+        --source-dir <pinned TripoSG checkout> \
         --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
         --out-dir asset-pipeline/battle/source/openweight-rock/generated
 
@@ -43,6 +56,17 @@ SOURCE_COMMIT = "fc5c40990181e2a756c4e0b1c2f4d6b5202faf8c"
 SOURCE_URL = "https://github.com/VAST-AI-Research/TripoSG"
 WEIGHTS_URL = "https://huggingface.co/VAST-AI/TripoSG"
 RMBG_NOTE = "RMBG-1.4 is not used: the input supplies its own alpha matte."
+NONFLASH_PATCH = Path(__file__).resolve().parent / "patches" / "triposg-nonflash.patch"
+# Hash of the reviewed patch that defers the flash-only ``diso`` import.
+NONFLASH_PATCH_SHA256 = "32bec58f6c3cd4dd06fdeb50ba19be3f148d3d0dcf7d81f08b8ef55223589b71"
+DISO_LICENSE_NOTE = (
+    "diso is CC BY-NC 4.0, not part of TripoSG's MIT code; nonflash extraction "
+    "does not import it and flash extraction is comparison-only."
+)
+PACKAGE_NAMES = (
+    "diffusers", "transformers", "numpy", "Pillow", "trimesh",
+    "scikit-image", "torchvision", "diso",
+)
 
 
 def sha256_file(path):
@@ -83,18 +107,25 @@ def prepare_foreground(image_path, out_path):
     return canvas, stats
 
 
-def weights_fingerprint(directory):
+def weights_fingerprint(directory, index_name="model_index.json",
+                        tensor_suffixes=(".safetensors", ".bin", ".pt", ".pth")):
+    """Fingerprint a local weights directory; never touches the network.
+
+    ``index_name`` distinguishes the TripoSG layout (``model_index.json``)
+    from TripoSR (``config.yaml`` + ``model.ckpt``).
+    """
     directory = Path(directory)
-    index = directory / "model_index.json"
+    index = directory / index_name
     if not index.is_file():
         raise FileNotFoundError(
-            f"{directory} is not a local TripoSG repository (model_index.json missing). "
+            f"{directory} is not a local weights repository ({index_name} missing). "
             "Download it from the official Hub on a permitted network; this script never "
             "fetches weights."
         )
+    suffixes = set(tensor_suffixes)
     files = []
     for path in sorted(directory.rglob("*")):
-        if path.is_file() and path.suffix in {".json", ".safetensors", ".bin", ".pt", ".pth"}:
+        if path.is_file() and (path.suffix in suffixes or path.name == index_name):
             files.append(
                 {
                     "path": path.relative_to(directory).as_posix(),
@@ -104,18 +135,51 @@ def weights_fingerprint(directory):
             )
     # Relative file names only: run.json is a committed provenance artifact and
     # must not embed the receiver's absolute filesystem layout.
-    if not any(item["path"].endswith((".safetensors", ".bin", ".pt", ".pth")) for item in files):
+    if not any(item["path"].endswith(tuple(suffixes)) for item in files):
         raise FileNotFoundError("local weights contain no model tensor files")
     return {"files": files}
 
 
-def verify_source_commit(source_dir=None):
-    """Return the TripoSG checkout HEAD and require it to be ``SOURCE_COMMIT``.
+def package_versions(names=PACKAGE_NAMES):
+    """Record installed distribution versions; missing ones stay explicit."""
+    versions = {}
+    for name in names:
+        try:
+            versions[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            versions[name] = None
+    return versions
+
+
+def read_recorded_patch(patch_path):
+    """Return the reviewed patch digest, refusing any other patch file."""
+    data = Path(patch_path).read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != NONFLASH_PATCH_SHA256:
+        raise SystemExit(
+            f"nonflash patch SHA-256 is {digest}, expected the reviewed "
+            f"{NONFLASH_PATCH_SHA256}; regenerate the review before using another patch"
+        )
+    return digest
+
+
+def _git(top, *args):
+    return subprocess.run(
+        ["git", "-C", str(top), *args],
+        check=True, capture_output=True,
+    ).stdout
+
+
+def verify_source_commit(source_dir=None, expected=SOURCE_COMMIT, patch=None):
+    """Return ``(checkout root, HEAD, patch digest or None)``.
 
     ``--source-dir`` should name the checkout placed on ``PYTHONPATH``. If it
     is omitted, the already-imported ``triposg`` package is located instead.
-    A non-git checkout, missing git, or any other HEAD is a hard failure: the
-    provenance recorded in ``run.json`` must describe the code that ran.
+    A non-git checkout, missing git, or any other HEAD is a hard failure.
+
+    With no patch the tree must be clean. With a patch the tracked diff must
+    be byte-identical to the reviewed patch, so ``run.json`` can honestly say
+    "base commit + exactly this patch" instead of claiming clean upstream.
     """
     if source_dir is None:
         package = sys.modules.get("triposg")
@@ -130,38 +194,58 @@ def verify_source_commit(source_dir=None):
     if not source_dir.is_dir():
         raise SystemExit(f"--source-dir is not a directory: {source_dir}")
     try:
-        top = subprocess.run(
-            ["git", "-C", str(source_dir), "rev-parse", "--show-toplevel"],
-            check=True, capture_output=True, text=True,
-        ).stdout.strip()
-        head = subprocess.run(
-            ["git", "-C", top, "rev-parse", "HEAD"],
-            check=True, capture_output=True, text=True,
-        ).stdout.strip()
+        top = _git(source_dir, "rev-parse", "--show-toplevel").decode().strip()
+        head = _git(top, "rev-parse", "HEAD").decode().strip()
     except (OSError, subprocess.CalledProcessError) as exc:
         raise SystemExit(
             f"cannot read git HEAD of the TripoSG checkout at --source-dir: {exc}"
         ) from exc
-    if head != SOURCE_COMMIT:
+    if head != expected:
         raise SystemExit(
-            f"TripoSG checkout HEAD is {head}, expected the pinned {SOURCE_COMMIT}; "
+            f"pinned checkout HEAD is {head}, expected {expected}; "
             "check out the pinned commit instead of recording a different source"
         )
-    dirty = subprocess.run(
-        ["git", "-C", top, "status", "--porcelain", "--untracked-files=all"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    if dirty:
-        raise SystemExit("TripoSG checkout is dirty; use a clean pinned checkout")
-    return Path(top).resolve(), head
+    if patch is None:
+        status = _git(top, "status", "--porcelain", "--untracked-files=all").decode().strip()
+        if status:
+            raise SystemExit("source checkout is dirty; use a clean pinned checkout")
+        return Path(top).resolve(), head, None
+
+    patch_digest = read_recorded_patch(patch)
+    status = _git(top, "status", "--porcelain", "--untracked-files=all").decode().splitlines()
+    untracked = [line for line in status if line.startswith("??")]
+    if untracked:
+        raise SystemExit(f"source checkout has untracked files: {untracked[:3]}")
+    diff = _git(top, "diff", "--no-color", "HEAD", "--")
+    if hashlib.sha256(diff).hexdigest() != patch_digest:
+        raise SystemExit(
+            "source working tree does not match the reviewed nonflash patch; "
+            "apply exactly patches/triposg-nonflash.patch to the pinned commit"
+        )
+    return Path(top).resolve(), head, patch_digest
 
 
-def verify_imported_source(source_root, module_file):
+def verify_imported_source(source_root, module_file, package_dir="triposg"):
     """The code imported must be the checkout whose commit was checked."""
     try:
-        Path(module_file).resolve().relative_to(source_root / "triposg")
+        Path(module_file).resolve().relative_to(source_root / package_dir)
     except (ValueError, TypeError):
-        raise SystemExit("imported TripoSG pipeline is outside the verified checkout")
+        raise SystemExit("imported module is outside the verified checkout")
+
+
+def verify_imported_modules(source_root, module_files):
+    for module_file in module_files:
+        verify_imported_source(source_root, module_file)
+
+
+def assert_no_diso_import(modules=None):
+    """Nonflash mode must prove the CC BY-NC dependency stayed unloaded."""
+    loaded = sys.modules if modules is None else modules
+    if "diso" in loaded:
+        raise SystemExit(
+            "nonflash extraction imported diso; the tree is not the reviewed "
+            "nonflash patch, so this run cannot be recorded as license-cleared"
+        )
 
 
 def validate_revision(revision):
@@ -179,23 +263,48 @@ def create_output(directory):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--weights", required=True, help="local copy of the official TripoSG repo")
+    parser.add_argument("--weights", required=True,
+                        help="local weights directory (model_index.json and tensors), "
+                             "not the source checkout")
     parser.add_argument("--revision", required=True, help="Hub revision/commit the weights came from")
     parser.add_argument(
         "--source-dir",
         required=True,
         help="pinned TripoSG checkout on PYTHONPATH; HEAD must match SOURCE_COMMIT",
     )
+    parser.add_argument(
+        "--extractor",
+        choices=("nonflash", "flash"),
+        default="nonflash",
+        help="nonflash (official license-cleared path, default) or flash (comparison only)",
+    )
+    parser.add_argument(
+        "--patch",
+        default=None,
+        help="nonflash patch to verify; defaults to patches/triposg-nonflash.patch",
+    )
     parser.add_argument("--image", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--seed", type=int, default=20261026)
     parser.add_argument("--num-inference-steps", type=int, default=50)
     parser.add_argument("--guidance-scale", type=float, default=7.0)
+    parser.add_argument("--dense-octree-depth", type=int, default=8,
+                        help="nonflash extraction; lower only with a recorded quality/memory note")
+    parser.add_argument("--hierarchical-octree-depth", type=int, default=9,
+                        help="nonflash extraction; lower only with a recorded quality/memory note")
     parser.add_argument("--device", default="cuda:0")
     args = parser.parse_args()
 
     validate_revision(args.revision)
-    source_root, source_commit = verify_source_commit(args.source_dir)
+    if args.extractor == "nonflash":
+        patch = Path(args.patch) if args.patch else NONFLASH_PATCH
+    else:
+        if args.patch:
+            raise SystemExit("--patch is only valid for --extractor nonflash")
+        patch = None
+    source_root, source_commit, patch_digest = verify_source_commit(
+        args.source_dir, SOURCE_COMMIT, patch
+    )
     # No implicit Hub downloads, including nested component loads.
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -205,22 +314,34 @@ def main():
 
     if not torch.cuda.is_available():
         raise SystemExit("CUDA is not available; TripoSG needs a CUDA GPU")
+    torch.cuda.init()
 
     out_dir = create_output(args.out_dir)
     prepared_path = out_dir / "prepared-input.png"
     prepared, alpha_stats = prepare_foreground(args.image, prepared_path)
-    fingerprint = weights_fingerprint(args.weights)
+    try:
+        fingerprint = weights_fingerprint(args.weights)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from exc
 
     try:
+        from triposg import inference_utils
         from triposg.pipelines import pipeline_triposg
         TripoSGPipeline = pipeline_triposg.TripoSGPipeline
-        verify_imported_source(source_root, pipeline_triposg.__file__)
+        verify_imported_modules(
+            source_root, [pipeline_triposg.__file__, inference_utils.__file__]
+        )
     except ImportError as exc:
         raise SystemExit(
-            "TripoSG source is not importable. Clone the pinned commit and put its "
-            "checkout on PYTHONPATH (or install it editable) before running; this "
-            "script does not vendor model code."
+            "TripoSG source is not importable. For nonflash, apply "
+            "patches/triposg-nonflash.patch to the pinned commit. For flash, "
+            "install diso==0.1.4 (CC BY-NC 4.0); flash is comparison-only. Put the "
+            "checkout on PYTHONPATH; this script does not vendor model code."
         ) from exc
+
+    if args.extractor == "nonflash":
+        # Importing the pipeline is where an unpatched tree pulls in diso.
+        assert_no_diso_import()
 
     device = torch.device(args.device)
     dtype = torch.float16
@@ -241,6 +362,9 @@ def main():
             generator=generator,
             num_inference_steps=args.num_inference_steps,
             guidance_scale=args.guidance_scale,
+            use_flash_decoder=(args.extractor == "flash"),
+            dense_octree_depth=args.dense_octree_depth,
+            hierarchical_octree_depth=args.hierarchical_octree_depth,
         ).samples[0]
     torch.cuda.synchronize(device)
     infer_seconds = time.time() - infer_start
@@ -258,7 +382,17 @@ def main():
     np.savez_compressed(out_dir / "raw-mesh.npz", vertices=vertices, faces=faces)
 
     run = {
-        "source": {"url": SOURCE_URL, "commit": source_commit},
+        "source": {
+            "url": SOURCE_URL,
+            "baseCommit": source_commit,
+            "patched": patch_digest is not None,
+            "patch": (
+                {"file": Path(patch).name, "sha256": patch_digest}
+                if patch_digest is not None else None
+            ),
+        },
+        "extractor": args.extractor,
+        "diso": DISO_LICENSE_NOTE,
         "weights": {"url": WEIGHTS_URL, "revision": args.revision, **fingerprint},
         "rmbg": RMBG_NOTE,
         "input": {
@@ -272,6 +406,8 @@ def main():
             "seed": args.seed,
             "numInferenceSteps": args.num_inference_steps,
             "guidanceScale": args.guidance_scale,
+            "denseOctreeDepth": args.dense_octree_depth,
+            "hierarchicalOctreeDepth": args.hierarchical_octree_depth,
             "dtype": str(dtype),
             "device": str(device),
         },
@@ -290,8 +426,7 @@ def main():
         },
         "runtime": {
             "python": platform.python_version(),
-            "packages": {name: importlib.metadata.version(name) for name in
-                         ("diffusers", "transformers", "numpy", "Pillow", "trimesh", "diso")},
+            "packages": package_versions(),
             "torch": torch.__version__,
             "torchCuda": torch.version.cuda,
             "deviceName": torch.cuda.get_device_name(device),
