@@ -8,6 +8,18 @@ import run_triposg as runner
 import run_triposr as triposr
 import postprocess
 
+try:  # The GLB contract checks read real exports; they need the task venv.
+    import trimesh  # noqa: F401
+    from PIL import Image  # noqa: F401
+    TASK_VENV_DEPS = True
+except ModuleNotFoundError:
+    TASK_VENV_DEPS = False
+
+requires_task_venv = unittest.skipUnless(
+    TASK_VENV_DEPS,
+    "needs the task venv (trimesh/Pillow); system Python cannot read exported GLBs",
+)
+
 
 def synthetic_rgba(width, height, alpha_fn):
     pixels = bytearray(width * height * 4)
@@ -63,6 +75,23 @@ class RunnerGuards(unittest.TestCase):
             (Path(tmp) / "model_index.json").write_text("{}")
             with self.assertRaisesRegex(FileNotFoundError, "tensor"):
                 runner.weights_fingerprint(tmp)
+
+    def test_weights_fingerprint_includes_nested_configs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "model_index.json").write_text("{}")
+            (root / "transformer").mkdir()
+            (root / "transformer" / "config.json").write_text('{"depth": 1}')
+            (root / "transformer" / "model.safetensors").write_bytes(b"tensors")
+            (root / "vae").mkdir()
+            (root / "vae" / "config.json").write_text('{"depth": 2}')
+            files = runner.weights_fingerprint(root)["files"]
+            paths = [row["path"] for row in files]
+            self.assertIn("model_index.json", paths)
+            self.assertIn("transformer/config.json", paths)
+            self.assertIn("vae/config.json", paths)
+            self.assertIn("transformer/model.safetensors", paths)
+            self.assertEqual(len(files), 4)
 
     def test_package_versions_mark_missing(self):
         versions = runner.package_versions(("not-a-real-distribution-xyz",))
@@ -202,6 +231,7 @@ class PostprocessContract(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'GLB'):
             postprocess.validate_contract(metrics, 100, 1, glb_bytes=600 * 1024)
 
+    @requires_task_venv
     def test_exported_texture_is_rejected_by_measured_glb(self):
         import numpy as np
         import trimesh
@@ -229,6 +259,7 @@ class PostprocessContract(unittest.TestCase):
                     alpha_modes=state["alphaModes"],
                 )
 
+    @requires_task_venv
     def test_exported_material_count_comes_from_glb(self):
         import trimesh
         from trimesh.visual.material import PBRMaterial

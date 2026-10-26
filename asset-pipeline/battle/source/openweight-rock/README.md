@@ -7,11 +7,12 @@
 
 ## 当前状态（2026-10-27，接收端续修）
 
-**阻塞：拿不到官方权重；推理一次都没跑。** 代码与许可路径已推进到“只差权重和 12 GB
-实机”：TripoSR 低成本路线有独立薄调用脚本，TripoSG 官方 nonflash 窄对照路径有可审的
-最小 `diso` 延迟导入 patch（基 SHA 与 patch hash 见下），两者都不下载、不初始化
-RMBG/rembg。仍没有原始生成 mesh、没有 Blender 采用源、没有旧/新同视角图，也没有质量
-结论。
+**阻塞：拿不到官方权重；推理一次都没跑。** 代码与许可路径已备好，剩下的是外部依赖：
+官方权重、能在隔离 CUDA 环境构建/加载 `torchmcubes` 的工具链（见状态 4），以及在已有
+12 GB 的 RTX 5070 上跑真实推理并记录峰值。TripoSR 低成本路线有独立薄调用脚本，
+TripoSG 官方 nonflash 窄对照路径有可审的最小 `diso` 延迟导入 patch（基 SHA 与 patch
+hash 见下），两者都不下载、不初始化 RMBG/rembg。仍没有原始生成 mesh、没有 Blender
+采用源、没有旧/新同视角图，也没有质量结论。
 
 1. **本机官方 Hub TLS 未建立。** 接收端记录 ClientHello 后未收到 ServerHello，
    Python `ssl` 为 `UNEXPECTED_EOF_WHILE_READING`，`snapshot_download` 抛
@@ -132,7 +133,7 @@ CUDA Toolkit 不能构建（见状态 4），所以这条路线是“代码与�
 | `tools/openweight-rock/patches/triposg-nonflash.patch` | 官方 `fc5c4099` 上的最小 `diso` 延迟导入 patch（SHA-256 `32bec58f…`） |
 | `tools/openweight-rock/run_triposr.py` | TripoSR 薄调用：直接 import `TSR`，跳过 `run.py` 的 `rembg`；灰底 RGB 输入；保留原始 mesh；不下载 |
 | `tools/openweight-rock/postprocess.py` | 可重复的 raw→final 转换：减面、接地/缩放、单材质、从导出 GLB 实测材质/贴图/alphaMode 的合同检查、GLB 与 sidecar |
-| `tools/openweight-rock/test_runner.py` | 19 项 CPU-only 检查：原来源/输出保护 6 项 + nonflash patch/TripoSR/后处理 13 项 |
+| `tools/openweight-rock/test_runner.py` | 20 项 CPU-only 检查：原有来源/输出保护 5 项 + 新增 15 项（依赖版本 1、权重指纹 1、nonflash patch 4、TripoSR 4、后处理 5） |
 | `tests/test_openweight_input.py` | 输入合同与坏输入拒绝（5 项，纯 Python） |
 
 输入图 SHA-256：`6139b5ba738ee39848bf0ef2358477e42607e65ee53aace19c768c92b0d31b9f`。
@@ -169,7 +170,9 @@ import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 
 
 ## 恢复后的制作顺序
 
-1. 放进官方权重，记录 revision 与每个权重文件的 SHA-256；RMBG 不下载。
+1. 放进官方权重，记录 revision 与每个权重文件的 SHA-256（含 `model_index.json`、
+   各组件嵌套的 `config.json` 等元数据与全部张量分片）；RMBG 不下载。runner 的
+   `weights_fingerprint` 会把这些文件连同相对路径、字节数和 SHA-256 写入 `run.json`。
 2. 在任务专用 prefix 建 Python 3.10 的 CUDA torch 环境（CPU-only torch 只能单独
    构建/验证 `torchmcubes`，不能运行 `run_triposr.py`），先核既有 MSVC `cl`、`nvcc`、
    `CUDA_HOME` 与 torch CUDA 版本。NVIDIA [12.8 Windows 安装文档](https://docs.nvidia.com/cuda/archive/12.8.0/cuda-installation-guide-microsoft-windows/index.html#using-conda-to-install-the-cuda-software)
@@ -259,16 +262,21 @@ import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 
 
 ## 验证
 
-已跑（2026-10-27）：
+已跑（2026-10-27）。`test_runner.py` 必须在任务 venv（上表记录的依赖组合，含 `trimesh`
+5.2.0 与 `Pillow` 12.3.0）中运行：两项后处理合同会真实导出并读取 GLB。系统 Python
+没有 `trimesh`，这 2 项会以“needs the task venv”跳过，不再报错；任务 venv 中是
+20/20 通过。`test_openweight_input.py` 和 `test_assets.py` 只用标准库。
 
 ```sh
+# 在任务 venv 中执行第一条；后两条用任意 Python 3 即可
 PYTHONUTF8=1 python asset-pipeline/battle/tools/openweight-rock/test_runner.py
 PYTHONUTF8=1 python asset-pipeline/battle/tests/test_openweight_input.py
 PYTHONUTF8=1 python asset-pipeline/battle/tests/test_assets.py
 ```
 
-- `test_runner.py`：19 项通过（原 6 项来源/输出保护 + 13 项 nonflash patch、TripoSR
-  灰底/rembg、后处理合同）。
+- `test_runner.py`：任务 venv 中 20 项通过（原有 5 项来源/输出保护 + 新增 15 项：
+  依赖版本 1、权重指纹 1（含嵌套 `config.json`）、nonflash patch 4、TripoSR 4、
+  后处理 5）。
 - `test_openweight_input.py`：5 项通过，含空 alpha、全不透明 alpha、过小前景和坏 PNG
   的拒绝。
 - `test_assets.py`：5 项通过（Windows 默认 GBK 读含非 ASCII 的 manifest 会报

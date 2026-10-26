@@ -107,12 +107,23 @@ def prepare_foreground(image_path, out_path):
     return canvas, stats
 
 
+CONFIG_SUFFIXES = (".json", ".yaml", ".yml")
+
+
 def weights_fingerprint(directory, index_name="model_index.json",
-                        tensor_suffixes=(".safetensors", ".bin", ".pt", ".pth")):
+                        tensor_suffixes=(".safetensors", ".bin", ".pt", ".pth"),
+                        config_suffixes=CONFIG_SUFFIXES):
     """Fingerprint a local weights directory; never touches the network.
 
     ``index_name`` distinguishes the TripoSG layout (``model_index.json``)
     from TripoSR (``config.yaml`` + ``model.ckpt``).
+
+    Tensor shards alone are not the whole model identity: a diffusers-style
+    directory keeps the component definitions in nested metadata such as
+    ``transformer/config.json`` and ``vae/config.json``, and a changed config
+    must be visible in ``run.json``. Metadata files (JSON/YAML at any depth)
+    are therefore hashed too, while at least one tensor file is still
+    required so a metadata-only directory is not mistaken for weights.
     """
     directory = Path(directory)
     index = directory / index_name
@@ -122,20 +133,27 @@ def weights_fingerprint(directory, index_name="model_index.json",
             "Download it from the official Hub on a permitted network; this script never "
             "fetches weights."
         )
-    suffixes = set(tensor_suffixes)
+    tensors = set(tensor_suffixes)
+    configs = set(config_suffixes)
     files = []
+    has_tensor = False
     for path in sorted(directory.rglob("*")):
-        if path.is_file() and (path.suffix in suffixes or path.name == index_name):
-            files.append(
-                {
-                    "path": path.relative_to(directory).as_posix(),
-                    "bytes": path.stat().st_size,
-                    "sha256": sha256_file(path),
-                }
-            )
+        if not path.is_file():
+            continue
+        is_tensor = path.suffix in tensors
+        if not (is_tensor or path.suffix in configs or path.name == index_name):
+            continue
+        has_tensor = has_tensor or is_tensor
+        files.append(
+            {
+                "path": path.relative_to(directory).as_posix(),
+                "bytes": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+        )
     # Relative file names only: run.json is a committed provenance artifact and
     # must not embed the receiver's absolute filesystem layout.
-    if not any(item["path"].endswith(tuple(suffixes)) for item in files):
+    if not has_tensor:
         raise FileNotFoundError("local weights contain no model tensor files")
     return {"files": files}
 
