@@ -62,6 +62,14 @@ export class HeroBot {
 
   think(sim: Simulation): SimCommand[] {
     const hero = sim.getHero(this.team, this.slotIndex);
+    if (sim.catalog.rules.resetReactionOnDeath) {
+      // Per-life reaction memory, not an action: invalidate even while unable to act.
+      if (!hero || !hero.alive) this.firstSeen.clear();
+      else for (const id of this.firstSeen.keys()) {
+        const enemy = sim.getEntityById(id);
+        if (!enemy || !enemy.alive || enemy.team === this.team) this.firstSeen.delete(id);
+      }
+    }
     if (!hero || !hero.alive || sim.status !== 'running') {
       return [];
     }

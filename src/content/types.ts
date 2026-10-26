@@ -1,5 +1,5 @@
 export type TeamId = 0 | 1;
-export type ContentVersion = 1 | 2 | 7;
+export type ContentVersion = 1 | 2 | 7 | 8;
 export type AbilitySlot = 'Q' | 'W' | 'E' | 'R';
 export type DamageType = 'physical' | 'magic' | 'true';
 export type Difficulty = 'low' | 'normal' | 'high';
@@ -150,6 +150,8 @@ export interface WaveRules {
 export interface MatchRules {
   /** Ignore destroyed tower anchors; versions 1/2 retain their original AI inputs. */
   liveTowerAnchors?: boolean;
+  /** A new life must reacquire targets before its difficulty reaction timer is ready. */
+  resetReactionOnDeath?: boolean;
   tickRate: number;
   maxMatchSeconds: number;
   waves: WaveRules;

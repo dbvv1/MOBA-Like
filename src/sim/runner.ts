@@ -84,7 +84,7 @@ export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerif
   if (replay.formatVersion !== 1) {
     throw new Error(`unsupported replay format version: ${String(replay.formatVersion)}`);
   }
-  if (replay.contentVersion !== 1 && replay.contentVersion !== 2 && replay.contentVersion !== 7) {
+  if (replay.contentVersion !== 1 && replay.contentVersion !== 2 && replay.contentVersion !== 7 && replay.contentVersion !== 8) {
     throw new Error(`unknown replay content version: ${String(replay.contentVersion)}`);
   }
   const simulation = new Simulation({
