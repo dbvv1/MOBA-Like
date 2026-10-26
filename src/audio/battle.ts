@@ -2,6 +2,7 @@ import type {PresentationEvent,Snapshot} from '../sim/types.js';
 export type BattleCue={kind:'swing'|'cast'|'hit'|'shield';strength:number;pan:number};
 /** Cosmetic routing only: no hit inferred from an attack or a disappearing projectile. */
 export function battleCue(event:PresentationEvent,snapshot:Snapshot,playerId:number):BattleCue|null{
+  if(event.type==='minionDied')return null; // no invented death sound
   const player=snapshot.heroes.find(hero=>hero.id===playerId);if(!player)return null;
   const id=event.type==='heroDamaged'?event.targetId:'heroId'in event?event.heroId:event.sourceId;
   const source=snapshot.entities.find(entity=>entity.id===id);if(!source)return null;

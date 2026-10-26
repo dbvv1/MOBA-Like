@@ -319,7 +319,7 @@ export class Simulation {
     }
 
     return {
-      events: this.stepEvents.map(event => ({ ...event })),
+      events: this.stepEvents.map(event => event.type === 'minionDied' ? { ...event, position: copyVec(event.position) } : { ...event }),
       tick: this.state.tick,
       timeSeconds: this.state.timeSeconds,
       status: this.state.status,
@@ -2021,6 +2021,7 @@ export class Simulation {
     const removedEntityIds: number[] = [];
     this.state.entities = this.state.entities.filter((entity) => {
       if (entity.kind === 'minion' && !entity.alive) {
+        this.emit({ type: 'minionDied', entityId: entity.id, position: copyVec(entity.position) });
         removedEntityIds.push(entity.id);
         return false;
       }
