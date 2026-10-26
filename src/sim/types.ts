@@ -311,7 +311,17 @@ export interface SnapshotDiagnostics {
   readonly stuckEvents: readonly SnapshotStuckEvent[];
 }
 
+/** Derived output for one completed logic tick; never part of authoritative state/hash. */
+export type PresentationEvent = Readonly<{ tick: number; ordinal: number } & (
+  | { type: 'castStarted' | 'castResolved'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot }
+  | { type: 'castCancelled'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot;
+      reason: 'stunned' | 'dead' | 'missingAbility' | 'invalidTarget' | 'missingPoint' | 'invalidDestination' }
+  | { type: 'basicAttack'; sourceId: number; targetId: number }
+  | { type: 'heroDamaged'; targetId: number; sourceId: number; hpDamage: number; shieldAbsorbed: number; abilityId: string | null }
+)>;
+
 export interface Snapshot {
+  readonly events: readonly PresentationEvent[];
   readonly tick: number;
   readonly timeSeconds: number;
   readonly status: SimStatus;
