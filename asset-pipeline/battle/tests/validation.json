@@ -53,7 +53,7 @@
     "integerFrame": 0.0003,
     "halfFrame": 0.005
   },
-  "qualityStatus": "ground continuity patch after actual Three.js frame; same-camera recheck pending",
+  "qualityStatus": "same-camera software WebGL recheck confirms grass slab and tile seams removed; full battle quality remains open",
   "notRun": [
     "hardware GPU",
     "full playable battle quality acceptance"

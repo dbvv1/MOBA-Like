@@ -20,11 +20,20 @@ const soundUrls={
   hit:new URL('../../assets/audio/battle/hit.ogg',import.meta.url).href,
   shield:new URL('../../assets/audio/battle/shield.ogg',import.meta.url).href,
 };
+// Four immutable page-owned downloads survive match restarts. A match owns its
+// AudioContext/voices, not the shared HTTP transport. No abandoned-request errors
+// are manufactured when Restart is clicked during the first audio gesture.
+const sampleBytes=new Map<BattleCue['kind'],Promise<ArrayBuffer>>();
+function readSample(kind:BattleCue['kind'],url:string){
+  let pending=sampleBytes.get(kind);
+  if(!pending){pending=fetch(url).then(response=>{if(!response.ok)throw new Error('Battle audio unavailable');return response.arrayBuffer();}).catch(error=>{sampleBytes.delete(kind);throw error;});sampleBytes.set(kind,pending);}
+  return pending;
+}
 /** Licensed sample palette. Audio unlock is gesture-only; it cannot stop the game. */
 export function createBattleAudio(initiallyEnabled=true){
   let context:AudioContext|null=null,master:GainNode|null=null;
   let enabled=initiallyEnabled,disposed=false,lastTick=-1,lastOrdinal=-1,lastSound=-Infinity;
-  let loading:Promise<void>|null=null;const abort=new AbortController();
+  let loading:Promise<void>|null=null;
   const buffers=new Map<BattleCue['kind'],AudioBuffer>(),voices=new Set<AudioBufferSourceNode>();
   async function unlock(){
     if(disposed||!enabled)return;
@@ -34,8 +43,8 @@ export function createBattleAudio(initiallyEnabled=true){
       if(ctx.state==='suspended')await ctx.resume();
       if(disposed)return;
       loading??=Promise.all(Object.entries(soundUrls).map(async([key,url])=>{
-        const response=await fetch(url,{signal:abort.signal});if(!response.ok)throw new Error('Battle audio unavailable');
-        const buffer=await ctx.decodeAudioData(await response.arrayBuffer());
+        const bytes=await readSample(key as BattleCue['kind'],url);if(disposed)return;
+        const buffer=await ctx.decodeAudioData(bytes.slice(0));
         if(!disposed)buffers.set(key as BattleCue['kind'],buffer);
       })).then(()=>{}).catch(()=>{});
       await loading;
@@ -59,6 +68,6 @@ export function createBattleAudio(initiallyEnabled=true){
       lastTick=event.tick;lastOrdinal=event.ordinal;const cue=battleCue(event,snapshot,playerId);
       if(cue&&(!foreground||priority[cue.kind]*cue.strength>priority[foreground.kind]*foreground.strength))foreground=cue;
     }if(foreground)play(foreground);},
-    dispose(){if(disposed)return;disposed=true;enabled=false;abort.abort();if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
+    dispose(){if(disposed)return;disposed=true;enabled=false;if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
   };
 }
