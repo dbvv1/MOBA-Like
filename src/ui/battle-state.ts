@@ -3,6 +3,7 @@ import type {HeroSnapshot,Snapshot} from '../sim/types.js';
 export function battleMessage(snapshot:Snapshot,hero:HeroSnapshot,catalog:ContentCatalog){
   if(snapshot.status!=='running')return {tone:'end',label:snapshot.winner===hero.team?'VICTORY':'MATCH ENDED',hint:'Restart to enter a new battle.'};
   if(!hero.alive)return {tone:'danger',label:'RETURNING TO THE FIELD',hint:`Respawn in ${Math.max(0,Math.ceil((hero.respawnAtTick-snapshot.tick)/catalog.rules.tickRate))}s`};
+  if(hero.stunned)return {tone:'danger',label:'STUNNED',hint:'Movement, attacks and skills are blocked. Stop still cancels your prior order.'};
   let nearby=false;
   const danger=snapshot.entities.some(entity=>{
     if(!entity.alive||entity.team===hero.team||entity.kind!=='structure'||entity.structureKind!=='tower')return false;

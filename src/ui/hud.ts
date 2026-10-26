@@ -1,3 +1,4 @@
+import {createCommandNotice} from './command-notice.js';
 import {battleMessage} from './battle-state.js';
 import {skillDescription} from './skill-description.js';
 import {abilityViewModel} from '../../asset-pipeline/presentation/icons.js';
@@ -8,6 +9,7 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
   root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
   const find=(selector:string)=>{const node=root.querySelector<HTMLElement>(selector);if(!node)throw new Error('Missing HUD element');return node;};
   const match=find('[data-match]'),heroText=find('[data-hero]'),skills=find('[data-skills]'),shop=find('[data-shop]'),message=find('[data-message]');
+  const notices=createCommandNotice();let currentTime=0;
   const abort=new AbortController();root.querySelector<HTMLInputElement>('[data-lock]')!.addEventListener('change',event=>onLock((event.target as HTMLInputElement).checked),{signal:abort.signal});
   const skillButtons=new Map<AbilitySlot,HTMLButtonElement>();
   for(const slot of ['Q','W','E','R'] as const){const button=document.createElement('button');button.type='button';button.addEventListener('click',()=>onSkill(slot),{signal:abort.signal});skills.append(button);skillButtons.set(slot,button);}
@@ -15,6 +17,7 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
   for(const item of Object.values(catalog.items)){const button=document.createElement('button');button.type='button';button.textContent=`${item.name} · ${item.cost}g`;button.addEventListener('click',()=>onBuy(item.id),{signal:abort.signal});shop.append(button);itemButtons.set(item.id,button);}
   function update(snapshot:Snapshot,playerId:number){
     const hero=snapshot.heroes.find(h=>h.id===playerId);if(!hero)return;
+    currentTime=snapshot.timeSeconds;message.textContent=notices.read(hero,currentTime);
     match.textContent=`${Math.floor(snapshot.timeSeconds/60)}:${String(Math.floor(snapshot.timeSeconds%60)).padStart(2,'0')} · ${snapshot.status}`;
     heroText.querySelector<HTMLElement>('[data-name]')!.textContent=hero.name;
     heroText.querySelector<HTMLElement>('[data-level]')!.textContent=`Lv ${hero.level}`;
@@ -36,5 +39,5 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     }
     for(const [id,button]of itemButtons){const item=catalog.items[id]!;button.disabled=!hero.alive||snapshot.status!=='running'||hero.gold<item.cost||hero.items.includes(id);}
   }
-  return {update,disable(){for(const button of root.querySelectorAll('button'))button.disabled=true;},setLocked(value:boolean){root.querySelector<HTMLInputElement>('[data-lock]')!.checked=value;},say(text:string){message.textContent=text;},dispose(){abort.abort();root.replaceChildren();}};
+  return {update,disable(){for(const button of root.querySelectorAll('button'))button.disabled=true;},setLocked(value:boolean){root.querySelector<HTMLInputElement>('[data-lock]')!.checked=value;},say(text:string){notices.say(text);message.textContent=text;},reject(reason:string){notices.reject(reason,currentTime);message.textContent=`Command rejected: ${reason}`;},dispose(){abort.abort();root.replaceChildren();}};
 }

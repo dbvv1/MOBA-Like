@@ -59,7 +59,7 @@ async function boot(){
             const issued=commands.splice(0);const results=sim.step([...issued,...bot.think(sim)]);
             snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
-            if(rejection)hud.say(`Command rejected: ${rejection.reason??'unknown reason'}`);
+            if(rejection)hud.reject(rejection.reason??'unknown reason');
             if(sim.isComplete())hud.say(`Match ended: ${snapshot.status} (${snapshot.endReason}). Restart to play again.`);
           });
           world.draw(Math.min(delta,.25),sim.isComplete()?1:alpha);
