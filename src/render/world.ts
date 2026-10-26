@@ -40,7 +40,9 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);effects.sync(next);health.sync(next,presentation.root);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
   function draw(seconds:number,alpha:number){
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
-    presentation.advance(seconds,alpha);effects.draw(alpha);
+    // While playing, actions share the snapshot interpolation clock. After the
+    // terminal snapshot, cosmetic tails may finish without advancing simulation.
+    presentation.advance(seconds,snapshot?.status==='running'?alpha:undefined);effects.draw(alpha);
     const playerRoot=player?presentation.root.getObjectByName(`hero-${player.id}`):null;
     if(locked && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
     else if(pointerInside){const speed=24*seconds;if(cursor.x>.88)focus.x+=speed;if(cursor.x<-.88)focus.x-=speed;if(cursor.y>.88)focus.z-=speed;if(cursor.y<-.88)focus.z+=speed;}
@@ -52,6 +54,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
     effectState(){return effects.inspect();},
+    motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},
     setTargeting(slot:AbilitySlot|null){targetingSlot=slot;if(slot===null)targeting.update(null);},
     cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
