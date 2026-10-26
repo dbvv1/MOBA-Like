@@ -5,22 +5,34 @@
   "type": "module",
   "description": "Deterministic, headless MOBA-lane simulation for the MOBA-Like vertical slice.",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "node --import tsx tools/sim.ts --games 1 --seed 1",
+    "dev": "vite --config vite.config.ts",
     "build": "tsc -p tsconfig.build.json && node --import tsx tools/copy-navmesh.ts",
     "test": "vitest run",
     "sim": "node --import tsx tools/sim.ts",
-    "bake:nav": "node --import tsx tools/bake-navmesh.ts"
+    "bake:nav": "node --import tsx tools/bake-navmesh.ts",
+    "dev:web": "vite --config vite.config.ts",
+    "build:web": "npm run typecheck:web && vite build --config vite.config.ts",
+    "typecheck:web": "tsc -p tsconfig.web.json",
+    "preview:web": "vite preview --config vite.config.ts",
+    "dev:sim": "node --import tsx tools/sim.ts --games 1 --seed 1",
+    "smoke": "npm run build:web && node tests/client/browser-smoke/run.mjs",
+    "smoke:serve": "npm run build:web && node tests/client/browser-smoke/server.mjs"
   },
   "dependencies": {
-    "recast-navigation": "0.43.1"
+    "recast-navigation": "0.43.1",
+    "three": "0.186.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/three": "0.186.0",
+    "playwright": "1.64.1",
+    "pngjs": "7.0.0",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
+    "vite": "8.3.5",
     "vitest": "3.2.4"
   }
 }

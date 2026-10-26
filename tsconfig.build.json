@@ -7,6 +7,12 @@
     "sourceMap": true,
     "declaration": false
   },
-  "include": ["src/**/*.ts", "tools/**/*.ts"],
-  "exclude": ["tests/**/*.ts"]
+  "include": [
+    "src/sim/**/*.ts",
+    "src/content/**/*.ts",
+    "tools/**/*.ts"
+  ],
+  "exclude": [
+    "tests/**/*.ts"
+  ]
 }
