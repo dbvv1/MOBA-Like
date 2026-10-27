@@ -1,0 +1,6 @@
+.local-save{position:absolute;z-index:12;left:18px;top:105px;max-width:260px;padding:8px 10px;border:1px solid #536a61;border-radius:6px;background:#142c2ee8;color:#dbe6d8;font-size:11px;line-height:1.4}
+.local-save button{font-size:11px;min-height:36px}.local-save p{margin:5px 0 0}
+.local-save-choice{width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:24px;background:#142c2e;color:#edf4e9;border:1px solid #c6ad74;border-radius:12px;box-shadow:0 20px 80px #0008}
+.local-save-choice::backdrop{background:#081416d9}.local-save-choice h2{margin-top:0;font:700 24px Georgia,serif}.local-save-choice p{font-size:14px;line-height:1.6}
+.local-save-actions{display:flex;flex-direction:column;gap:10px}.local-save-actions button{min-height:44px;text-align:left;white-space:normal}
+@media(max-width:750px){.local-save{left:10px;top:120px;max-width:200px;font-size:10px;padding:6px}}

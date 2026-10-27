@@ -1,0 +1,36 @@
+{
+  "formatVersion": 1,
+  "compatibilityId": "test-rules",
+  "recipe": {
+    "seed": 1,
+    "contentVersion": 10,
+    "heroIdsByTeam": [
+      [
+        "morrow"
+      ],
+      [
+        "veyra"
+      ]
+    ],
+    "maxMatchSeconds": 1200,
+    "botSeed": 1002,
+    "botDifficulty": "normal"
+  },
+  "tick": 180,
+  "stateHash": "0de0d7f7fb10023c",
+  "inputs": [
+    {
+      "tick": 1,
+      "commands": [
+        {
+          "type": "move",
+          "heroId": 9,
+          "point": {
+            "x": 0,
+            "z": 0
+          }
+        }
+      ]
+    }
+  ]
+}
