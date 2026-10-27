@@ -1,19 +1,12 @@
 import type {ReadSave} from './storage.js';
+import {createSaveOwnership} from './ownership.js';
 import './panel.css';
 
 declare const __MOBA_SAVE_COMPATIBILITY__:string;
 export const SAVE_COMPATIBILITY_ID=__MOBA_SAVE_COMPATIBILITY__;
 
 /** Native lock prevents two tabs from racing a read/modify/write Web Storage transaction. */
-export async function acquireSaveOwnership():Promise<(()=>void)|null>{
-  if(!navigator.locks)return null;
-  return new Promise(resolve=>{
-    void navigator.locks.request('ashen-furrow-local-match',{ifAvailable:true},async lock=>{
-      if(!lock){resolve(null);return;}
-      await new Promise<void>(release=>{resolve(release);});
-    }).catch(()=>resolve(null));
-  });
-}
+export const acquireSaveOwnership=createSaveOwnership(()=>navigator.locks);
 
 export function createSavePanel(){
   const root=document.createElement('aside');root.className='local-save';root.setAttribute('aria-label','Local match save');

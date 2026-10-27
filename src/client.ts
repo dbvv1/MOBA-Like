@@ -25,7 +25,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
   const lifetime=createLifetime();const dispose=()=>{abort.abort();const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};cleanup=dispose;
   try{
     const panel=createSavePanel();lifetime.defer(()=>panel.dispose());
-    const releaseSave=await acquireSaveOwnership();if(releaseSave)lifetime.defer(releaseSave);
+    const releaseSave=await acquireSaveOwnership(abort.signal);if(releaseSave)lifetime.defer(releaseSave);
     current();
     const slot=createSaveSlot(()=>window.localStorage,SAVE_COMPATIBILITY_ID);
     let saving=releaseSave!==null,saved:MatchSave|undefined;
