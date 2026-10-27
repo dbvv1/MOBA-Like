@@ -1,0 +1,1392 @@
+{
+  "format": 1,
+  "task": "B-MOBA-HEADLESS-GPU-001",
+  "runId": "run-baecaf56e131-idle-9vRPTA",
+  "sourceCommit": "baecaf56e131a9bfebbbcf1a65427c45b002b19f",
+  "runnerSourceCommit": "baecaf56e131a9bfebbbcf1a65427c45b002b19f",
+  "sourceDirty": false,
+  "input": "idle",
+  "bundle": {
+    "sha256": "a219b29e36241877780f5bbf8116024277aeb3d2ce97eb574afc283efe9d4817",
+    "binding": "served-files-verified-against-local-artifact"
+  },
+  "parameters": {
+    "shots": [
+      "first-tower"
+    ],
+    "seed": "61",
+    "t": "101",
+    "input": "idle",
+    "frames": "20",
+    "repeat": 2
+  },
+  "browserVersion": "156.0.8078.4",
+  "launch": {
+    "headless": true,
+    "chromiumSandbox": true,
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ],
+    "args": [
+      "--disable-background-timer-throttling",
+      "--disable-renderer-backgrounding",
+      "--disable-backgrounding-occluded-windows"
+    ],
+    "channel": "chromium"
+  },
+  "renderer": {
+    "raw": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmasked": true,
+    "rendererClass": "gpu",
+    "class": "gpu"
+  },
+  "outcome": {
+    "reportPassed": false,
+    "capturedFrames": 23,
+    "firstRepeatMismatchFrame": 2,
+    "firstError": "first-tower frame 2 must repeat pixel-identically on the same renderer"
+  },
+  "frameDirectories": [
+    {
+      "original": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1",
+      "delivered": "frames-r1",
+      "run": 1
+    },
+    {
+      "original": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2",
+      "delivered": "frames-r2",
+      "run": 2
+    }
+  ],
+  "report": {
+    "file": "report.json",
+    "bytes": 185170,
+    "sha256": "70dc69584085ce22871e480a59706582af49ec1a4c72416eadadd936a91bf1a2"
+  },
+  "files": [
+    {
+      "file": "frames-r1/00000.json",
+      "bytes": 6904,
+      "sha256": "5caf33b896a52fd88d6c87da090858836793e0fe7a25ae515c1e283440d6fd17"
+    },
+    {
+      "file": "frames-r1/00000.png",
+      "bytes": 119985,
+      "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11"
+    },
+    {
+      "file": "frames-r1/00001.json",
+      "bytes": 6921,
+      "sha256": "84457aec7e0d06a0f7f789a6f9fd7fedbb6e799c4e04c22045cf98108a8c1737"
+    },
+    {
+      "file": "frames-r1/00001.png",
+      "bytes": 119730,
+      "sha256": "79cb574f481fd6a29c6b215ebe2ff1b864bcf514f69c238838bab72d63fd8994"
+    },
+    {
+      "file": "frames-r1/00002.json",
+      "bytes": 6934,
+      "sha256": "bc5a814378b5acc45f6bf2a260776194cce43e5e95cd0baf31627fd3bc5c0559"
+    },
+    {
+      "file": "frames-r1/00002.png",
+      "bytes": 119575,
+      "sha256": "778a84dec0b5d2a6d5b343b5fbf21e2aed4c92ca2881b0b7984ad7682fda4606"
+    },
+    {
+      "file": "frames-r1/00003.json",
+      "bytes": 6924,
+      "sha256": "eeebd806ed228fa1a8ee8491d1c66cef90adee49be6cab3cc866698be9ccb756"
+    },
+    {
+      "file": "frames-r1/00003.png",
+      "bytes": 119262,
+      "sha256": "1b389b030bfcd3069f0e07e1ffcde9cc25991b18735af0037940d881acd84e5d"
+    },
+    {
+      "file": "frames-r1/00004.json",
+      "bytes": 6934,
+      "sha256": "a3eaece5031cec72711540a1f0b17e6c3853b590cd31df97430b0f97abcb4b2b"
+    },
+    {
+      "file": "frames-r1/00004.png",
+      "bytes": 118808,
+      "sha256": "ce82a79cfad11fe91b63ab38531900aff185d75be109c149f696f85fd1cec25e"
+    },
+    {
+      "file": "frames-r1/00005.json",
+      "bytes": 6936,
+      "sha256": "0d4d789833aead1c9013be83637cc7691052525aa5e163e2931906cd1d9d3490"
+    },
+    {
+      "file": "frames-r1/00005.png",
+      "bytes": 118681,
+      "sha256": "f6fc606f665e96cc89a321c60c9e1cd6b4905bede3a14d794ce71bf6ade9482c"
+    },
+    {
+      "file": "frames-r1/00006.json",
+      "bytes": 6908,
+      "sha256": "4404ce522d8660bd139ba3118180e6e81f1e015e35bf4095601b8de042c4dcf6"
+    },
+    {
+      "file": "frames-r1/00006.png",
+      "bytes": 119177,
+      "sha256": "933cebdfe138dedb249862e56c911f8ec1a95291967ebd7b244df3cba4f5b7bd"
+    },
+    {
+      "file": "frames-r1/00007.json",
+      "bytes": 6923,
+      "sha256": "3f75ae4c810328cf9f7ff1ef0de27385bfb86945319fa04c6e0d61e30ce111b4"
+    },
+    {
+      "file": "frames-r1/00007.png",
+      "bytes": 119119,
+      "sha256": "ccfe7f6d42a1c6063e0291342ba7f0533daf6685f550d121493b51df21611028"
+    },
+    {
+      "file": "frames-r1/00008.json",
+      "bytes": 6934,
+      "sha256": "ae9953ccaab72c0d301979646f6b875d9baa7354b4159023911e9ff6ea5c8ec2"
+    },
+    {
+      "file": "frames-r1/00008.png",
+      "bytes": 118471,
+      "sha256": "52e3291b8e4b1aee4a9178e73c666e58f6156ac4455ed7a2ce11e76ce11bb15d"
+    },
+    {
+      "file": "frames-r1/00009.json",
+      "bytes": 6924,
+      "sha256": "831bce755ad0f67b0418f84c334a6fd87672cc5b595e28a79a6d7d2be6210942"
+    },
+    {
+      "file": "frames-r1/00009.png",
+      "bytes": 118210,
+      "sha256": "22a62078b424f225e53b4b7956781e4dda1cf2719cdf689c3a6de8255a28590d"
+    },
+    {
+      "file": "frames-r1/00010.json",
+      "bytes": 6935,
+      "sha256": "68307932220b2500a9d9f5a10ce37bf2724fc19c6cc9c5482df867547e0d3076"
+    },
+    {
+      "file": "frames-r1/00010.png",
+      "bytes": 117792,
+      "sha256": "875d65a6c04aef6f2d879103bcd690af9133d32b6cfb25f08a8a166998447b56"
+    },
+    {
+      "file": "frames-r1/00011.json",
+      "bytes": 6937,
+      "sha256": "87a7f9fa6e2b84d69fcc5404b415495199c822419139eb744a57c74fdb2e4fb4"
+    },
+    {
+      "file": "frames-r1/00011.png",
+      "bytes": 117671,
+      "sha256": "d1443379f3ff5962d21baa0e7cace85e8c2a69e2de52ac243729ff3cacde27af"
+    },
+    {
+      "file": "frames-r1/00012.json",
+      "bytes": 6909,
+      "sha256": "24069a8e791a7b89b71648101b642a98a9f67f6b130e7c9e1bda929d89c1ffb3"
+    },
+    {
+      "file": "frames-r1/00012.png",
+      "bytes": 117375,
+      "sha256": "67acf7b0f400df8d32727f80587ff25d28675e985ddc63f4a3d7e0dbbbc0c286"
+    },
+    {
+      "file": "frames-r1/00013.json",
+      "bytes": 6924,
+      "sha256": "8ccd3a52b811005d690a52f047658d1946f143a83bbd5162888361ead2860773"
+    },
+    {
+      "file": "frames-r1/00013.png",
+      "bytes": 117167,
+      "sha256": "9440293f16a84a21b9e67de9900c6cdaca3841739c4b032045efbb304150812b"
+    },
+    {
+      "file": "frames-r1/00014.json",
+      "bytes": 6935,
+      "sha256": "b0c3571e9444dd43115218aa8749cdb607707a3d18e0e43840d563aa5a3132f9"
+    },
+    {
+      "file": "frames-r1/00014.png",
+      "bytes": 117301,
+      "sha256": "90a47ced5b3bbc060519b4ffb7d4e1061a546eacec69e3c8b185472de3df377c"
+    },
+    {
+      "file": "frames-r1/00015.json",
+      "bytes": 6925,
+      "sha256": "6128910f95d8d3e58244cf5f5794d4cb13227ea2d699f3aed0b89260c47bafb9"
+    },
+    {
+      "file": "frames-r1/00015.png",
+      "bytes": 117105,
+      "sha256": "019df9934468edc954f373b1945a039a0d6c3ae5e3f137512335fe5f1d83e9d7"
+    },
+    {
+      "file": "frames-r1/00016.json",
+      "bytes": 6935,
+      "sha256": "8df76b7d9ceb369b6032b6a49ea1f4f544c7399ec2a0fb8425ccd4dc44a8bcf9"
+    },
+    {
+      "file": "frames-r1/00016.png",
+      "bytes": 116550,
+      "sha256": "bb5b7d1389074a8d12b611710a73826aede58c2a7015a3bafe9c667f4ced0632"
+    },
+    {
+      "file": "frames-r1/00017.json",
+      "bytes": 6937,
+      "sha256": "a485ba79c873a556d15ab616c9e348b42f0cc316c50bb0d8c152f51f0ee15077"
+    },
+    {
+      "file": "frames-r1/00017.png",
+      "bytes": 116778,
+      "sha256": "4398e14fa06dd128d17df3c3889ab6066711ef3c0af9022f1903f82351287ac6"
+    },
+    {
+      "file": "frames-r1/00018.json",
+      "bytes": 6909,
+      "sha256": "7347fb29613375831b9c65b664243dc073f14ca2a668b357ee013da456732d33"
+    },
+    {
+      "file": "frames-r1/00018.png",
+      "bytes": 116138,
+      "sha256": "d52360a305d951f67d7e06988d9037a48a0d40622b76a8f239ae223d7ef0d6aa"
+    },
+    {
+      "file": "frames-r1/00019.json",
+      "bytes": 6923,
+      "sha256": "b266d08d8fd4a44bea5ed16f7f9db8a471aa72a1cbd6c9ebc4359333d56ecff9"
+    },
+    {
+      "file": "frames-r1/00019.png",
+      "bytes": 116695,
+      "sha256": "b3219ebd5822c04ea519da10870805b65e53f208e4c8f6ebe7fda7819c090eaf"
+    },
+    {
+      "file": "frames-r2/00000.json",
+      "bytes": 6904,
+      "sha256": "1091a595852646d9052d7eb7085baa07ef29acb40f1325cbeed9d7a2ceea6c5b"
+    },
+    {
+      "file": "frames-r2/00000.png",
+      "bytes": 119985,
+      "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11"
+    },
+    {
+      "file": "frames-r2/00001.json",
+      "bytes": 6921,
+      "sha256": "ff5f0951794e43c5fe64d7a56dcc18999ff471be144d96e22a2bd3297938d585"
+    },
+    {
+      "file": "frames-r2/00001.png",
+      "bytes": 119730,
+      "sha256": "79cb574f481fd6a29c6b215ebe2ff1b864bcf514f69c238838bab72d63fd8994"
+    },
+    {
+      "file": "frames-r2/00002.json",
+      "bytes": 6934,
+      "sha256": "be7528d2da0fa127bd66c666117dd8970f7a24553ec870c6a3bc901b067a0ec0"
+    },
+    {
+      "file": "frames-r2/00002.png",
+      "bytes": 119573,
+      "sha256": "433ec88f3d61f3c294030a709430a9ff52963852aba2ef946b5eab3a8e6667b0"
+    },
+    {
+      "file": "report.json",
+      "bytes": 185170,
+      "sha256": "70dc69584085ce22871e480a59706582af49ec1a4c72416eadadd936a91bf1a2"
+    }
+  ],
+  "frames": [
+    {
+      "file": "frames-r1/00000.png",
+      "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+      "metadataFile": "frames-r1/00000.json",
+      "metadataSha256": "5caf33b896a52fd88d6c87da090858836793e0fe7a25ae515c1e283440d6fd17",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00000.png",
+      "run": 1,
+      "frame": 0,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101,
+      "virtualFrame": 6060,
+      "simTick": 3030,
+      "stateHash": "45ddcfd7f7a45536",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00001.png",
+      "sha256": "79cb574f481fd6a29c6b215ebe2ff1b864bcf514f69c238838bab72d63fd8994",
+      "metadataFile": "frames-r1/00001.json",
+      "metadataSha256": "84457aec7e0d06a0f7f789a6f9fd7fedbb6e799c4e04c22045cf98108a8c1737",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00001.png",
+      "run": 1,
+      "frame": 1,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.01666666666667,
+      "virtualFrame": 6061,
+      "simTick": 3030,
+      "stateHash": "45ddcfd7f7a45536",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00002.png",
+      "sha256": "778a84dec0b5d2a6d5b343b5fbf21e2aed4c92ca2881b0b7984ad7682fda4606",
+      "metadataFile": "frames-r1/00002.json",
+      "metadataSha256": "bc5a814378b5acc45f6bf2a260776194cce43e5e95cd0baf31627fd3bc5c0559",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00002.png",
+      "run": 1,
+      "frame": 2,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.03333333333333,
+      "virtualFrame": 6062,
+      "simTick": 3031,
+      "stateHash": "25d16569c6f586f3",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00003.png",
+      "sha256": "1b389b030bfcd3069f0e07e1ffcde9cc25991b18735af0037940d881acd84e5d",
+      "metadataFile": "frames-r1/00003.json",
+      "metadataSha256": "eeebd806ed228fa1a8ee8491d1c66cef90adee49be6cab3cc866698be9ccb756",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00003.png",
+      "run": 1,
+      "frame": 3,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.05,
+      "virtualFrame": 6063,
+      "simTick": 3031,
+      "stateHash": "25d16569c6f586f3",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00004.png",
+      "sha256": "ce82a79cfad11fe91b63ab38531900aff185d75be109c149f696f85fd1cec25e",
+      "metadataFile": "frames-r1/00004.json",
+      "metadataSha256": "a3eaece5031cec72711540a1f0b17e6c3853b590cd31df97430b0f97abcb4b2b",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00004.png",
+      "run": 1,
+      "frame": 4,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.06666666666666,
+      "virtualFrame": 6064,
+      "simTick": 3032,
+      "stateHash": "e614a947413a2ef1",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00005.png",
+      "sha256": "f6fc606f665e96cc89a321c60c9e1cd6b4905bede3a14d794ce71bf6ade9482c",
+      "metadataFile": "frames-r1/00005.json",
+      "metadataSha256": "0d4d789833aead1c9013be83637cc7691052525aa5e163e2931906cd1d9d3490",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00005.png",
+      "run": 1,
+      "frame": 5,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.08333333333333,
+      "virtualFrame": 6065,
+      "simTick": 3032,
+      "stateHash": "e614a947413a2ef1",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00006.png",
+      "sha256": "933cebdfe138dedb249862e56c911f8ec1a95291967ebd7b244df3cba4f5b7bd",
+      "metadataFile": "frames-r1/00006.json",
+      "metadataSha256": "4404ce522d8660bd139ba3118180e6e81f1e015e35bf4095601b8de042c4dcf6",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00006.png",
+      "run": 1,
+      "frame": 6,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.1,
+      "virtualFrame": 6066,
+      "simTick": 3033,
+      "stateHash": "de3c0d739f5faf16",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00007.png",
+      "sha256": "ccfe7f6d42a1c6063e0291342ba7f0533daf6685f550d121493b51df21611028",
+      "metadataFile": "frames-r1/00007.json",
+      "metadataSha256": "3f75ae4c810328cf9f7ff1ef0de27385bfb86945319fa04c6e0d61e30ce111b4",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00007.png",
+      "run": 1,
+      "frame": 7,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.11666666666666,
+      "virtualFrame": 6067,
+      "simTick": 3033,
+      "stateHash": "de3c0d739f5faf16",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00008.png",
+      "sha256": "52e3291b8e4b1aee4a9178e73c666e58f6156ac4455ed7a2ce11e76ce11bb15d",
+      "metadataFile": "frames-r1/00008.json",
+      "metadataSha256": "ae9953ccaab72c0d301979646f6b875d9baa7354b4159023911e9ff6ea5c8ec2",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00008.png",
+      "run": 1,
+      "frame": 8,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.13333333333334,
+      "virtualFrame": 6068,
+      "simTick": 3034,
+      "stateHash": "5b723e4bed88c7d4",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00009.png",
+      "sha256": "22a62078b424f225e53b4b7956781e4dda1cf2719cdf689c3a6de8255a28590d",
+      "metadataFile": "frames-r1/00009.json",
+      "metadataSha256": "831bce755ad0f67b0418f84c334a6fd87672cc5b595e28a79a6d7d2be6210942",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00009.png",
+      "run": 1,
+      "frame": 9,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.15,
+      "virtualFrame": 6069,
+      "simTick": 3034,
+      "stateHash": "5b723e4bed88c7d4",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00010.png",
+      "sha256": "875d65a6c04aef6f2d879103bcd690af9133d32b6cfb25f08a8a166998447b56",
+      "metadataFile": "frames-r1/00010.json",
+      "metadataSha256": "68307932220b2500a9d9f5a10ce37bf2724fc19c6cc9c5482df867547e0d3076",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00010.png",
+      "run": 1,
+      "frame": 10,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.16666666666667,
+      "virtualFrame": 6070,
+      "simTick": 3035,
+      "stateHash": "06d8953d2640b181",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00011.png",
+      "sha256": "d1443379f3ff5962d21baa0e7cace85e8c2a69e2de52ac243729ff3cacde27af",
+      "metadataFile": "frames-r1/00011.json",
+      "metadataSha256": "87a7f9fa6e2b84d69fcc5404b415495199c822419139eb744a57c74fdb2e4fb4",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00011.png",
+      "run": 1,
+      "frame": 11,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.18333333333334,
+      "virtualFrame": 6071,
+      "simTick": 3035,
+      "stateHash": "06d8953d2640b181",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00012.png",
+      "sha256": "67acf7b0f400df8d32727f80587ff25d28675e985ddc63f4a3d7e0dbbbc0c286",
+      "metadataFile": "frames-r1/00012.json",
+      "metadataSha256": "24069a8e791a7b89b71648101b642a98a9f67f6b130e7c9e1bda929d89c1ffb3",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00012.png",
+      "run": 1,
+      "frame": 12,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.2,
+      "virtualFrame": 6072,
+      "simTick": 3036,
+      "stateHash": "111005f0409d61a5",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00013.png",
+      "sha256": "9440293f16a84a21b9e67de9900c6cdaca3841739c4b032045efbb304150812b",
+      "metadataFile": "frames-r1/00013.json",
+      "metadataSha256": "8ccd3a52b811005d690a52f047658d1946f143a83bbd5162888361ead2860773",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00013.png",
+      "run": 1,
+      "frame": 13,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.21666666666667,
+      "virtualFrame": 6073,
+      "simTick": 3036,
+      "stateHash": "111005f0409d61a5",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00014.png",
+      "sha256": "90a47ced5b3bbc060519b4ffb7d4e1061a546eacec69e3c8b185472de3df377c",
+      "metadataFile": "frames-r1/00014.json",
+      "metadataSha256": "b0c3571e9444dd43115218aa8749cdb607707a3d18e0e43840d563aa5a3132f9",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00014.png",
+      "run": 1,
+      "frame": 14,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.23333333333333,
+      "virtualFrame": 6074,
+      "simTick": 3037,
+      "stateHash": "792e6ce2b588dc05",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00015.png",
+      "sha256": "019df9934468edc954f373b1945a039a0d6c3ae5e3f137512335fe5f1d83e9d7",
+      "metadataFile": "frames-r1/00015.json",
+      "metadataSha256": "6128910f95d8d3e58244cf5f5794d4cb13227ea2d699f3aed0b89260c47bafb9",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00015.png",
+      "run": 1,
+      "frame": 15,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.25,
+      "virtualFrame": 6075,
+      "simTick": 3037,
+      "stateHash": "792e6ce2b588dc05",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00016.png",
+      "sha256": "bb5b7d1389074a8d12b611710a73826aede58c2a7015a3bafe9c667f4ced0632",
+      "metadataFile": "frames-r1/00016.json",
+      "metadataSha256": "8df76b7d9ceb369b6032b6a49ea1f4f544c7399ec2a0fb8425ccd4dc44a8bcf9",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00016.png",
+      "run": 1,
+      "frame": 16,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.26666666666667,
+      "virtualFrame": 6076,
+      "simTick": 3038,
+      "stateHash": "4a4767ad53dba0d9",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00017.png",
+      "sha256": "4398e14fa06dd128d17df3c3889ab6066711ef3c0af9022f1903f82351287ac6",
+      "metadataFile": "frames-r1/00017.json",
+      "metadataSha256": "a485ba79c873a556d15ab616c9e348b42f0cc316c50bb0d8c152f51f0ee15077",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00017.png",
+      "run": 1,
+      "frame": 17,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.28333333333333,
+      "virtualFrame": 6077,
+      "simTick": 3038,
+      "stateHash": "4a4767ad53dba0d9",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00018.png",
+      "sha256": "d52360a305d951f67d7e06988d9037a48a0d40622b76a8f239ae223d7ef0d6aa",
+      "metadataFile": "frames-r1/00018.json",
+      "metadataSha256": "7347fb29613375831b9c65b664243dc073f14ca2a668b357ee013da456732d33",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00018.png",
+      "run": 1,
+      "frame": 18,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.3,
+      "virtualFrame": 6078,
+      "simTick": 3039,
+      "stateHash": "c641b6abcd3962b9",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r1/00019.png",
+      "sha256": "b3219ebd5822c04ea519da10870805b65e53f208e4c8f6ebe7fda7819c090eaf",
+      "metadataFile": "frames-r1/00019.json",
+      "metadataSha256": "b266d08d8fd4a44bea5ed16f7f9db8a471aa72a1cbd6c9ebc4359333d56ecff9",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00019.png",
+      "run": 1,
+      "frame": 19,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.31666666666666,
+      "virtualFrame": 6079,
+      "simTick": 3039,
+      "stateHash": "c641b6abcd3962b9",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r2/00000.png",
+      "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+      "metadataFile": "frames-r2/00000.json",
+      "metadataSha256": "1091a595852646d9052d7eb7085baa07ef29acb40f1325cbeed9d7a2ceea6c5b",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00000.png",
+      "run": 2,
+      "frame": 0,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101,
+      "virtualFrame": 6060,
+      "simTick": 3030,
+      "stateHash": "45ddcfd7f7a45536",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r2/00001.png",
+      "sha256": "79cb574f481fd6a29c6b215ebe2ff1b864bcf514f69c238838bab72d63fd8994",
+      "metadataFile": "frames-r2/00001.json",
+      "metadataSha256": "ff5f0951794e43c5fe64d7a56dcc18999ff471be144d96e22a2bd3297938d585",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00001.png",
+      "run": 2,
+      "frame": 1,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.01666666666667,
+      "virtualFrame": 6061,
+      "simTick": 3030,
+      "stateHash": "45ddcfd7f7a45536",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0.5,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    },
+    {
+      "file": "frames-r2/00002.png",
+      "sha256": "433ec88f3d61f3c294030a709430a9ff52963852aba2ef946b5eab3a8e6667b0",
+      "metadataFile": "frames-r2/00002.json",
+      "metadataSha256": "be7528d2da0fa127bd66c666117dd8970f7a24553ec870c6a3bc901b067a0ec0",
+      "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00002.png",
+      "run": 2,
+      "frame": 2,
+      "shot": "first-tower",
+      "seed": 61,
+      "input": "idle",
+      "requestedTime": 101,
+      "t": 101.03333333333333,
+      "virtualFrame": 6062,
+      "simTick": 3031,
+      "stateHash": "25d16569c6f586f3",
+      "contentVersion": 11,
+      "warmupFrames": 12,
+      "alpha": 0,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "unmasked": true,
+      "rendererClass": "gpu",
+      "class": "gpu"
+    }
+  ],
+  "redactions": [
+    "Local absolute checkout paths in the report error stack were replaced with <capture-checkout>; all other report bytes and every PNG are as written by tools/capture.mjs."
+  ],
+  "packagingNote": "Native frame directories too long for a Windows checkout were delivered as frames-r1/frames-r2 (frameDirectories maps original to delivered). Frame JSON `file` fields keep the native relative path in originalFile; PNG and JSON bytes are unchanged."
+}

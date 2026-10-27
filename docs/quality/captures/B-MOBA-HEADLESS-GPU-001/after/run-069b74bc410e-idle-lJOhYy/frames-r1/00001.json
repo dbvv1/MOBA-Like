@@ -1,0 +1,245 @@
+{
+  "run": 1,
+  "rgbaSha256": "dd47f8af218017332bdb8933f6e9a48d94632a03222ea556d0e33e71c58ae58c",
+  "pngSha256": "3f46fc20d35e10688797eb5faf69ceef3633cbae98a7cb1532f4c08ca4f333e6",
+  "ready": true,
+  "sourceCommit": "069b74bc410eec318a1effb0a05a7acc619b5bcc",
+  "sourceDirty": false,
+  "bundleSha256": "bd8fb1a153beca502d648ddf02956abfc08be82b2e3159ed6b0f0153a8a12245",
+  "bundle": {
+    "sha256": "bd8fb1a153beca502d648ddf02956abfc08be82b2e3159ed6b0f0153a8a12245",
+    "files": [
+      {
+        "file": "assets/amber-B-DIcLhT.glb",
+        "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+      },
+      {
+        "file": "assets/barracks-rust-ELYrhKWW.glb",
+        "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+      },
+      {
+        "file": "assets/barracks-teal-DplTNS_l.glb",
+        "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+      },
+      {
+        "file": "assets/base-rust-CiTXTXEl.glb",
+        "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+      },
+      {
+        "file": "assets/base-teal-L4GVNWxZ.glb",
+        "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+      },
+      {
+        "file": "assets/blue-reactions-CcPaxMLZ.glb",
+        "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+      },
+      {
+        "file": "assets/capture-B-P3g8gT.js",
+        "sha256": "6cfbee5dc67392423a891d7dd6855463aa43d200d3cd7a526efeb03432ab166b"
+      },
+      {
+        "file": "assets/cast-Ca76kIp9.ogg",
+        "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+      },
+      {
+        "file": "assets/clock-N7ApkRfA.js",
+        "sha256": "a6eb298448be7bc830b5cf0f787fb252c482cc1da1d32b7046ecba58ef01e61b"
+      },
+      {
+        "file": "assets/game-BFIPf_aa.js",
+        "sha256": "e3da9e7d7c1d421cdfb23bbb3c757bcbae46c72063825206adad86efab61e22f"
+      },
+      {
+        "file": "assets/hero-rust-6hnVVH5H.glb",
+        "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+      },
+      {
+        "file": "assets/hero-teal-sUFSV1Mz.glb",
+        "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+      },
+      {
+        "file": "assets/hit-ClSpEb3w.ogg",
+        "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+      },
+      {
+        "file": "assets/kloppenheim_03_puresky_1k-BtUgUZG8.hdr",
+        "sha256": "9806bc452fc8e1564418e7b45b50683732c0b37584423fa026ff0e2edf4eb1ce"
+      },
+      {
+        "file": "assets/lane-ground-BkV_wW4P.glb",
+        "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+      },
+      {
+        "file": "assets/lane-rEqk0SD2.navmesh",
+        "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+      },
+      {
+        "file": "assets/melee-rust-DlZVcWSl.glb",
+        "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+      },
+      {
+        "file": "assets/melee-teal-fyp_u-7O.glb",
+        "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+      },
+      {
+        "file": "assets/ranged-rust-rsnFKRRJ.glb",
+        "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+      },
+      {
+        "file": "assets/ranged-teal-B_rlZWgD.glb",
+        "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+      },
+      {
+        "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+        "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+      },
+      {
+        "file": "assets/rock-DnYfbnCK.glb",
+        "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+      },
+      {
+        "file": "assets/shield-CiyT-Gb-.ogg",
+        "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+      },
+      {
+        "file": "assets/siege-rust-1xQRoxFB.glb",
+        "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+      },
+      {
+        "file": "assets/siege-teal-CsgCrOmN.glb",
+        "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+      },
+      {
+        "file": "assets/swing-B45xdEEZ.ogg",
+        "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+      },
+      {
+        "file": "assets/tower-rust-B3YjHLZt.glb",
+        "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+      },
+      {
+        "file": "assets/tower-teal-BQ2jCRMr.glb",
+        "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+      },
+      {
+        "file": "assets/trace_02-KaZGZY6K.png",
+        "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+      },
+      {
+        "file": "assets/tree-CawC7zP0.glb",
+        "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+      },
+      {
+        "file": "assets/veyra-rust-BSIRU2oZ.glb",
+        "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+      },
+      {
+        "file": "assets/veyra-teal-CpkKDg1w.glb",
+        "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+      },
+      {
+        "file": "capture.html",
+        "sha256": "5ead9f35dd5605968c0786fbbca87107530e68c76b51bae54c8c4d60aee94631"
+      },
+      {
+        "file": "index.html",
+        "sha256": "c52782d7b082326abf385e4421dcdd8c67bf3079d6d4110915d8905199b8bdfc"
+      }
+    ]
+  },
+  "shot": "first-tower",
+  "seed": 61,
+  "input": "idle",
+  "requestedTime": 101,
+  "t": 101.01666666666667,
+  "virtualFrame": 6061,
+  "fixedDt": 0.016666666666666666,
+  "simTick": 3030,
+  "simTime": 101,
+  "contentVersion": 11,
+  "stateHash": "45ddcfd7f7a45536",
+  "frame": 1,
+  "frames": 20,
+  "complete": false,
+  "warmupFrames": 12,
+  "alpha": 0.5,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "vendor": "Google Inc. (NVIDIA)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "unmasked": true,
+  "rendererClass": "gpu",
+  "lighting": {
+    "environment": "kloppenheim_03_puresky_1k",
+    "skySeparation": {
+      "separated": true,
+      "peakLuminance": 32287.5392,
+      "peakX": 614,
+      "peakY": 89,
+      "pixels": 1227,
+      "sky": [
+        2.603515625,
+        2.4921875,
+        2.4140625
+      ]
+    },
+    "environmentIntensity": 0.45,
+    "pmrem": true,
+    "environmentReceivers": 433,
+    "unlitOrTransparent": 55,
+    "sun": {
+      "intensity": 3.15,
+      "shadowType": "PCF",
+      "shadowMapSize": 2048,
+      "normalBias": 0.012,
+      "bias": -0.0001
+    },
+    "fog": {
+      "near": 48,
+      "far": 125
+    },
+    "toneMapping": "ACESFilmic",
+    "exposure": 1.06,
+    "ao": "GTAO contact, deterministic 8 samples, 75% resolution",
+    "aoWidth": 960,
+    "aoHeight": 540,
+    "colorPipeline": "linear half-float MSAA -> contact AO -> OutputPass sRGB -> copy world depth -> original gameplay cues"
+  },
+  "camera": {
+    "position": {
+      "x": -28,
+      "y": 24,
+      "z": 18
+    },
+    "target": {
+      "x": -28,
+      "y": 0,
+      "z": 0
+    },
+    "fov": 45,
+    "aspect": 1.7777777777777777
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "pixelRatio": 1,
+    "bufferWidth": 1280,
+    "bufferHeight": 720
+  },
+  "render": {
+    "calls": 458,
+    "triangles": 155205,
+    "geometries": 63,
+    "textures": 36
+  },
+  "backend": "three-webgl2",
+  "audio": "not-captured",
+  "hud": "world-bars-only",
+  "expectedViewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "bundleBinding": "served-files-verified-against-local-artifact",
+  "file": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00001.png",
+  "runId": "run-069b74bc410e-idle-lJOhYy",
+  "runnerSourceCommit": "069b74bc410eec318a1effb0a05a7acc619b5bcc"
+}
