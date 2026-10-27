@@ -6,6 +6,31 @@ import {PNG} from 'pngjs';
 import {launchOptions,pixelEvidence,failureCategory,cleanup} from './options.mjs';
 import {startServer} from './server.mjs';
 
+// Check real ready/cooling HUD labels without altering simulation state.
+async function checkHudLayout(page){
+  const layouts=[];
+  for(const width of [320,375,420,421,640,750,751,1280]){
+    await page.setViewportSize({width,height:900});
+    const layout=await page.locator('[data-skills]').evaluate(skills=>({
+      width:innerWidth,height:innerHeight,
+      buttons:[...skills.querySelectorAll('button')].map(button=>{
+        const rect=button.getBoundingClientRect(),label=button.querySelector('span');
+        const range=document.createRange();range.selectNodeContents(label);
+        const lines=[...range.getClientRects()].map(line=>({left:line.left,right:line.right,top:line.top,bottom:line.bottom}));
+        return {text:label.textContent,left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height,lines};
+      }),
+    }));
+    layouts.push(layout);assert.equal(layout.buttons.length,4);
+    for(const button of layout.buttons){
+      assert.ok(button.left>=0&&button.right<=layout.width&&button.top>=0&&button.bottom<=layout.height,`Skill is outside ${width}px viewport: ${button.text}`);
+      assert.ok(button.width>=44&&button.height>=44,`Skill target is too small: ${button.text}`);
+      assert.ok(button.lines.length>0&&button.lines.every(line=>line.left>=button.left-1&&line.right<=button.right+1&&line.top>=button.top-1&&line.bottom<=button.bottom+1),`Skill label is clipped: ${button.text}`);
+    }
+  }
+  await page.setViewportSize({width:1280,height:900});
+  return layouts;
+}
+
 const output=new URL('./reports/',import.meta.url);
 await mkdir(output,{recursive:true});
 for (const name of ['page.png','canvas.png','failure.png','report.json']) await rm(new URL(name,output),{force:true});
@@ -31,6 +56,7 @@ try {
   stage='context';
   report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER)}:null;});
   assert.ok(report.webgl2,'A live WebGL2 context is required');
+  stage='hud-layout';report.hudLayout=await checkHudLayout(page);
   stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,10,'Integrated browser entry must use v10 minion-spacing content');
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
@@ -94,6 +120,7 @@ try {
   });
   assert.equal(report.effect.consumer.position.x,report.effect.zone.position.x);
   assert.equal(report.effect.consumer.position.z,report.effect.zone.position.z);
+  stage='hud-layout-cooldown';report.cooldownHudLayout=await checkHudLayout(page);
   report.initialMatchFinalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
   // Next-match selection must not mutate a live hero; exercise real DOM, controls and restart.
   stage='hero-selection';
@@ -115,6 +142,7 @@ try {
     await page.waitForFunction(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0).castSlot===null);
   }
   report.heroSelection={selected:'morrow',played:await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0))};
+  stage='hud-layout-morrow-cooldown';report.morrowCooldownHudLayout=await checkHudLayout(page);
   assert.ok(await page.evaluate(()=>window.mobaClient.snapshot().zones.some(z=>z.team===0&&z.abilityId==='morrow.e')),'Morrow E must produce its actual zone');
   await page.locator('#restart').click();
   await page.waitForFunction(()=>{const h=window.mobaClient?.snapshot().heroes.find(h=>h.team===0);return h?.definitionId==='morrow'&&h.mana===h.maxMana&&Object.values(h.cooldowns).every(x=>x===0);});

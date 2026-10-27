@@ -4,6 +4,7 @@ import type {ContentCatalog} from '../content/types.js';
 import type {Snapshot,EntitySnapshot} from '../sim/types.js';
 import type {BattleAssets} from './battle-assets.js';
 import {battleManifest} from './battle-assets.js';
+import {createGroundSurfaces} from './ground-surfaces.js';
 
 export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
@@ -25,6 +26,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
     object.traverse(node=>{if((node as THREE.Mesh).isMesh){node.castShadow=id!=='lane-ground';node.receiveShadow=true;}});root.add(object);return object;
   }
   for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
+  const groundSurfaces=createGroundSurfaces();root.add(groundSurfaces.root);owned.push(groundSurfaces);
   // Deterministic art layout only; no simulation random stream consumption.
   for(let group=0;group<26;group++)for(const side of [-1,1]){
     const x=world.minX-18+group*10.4+Math.sin(group*2.1+side)*3.2;

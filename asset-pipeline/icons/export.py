@@ -1,4 +1,4 @@
-"""Export original SVG masters through one shared theme recipe."""
+"""Export editable SVG masters through one shared theme recipe."""
 import argparse
 import io
 import json
@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-NAMES = ('targeted', 'displacement', 'persistent-effect', 'control', 'directional-projectile')
+NAMES = ('targeted', 'displacement', 'persistent-effect', 'control', 'directional-projectile', 'self-shield')
 ROOT = Path(__file__).resolve().parent
 
 

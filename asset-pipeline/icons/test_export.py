@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 import subprocess
 import sys
@@ -17,8 +18,8 @@ class ExportTest(unittest.TestCase):
             export.export(export.ROOT / 'recipe.json', out)
             second = Path(temp) / 'second'
             export.export(export.ROOT / 'recipe.json', second)
-            self.assertEqual(len(list(out.rglob('*.svg'))), 10)
-            self.assertEqual(len(list(out.rglob('*.png'))), 21)
+            self.assertEqual(len(list(out.rglob('*.svg'))), 12)
+            self.assertEqual(len(list(out.rglob('*.png'))), 25)
             for path in out.rglob('*'):
                 if path.is_file():
                     self.assertEqual(path.read_bytes(), (second / path.relative_to(out)).read_bytes())
@@ -26,7 +27,7 @@ class ExportTest(unittest.TestCase):
                         self.assertEqual(path.read_bytes(), (export.ROOT / 'exported' / path.relative_to(out)).read_bytes())
                     else:
                         with Image.open(path) as preview:
-                            self.assertEqual(preview.size, (800, 400))
+                            self.assertEqual(preview.size, (960, 400))
                 if path.suffix == '.svg':
                     root = ET.fromstring(path.read_text())
                     self.assertEqual(root.attrib['viewBox'], '0 0 64 64')
@@ -42,6 +43,15 @@ class ExportTest(unittest.TestCase):
                     self.assertGreaterEqual(min(box[:2]), 2)
                     self.assertLessEqual(max(box[2:]), size - 2)
                     self.assertEqual(alpha.getpixel((0, 0)), 0)
+
+    def test_upstream_shield_identity_and_runtime_notice(self):
+        source = export.ROOT / 'source' / 'tabler'
+        provenance = json.loads((source / 'provenance.json').read_text())
+        for name, digest in provenance['files'].items():
+            self.assertEqual(hashlib.sha256((source / name).read_bytes()).hexdigest(), digest)
+        notice = (source / 'LICENSE.txt').read_text().strip()
+        for theme in ['bright', 'dark']:
+            self.assertIn(notice, (export.ROOT / 'exported' / theme / 'self-shield.svg').read_text())
 
     def test_invalid_parameters(self):
         good = json.loads((export.ROOT / 'recipe.json').read_text())

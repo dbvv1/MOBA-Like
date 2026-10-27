@@ -1,0 +1,13 @@
+{
+  "source": "Tabler Icons / outline shield",
+  "author": "Paweł Kuna",
+  "license": "MIT",
+  "commit": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d",
+  "page": "https://tabler.io/icons?icon=shield",
+  "repository": "https://github.com/tabler/tabler-icons",
+  "files": {
+    "shield.svg": "254faf50fe337be66083b5292d7a1d548bb24289a26a3496e367ea341c7869da",
+    "LICENSE.txt": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db"
+  },
+  "adaptation": "Path coordinates = original × 2.4 + (3.2,3.2); arc radii/deltas × 2.4. Existing recipe supplies outline, accent fill and 4/4.5 width. No added healing/cross/leaf meaning."
+}

@@ -1,0 +1,3 @@
+source/*.obj text eol=lf
+source/*.mtl text eol=lf
+source/License.txt text eol=lf

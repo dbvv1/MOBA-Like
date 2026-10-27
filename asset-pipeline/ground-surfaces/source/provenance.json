@@ -1,0 +1,52 @@
+{
+  "publisher": "Kenney",
+  "pack": "Nature Kit 2.1",
+  "license": "CC0-1.0",
+  "page": "https://kenney.nl/assets/nature-kit",
+  "archiveURL": "https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip",
+  "archiveSHA256": "fa7974a0d342bfe63c38664ba9f8ec1a4aab8ea25f099bdc56870e33588c4d9d",
+  "checkedAt": "2026-10-26",
+  "archiveReuse": "Existing shared Star research archive; no rock assets copied",
+  "files": [
+    {
+      "name": "License.txt",
+      "archivePath": "License.txt",
+      "sha256": "5c063f83e0422114f703fc6bbe23010f32b12d132b93578fa776289c0d334675",
+      "bytes": 586,
+      "archiveMemberSHA256": "cb96b75e3560ac78d7a53ce6f083f4cdb5c53faea6141b62d63458dcfe1e4b9d"
+    },
+    {
+      "name": "grass_large.obj",
+      "archivePath": "Models/OBJ format/grass_large.obj",
+      "sha256": "27fa6433da98b2a10e975706fd1208dfd49bd6ead18e8cc9837c114e68471185",
+      "bytes": 19495,
+      "archiveMemberSHA256": "8a7cd258fa054bb6d3db5ecd05b746c002a51c8d0542757f3b6e1079df34567f"
+    },
+    {
+      "name": "grass_large.mtl",
+      "archivePath": "Models/OBJ format/grass_large.mtl",
+      "sha256": "a8a1edd5bac4efe95aa438f0cd1f894604e86463a09be3b1f59c9561561c9ec2",
+      "bytes": 82,
+      "archiveMemberSHA256": "b186368ad09ddb6673f90f63c45ecac3f793b36fe14f96bd62e6d44922e7e874"
+    },
+    {
+      "name": "grass_leafsLarge.obj",
+      "archivePath": "Models/OBJ format/grass_leafsLarge.obj",
+      "sha256": "bd3e51c289253e9fb2975c24e8079648d764fef82a7765aec83db7ae42c2ec87",
+      "bytes": 14918,
+      "archiveMemberSHA256": "4cb95c585bc98d47aa661de7bb9b14ab6e2912880fb9dca74efce8abbd818f49"
+    },
+    {
+      "name": "grass_leafsLarge.mtl",
+      "archivePath": "Models/OBJ format/grass_leafsLarge.mtl",
+      "sha256": "a8a1edd5bac4efe95aa438f0cd1f894604e86463a09be3b1f59c9561561c9ec2",
+      "bytes": 82,
+      "archiveMemberSHA256": "b186368ad09ddb6673f90f63c45ecac3f793b36fe14f96bd62e6d44922e7e874"
+    }
+  ],
+  "originalByteArchive": {
+    "file": "original-source-bytes.zip",
+    "sha256": "ae2adaac61b5ad3ffc6ebdae393d78e4c9529ee0d68359a79096fe7c80eaa91a",
+    "note": "Subset container made here; entries preserve exact original package bytes. Readable OBJ/MTL/License copies normalize whitespace only; token equality verified."
+  }
+}

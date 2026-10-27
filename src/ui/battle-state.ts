@@ -1,7 +1,33 @@
-import type {ContentCatalog} from '../content/types.js';
+import type {ContentCatalog,TeamId} from '../content/types.js';
 import type {HeroSnapshot,Snapshot} from '../sim/types.js';
+
+/** Describe the recorded outcome from the player's perspective, not a fixed team. */
+export function matchResult(snapshot:Pick<Snapshot,'status'|'winner'|'endReason'>,playerTeam:TeamId){
+  if(snapshot.status==='running')return null;
+  const label=snapshot.winner===null
+    ?snapshot.status==='timeout'?'TIME LIMIT':'MATCH ENDED'
+    :snapshot.winner===playerTeam?'VICTORY':'DEFEAT';
+  let reason:string;
+  switch(snapshot.endReason){
+    case 'blueBaseDestroyed':
+    case 'redBaseDestroyed':{
+      const destroyedTeam=snapshot.endReason==='blueBaseDestroyed'?0:1;
+      reason=destroyedTeam===playerTeam?'Your Heartwood was destroyed.':'The enemy Heartwood was destroyed.';
+      break;
+    }
+    case 'mutualBaseDestruction':
+      // The simulation records a winner for this case; do not invent a draw.
+      reason='Both Heartwoods were destroyed.';
+      break;
+    case 'maxMatchSeconds':reason='No winner was decided before the time limit.';break;
+    default:reason=snapshot.winner===null?'No winner was declared.':snapshot.winner===playerTeam?'Your team won.':'The enemy team won.';
+  }
+  return {label,hint:`${reason} Restart to play again.`,announcement:`${label}. ${reason}`};
+}
+
 export function battleMessage(snapshot:Snapshot,hero:HeroSnapshot,catalog:ContentCatalog){
-  if(snapshot.status!=='running')return {tone:'end',label:snapshot.winner===hero.team?'VICTORY':'MATCH ENDED',hint:'Restart to enter a new battle.'};
+  const result=matchResult(snapshot,hero.team);
+  if(result)return {tone:'end',label:result.label,hint:result.hint};
   if(!hero.alive)return {tone:'danger',label:'RETURNING TO THE FIELD',hint:`Respawn in ${Math.max(0,Math.ceil((hero.respawnAtTick-snapshot.tick)/catalog.rules.tickRate))}s`};
   if(hero.stunned)return {tone:'danger',label:'STUNNED',hint:'Movement, attacks and skills are blocked. Stop still cancels your prior order.'};
   let nearby=false;

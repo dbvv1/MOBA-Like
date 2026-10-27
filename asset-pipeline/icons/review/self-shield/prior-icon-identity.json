@@ -1,0 +1,142 @@
+[
+  {
+    "path": "asset-pipeline/icons/source/persistent-effect.svg",
+    "sha256": "4db08a203e34909010996ba2559d362e57bc57a9269ae457363b3015568d9823"
+  },
+  {
+    "path": "asset-pipeline/icons/source/directional-projectile.svg",
+    "sha256": "3891dace9eeecfffab52063e56b54d3116ac1d0a15018c3f77c116a765722fef"
+  },
+  {
+    "path": "asset-pipeline/icons/source/displacement.svg",
+    "sha256": "41a365d6621c4e7ddec5101f1263c548e4b89d5486233c36565c16ce2d88acfa"
+  },
+  {
+    "path": "asset-pipeline/icons/source/control.svg",
+    "sha256": "bf243432b2226065e22ed63c2ce5fa0a7947ab0499bf24a7fdc194a72689ffcd"
+  },
+  {
+    "path": "asset-pipeline/icons/source/targeted.svg",
+    "sha256": "c6e887057222426fae07c414f3d8cd957d3d03f013f648de8c939c0d6a3c4e18"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/control-32.png",
+    "sha256": "fcc4d6c655935fe50a4a0c338a9000b68e104fff946fa1d32ac6e7b9649290f0"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/persistent-effect.svg",
+    "sha256": "4db08a203e34909010996ba2559d362e57bc57a9269ae457363b3015568d9823"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/displacement-32.png",
+    "sha256": "852a2ba3803288b90e01376179634fd3b5bf47909b47cc44aa6b279793eba16f"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/targeted-48.png",
+    "sha256": "525b11cf84231cd7265b3a12d9f024cb4ed33a75635850b0f284d254f7b88835"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/directional-projectile.svg",
+    "sha256": "3891dace9eeecfffab52063e56b54d3116ac1d0a15018c3f77c116a765722fef"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/control-48.png",
+    "sha256": "9d3798958e1430eb59d72425d7c2a92ff67afb0d05244327abddb91ece099f69"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/directional-projectile-32.png",
+    "sha256": "6b9117e309f04432ba319c3395f62c408acff443dd02eaf71baeac78578cfb61"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/displacement.svg",
+    "sha256": "41a365d6621c4e7ddec5101f1263c548e4b89d5486233c36565c16ce2d88acfa"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/persistent-effect-32.png",
+    "sha256": "953cabe78fbced2e71a3e5c5f736d0d27ba98ebe9be454fb0ea4835cca6e3fea"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/control.svg",
+    "sha256": "bf243432b2226065e22ed63c2ce5fa0a7947ab0499bf24a7fdc194a72689ffcd"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/targeted.svg",
+    "sha256": "c6e887057222426fae07c414f3d8cd957d3d03f013f648de8c939c0d6a3c4e18"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/displacement-48.png",
+    "sha256": "eb145d404fe304add0b96cf5c01f6d4dd2f33d35b841e5fa061f8798f6213c3f"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/persistent-effect-48.png",
+    "sha256": "83bfacc01920431ad95f4e9679b83ceb575045ccf708200ec8138f0ebeb730d8"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/targeted-32.png",
+    "sha256": "eb475cb2736c9b09c24783ae6655ee52f71fe8f06b6a8355cfe394b100989ded"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/bright/directional-projectile-48.png",
+    "sha256": "9c71e39d306ce143074470188c3835cdae7466f1ef2026ca792965dae477f623"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/control-32.png",
+    "sha256": "ea6c20489e3c543d080fbd81d156df95a33f14928e7baf73067572d631f8640b"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/persistent-effect.svg",
+    "sha256": "d90b7c1a461185ee721d806efb4cb809279cf92f4a9deb782154a1fecc4bed54"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/displacement-32.png",
+    "sha256": "419ddd97dd9138e1c755e27a51321788b4c2673f5fed05d5980643263dc5e651"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/targeted-48.png",
+    "sha256": "ad10107aa62cc8b6ddd5a43fcfd034fab7a4868d014ab9734fe06256a56709f3"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/directional-projectile.svg",
+    "sha256": "245757c4fc9f6fd2ceac500e9998b7824b19359b51e166a6c77124bf20cf117e"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/control-48.png",
+    "sha256": "c5290c962168c4f24523a2769d57de0d481524c4a5f5ae60d2c38d0a9cabc4cc"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/directional-projectile-32.png",
+    "sha256": "800fd7828515af673e3ea068c0c8a5c519a74ba6d5a293498369a28c67ff8154"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/displacement.svg",
+    "sha256": "3299a65524d0159f388a14ab32aea3a879bc7cd35565bbb4beea011d5521284e"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/persistent-effect-32.png",
+    "sha256": "f3440a2d2ec970d466549d550180f64a7256aa05ac6e53a9f979bfb6c884b34d"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/control.svg",
+    "sha256": "175d70649687f5cc75cc9bb24bd0fd42b55751d87d94a960cc47e977019e9ccc"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/targeted.svg",
+    "sha256": "d2f59548cd095c07cb3d0fe6bc45ffe0834b34f80942d2019d1ad1fbdb6c663a"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/displacement-48.png",
+    "sha256": "e4ac32997cd428025deb57d2205f4c92fd851e344981beddbd37cac879c28136"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/persistent-effect-48.png",
+    "sha256": "58e7c6bf668398179e18de06aa0dd13c4edc4f204a3420e34d31536b40168d27"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/targeted-32.png",
+    "sha256": "5b338bd2a6dcd1b04bac033638b8eb6806d0f8e61cb1c7c8590435b22aee5c7a"
+  },
+  {
+    "path": "asset-pipeline/icons/exported/dark/directional-projectile-48.png",
+    "sha256": "a544486d56b6d4f5f4d1ac061cc01585599eacc9fa271c209c8c0ff9234c2083"
+  }
+]

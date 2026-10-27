@@ -103,6 +103,31 @@ test('icons use catalog delivery, actual cooldown/cast/death states, never fixed
   assert.throws(()=>iconUrl('projectile'),/semantic/); assert.throws(()=>iconUrl('targeted','untrusted'),/theme/);
 });
 
+test('self shield follows Morrow effects, preserves unknown-self fallback and real cooldown masks', async () => {
+  const catalog=getContent(10);
+  const sim=new Simulation({seed:7,contentVersion:10,navigation,heroesPerTeam:1,heroIdsByTeam:[['morrow'],['veyra']]});
+  const initial=sim.snapshot().heroes.find(h=>h.team===0);
+  const before=abilityViewModel(initial,catalog).find(i=>i.slot==='W');
+  assert.equal(before.name,'Barkguard'); assert.equal(before.semantic,'self-shield'); assert.equal(before.disabled,false);
+  const source=catalog.abilities[before.abilityId];
+  for (const theme of ['bright','dark']) assert.match(await readFile(new URL(iconUrl('self-shield',theme)),'utf8'),/<title>Self shield<\/title>/);
+  assert.equal(abilitySemantic({...source,effects:[{type:'speed',multiplier:.2,duration:2}]}),null);
+  assert.equal(abilitySemantic({...source,effects:[{type:'heal',amount:10}]}),null);
+  assert.equal(abilitySemantic({...source,targetType:'point'}),null);
+  const remapped=structuredClone(catalog);
+  [remapped.heroes.morrow.abilities.W,remapped.heroes.morrow.abilities.Q]=[remapped.heroes.morrow.abilities.Q,remapped.heroes.morrow.abilities.W];
+  assert.equal(abilityViewModel(initial,remapped).find(i=>i.slot==='Q').semantic,'self-shield');
+  assert.notEqual(abilityViewModel(initial,remapped).find(i=>i.slot==='W').semantic,'self-shield');
+  sim.step([{type:'cast',heroId:initial.id,slot:'W',targetId:null,point:null,direction:null}]);
+  for(let i=0;i<20;i++)sim.step([]);
+  const cast=sim.snapshot().heroes.find(h=>h.id===initial.id);
+  const cooldown=abilityViewModel(cast,catalog).find(i=>i.slot==='W');
+  assert.ok(cast.shield>0); assert.ok(cooldown.cooldownTicks>0); assert.ok(cooldown.disabled); assert.ok(cooldown.reasons.includes('cooldown'));
+  assert.equal(cooldown.cooldownSeconds,cast.cooldowns.W/catalog.rules.tickRate); assert.equal(cooldown.icon,before.icon);
+  const blocked=abilityViewModel({...initial,alive:false,stunned:true,mana:0,castSlot:'R',cooldowns:{...initial.cooldowns,W:60}},catalog).find(i=>i.slot==='W');
+  assert.deepEqual(blocked.reasons,['dead','stunned','casting','cooldown','mana']); assert.equal(blocked.icon,before.icon);
+});
+
 test('asset loader rejects a missing required clip',async()=>{
   await assert.rejects(loadCharacterAssets(async()=>({animations:[]})),/Missing clip/);
 });

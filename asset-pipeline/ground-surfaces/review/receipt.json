@@ -1,0 +1,170 @@
+{
+  "status": "limited visual adoption approved by author and root coordinator; combined-source checks pending; not published",
+  "baselineSource": "a7d66054ae5885e38af43f88c4472a58cb765d89",
+  "candidateSource": "5b2faacaf968efdcd39066456ae7006ee739408b",
+  "firstRoundSource": "d2509a550326b12897c4b4de046744b6157ccbfa",
+  "firstRoundDecision": "reject detached flower-bed patches; corrected by joining sparse banks to road edge, not increased density",
+  "authorAssessment": "small visible improvement in road-edge grounding, central combat clarity retained; not a complete large-area ground material solution",
+  "sourceAndLayout": "Kenney CC0 grass shapes plus editable local cluster layout; no old full-surface textures",
+  "cameraScope": "Actual product, original camera/lights/content v10, real pointer and keyboard commands. Controlled 250ms browser frame clock for reproducible matched states; separate real-time segment after samples. No state injection.",
+  "imagesUnedited": [
+    {
+      "file": "baseline-05-t40.png",
+      "sha256": "3139a273d6fc942eef83f532daab66aa9cfc92292cbb98bb8c1db589c97eff17",
+      "bytes": 161714
+    },
+    {
+      "file": "baseline-06-aim.png",
+      "sha256": "508659ccf251ead680919feb2e3b9333d6f1994c21ddcc802f1c5c74c2c23304",
+      "bytes": 169967
+    },
+    {
+      "file": "baseline-07-small.png",
+      "sha256": "704d02b3b1e1342a0e04c11708bd8608fdcab440d8b22f3699482e6ccd74c267",
+      "bytes": 121183
+    },
+    {
+      "file": "candidate-r2-05-t40.png",
+      "sha256": "a204e5eba22345940fb197645614f1b332202fc82baacfa7375eb360d4e105a7",
+      "bytes": 187755
+    },
+    {
+      "file": "candidate-r2-06-aim.png",
+      "sha256": "05f21c6166a98374c3fedfcffb5ecdbaa95adaecad377edd94e0ceb53ce9a528",
+      "bytes": 202593
+    },
+    {
+      "file": "candidate-r2-07-small.png",
+      "sha256": "bb4afd91be60cbaa65ef1d90b924a9767c4b4331604bc4ba44ec51570f7ed716",
+      "bytes": 129557
+    }
+  ],
+  "matchedFrames": [
+    {
+      "name": "01-spawn",
+      "tick": 0,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "02-t12",
+      "tick": 360,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "03-t24",
+      "tick": 720,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "04-t32",
+      "tick": 960,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "05-t40",
+      "tick": 1200,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "06-aim",
+      "tick": 1260,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    },
+    {
+      "name": "07-small",
+      "tick": 1261,
+      "snapshotHashEqual": true,
+      "cameraEqual": true
+    }
+  ],
+  "actualObservation": {
+    "errors": [],
+    "failure": null,
+    "resizeDraw": {
+      "count": 38300,
+      "width": 800,
+      "height": 600
+    },
+    "realTimeStart": 1263,
+    "realTimeEnd": 1322,
+    "restartReady": true,
+    "webgl": {
+      "live": true,
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "renderer": "WebKit WebGL"
+    },
+    "finished": "2026-10-26T21:18:30.833Z"
+  },
+  "staticBudget": {
+    "maxOpaqueDrawsAdded": 3,
+    "textureBytesAdded": 0,
+    "allInstancesTriangles": 40170,
+    "positionNormalColourAndMatrixBuffersEstimateBytes": 75576,
+    "estimatedNotMeasuredGPUResidentBytes": true,
+    "hardwarePerformance": "not measured; software-browser realtime tick progression is not hardware FPS or handfeel",
+    "culling": "whole-batch bounding spheres, not per-instance; all 3 batches visible in recorded actual cameras, so off-screen instances are also submitted"
+  },
+  "checks": {
+    "unitTests": "190 passed in 38 files",
+    "webTypecheckAndBuild": "passed",
+    "simulationBuild": "passed before second-round layout-only change",
+    "exportTests": "repeatable, source mutation/missing rejected before output writes",
+    "sourceProvenance": "exact original bytes preserved in ZIP; readable copies whitespace-normalized with original/normalized hashes and token equality checked",
+    "clearCentre": "all geometry vertices remain outside abs(z)<4.8m",
+    "height": "all grass vertices under 0.5m",
+    "normalWinding": "both mirrored banks upward",
+    "lifetime": "dispose idempotent with owned geometry/material/instance buffers"
+  },
+  "fullArtifacts": "moba-ground-edge-qa/ (external sibling QA archive; not required to rebuild, representative raw images and hashes are included here)",
+  "artifactHashes": [
+    {
+      "path": "candidate-frames/report.json",
+      "sha256": "06bfc054e0e8eef43f255936ae55b55f9505eaa89d6d8fea3e4980db8082fbf0"
+    },
+    {
+      "path": "candidate-r2-frames/report.json",
+      "sha256": "88f9ebb9bf5f65258e6d77b49acbf1487e82b6b7f4036da3681d740ec568aa17"
+    },
+    {
+      "path": "capture.mjs",
+      "sha256": "710de276dfa9481904dd2a3b9eded41cbc1ae5670d1e348edc267ee684a4a19f"
+    },
+    {
+      "path": "capture-r2.mjs",
+      "sha256": "9970fbd0677ad6320d7f3b77fe4d3fc6a0c07bdeddf20a620157a96a135d16f3"
+    },
+    {
+      "path": "candidate.log",
+      "sha256": "f63e83de757f1a56dc2cb956a8b738eaafa188358e631cc50dd7062d79e99e9e"
+    },
+    {
+      "path": "candidate-r2.log",
+      "sha256": "37d70852c67e26f200600b6a95a96dca8e8a979274fdd7313f6e37cd06c6a059"
+    },
+    {
+      "path": "tests-r2.log",
+      "sha256": "dc0860bf6f70870db54c68e7ea3bc9a58ce47df2c5e93c5cff1a685642843a88"
+    },
+    {
+      "path": "build-r2.log",
+      "sha256": "9195021366fa6403fbc0444bc47ae3fd860a820eb7e5981996a812576fcae4e1"
+    }
+  ],
+  "independentVisualReview": {
+    "reviewer": "root coordinator",
+    "time": "2026-10-26T21:24:53Z",
+    "images": [
+      "baseline-05-t40.png",
+      "candidate-r2-05-t40.png",
+      "baseline-06-aim.png",
+      "candidate-r2-06-aim.png"
+    ],
+    "finding": "road edge less disconnected, grass clusters do not compete with actors or aim dashes; limited gain justified against three draws and about 7.4KB gzip; not a completed large-ground material or genre-level quality claim"
+  }
+}

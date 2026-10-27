@@ -1,0 +1,127 @@
+{
+  "baselineSource": "a7d66054ae5885e38af43f88c4472a58cb765d89",
+  "candidateRuntimeSource": "33112e856aecbe54d8b99f359a188b9018feacad",
+  "scope": "Normal real-time, real Morrow selection and W input, actual product camera/lights. No state injection or controlled clock. Not exact-state battle A/B or hardware budget.",
+  "started": "2026-10-26T21:53:14.457Z",
+  "finished": "2026-10-26T21:53:35.013Z",
+  "fullGroupResult": "First full observation reached 2 baseline / 4 candidate frames. Final restart QA wait dereferenced mobaClient while client.ts boot deliberately removes it; preserve failure, do not claim all-green. Narrow guarded restart tail then passed twice with no page/console errors; product bytes unchanged.",
+  "frames": [
+    {
+      "file": "baseline-01-ready.png",
+      "sha256": "60a73354709248abe60895c2ad8a217dc462f4b254df100a5915f03485ae306b",
+      "tick": 12,
+      "text": "W  Barkguard",
+      "disabled": false,
+      "opacity": "1",
+      "draw": {
+        "count": 1232,
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "file": "baseline-02-cooldown.png",
+      "sha256": "06f64b7261b2c764932f3319e16aa7c9615ef55fb940830052f9c435490849d8",
+      "tick": 32,
+      "text": "W  Barkguard · 11.8s",
+      "disabled": true,
+      "opacity": "0.48",
+      "draw": {
+        "count": 1792,
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "file": "candidate-01-ready.png",
+      "sha256": "d3911e3c2769b04ad0b7cc5cbc79282c12e41da5faae9594b759d14385f8a648",
+      "tick": 13,
+      "text": "W  Barkguard",
+      "disabled": false,
+      "opacity": "1",
+      "draw": {
+        "count": 1232,
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "file": "candidate-02-cooldown.png",
+      "sha256": "34ab63303b1cd79bcb7592ac1543f07ee7874ff03dee2589eec5cbf43487c5a0",
+      "tick": 32,
+      "text": "W  Barkguard · 11.9s",
+      "disabled": true,
+      "opacity": "0.48",
+      "draw": {
+        "count": 1792,
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "file": "candidate-03-small-cooldown.png",
+      "sha256": "b5c016877fef2ffa19f6ae3ce49f612b12779e206ce3dad9923a255b2146a8b2",
+      "tick": 55,
+      "text": "W  Barkguard · 11.1s",
+      "disabled": true,
+      "opacity": "0.48",
+      "draw": {
+        "count": 2458,
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "file": "candidate-04-small-ready.png",
+      "sha256": "c12acac0bb854f9e704c50bda7f5954adec30870a1924124322d62d7a4400904",
+      "tick": 389,
+      "text": "W  Barkguard",
+      "disabled": false,
+      "opacity": "1",
+      "draw": {
+        "count": 30302,
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "file": "candidate-05-restart.png",
+      "sha256": "54ef3163d81ce31ac035ff0cb3b3a8ad519d2e6a466e06d6552dbd10d33ed6c1",
+      "tick": 17,
+      "text": "W  Barkguard",
+      "disabled": false
+    }
+  ],
+  "priorIconFilesUnchanged": 35,
+  "checks": {
+    "rootTests": 187,
+    "presentationTests": 30,
+    "sourceExportTests": 4,
+    "builds": [
+      "web typecheck and Vite",
+      "simulation TypeScript"
+    ]
+  },
+  "bundleDelta": {
+    "rawBytes": 4369,
+    "gzipBytes": 933,
+    "scope": "Sum of generated JavaScript files in saved baseline/candidate builds, not frame time or hardware budget."
+  },
+  "authorJudgment": "Limited improvement: W no longer has a blank art slot; a broad shield at native 32px matches the existing silhouette/color family. Real cooldown tint and readable text remain; 800x600 view draws and returns to ready naturally. Does not establish hero-specific illustration, player recognition rate, or genre-complete HUD quality.",
+  "fullArtifacts": "Independent QA archive moba-self-shield-qa: capture.mjs/capture.log/report.json restart.mjs/restart.log/restart-report.json and baseline/candidate-frames. Paths are relative to the shared handoff archive, not runtime dependencies.",
+  "restartTail": {
+    "started": "2026-10-26T21:56:28.652Z",
+    "source": "33112e856aecbe54d8b99f359a188b9018feacad",
+    "scope": "Only restart tail; guarded readiness across actual boot deleting mobaClient. First full observation report remains unchanged.",
+    "errors": [],
+    "cleanup": [],
+    "hud": {
+      "text": "W  Barkguard",
+      "disabled": false,
+      "iconWidth": 64
+    },
+    "tick": 17,
+    "passed": true,
+    "finished": "2026-10-26T21:56:33.613Z"
+  }
+}

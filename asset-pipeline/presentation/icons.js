@@ -1,10 +1,11 @@
-const semanticNames = new Set(['targeted', 'displacement', 'persistent-effect', 'control', 'directional-projectile']);
+const semanticNames = new Set(['targeted', 'displacement', 'persistent-effect', 'control', 'directional-projectile', 'self-shield']);
 export function abilitySemantic(ability) {
   if (ability.delivery === 'dash') return 'displacement';
   if (ability.delivery === 'zone' && ability.duration > 0) return 'persistent-effect';
   if (ability.effects.some(effect => effect.type === 'stun')) return 'control';
   if (ability.delivery === 'unit' && ability.targetType === 'enemyUnit') return 'targeted';
   if (ability.delivery === 'projectile' && ability.targetType === 'direction') return 'directional-projectile';
+  if (ability.delivery === 'self' && ability.targetType === 'self' && ability.effects.some(effect => effect.type === 'shield')) return 'self-shield';
   return null; // Unsupported delivery/target combinations keep their text label, not guessed art.
 }
 export function iconUrl(semantic, theme = 'dark') {

@@ -60,7 +60,6 @@ async function boot(){
             snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.reject(rejection.reason??'unknown reason');
-            if(sim.isComplete())hud.say(`Match ended: ${snapshot.status} (${snapshot.endReason}). Restart to play again.`);
           });
           world.draw(Math.min(delta,.25),sim.isComplete()?1:alpha);
         }else clock.reset();
