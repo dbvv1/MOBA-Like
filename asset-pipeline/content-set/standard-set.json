@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "9311f43e1b396827bf27caebc8ab715f5cb2cc84",
+  "a1Commit": "f3212e2c0969ec9df283bf29a2849265834dfad5",
+  "purpose": "Source-locked standard pieces and integration contract; not completed content or visual adoption",
+  "camera": {
+    "offset": [
+      0,
+      24,
+      18
+    ],
+    "verticalFovDegrees": 45,
+    "referenceViewport": [
+      1280,
+      720
+    ],
+    "smallViewport": [
+      800,
+      600
+    ],
+    "source": "src/render/world.ts",
+    "note": "Reuse active world light/exposure. No separate beauty-camera acceptance.",
+    "captureSourceCommit": "c3b6f237"
+  },
+  "standards": [
+    {
+      "id": "01-hero",
+      "label": "Veyra · teal",
+      "files": [
+        "veyra-teal"
+      ],
+      "runtimeStatus": "already used in 9311, not new quality acceptance",
+      "consumer": "src/render/world.ts byDefinition.veyra → asset-pipeline/presentation/adapter.js",
+      "gaps": [
+        "body still reads as guard",
+        "crowd obscures hands",
+        "death foot penetration inherited"
+      ]
+    },
+    {
+      "id": "02-enemy",
+      "label": "Furrow Guard · rust",
+      "files": [
+        "melee-rust"
+      ],
+      "runtimeStatus": "already used in 9311",
+      "consumer": "src/render/battlefield.ts battleAssetId()",
+      "gaps": [
+        "siege is this mesh at 1.45, NOT a separate role silhouette",
+        "hurt clip exists but minion consumer does not route damage to it"
+      ]
+    },
+    {
+      "id": "03-landmark",
+      "label": "Enemy catapult tower",
+      "files": [
+        "tower-rust"
+      ],
+      "runtimeStatus": "already used in 9311",
+      "consumer": "src/render/battlefield.ts",
+      "gaps": [
+        "no mechanical fire clip",
+        "no destruction/rubble source",
+        "no attack-specific sound"
+      ]
+    },
+    {
+      "id": "04-lane-context",
+      "label": "12 m road / forest edge",
+      "files": [
+        "lane-ground",
+        "tree",
+        "rock",
+        "shoulder-geometry",
+        "shoulder-layout"
+      ],
+      "runtimeStatus": "existing assets and layout; NOT a new terrain layer",
+      "consumer": "src/render/battlefield.ts + src/render/ground-surfaces.ts",
+      "gaps": [
+        "flat center and outer ground",
+        "no continuous enclosure silhouette",
+        "one tree and one rock shape",
+        "do not add grass in central |z| < 4.8"
+      ]
+    },
+    {
+      "id": "05-action-cue",
+      "label": "Veyra Q / basic release semantic palette",
+      "files": [
+        "directional-projectile-icon",
+        "release-trace",
+        "audio-cast",
+        "audio-swing",
+        "audio-hit",
+        "audio-shield"
+      ],
+      "runtimeStatus": "existing source vocabulary; Q beam is procedural, trace is basic attack only",
+      "consumer": "asset-pipeline/presentation/icons.js + src/render/effects.ts + src/render/impact.ts + src/audio/battle.ts",
+      "gaps": [
+        "cloth cast lacks spell identity",
+        "no dedicated skill/result cue set",
+        "hearing acceptance pending"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "id": "veyra-teal",
+      "path": "asset-pipeline/heroes/veyra-release/exported/veyra-teal.glb",
+      "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/heroes/veyra-release/source/LICENSE.txt",
+        "asset-pipeline/heroes/veyra-release/source/UAL1-License.txt"
+      ],
+      "source": "https://quaternius.itch.io/universal-animation-library",
+      "editableSource": [
+        "asset-pipeline/heroes/veyra-release/source/veyra-teal.blend",
+        "asset-pipeline/heroes/veyra-release/tools/build.py",
+        "asset-pipeline/heroes/veyra-release/tools/retarget.py",
+        "asset-pipeline/heroes/veyra-release/source/UAL1_Standard.glb"
+      ],
+      "kind": "hero",
+      "normalization": {
+        "sourceNominalHeight": 2.28,
+        "targetNominalHeight": 2.28,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 1500,
+        "materials": 6,
+        "bytes": 200000
+      },
+      "clips": [
+        "idle",
+        "walk",
+        "attack",
+        "hurt",
+        "death"
+      ]
+    },
+    {
+      "id": "melee-rust",
+      "path": "asset-pipeline/battle/exported/melee-rust.glb",
+      "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/battle/source/BATTLE-LICENSE.txt",
+        "asset-pipeline/battle/source/GUARD-LICENSE.txt"
+      ],
+      "source": "project-owned-original",
+      "editableSource": [
+        "asset-pipeline/battle/source/melee-rust.blend",
+        "asset-pipeline/battle/tools/build.py"
+      ],
+      "kind": "minion",
+      "normalization": {
+        "sourceNominalHeight": 1.2,
+        "targetNominalHeight": 1.2,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 1500,
+        "materials": 5,
+        "bytes": 180000
+      },
+      "clips": [
+        "idle",
+        "walk",
+        "attack",
+        "hurt",
+        "death"
+      ]
+    },
+    {
+      "id": "tower-rust",
+      "path": "asset-pipeline/battle/exported/tower-rust.glb",
+      "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/battle/source/KAYKIT-LICENSE.txt",
+        "asset-pipeline/battle/source/BATTLE-LICENSE.txt"
+      ],
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "editableSource": [
+        "asset-pipeline/battle/source/tower-rust.blend",
+        "asset-pipeline/battle/tools/build.py"
+      ],
+      "kind": "tower",
+      "normalization": {
+        "sourceNominalHeight": 5.3,
+        "targetNominalHeight": 5.3,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 3500,
+        "materials": 4,
+        "bytes": 180000
+      }
+    },
+    {
+      "id": "lane-ground",
+      "path": "asset-pipeline/battle/exported/lane-ground.glb",
+      "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/battle/source/BATTLE-LICENSE.txt",
+        "asset-pipeline/battle/source/GUARD-LICENSE.txt"
+      ],
+      "source": "project-owned-original",
+      "editableSource": [
+        "asset-pipeline/battle/source/lane-ground.blend",
+        "asset-pipeline/battle/tools/build.py"
+      ],
+      "kind": "ground",
+      "normalization": {
+        "sourceNominalHeight": 0.002,
+        "targetNominalHeight": 0.002,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 100,
+        "materials": 2,
+        "bytes": 8000
+      }
+    },
+    {
+      "id": "tree",
+      "path": "asset-pipeline/battle/exported/tree.glb",
+      "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/battle/source/KAYKIT-LICENSE.txt",
+        "asset-pipeline/battle/source/BATTLE-LICENSE.txt"
+      ],
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "editableSource": [
+        "asset-pipeline/battle/source/tree.blend",
+        "asset-pipeline/battle/tools/build.py"
+      ],
+      "kind": "decoration",
+      "normalization": {
+        "sourceNominalHeight": 4.2,
+        "targetNominalHeight": 4.2,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 100,
+        "materials": 1,
+        "bytes": 12000
+      }
+    },
+    {
+      "id": "rock",
+      "path": "asset-pipeline/battle/exported/rock.glb",
+      "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/battle/source/KAYKIT-LICENSE.txt",
+        "asset-pipeline/battle/source/BATTLE-LICENSE.txt"
+      ],
+      "source": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "editableSource": [
+        "asset-pipeline/battle/source/rock.blend",
+        "asset-pipeline/battle/tools/build.py"
+      ],
+      "kind": "decoration",
+      "normalization": {
+        "sourceNominalHeight": 1.1,
+        "targetNominalHeight": 1.1,
+        "sourceGroundY": 0,
+        "up": "+Y",
+        "forward": "+Z"
+      },
+      "budget": {
+        "triangles": 100,
+        "materials": 1,
+        "bytes": 12000
+      }
+    },
+    {
+      "id": "shoulder-geometry",
+      "path": "asset-pipeline/ground-surfaces/exported/grass-geometries.json",
+      "sha256": "60e88f984d9db646e9a6e218682d20546442ef41257d2c62eb1ebdb282450d2c",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/ground-surfaces/source/License.txt"
+      ],
+      "source": "https://kenney.nl/assets/nature-kit",
+      "editableSource": [
+        "asset-pipeline/ground-surfaces/source/grass_large.obj",
+        "asset-pipeline/ground-surfaces/source/grass_leafsLarge.obj",
+        "asset-pipeline/ground-surfaces/export.py"
+      ]
+    },
+    {
+      "id": "shoulder-layout",
+      "path": "asset-pipeline/ground-surfaces/source/edge-layout.json",
+      "sha256": "767b4244b374be9fdb9ba666312a6198be01d73015d25682ec62dd211f1a427f",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/ground-surfaces/source/License.txt"
+      ],
+      "source": "https://kenney.nl/assets/nature-kit",
+      "editableSource": [
+        "asset-pipeline/ground-surfaces/source/grass_large.obj",
+        "asset-pipeline/ground-surfaces/source/grass_leafsLarge.obj",
+        "asset-pipeline/ground-surfaces/export.py"
+      ]
+    },
+    {
+      "id": "audio-swing",
+      "path": "assets/audio/battle/swing.ogg",
+      "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "assets/audio/battle/LICENSE-RPG.txt"
+      ],
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "editableSource": [
+        "assets/audio/battle/README.md"
+      ]
+    },
+    {
+      "id": "audio-cast",
+      "path": "assets/audio/battle/cast.ogg",
+      "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "assets/audio/battle/LICENSE-RPG.txt"
+      ],
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "editableSource": [
+        "assets/audio/battle/README.md"
+      ]
+    },
+    {
+      "id": "audio-hit",
+      "path": "assets/audio/battle/hit.ogg",
+      "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "assets/audio/battle/LICENSE-Impact.txt"
+      ],
+      "source": "https://kenney.nl/assets/impact-sounds",
+      "editableSource": [
+        "assets/audio/battle/README.md"
+      ]
+    },
+    {
+      "id": "audio-shield",
+      "path": "assets/audio/battle/shield.ogg",
+      "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "assets/audio/battle/LICENSE-Impact.txt"
+      ],
+      "source": "https://kenney.nl/assets/impact-sounds",
+      "editableSource": [
+        "assets/audio/battle/README.md"
+      ]
+    },
+    {
+      "id": "directional-projectile-icon",
+      "path": "asset-pipeline/icons/exported/dark/directional-projectile.svg",
+      "sha256": "245757c4fc9f6fd2ceac500e9998b7824b19359b51e166a6c77124bf20cf117e",
+      "license": "project-owned; no separate reusable CC0 grant claimed",
+      "licenseEvidence": [
+        "asset-pipeline/icons/README.md"
+      ],
+      "source": "project-owned-original",
+      "editableSource": [
+        "asset-pipeline/icons/source/directional-projectile.svg",
+        "asset-pipeline/icons/recipe.json",
+        "asset-pipeline/icons/export.py"
+      ]
+    },
+    {
+      "id": "release-trace",
+      "path": "asset-pipeline/combat-vfx/source/trace_02.png",
+      "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685",
+      "license": "CC0-1.0",
+      "licenseEvidence": [
+        "asset-pipeline/combat-vfx/LICENSE.txt"
+      ],
+      "source": "https://kenney.nl/assets/particle-pack",
+      "editableSource": [
+        "asset-pipeline/combat-vfx/manifest.json"
+      ]
+    }
+  ],
+  "reviewLineup": {
+    "subjects": [
+      {
+        "id": "veyra-teal",
+        "x": -3,
+        "z": 0,
+        "yaw": 1.5707963267948966
+      },
+      {
+        "id": "melee-rust",
+        "x": 0,
+        "z": 0,
+        "yaw": -1.5707963267948966
+      },
+      {
+        "id": "tower-rust",
+        "x": 6,
+        "z": 0,
+        "yaw": -1.5707963267948966
+      }
+    ],
+    "context": "Existing road and actual world light, no camera zoom; authoring placement only, never simulation positions"
+  },
+  "cueContract": {
+    "missing": [
+      "structureDestroyed",
+      "heroRespawned",
+      "matchWon/matchLost",
+      "purchaseAccepted",
+      "purchaseRejected"
+    ],
+    "baselineV10": {
+      "swing": "basicAttack from hero; release, not impact",
+      "cast": "castResolved; not hit",
+      "hit": "heroDamaged.hpDamage > 0",
+      "shield": "heroDamaged.hpDamage == 0 and absorbed > 0"
+    },
+    "currentV11": {
+      "sourceCommit": "003884b2188c4424e4b13af3e630b55ffc32f1ce",
+      "hit": "basicAttackHit at supplied impact position including removed minion; suppress duplicate heroDamaged",
+      "cast": "castResolved excluding action=basicAttack"
+    }
+  },
+  "consumerCommit": "003884b2188c4424e4b13af3e630b55ffc32f1ce"
+}

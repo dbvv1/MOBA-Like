@@ -3,18 +3,24 @@ import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import type {ContentCatalog} from '../content/types.js';
 import type {Snapshot,EntitySnapshot} from '../sim/types.js';
 import type {BattleAssets} from './battle-assets.js';
-import {battleManifest} from './battle-assets.js';
+import {battleManifest,siegeAssetManifest} from './battle-assets.js';
 import {createGroundSurfaces} from './ground-surfaces.js';
 import {createMotionState} from '../../asset-pipeline/presentation/motion-state.js';
 
 export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
-  return `${entity.kind==='minion'?(entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
+  return `${entity.kind==='minion'?(entity.minionKind==='siege'?'siege':entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
 }
 export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   const root=new THREE.Group();root.name='Battlefield';
   const owned:Array<{dispose():void}>=[];
-  const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
+  const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;activeClip:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];siege:boolean;walkNominalSpeed:number;walkTimeScale:number;wheelTravel:number;wheelStep:number;wheelSamples:Array<{bone:THREE.Object3D;sample:THREE.Interpolant}>;death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
+  function useClip(actor:NonNullable<ReturnType<typeof actors.get>>,name:string){
+    if(actor.activeClip===name)return;
+    for(const action of actor.actions.values())action.stop();
+    const action=actor.actions.get(name);if(action){action.setEffectiveTimeScale(1);action.play();}
+    actor.activeClip=name;
+  }
   const world=catalog.map.world;
   // The playable strip is not the edge of the world: ground fills the oblique
   // camera, while all trees/rocks remain outside the unchanged navigation lane.
@@ -39,7 +45,9 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   function remove(id:number){const actor=actors.get(id);if(!actor)return;actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.root);for(const skeleton of actor.skeletons)skeleton.dispose();root.remove(actor.root);actors.delete(id);}
   let tick=-1,terminal=false,logicTime=0;
   function sync(snapshot:Snapshot){
-    if(snapshot.tick===tick)return;if(snapshot.tick<tick)throw new Error('Reset battlefield before replay');tick=snapshot.tick;terminal=snapshot.status!=='running';logicTime=snapshot.timeSeconds;
+    if(snapshot.tick===tick)return;if(snapshot.tick<tick)throw new Error('Reset battlefield before replay');
+    const elapsedLogic=Math.max(1/catalog.rules.tickRate,snapshot.timeSeconds-logicTime);
+    tick=snapshot.tick;terminal=snapshot.status!=='running';logicTime=snapshot.timeSeconds;
     for(const event of snapshot.events){
       if(event.type!=='minionDied')continue;
       const actor=actors.get(event.entityId);if(!actor||actor.kind!=='minion'||actor.death)continue;
@@ -47,8 +55,8 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
       actor.from.set(event.position.x,0,event.position.z);actor.to.copy(actor.from);actor.root.position.copy(actor.to);
       delete actor.root.userData['simEntityId'];
       for(const other of actor.actions.values())other.stop();
-      action.reset().setLoop(THREE.LoopOnce,1);action.clampWhenFinished=true;action.play();
-      actor.action='death';actor.death={elapsed:0,duration:action.getClip().duration};actor.mixer.update(0);
+      action.reset().setEffectiveTimeScale(1).setLoop(THREE.LoopOnce,1);action.clampWhenFinished=true;action.play();
+      actor.action='death';actor.activeClip='death';actor.death={elapsed:0,duration:action.getClip().duration};actor.mixer.update(0);
     }
     const seen=new Set<number>();
     for(const entity of snapshot.entities){
@@ -58,15 +66,24 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
         const id=battleAssetId(entity),model=assets.models[id];if(!model)throw new Error(`Missing battle model ${id}`);
         const object=clone(model.scene) as THREE.Group,skeletons=new Set<THREE.Skeleton>();
         object.traverse(node=>{const mesh=node as THREE.SkinnedMesh;if(mesh.isMesh){mesh.castShadow=true;mesh.receiveShadow=true;}if(mesh.isSkinnedMesh){mesh.frustumCulled=false;const raycast=mesh.raycast;mesh.raycast=function(ray,hits){this.computeBoundingBox();this.boundingSphere??=new THREE.Sphere();this.boundingBox!.getBoundingSphere(this.boundingSphere);raycast.call(this,ray,hits);};const s=mesh.skeleton;const existing=[...skeletons].find(other=>other.bones.length===s.bones.length&&other.bones.every((b,i)=>b===s.bones[i])&&other.boneInverses.length===s.boneInverses.length&&other.boneInverses.every((b,i)=>b.equals(s.boneInverses[i]!)));if(existing&&existing!==s){mesh.skeleton=existing;s.dispose();}else skeletons.add(s);}});
-        const entry=battleManifest.assets.find(item=>item.id===id)!;
-        const scale=entity.kind==='minion'&&entity.minionKind==='siege'?1.45:1;
-        object.scale.setScalar(scale);object.userData['visualHeight']=entry.nominalHeight*scale;object.userData['simEntityId']=entity.id;object.name=`entity-${entity.id}`;
+        const siege=entity.kind==='minion'&&entity.minionKind==='siege';
+        const entry=battleManifest.assets.find(item=>item.id===id);
+        const siegeEntry=siegeAssetManifest.assets.find(item=>item.id===id);
+        // GLB is already final metres. The 1.85m bar clears its sampled 1.77m arm envelope.
+        object.scale.setScalar(1);object.userData['visualHeight']=siege?1.85:entry!.nominalHeight;object.userData['simEntityId']=entity.id;object.name=`entity-${entity.id}`;
         const mixer=new THREE.AnimationMixer(object),actions=new Map(model.animations.map(clip=>[clip.name,mixer.clipAction(clip)]));
+        // Wheels are locomotion, not a cast phase. Sample only their authored
+        // quaternion tracks after the primary mixer, so recovery can coexist with travel.
+        const wheelSamples=siege&&catalog.basicAttacks?['Wheel_L','Wheel_R'].map(name=>{
+          const track=model.animations.find(clip=>clip.name==='walk')!.tracks.find(track=>track.name===`${name}.quaternion`)!;
+          return {bone:object.getObjectByName(name)!,sample:new THREE.QuaternionLinearInterpolant(track.times,track.values,4)};
+        }):[];
         const to=new THREE.Vector3(entity.position.x,0,entity.position.z);
-        actor={root:object,from:to.clone(),to,mixer,actions,action:'',attackUntil:0,events:createMotionState(entity.id,catalog),visualTime:snapshot.timeSeconds,kind:entity.kind,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;
+        actor={root:object,from:to.clone(),to,mixer,actions,action:'',activeClip:'',attackUntil:0,events:createMotionState(entity.id,catalog),visualTime:snapshot.timeSeconds,kind:entity.kind,siege,walkNominalSpeed:siegeEntry?.nominalWalkSpeed??1,walkTimeScale:1,wheelTravel:0,wheelStep:0,wheelSamples,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;
       }
       actor.from.copy(actor.to);actor.to.set(entity.position.x,0,entity.position.z);actor.root.position.copy(actor.to);
       const dx=actor.to.x-actor.from.x,dz=actor.to.z-actor.from.z;
+      if(actor.siege){actor.walkTimeScale=Math.hypot(dx,dz)/elapsedLogic/actor.walkNominalSpeed;actor.wheelTravel+=actor.wheelStep;actor.wheelStep=Math.hypot(dx,dz);}
       if(Math.hypot(dx,dz)>1e-5&&snapshot.timeSeconds>=actor.attackUntil)actor.root.rotation.y=Math.atan2(dx,dz);
       actor.events.consume(snapshot.events,snapshot.timeSeconds,true);
       if(terminal)actor.events.finish(snapshot.timeSeconds);
@@ -78,10 +95,12 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
         if(strike){actor.attackUntil=snapshot.timeSeconds+strike.getClip().duration;strike.reset().setLoop(THREE.LoopOnce,1);strike.clampWhenFinished=true;}
       }
       const preparation=actor.events.inspect().attack;
-      const cycling=entity.kind==='minion'&&!!catalog.basicAttacks&&preparation!==null&&preparation.cancelledAt===null&&preparation.visualStopAt===undefined&&(preparation.resolvedAt===null||snapshot.timeSeconds-preparation.resolvedAt<.36);
+      const recovery=actor.siege?(actor.actions.get('attack_release')!.getClip().duration+actor.actions.get('attack_recover')!.getClip().duration):.36;
+      const cycling=entity.kind==='minion'&&!!catalog.basicAttacks&&preparation!==null&&preparation.cancelledAt===null&&preparation.visualStopAt===undefined&&(preparation.resolvedAt===null||snapshot.timeSeconds-preparation.resolvedAt<recovery);
       if(cycling&&preparation){const target=snapshot.entities.find(value=>value.id===preparation.targetId)??snapshot.events.find(event=>event.type==='minionDied'&&event.entityId===preparation.targetId);if(target&&'position'in target)actor.root.rotation.y=Math.atan2(target.position.x-entity.position.x,target.position.z-entity.position.z);}
       const next=cycling||snapshot.timeSeconds<actor.attackUntil?'attack':Math.hypot(dx,dz)>1e-5?'walk':'idle';
-      if(actor.action!==next){for(const action of actor.actions.values())action.stop();actor.actions.get(next)?.play();actor.action=next;}
+      if(actor.action!==next){useClip(actor,next);actor.action=next;}
+      actor.actions.get('walk')?.setEffectiveTimeScale(actor.siege&&next==='walk'?actor.walkTimeScale:1);
     }
     for(const [id,actor] of actors)if(!seen.has(id)&&!actor.death)remove(id);
   }
@@ -96,7 +115,17 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
       actor.root.position.lerpVectors(actor.from,actor.to,terminal?1:alpha);
       actor.visualTime=Math.max(actor.visualTime,logicTime-(terminal?0:(1-alpha)/catalog.rules.tickRate));
       const cycle=actor.events.inspect().attack,strike=actor.actions.get('attack');
-      if(catalog.basicAttacks&&cycle&&actor.action==='attack'&&strike){
+      if(actor.siege&&catalog.basicAttacks&&cycle&&actor.action==='attack'){
+        // Mechanical phases sample the existing authoritative cycle; they emit no events.
+        const at=cycle.cancelledAt??cycle.visualStopAt??actor.visualTime;
+        const prepare=actor.actions.get('attack_prepare')!,release=actor.actions.get('attack_release')!,recover=actor.actions.get('attack_recover')!;
+        const beforeRelease=cycle.resolvedAt===null||at<cycle.resolvedAt;
+        const elapsed=beforeRelease?0:Math.max(0,at-cycle.resolvedAt!);
+        const name=beforeRelease?'attack_prepare':elapsed<release.getClip().duration?'attack_release':'attack_recover';
+        useClip(actor,name);const phase=actor.actions.get(name)!;phase.paused=true;
+        phase.time=beforeRelease?prepare.getClip().duration*THREE.MathUtils.clamp((at-cycle.startedAt)/Math.max(cycle.windup,1e-9),0,1):name==='attack_release'?elapsed:Math.min(recover.getClip().duration,elapsed-release.getClip().duration);
+        actor.mixer.update(0);
+      }else if(catalog.basicAttacks&&cycle&&actor.action==='attack'&&strike){
         // Troop source keys: frame 7 anticipation, frame 11 contact/release.
         // Retiming is presentation-only; a cancelled preparation never reaches 11.
         const at=cycle.cancelledAt??cycle.visualStopAt??actor.visualTime;
@@ -105,6 +134,11 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
         strike.time=cycle.resolvedAt===null||at<cycle.resolvedAt?ready*Math.min(1,Math.max(0,(at-cycle.startedAt)/cycle.windup)):Math.min(strike.getClip().duration,contact+Math.max(0,at-cycle.resolvedAt));
         actor.mixer.update(0);
       }else{if(strike)strike.paused=false;actor.mixer.update(terminal?0:seconds);}
+      if(actor.wheelSamples.length){
+        const distance=actor.wheelTravel+actor.wheelStep*(terminal?1:THREE.MathUtils.clamp(alpha,0,1));
+        const time=(distance/actor.walkNominalSpeed)%actor.actions.get('walk')!.getClip().duration;
+        for(const {bone,sample} of actor.wheelSamples)bone.quaternion.fromArray(sample.evaluate(time));
+      }
     }
   }},dispose(){for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();root.clear();}};
 }

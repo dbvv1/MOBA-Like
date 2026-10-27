@@ -1,0 +1,15 @@
+Resource-specific notice (not a license for repository code)
+
+Kenney Fantasy Town Kit 2.0 cart, wheels and colormap: CC0 1.0.
+Original license wording: source/LICENSE-Kenney.txt.
+Original license bytes: source/original-license-bytes.zip.
+
+Kay Lousberg / KayKit Medieval Hexagon Pack 1.0 catapult turret, arm and atlas:
+CC0 1.0. Original license wording is retained at
+asset-pipeline/battle/source/KAYKIT-LICENSE.txt in this repository.
+
+The new mechanical rig, animation curves, team-panel material assignment and
+derived Blend/GLB resources created for MOBA-Like are dedicated under CC0 1.0:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+This does not claim authors' endorsement or license commercial-game references.
