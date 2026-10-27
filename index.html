@@ -9,4 +9,19 @@
   .skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
   .skills button{width:100%;height:auto;min-height:76px}
 }
-</style></head><body><header><h1>ASHEN FURROW</h1><label for="hero-select">Next match hero</label><select id="hero-select" aria-describedby="hero-choice-details" disabled></select><button id="sound-toggle" type="button" aria-pressed="true">Sound on</button><button id="restart" disabled>Restart</button></header><div id="hero-choice-details" role="status"></div><div id="notice" role="alert">Loading simulation and 3D assets…</div><main id="stage"></main><section id="hud"></section><footer><details><summary>Controls &amp; help</summary><p>Right-click enemy: chase/attack · Right-click ground: move · Q/W/E/R then left-click: aim/cast · A then left-click: attack-move · S: stop · Esc: cancel aim · Space: lock camera. Unlock camera to scroll at edges. Choose your next-match hero above, then Restart to begin a fresh match.</p></details></footer><script type="module" src="/src/client.ts"></script></body></html>
+/* The keyboard editor stays within the existing Controls & help menu. */
+#keyboard-settings{margin-top:10px;width:100%}
+#keyboard-dialog{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow:auto;color:#edf4e9;background:#142e31;border:1px solid #c6ad74;border-radius:12px;padding:22px;box-shadow:0 20px 80px #0009}
+#keyboard-dialog::backdrop{background:#061517b8}
+#keyboard-dialog h2{margin:0 0 12px;font:700 23px Georgia,serif;color:#f4e7c6}
+#keyboard-dialog p{font-size:13px;line-height:1.5}
+.binding-rows{display:grid;gap:8px;margin:16px 0}
+.binding-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,auto);align-items:center;gap:12px;font-size:14px}
+.binding-row button[aria-pressed=true]{outline:2px solid #f0d191;background:#36554b}
+[data-binding-status]{min-height:40px;color:#f2d48d}
+[data-binding-swap]{width:100%;margin-bottom:12px;white-space:normal}
+.binding-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;border-top:1px solid #536a61;padding-top:14px}
+[data-binding-defaults]{margin-right:auto}
+[data-binding-save]{border-color:#e6ca8b;background:#36554b}
+@media(max-width:420px){#keyboard-dialog{padding:16px}.binding-row{font-size:12px;gap:8px}.binding-actions button{font-size:12px}}
+</style></head><body><header><h1>ASHEN FURROW</h1><label for="hero-select">Next match hero</label><select id="hero-select" aria-describedby="hero-choice-details" disabled></select><button id="sound-toggle" type="button" aria-pressed="true">Sound on</button><button id="restart" disabled>Restart</button></header><div id="hero-choice-details" role="status"></div><div id="notice" role="alert">Loading simulation and 3D assets…</div><main id="stage"></main><section id="hud"></section><footer><details><summary>Controls &amp; help</summary><p id="controls-help">Right-click enemy: chase/attack · Right-click ground: move · Q/W/E/R then left-click: aim/cast · A then left-click: attack-move · S: stop · Esc: cancel aim · Space: lock camera. Unlock camera to scroll at edges. Choose your next-match hero above, then Restart to begin a fresh match.</p><button id="keyboard-settings" type="button" disabled>Keyboard settings</button></details></footer><dialog id="keyboard-dialog"></dialog><script type="module" src="/src/client.ts"></script></body></html>
