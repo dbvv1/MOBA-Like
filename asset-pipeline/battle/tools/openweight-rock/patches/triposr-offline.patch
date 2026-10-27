@@ -1,0 +1,51 @@
+diff --git a/tsr/models/tokenizers/image.py b/tsr/models/tokenizers/image.py
+index d4034b2..c6c3ba7 100644
+--- a/tsr/models/tokenizers/image.py
++++ b/tsr/models/tokenizers/image.py
+@@ -1,9 +1,9 @@
++import os
+ from dataclasses import dataclass
+
+ import torch
+ import torch.nn as nn
+ from einops import rearrange
+-from huggingface_hub import hf_hub_download
+ from transformers.models.vit.modeling_vit import ViTModel
+
+ from ...utils import BaseModule
+@@ -19,12 +19,9 @@ class DINOSingleImageTokenizer(BaseModule):
+
+     def configure(self) -> None:
+         self.model: ViTModel = ViTModel(
+-            ViTModel.config_class.from_pretrained(
+-                hf_hub_download(
+-                    repo_id=self.cfg.pretrained_model_name_or_path,
+-                    filename="config.json",
+-                )
+-            )
++            # The runner verifies this local, pinned DINO config before import.
++            # No Hub/cache fallback: missing local input must fail closed.
++            ViTModel.config_class.from_json_file(os.environ["TRIPOSR_DINO_CONFIG"])
+         )
+
+         if self.cfg.enable_gradient_checkpointing:
+diff --git a/tsr/utils.py b/tsr/utils.py
+index 9758f2e..822dcb1 100644
+--- a/tsr/utils.py
++++ b/tsr/utils.py
+@@ -7,7 +7,6 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+ import imageio
+ import numpy as np
+ import PIL.Image
+-import rembg
+ import torch
+ import torch.nn as nn
+ import torch.nn.functional as F
+@@ -410,5 +409,7 @@ def remove_background(
+         do_remove = False
+     do_remove = do_remove or force
+     if do_remove:
++        import rembg
++
+         image = rembg.remove(image, session=rembg_session, **rembg_kwargs)
+     return image

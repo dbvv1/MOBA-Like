@@ -7,11 +7,13 @@
 
 ## 当前状态（2026-10-27，接收端续修）
 
-**阻塞：拿不到官方权重；推理一次都没跑。** 代码与许可路径已备好，剩下的是外部依赖：
+**仍阻塞：接收端拿不到官方权重；推理一次都没跑。** 本轮只补 TripoSR 离线输入与源码身份合同，
+不代表模型依赖已经闭合。真实执行仍缺：
 官方权重、能在隔离 CUDA 环境构建/加载 `torchmcubes` 的工具链（见状态 4），以及在已有
 12 GB 的 RTX 5070 上跑真实推理并记录峰值。TripoSR 低成本路线有独立薄调用脚本，
 TripoSG 官方 nonflash 窄对照路径有可审的最小 `diso` 延迟导入 patch（基 SHA 与 patch
-hash 见下），两者都不下载、不初始化 RMBG/rembg。仍没有原始生成 mesh、没有 Blender
+hash 见下）。TripoSR 新增两个文件的精确 patch，修正 `tsr.utils` 顶层 rembg 导入及
+DINO config 隐式 Hub 读取；rembg 是库，不等同于 RMBG-1.4 权重。两路线都不下载背景模型。仍没有原始生成 mesh、没有 Blender
 采用源、没有旧/新同视角图，也没有质量结论。
 
 1. **本机官方 Hub TLS 未建立。** 接收端记录 ClientHello 后未收到 ServerHello，
@@ -63,7 +65,7 @@ hash 见下），两者都不下载、不初始化 RMBG/rembg。仍没有原始�
 |---|---|---|---|
 | 1 | 把 HF 404 误挂到官方 Hub | 已撤回该断言；只记录本机 TLS EOF，并说明云端能读官方模型卡不等于本机能下载 | 本节状态 1；2026-10-27 复测仍为握手失败，未出现 HTTP 404 |
 | 2 | 接入步骤未要求改 manifest 的 `source`/`license` | 接入步骤明确同步改 hash/bounds/bytes/triangles/source/license/provenance，保留五个运行字段；若最终许可不是 CC0-1.0，同时把 `test_assets.py` 的全资产许可断言改成显式允许值并保留其余检查（当前尚未接入，未先改测试） | 下文“恢复后的制作顺序”第 5 步 |
-| 3 | TripoSR 回退被 `run.py` 顶层 `import rembg` 阻断，且没写裁剪/灰底合同 | 新增 `run_triposr.py`：直接 import `tsr.system.TSR`，不经过 `run.py`；输入按 `a > 0` 裁剪、方形化并按 0.85 前景占比留边、合成到中性灰 0.5，输出无 alpha 的 RGB；运行后断言 `rembg`/`tsr.bake_texture` 未被导入 | `run_triposr.py`；`test_runner.py` 的 `TripoSRGuards` 4 项 |
+| 3 | TripoSR 回退的 rembg 导入与裁剪/灰底合同 | 灰底 RGB 合同保留；仅跳过 `run.py` 不够，`tsr.utils` 仍顶层 import rembg。本轮 `triposr-offline.patch` 把它延迟到实际抠图分支；runner 严核两个补丁文件，不放行任意 dirty | CPU 合同和官方小源码 patch 检查通过；真实 TSR 成功导入仍待 torchmcubes/CUDA，不能把先前缺模块失败当闭合 |
 | 4 | `--weights` 示例与帮助把权重目录和源码 checkout 混用 | docstring、`--weights` help 和 README 命令统一为“权重目录（含 `model_index.json`）+ `--source-dir` 源码 checkout” | `run_triposg.py --help` |
 | 5 | `run.json` 未记录实际依赖版本 | `runtime.packages` 记录 diffusers/transformers/numpy/Pillow/trimesh/scikit-image/torchvision/diso，未安装项写 `null`；TripoSR sidecar 另记 torchmcubes | `package_versions()`；`test_package_versions_mark_missing` |
 | 6 | `--source-dir` 只核 HEAD，未绑定实际 import | 导入后核 `pipeline_triposg`、`inference_utils` 和 TripoSR `tsr.system` 的 `__file__` 都在已核 checkout 下，否则明确失败 | `verify_imported_modules`；`test_import_must_come_from_verified_checkout` |
@@ -87,16 +89,68 @@ hash 见下），两者都不下载、不初始化 RMBG/rembg。仍没有原始�
 ```sh
 python asset-pipeline/battle/tools/openweight-rock/run_triposr.py \
   --weights <本地 TripoSR 权重目录（config.yaml + model.ckpt）> \
-  --revision <完整 Hub commit> \
-  --source-dir <固定 commit 的 TripoSR checkout> \
+  --revision 5b521936b01fbe1890f6f9baed0254ab6351c04a \
+  --source-dir <固定 commit 且已应用下述 patch 的 TripoSR checkout> \
   --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
   --out-dir asset-pipeline/battle/source/openweight-rock/generated-triposr
 ```
 
 输入合同对应上游 `--no-remove-bg`：真实 alpha 只用于离线裁剪/合成，最终交给模型的是
 中性灰 0.5 底的 RGB，不带 alpha；`rembg` 不安装、不导入、不初始化，`tsr.bake_texture`
-（xatlas）也不导入。提取仍用官方 `torchmcubes`，不另写 marching cubes。它当前因缺
-CUDA Toolkit 不能构建（见状态 4），所以这条路线是“代码与许可就绪、依赖阻塞”，不是已跑通。
+（xatlas）也不导入。这里是 runner 与已审 patch 的合同，不是已取得真实 TSR 导入成功的结果。
+提取仍用官方 `torchmcubes`，不另写 marching cubes。它当前因缺 CUDA Toolkit 不能构建
+（见状态 4），这条路线仍为依赖阻塞。
+
+#### 本地配置与精确 source patch
+
+固定上游的 `tsr/models/tokenizers/image.py` 在构造 tokenizer 时还调用
+`hf_hub_download("facebook/dino-vitb16", "config.json")`，没有 revision。
+只备齐 TripoSR 的两个权重文件再设 `HF_HUB_OFFLINE=1`，空 Hub cache 仍会失败。
+本轮不预热用户 cache，也不下载 DINO 权重：随工具提供官方 **454 B config.json** 原字节，
+patch 改为 `from_json_file` 读取 runner 指定的本地路径，缺失或错 hash 直接失败。
+
+- DINO：`facebook/dino-vitb16`，revision `f205d5d8e640a89a2b8ef0369670dfc37cc07fc2`；
+  `config/dino-vitb16-config.json`，SHA-256
+  `b87c0270b97db085fd82cf114a761fd0f62ae7914fbd407c752a2260646b689c`。
+  [固定官方文件](https://huggingface.co/facebook/dino-vitb16/blob/f205d5d8e640a89a2b8ef0369670dfc37cc07fc2/config.json)、
+  [固定模型卡](https://huggingface.co/facebook/dino-vitb16/blob/f205d5d8e640a89a2b8ef0369670dfc37cc07fc2/README.md)
+  标 Apache-2.0；文件未修改，许可证随附于 `config/LICENSE-Apache-2.0.txt`。
+- TripoSR 权重 revision：`5b521936b01fbe1890f6f9baed0254ab6351c04a`；
+  runner 要求确切的 `config.yaml`（987 B，SHA-256
+  `74ca708ce086bf68e97709ea6b3d91f14717921c04691e84043f0eb8fcc68e62`）与 `model.ckpt`，checkpoint 1,677,246,742 B，SHA-256
+  `429e2c6b22a0923967459de24d67f05962b235f79cde6b032aa7ed2ffcd970ee`。
+  本轮未取得/读取这个 checkpoint；这是固定官方元数据，不是下载成功证据。
+- 源码基 commit：`107cefdc244c39106fa830359024f6a2f1c78871`。
+  patch：`tools/openweight-rock/patches/triposr-offline.patch`，SHA-256
+  `99167c33aebec64285c97b40c6e4bf75d2d7bdc332f3015865863fd0eccd5b14`。
+  仅改 `tsr/utils.py` 的 rembg 延迟导入，以及 `tsr/models/tokenizers/image.py` 的本地 config 读取；
+  不改网络、模型结构、权重或提取器。
+
+| 源码路径 | 上游文件 SHA-256 | 补后文件 SHA-256 |
+|---|---|---|
+| `tsr/utils.py` | `d9d1a645fef7ea489615bff3471fd01a4941a2c0e138c5dff5daae619563279b` | `ec1f673845cfd7568440e51ed9a8947b08a6fb72d5534b0f25856f5cbc2c4394` |
+| `tsr/models/tokenizers/image.py` | `f6da23124dfabe6a1f8d0d27693d0cece6574de68be15487a77781b6a9d73195` | `32a12f638e85e73701622dad7092d276119173512d5afbb72dbb4b5d627ebd9c` |
+
+在**专用、无其他改动**的固定源码 checkout 应用，不提交 patch 到上游 checkout；Git 工作树
+须保留 LF 字节（Windows 专用 checkout 用 `core.autocrlf=false`）。从产品仓库复制 patch 的绝对
+路径给下列占位，不移动或改写用户已有源码：
+
+```sh
+git -C <TripoSR源码目录> apply --check <triposr-offline.patch的路径>
+git -C <TripoSR源码目录> apply <triposr-offline.patch的路径>
+```
+
+runner 在 torch/TSR import、CUDA 初始化和输出创建前验证 DINO config、固定 HEAD、两文件
+前后 SHA、恰好两个未暂存修改路径；错源版本、漏 patch、额外 dirty/untracked、暂存改动及
+隐藏修改的 index flags 都拒绝；整个 source checkout 内被 ignore 的额外文件（包括根目录依赖同名文件与旧字节码）也拒绝，
+请用独立无缓存 checkout。runner 在所有上游/重依赖导入前设置进程级
+`sys.dont_write_bytecode=True`，不生成 `__pycache__`；不删除用户已有文件或改系统设置。它不自动打 patch，不将 dirty 树冒称 clean 上游。
+`--dino-config` 可改存放路径，不能换 config 身份；运行记录只收 repo/revision/相对文件名/hash，
+不写用户本机路径。真实 import 后还核 `tsr.system`、`tsr.utils`、tokenizer 与已加载 tsr 模块
+是否来自同一 checkout，支持 namespace package，模型加载后复核 rembg 未导入。
+
+本轮云端只读取 DINO 454 B config 与 TripoSR 987 B config 等小源码/元数据，仅说明这些小文件可取得；**不代表接收端 schannel TLS 恢复**。
+无真实 TSR 导入、权重推理、mesh、GLB 接入或品质采用结论。
 
 ### TripoSG nonflash（许可已清的窄对照/后备）
 
@@ -131,9 +185,11 @@ CUDA Toolkit 不能构建（见状态 4），所以这条路线是“代码与�
 | `tools/openweight-rock/png_rgba.py` | 无第三方依赖的 RGBA PNG 读取、alpha 合同与 RGB PNG 写出；空/全不透明/过小 alpha 明确报错 |
 | `tools/openweight-rock/run_triposg.py` | TripoSG 薄调用：nonflash 为默认；只吃本地权重；核基 commit + 已审 patch；核实际 import 路径；断言非 flash 没导入 `diso`；保留原始 mesh；不下载权重/背景模型 |
 | `tools/openweight-rock/patches/triposg-nonflash.patch` | 官方 `fc5c4099` 上的最小 `diso` 延迟导入 patch（SHA-256 `32bec58f…`） |
-| `tools/openweight-rock/run_triposr.py` | TripoSR 薄调用：直接 import `TSR`，跳过 `run.py` 的 `rembg`；灰底 RGB 输入；保留原始 mesh；不下载 |
+| `tools/openweight-rock/run_triposr.py` | TripoSR 薄调用：核固定本地 DINO config、精确两文件 patch、权重身份及真实 import 路径；灰底 RGB；不下载 |
+| `tools/openweight-rock/patches/triposr-offline.patch` | 固定 `107cefdc` 上的 rembg 延迟导入 + 本地 DINO config 窄修 |
+| `source/openweight-rock/config/` | 官方 454 B DINO config 原字节及 Apache-2.0 许可证；没有权重 |
 | `tools/openweight-rock/postprocess.py` | 可重复的 raw→final 转换：减面、接地/缩放、单材质、从导出 GLB 实测材质/贴图/alphaMode 的合同检查、GLB 与 sidecar |
-| `tools/openweight-rock/test_runner.py` | 20 项 CPU-only 检查：原有来源/输出保护 5 项 + 新增 15 项（依赖版本 1、权重指纹 1、nonflash patch 4、TripoSR 4、后处理 5） |
+| `tools/openweight-rock/test_runner.py` | 42 项 CPU-only 检查：保留原 20 项，新增本地 DINO/权重/模块身份 9 项与真实小 Git fixture 13 项；不导入 TSR |
 | `tests/test_openweight_input.py` | 输入合同与坏输入拒绝（5 项，纯 Python） |
 
 输入图 SHA-256：`6139b5ba738ee39848bf0ef2358477e42607e65ee53aace19c768c92b0d31b9f`。
@@ -181,22 +237,23 @@ import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 
    若缺 host compiler，记录该独立阻塞，不静默跑系统安装器。PyTorch CUDA wheel 能运行
    不代表含 `nvcc`；pip runtime 也不是完整编译工具链，未找到经验证的 Windows
    `torchmcubes`/`diso` wheel。上表环境是历史报告，不盲钉尚未核对的组合；固定实际可
-   安装的版本与 wheel/source hash，保留与上游 numpy pin 的差异。源码使用干净固定
-   checkout，避免 editable 导入别处代码。
+   安装的版本与 wheel/source hash，保留与上游 numpy pin 的差异。源码使用固定
+   checkout 加对应路线的精确 patch，避免 editable 导入别处代码。
 3. 按依赖条件选路线，优先跑 TripoSR（相对仓库根）：
 
    - **首选：TripoSR**（官方 `torchmcubes` 在该 CUDA torch 环境可构建/加载时）：
      ```sh
      python asset-pipeline/battle/tools/openweight-rock/run_triposr.py \
        --weights <本地 TripoSR 权重目录（config.yaml + model.ckpt）> \
-       --revision <完整 Hub commit> \
-       --source-dir <固定 commit 的 TripoSR checkout> \
+       --revision 5b521936b01fbe1890f6f9baed0254ab6351c04a \
+       --source-dir <固定 commit 且已应用 triposr-offline.patch 的 TripoSR checkout> \
        --image asset-pipeline/battle/source/openweight-rock/input/rock-cluster.png \
        --out-dir asset-pipeline/battle/source/openweight-rock/generated-triposr
      ```
      产物为 `prepared-input.png`（`a > 0` 裁剪后合成到中性灰 0.5 的 RGB，无 alpha）、
      未改动的 `raw.glb` / `raw-mesh.npz`，以及记录输入/权重/耗时/峰值显存/依赖版本的
-     `run.json`。revision 必须是完整 Hub commit；输出目录必须空。`rembg` 和
+     `run.json`。revision 必须等于上面固定值，两个权重文件和 DINO config 都核大小/hash；
+     输出目录必须空。`rembg` 和
      `tsr.bake_texture` 被导入时 runner 明确失败。
    - **仅当 TripoSR 依赖链仍不可用时：TripoSG nonflash 窄对照/后备**（`--source-dir`
      指向固定 commit 的 checkout，并在其上应用本页 patch；runner 会自己核 patch hash）：
@@ -254,7 +311,8 @@ import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 
 - TripoSR 源码与权重 MIT（commit `107cefdc…`，`stabilityai/TripoSR`）；`torchmcubes`
   为 MPL-2.0，编译/分发依赖代码须守其条款。
 - `fast-simplification` 0.2.0 为 MIT，只在后处理减面时使用。
-- RMBG-1.4 不在本链路里，不随输入或输出分发；`rembg` 同样不安装/不导入。
+- DINO 的本地 config 单独按 Apache-2.0 记录，不将其误标 MIT；没有引入 DINO 权重。
+- RMBG-1.4 不在本链路里，不随输入或输出分发；`rembg` 库同样不安装/不导入。
 - 输入图由本仓库脚本原创生成，按 CC0-1.0 提供；它不是 KayKit 资产。
 - 生成输出是另一层权利，生成后单独记录；不自动标成 KayKit CC0，也不因输入是
   CC0 就推定输出无约束。
@@ -262,7 +320,26 @@ import”当成功——那会把 numpy 降回 1.22.3，就不再是 `run.json` 
 
 ## 验证
 
-已跑（2026-10-27）。`test_runner.py` 必须在任务 venv（上表记录的依赖组合，含 `trimesh`
+### 本轮云端 CPU-only 离线合同（2026-10-27）
+
+- 复用已有 Python 3.12.14 venv（numpy 2.5.4 / Pillow 13.0.0 / trimesh 5.2.0），`test_runner.py` **42/42 通过，0 skip**；没有安装依赖。
+  新增 22 项覆盖固定 DINO、错 hash/缺文件、先于 heavy import/输出失败、精确 patch 路径/hash、
+  checkpoint 文件名/revision/hash 拒绝、module 路径与 namespace 元数据合同，以及真实小 Git
+  fixture 的错 HEAD、漏 patch、同路径错字节、额外 tracked/untracked/ignored、staged、index flags 和链接拒绝。
+- 官方固定两个小源码文件：实际 `git apply --check`、apply/reverse/apply 通过，前/后文件 SHA 与
+  上表一致。它们被放入**合成小 Git 仓库**测试，未 clone 完整上游；production verifier
+  正确拒绝该合成 HEAD。该测试不是官方完整 checkout 验证，更不是 TSR import 成功。
+- 两个独立 Python 进程真实导入同一合成小模块；每次导入后 source guard 仍通过且无
+  `__pycache__`/`.pyc`。子进程明确移除环境中的 bytecode/cache 覆盖，验证 runner 自己的进程级设置，
+  不是 `-B` 或测试父进程替它关闭缓存；未导入 TSR。
+- 454 B 官方 config 的本地 hash 通过；新测试的 dummy checkpoint 与模块 metadata 对象只测拒绝
+  和路径合同，没有替身 TSR、没有模型加载。torchmcubes/CUDA、真实 import 和推理仍待验证。
+- `test_openweight_input.py` 5/5 通过；runner `--help` 与 `git diff --check` 通过。
+- 本轮未运行 npm/web smoke；只改制作工具/测试与源说明，不改运行 GLB、manifest、src 或原卡。
+
+### 接收端历史验证（本轮不重算为真实模型通过）
+
+已跑（2026-10-27，原 20 项版本）。`test_runner.py` 必须在任务 venv（上表记录的依赖组合，含 `trimesh`
 5.2.0 与 `Pillow` 12.3.0）中运行：两项后处理合同会真实导出并读取 GLB。系统 Python
 没有 `trimesh`，这 2 项会以“needs the task venv”跳过，不再报错；任务 venv 中是
 20/20 通过。`test_openweight_input.py` 和 `test_assets.py` 只用标准库。
@@ -295,7 +372,8 @@ PYTHONUTF8=1 python asset-pipeline/battle/tests/test_assets.py
   占位权重跑到依赖边界：生成 872×872、colour type 2（无 alpha）的 `prepared-input.png`，
   随后在 `tsr.system` 导入处退出，实际输出为
   `TripoSR source is not importable: No module named 'torchmcubes'.`（缺失模块名来自
-  import 异常），失败路径也复核了 `rembg`/`tsr.bake_texture` 未导入。
+  import 异常），失败路径也复核了 `rembg`/`tsr.bake_texture` 未导入。这个前置失败没有到达
+  `tsr.utils`，不能证明成功导入 TSR 时不会加载 rembg；本轮已修源码合同但未补真实导入证据。
 - `run_triposg.py --help`、`run_triposr.py --help` 正常；两者在解析参数前不导入 torch。
 - 缺权重失败：两个 runner 用空权重目录实跑，都在权重检查处以明确错误退出
   （`model_index.json` / `config.yaml` missing），没有发起任何下载。
