@@ -1,0 +1,33 @@
+{
+  "asset": "Kloppenheim 03 (Pure Sky)",
+  "author": [
+    "Greg Zaal",
+    "Jarod Guest"
+  ],
+  "source": "https://polyhaven.com/a/kloppenheim_03_puresky",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "download_url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloppenheim_03_puresky_1k.hdr",
+  "api_url": "https://api.polyhaven.com/files/kloppenheim_03_puresky",
+  "api_md5": "4398fb83b085aed97cef788cda6f9e2d",
+  "bytes": 1428760,
+  "sha256": "9806bc452fc8e1564418e7b45b50683732c0b37584423fa026ff0e2edf4eb1ce",
+  "state": "bundled lighting candidate; source verified, PMREM runtime and image quality require rendered evidence",
+  "purpose": "PMREM environment lighting candidate, not a tone-mapped JPG background",
+  "verified_at_utc": "2026-10-27T10:41:21Z",
+  "decode_check": {
+    "loader": "Three.js 0.186.1 RGBELoader (deprecated alias; use HDRLoader for integration)",
+    "width": 1024,
+    "height": 512,
+    "type": "HalfFloatType",
+    "values": 2097152,
+    "scope": "CPU parse only; no PMREM or GPU runtime"
+  },
+  "runtime_processing": {
+    "helper": "src/render/sky-radiance.ts",
+    "method": "Find upper-hemisphere solar hotspot; replace inner 2 degrees with median RGB of 5\u20138 degree sky ring, feather to original by 5 degrees; preserve original asset file",
+    "original_file_modified": false,
+    "environment_intensity": 0.45,
+    "direct_sun": "single shadow-casting DirectionalLight; art-directed, not absolute photometry"
+  }
+}

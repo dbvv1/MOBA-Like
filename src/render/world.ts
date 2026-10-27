@@ -1,3 +1,4 @@
+import {createBattleLighting,type BattleLighting} from './lighting.js';
 import {loadCombatTextures,type CombatTextures} from './combat-textures.js';
 import {disposeOwnedRenderer} from './owned-renderer.js';
 import {createControlMarkers} from './control-state.js';
@@ -21,17 +22,15 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   try{renderer=new THREE.WebGLRenderer({antialias:true});}
   catch{throw new Error('WebGL 2 is unavailable. This client needs a working Three.js/WebGL renderer; no 2D substitute is used.');}
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
-  const scene=new THREE.Scene();scene.background=new THREE.Color('#304c49');scene.fog=new THREE.Fog('#304c49',75,160);
+  const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(45,1,.1,200);
   const focus=new THREE.Vector3(0,0,0);
-  scene.add(new THREE.HemisphereLight('#d7e9e3','#3c4333',1.65));
-  const light=new THREE.DirectionalLight('#fff0cf',2.5);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
+  let lighting:BattleLighting|undefined;
   let combatTextures:CombatTextures|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
-  try{assets=await loadBattleAssets();combatTextures=await loadCombatTextures();statusTexture=await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href);statusTexture.colorSpace=THREE.SRGBColorSpace;view=createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true});}
-  catch(error){disposeOwnedRenderer(renderer,()=>{statusTexture?.dispose();combatTextures?.dispose();assets?.dispose();});throw error;}
-  const loadedAssets=assets, presentation=view;
+  try{lighting=await createBattleLighting(renderer,scene,camera);assets=await loadBattleAssets();combatTextures=await loadCombatTextures();statusTexture=await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href);statusTexture.colorSpace=THREE.SRGBColorSpace;view=createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true});}
+  catch(error){disposeOwnedRenderer(renderer,()=>{statusTexture?.dispose();combatTextures?.dispose();assets?.dispose();lighting?.dispose();});throw error;}
+  const loadedAssets=assets, presentation=view,lightRig=lighting;
   const battlefield=createBattlefield(catalog,loadedAssets);const actors=new THREE.Group();actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
   scene.add(actors);const controls=createControlMarkers(scene,statusTexture!);const reach=createTowerReach(scene,catalog);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene,combatTextures);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
@@ -41,7 +40,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
   let captureView:CaptureView|null=null,savedFocus:THREE.Vector3|null=null;
   function positionCamera(){if(captureView?.pose){applyCapturePose(camera,captureView.pose);return;}camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
-  function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();}
+  function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);lightRig.resize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();}
   fit();positionCamera();
   const onResize=()=>fit();window.addEventListener('resize',onResize);
   function setPointer(clientX:number,clientY:number){const box=renderer.domElement.getBoundingClientRect();cursor.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);pointerInside=true;}
@@ -64,8 +63,8 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     focus.z=THREE.MathUtils.clamp(focus.z,catalog.map.world.minZ,catalog.map.world.maxZ);
     positionCamera();if(playerRoot&&player?.alive)marker.position.set(playerRoot.position.x,.04,playerRoot.position.z);health.draw(camera);controls.draw();
     targeting.update(player&&snapshot&&pointerInside&&targetingSlot?targetingPlan(player,targetingSlot,aim(),snapshot,catalog):null);
-    light.position.set(focus.x-12,26,focus.z+12);light.target.position.copy(focus);light.target.updateMatrixWorld();
-    if(render)renderer.render(scene,camera);
+    lightRig.follow(focus);
+    if(render)lightRig.render();
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
     // Explicit opt-in adapter. Ordinary clients never set it. Pre-roll still
@@ -78,9 +77,9 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
       if(!next?.pose)camera.fov=45;
       renderer.setPixelRatio(next?.pixelRatio??Math.min(window.devicePixelRatio,2));fit();positionCamera();
     },
-    renderOnly(){renderer.render(scene,camera);},
+    renderOnly(){lightRig.render();},
     captureContext(){return renderer.getContext();},
-    captureState(){return {camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
+    captureState(){return {lighting:lightRig.inspect(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},
@@ -88,7 +87,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
     leavePointer(){pointerInside=false;},setLocked(value:boolean){locked=value;},
     groundPoint():Vec2|null{return aim().point;},
-    dispose(){disposeOwnedRenderer(renderer,()=>{window.removeEventListener('resize',onResize);controls.dispose();statusTexture!.dispose();reach.dispose();health.dispose();effects.dispose();impacts.dispose();combatTextures?.dispose();targeting.dispose();presentation.dispose();battlefield.dispose();loadedAssets.dispose();marker.geometry.dispose();marker.material.dispose();});}
+    dispose(){disposeOwnedRenderer(renderer,()=>{window.removeEventListener('resize',onResize);controls.dispose();statusTexture!.dispose();reach.dispose();health.dispose();effects.dispose();impacts.dispose();combatTextures?.dispose();targeting.dispose();presentation.dispose();battlefield.dispose();loadedAssets.dispose();marker.geometry.dispose();marker.material.dispose();lightRig.dispose();});}
   };
 }
 export type GameWorld=Awaited<ReturnType<typeof createWorld>>;
