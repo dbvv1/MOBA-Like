@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "license": "CC0-1.0",
+  "forward": "+Z",
+  "assets": [
+    {
+      "id": "veyra-teal",
+      "definitionId": "veyra",
+      "team": "teal",
+      "file": "exported/veyra-teal.glb",
+      "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
+      "bytes": 181652,
+      "sourceBaseSha256": "963240cca558d3ff1d238583e53399956905a580db07f56b94ed21e3c2bce74a",
+      "clips": [
+        "idle",
+        "walk",
+        "attack",
+        "hurt",
+        "death"
+      ],
+      "bones": 15,
+      "removedWeaponParts": [
+        {
+          "bone": "Hand_L",
+          "vertices": 10
+        },
+        {
+          "bone": "Hand_L",
+          "vertices": 10
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 16
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 16
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 9
+        }
+      ]
+    },
+    {
+      "id": "veyra-rust",
+      "definitionId": "veyra",
+      "team": "rust",
+      "file": "exported/veyra-rust.glb",
+      "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774",
+      "bytes": 182508,
+      "sourceBaseSha256": "d4812021324111483565b5cd81fe9ee0fe14f5df23c4dbf734f8b117e32f0580",
+      "clips": [
+        "idle",
+        "walk",
+        "attack",
+        "hurt",
+        "death"
+      ],
+      "bones": 15,
+      "removedWeaponParts": [
+        {
+          "bone": "Hand_L",
+          "vertices": 10
+        },
+        {
+          "bone": "Hand_L",
+          "vertices": 10
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 16
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 16
+        },
+        {
+          "bone": "Hand_R",
+          "vertices": 9
+        }
+      ]
+    }
+  ],
+  "animationSource": {
+    "url": "https://quaternius.itch.io/universal-animation-library",
+    "license": "CC0-1.0",
+    "packageSha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724",
+    "file": "source/UAL1_Standard.glb",
+    "sha256": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997",
+    "clips": [
+      "Spell_Simple_Enter",
+      "Spell_Simple_Shoot",
+      "Spell_Simple_Exit"
+    ],
+    "targetFrames": {
+      "prepare": [
+        1,
+        14
+      ],
+      "release": [
+        14,
+        19
+      ],
+      "recover": [
+        19,
+        36
+      ]
+    },
+    "boneMap": {
+      "Torso": "spine_03",
+      "Head": "Head",
+      "UpperArm_L": "upperarm_r",
+      "Forearm_L": "lowerarm_r",
+      "Hand_L": "hand_r",
+      "UpperArm_R": "upperarm_l",
+      "Forearm_R": "lowerarm_l",
+      "Hand_R": "hand_l"
+    }
+  }
+}

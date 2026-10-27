@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import manifest from '../../asset-pipeline/battle/manifest.json';
+import heroManifest from '../../asset-pipeline/heroes/veyra-release/manifest.json';
 
 // Vite emits every referenced GLB; source manifest URLs are not server-root assumptions.
 const urls=import.meta.glob('../../asset-pipeline/battle/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
+const heroUrls=import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 export type BattleAssets={models:Record<string,GLTF>;dispose():void};
 export function releaseModels(models:Iterable<GLTF>){
   const resources=new Set<{dispose():void}>();
@@ -18,8 +20,8 @@ export function releaseModels(models:Iterable<GLTF>){
   for(const resource of resources)resource.dispose();
 }
 export async function loadBattleAssets(load=(url:string)=>new GLTFLoader().loadAsync(url)):Promise<BattleAssets>{
-  const results=await Promise.allSettled(manifest.assets.map(async asset=>{
-    const url=urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`];
+  const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroManifest.assets.map(asset=>({id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]}))].map(async asset=>{
+    const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);
     return [asset.id,await load(url)] as const;
   }));

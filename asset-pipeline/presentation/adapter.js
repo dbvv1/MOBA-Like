@@ -12,7 +12,7 @@ export const assetUrls = Object.freeze({
 
 function assetResources(assets) {
   const resources = new Set();
-  for (const asset of Object.values(assets)) asset?.scene?.traverse(node => {
+  for (const asset of [...Object.values(assets),...Object.values(assets.byDefinition??{}).flatMap(pair=>[pair.blue,pair.amber])]) asset?.scene?.traverse(node => {
     if (node.geometry) resources.add(node.geometry);
     if (node.skeleton) resources.add(node.skeleton);
     for (const material of Array.isArray(node.material) ? node.material : node.material ? [node.material] : []) {
@@ -155,9 +155,11 @@ export function createPresentation({catalog, assets, motionOptions, heroesOnly =
       if (![0,1].includes(hero.team) || !Number.isFinite(hero.position.x) || !Number.isFinite(hero.position.z)) throw new Error('Invalid hero transform');
       seen.add(hero.id);
       let actor = heroes.get(hero.id);
-      if (actor && actor.team !== hero.team) { root.remove(actor.root); actor.dispose(); heroes.delete(hero.id); actor = null; }
+      if (actor && (actor.team !== hero.team || actor.definitionId !== hero.definitionId)) { root.remove(actor.root); actor.dispose(); heroes.delete(hero.id); actor = null; }
       if (!actor) {
-        actor = character(hero.team === 0 ? assets.blue : assets.amber,motionOptions);
+        const selected=assets.byDefinition?.[hero.definitionId]??assets;
+        actor = character(hero.team === 0 ? selected.blue : selected.amber,selected.motionOptions??motionOptions);
+        actor.definitionId=hero.definitionId;
         actor.events=createMotionState(hero.id,catalog);
         actor.team = hero.team; actor.previous = null;actor.visualTime=snapshot.timeSeconds;
         actor.root.name = `hero-${hero.id}`; actor.root.userData.simEntityId = hero.id; heroes.set(hero.id, actor); root.add(actor.root);
@@ -183,8 +185,9 @@ export function createPresentation({catalog, assets, motionOptions, heroesOnly =
       // from an input pointer, target guess, or an unrelated movement delta.
       if(hero.facing&&Number.isFinite(hero.facing.x)&&Number.isFinite(hero.facing.z)&&Math.hypot(hero.facing.x,hero.facing.z)>1e-8)actor.root.rotation.y=Math.atan2(hero.facing.x,hero.facing.z);
       else if(moving)actor.root.rotation.y=Math.atan2(dx,dz); // legacy snapshots without facing
+      actor.controlled=hero.stunned;
       actor.motion.play(moving&&snapshot.status==='running'?'walk':'idle');
-      actor.motion.sample({time:actor.visualTime,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:deadElapsed});
+      actor.motion.sample({time:actor.visualTime,controlled:actor.controlled,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:deadElapsed});
       actor.previous = {x: hero.position.x, z: hero.position.z, alive: hero.alive};
     }
     for (const [id, actor] of heroes) if (!seen.has(id)) { root.remove(actor.root); actor.dispose(); heroes.delete(id); }
@@ -217,7 +220,7 @@ export function createPresentation({catalog, assets, motionOptions, heroesOnly =
         const time=synchronized?Math.max(actor.visualTime,Math.max(0,latestTime-(1-alpha)/catalog.rules.tickRate)):actor.visualTime+seconds;
         actor.motion.advance(time-actor.visualTime);actor.visualTime=time;
         if(actor.deathStarted!=null){actor.deadElapsed=Math.max(0,time-actor.deathStarted);if(actor.deadElapsed>=actor.deathDuration+1)actor.root.visible=false;}
-        actor.motion.sample({time:actor.visualTime,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:actor.deadElapsed});
+        actor.motion.sample({time:actor.visualTime,drawn:true,controlled:actor.controlled,...actor.events.inspect(),deathElapsed:actor.deathStarted==null?null:actor.deadElapsed});
       }
     }
     for (const [id, proxy] of entities) {
