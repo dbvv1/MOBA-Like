@@ -1,0 +1,21 @@
+{
+  "sequence": 7,
+  "event": "browser-close-observed",
+  "observedAt": "2026-10-27T21:03:26.342Z",
+  "runId": "run-8ac7340ca3b6-idle-VCcuTl",
+  "state": "owned-handles-closed",
+  "serverClosed": true,
+  "connectionClosed": true,
+  "process": {
+    "pid": 53328,
+    "parentPid": 52228,
+    "registeredAt": "2026-10-27T21:03:05.508Z",
+    "identitySource": "owned-ChildProcess-handle",
+    "exit": {
+      "code": 0,
+      "signal": null,
+      "observedAt": "2026-10-27T21:03:25.997Z",
+      "source": "ChildProcess-exit-event"
+    }
+  }
+}

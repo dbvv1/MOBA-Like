@@ -1,0 +1,24 @@
+{
+  "sequence": 6,
+  "event": "browser-process-observed",
+  "observedAt": "2026-10-27T21:03:05.508Z",
+  "runId": "run-8ac7340ca3b6-idle-VCcuTl",
+  "process": {
+    "pid": 53328,
+    "parentPid": 52228,
+    "registeredAt": "2026-10-27T21:03:05.508Z",
+    "identitySource": "owned-ChildProcess-handle",
+    "exit": null
+  },
+  "spawn": {
+    "source": "ChildProcess.spawnargs",
+    "executable": "playwright-bundled",
+    "headless": true,
+    "headed": false,
+    "noSandbox": false,
+    "disableSetuidSandbox": false,
+    "unsafeSwiftshader": false,
+    "useAngle": null,
+    "software": false
+  }
+}

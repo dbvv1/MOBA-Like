@@ -1,0 +1,353 @@
+{
+  "task": "B-MOBA-DIFFUSE-GPU-001",
+  "generatedAt": "2026-10-27T21:05:02.001Z",
+  "archiveNote": "Original frame files are preserved byte-for-byte; their long source directory names were flattened to r1/r2 to stay under the Windows path limit. originalFile records the source-relative name reported by capture.",
+  "source": {
+    "commit": "8ac7340ca3b6148e8158e7e252f1f52edb6e5494",
+    "sourceDirty": false,
+    "treeClean": true,
+    "bundleSha256": "661dc5d08290b048f7d3ff15737cb2999ac2303bb6462f17b29dca5a194abf00",
+    "bundleFileCount": 33,
+    "bundleBinding": "served-files-verified-against-local-artifact",
+    "build": "one clean build of the fixed commit"
+  },
+  "fixedParameters": {
+    "shot": "first-tower",
+    "seed": 61,
+    "input": "idle",
+    "t": 101,
+    "frames": 1,
+    "repeat": 2,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "pixelRatio": 1
+    },
+    "camera": {
+      "position": {
+        "x": -28,
+        "y": 24,
+        "z": 18
+      },
+      "target": {
+        "x": -28,
+        "y": 0,
+        "z": 0
+      },
+      "fov": 45
+    },
+    "frame": 0,
+    "virtualFrame": 6060,
+    "simTick": 3030,
+    "simTime": 101,
+    "stateHash": "45ddcfd7f7a45536",
+    "contentVersion": 11,
+    "warmupFrames": 12,
+    "alpha": 0
+  },
+  "renderer": {
+    "raw": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmasked": true,
+    "rendererClass": "gpu",
+    "browserVersion": "156.0.8078.4"
+  },
+  "controlledVariable": {
+    "name": "lighting",
+    "before": "baseline",
+    "after": "stylized-diffuse",
+    "sameSourceTreeBundle": true,
+    "sameStateCameraRendererIfAfterRuns": true
+  },
+  "runs": [
+    {
+      "lighting": "baseline",
+      "status": "failed",
+      "exitCode": 1,
+      "runId": "run-8ac7340ca3b6-idle-VCcuTl",
+      "requestedLighting": "baseline",
+      "configuredLighting": "baseline",
+      "activeLighting": "baseline",
+      "lightingStage": "frame-submitted",
+      "capturePassed": false,
+      "passed": false,
+      "repeatComparison": {
+        "passed": false,
+        "firstMismatchFrame": 0,
+        "expectedRgbaSha256": "80f4484fb92a74c9ef8cd7d7d9dcf392903195f90c4e44df88d25a2cca19dcab",
+        "actualRgbaSha256": "3cca7b9889f2f56021f749dc09d32f0756232b647ee7a0291a8f1d8ce8ef60a0",
+        "stateHashEqual": true,
+        "cameraEqual": true,
+        "rendererEqual": true,
+        "lightingEqual": true
+      },
+      "repeats": [
+        {
+          "run": 1,
+          "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00000.png",
+          "archivedFile": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r1-00000.png",
+          "archivedJson": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r1-00000.json",
+          "originalJsonFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00000.json",
+          "rgbaSha256": "80f4484fb92a74c9ef8cd7d7d9dcf392903195f90c4e44df88d25a2cca19dcab",
+          "pngSha256": "f41a5f4b4133706bebd539f921b16475e6267a3b6707c2351cbde15bb6d6ace9",
+          "png": {
+            "width": 1280,
+            "height": 720,
+            "sha256": "f41a5f4b4133706bebd539f921b16475e6267a3b6707c2351cbde15bb6d6ace9"
+          },
+          "jsonSha256": "04a7ae380489dcfcf9635777f7f0cce4b2d3ad05ce5c3bb979aad8419b71b25f",
+          "frame": 0,
+          "virtualFrame": 6060,
+          "simTick": 3030,
+          "simTime": 101,
+          "stateHash": "45ddcfd7f7a45536",
+          "camera": {
+            "position": {
+              "x": -28,
+              "y": 24,
+              "z": 18
+            },
+            "target": {
+              "x": -28,
+              "y": 0,
+              "z": 0
+            },
+            "fov": 45,
+            "aspect": 1.7777777777777777
+          },
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "unmasked": true,
+          "rendererClass": "gpu",
+          "lighting": {
+            "requested": "baseline",
+            "configured": "baseline",
+            "active": "baseline",
+            "stage": "frame-submitted",
+            "diffuse": "source-materials",
+            "environment": {
+              "kind": "ambient-and-hemisphere",
+              "sky": "#d7e9e3",
+              "ground": "#3c4333",
+              "hemisphereIntensity": 1.65,
+              "ambientIntensity": 0
+            },
+            "directSun": {
+              "color": "#fff0cf",
+              "intensity": 2.5,
+              "shadow": "original-pcf-soft"
+            },
+            "toneMapping": "ACESFilmic",
+            "exposure": 1.12
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "pixelRatio": 1,
+            "bufferWidth": 1280,
+            "bufferHeight": 720
+          }
+        },
+        {
+          "run": 2,
+          "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00000.png",
+          "archivedFile": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r2-00000.png",
+          "archivedJson": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r2-00000.json",
+          "originalJsonFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00000.json",
+          "rgbaSha256": "3cca7b9889f2f56021f749dc09d32f0756232b647ee7a0291a8f1d8ce8ef60a0",
+          "pngSha256": "729c3932ac57ac2c244dac4a581dd468b643cd6e76caa36d4272edd782e0e956",
+          "png": {
+            "width": 1280,
+            "height": 720,
+            "sha256": "729c3932ac57ac2c244dac4a581dd468b643cd6e76caa36d4272edd782e0e956"
+          },
+          "jsonSha256": "7ffacf750477b5adcd85e16f82f63a6c69210408a2fa80fa6faf6bfe8c7426a2",
+          "frame": 0,
+          "virtualFrame": 6060,
+          "simTick": 3030,
+          "simTime": 101,
+          "stateHash": "45ddcfd7f7a45536",
+          "camera": {
+            "position": {
+              "x": -28,
+              "y": 24,
+              "z": 18
+            },
+            "target": {
+              "x": -28,
+              "y": 0,
+              "z": 0
+            },
+            "fov": 45,
+            "aspect": 1.7777777777777777
+          },
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "unmasked": true,
+          "rendererClass": "gpu",
+          "lighting": {
+            "requested": "baseline",
+            "configured": "baseline",
+            "active": "baseline",
+            "stage": "frame-submitted",
+            "diffuse": "source-materials",
+            "environment": {
+              "kind": "ambient-and-hemisphere",
+              "sky": "#d7e9e3",
+              "ground": "#3c4333",
+              "hemisphereIntensity": 1.65,
+              "ambientIntensity": 0
+            },
+            "directSun": {
+              "color": "#fff0cf",
+              "intensity": 2.5,
+              "shadow": "original-pcf-soft"
+            },
+            "toneMapping": "ACESFilmic",
+            "exposure": 1.12
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "pixelRatio": 1,
+            "bufferWidth": 1280,
+            "bufferHeight": 720
+          }
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "afterStatus": "not-executed",
+    "reason": "baseline command exited 1 (repeat RGBA mismatch); task requires stopping before the second command and not rerunning or diagnosing",
+    "beforeAfterSameStateCameraRenderer": "not-establishable without after run"
+  },
+  "cleanup": {
+    "scope": "this invocation owned BrowserServer/ChildProcess/connection/preview only",
+    "osProcessTree": "not-observed",
+    "globalGpuAvailability": "not-assessed",
+    "leaseOwner": {
+      "task": "B-MOBA-DIFFUSE-GPU-001",
+      "runId": "run-8ac7340ca3b6-idle-VCcuTl",
+      "pid": 52228,
+      "runtimeStartedAt": "2026-10-27T21:02:53.886Z",
+      "createdAt": "2026-10-27T21:02:57.642Z"
+    },
+    "browser": {
+      "state": "owned-handles-closed",
+      "serverClosed": true,
+      "connectionClosed": true,
+      "process": {
+        "pid": 53328,
+        "parentPid": 52228,
+        "registeredAt": "2026-10-27T21:03:05.508Z",
+        "identitySource": "owned-ChildProcess-handle",
+        "exit": {
+          "code": 0,
+          "signal": null,
+          "observedAt": "2026-10-27T21:03:25.997Z",
+          "source": "ChildProcess-exit-event"
+        }
+      }
+    },
+    "preview": {
+      "pid": 52228,
+      "port": 1872,
+      "closedAt": "2026-10-27T21:03:26.346Z",
+      "listening": false,
+      "portState": "refused",
+      "exitProven": true,
+      "state": "closed-port-refused",
+      "externalNotOwned": false
+    },
+    "lease": {
+      "released": true,
+      "ownerMatched": true,
+      "reason": "owned-handles-closed-or-not-started"
+    }
+  },
+  "errors": [
+    "first-tower frame 0 must repeat pixel-identically on the same renderer\n+ actual - expected\n... Skipped lines\n\n  {\n    camera: {\n      aspect: 1.7777777777777777,\n      fov: 45,\n      position: {\n...\n    },\n+   hash: '3cca7b9889f2f56021f749dc09d32f0756232b647ee7a0291a8f1d8ce8ef60a0',\n-   hash: '80f4484fb92a74c9ef8cd7d7d9dcf392903195f90c4e44df88d25a2cca19dcab',\n    lighting: {\n      active: 'baseline',\n      configured: 'baseline',\n      diffuse: 'source-materials',\n      directSun: {\n"
+  ],
+  "warnings": [
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.",
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead."
+  ],
+  "verdict": "blocked",
+  "files": [
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0001-runner-started.json",
+      "sha256": "b86c8c0798902f42adab246b96050dc146c077907182d802e4ccac0361a92b80",
+      "bytes": 188
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0002-lease-acquired.json",
+      "sha256": "ac1d5ad5d3b7b1fe5ae3715501665d11dda813c7f8e5a1ff7be20824dc02889b",
+      "bytes": 351
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0003-preview-start-requested.json",
+      "sha256": "2dde6d89ef772e1ffc642c1a317f225684994fb7abf3ab6d063f9a27ea6f0c14",
+      "bytes": 161
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0004-preview-listening.json",
+      "sha256": "104d04d6e410145d498fb21ae0517cb735bbc8f0e4bb03688eef0362ffc6ab7d",
+      "bytes": 215
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0005-browser-start-requested.json",
+      "sha256": "3c7752ce3f09f3e1da0e24089b2e1649b8ab892e0931c15edc60e874357d24fd",
+      "bytes": 610
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0006-browser-process-observed.json",
+      "sha256": "a716ae9b94b87f1d173e7e314fb5bee8293f750b8812ea9d2d4c2897000bd5aa",
+      "bytes": 600
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0007-browser-close-observed.json",
+      "sha256": "36b118471363826a530b255268b32f8c76040e310240466710673d15b4394de9",
+      "bytes": 541
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0008-preview-close-observed.json",
+      "sha256": "a68c488a61cbc69645e9892d58027491b3fdcfb3af55b8ffff0cc04593547198",
+      "bytes": 351
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/lifecycle/0009-lease-release-observed.json",
+      "sha256": "f49f24f46c88b164443e272f010521451de8220148bf079fb8517f722e9b3888",
+      "bytes": 239
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r1-00000.json",
+      "sha256": "04a7ae380489dcfcf9635777f7f0cce4b2d3ad05ce5c3bb979aad8419b71b25f",
+      "bytes": 7423
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r1-00000.png",
+      "sha256": "f41a5f4b4133706bebd539f921b16475e6267a3b6707c2351cbde15bb6d6ace9",
+      "bytes": 119982
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r2-00000.json",
+      "sha256": "7ffacf750477b5adcd85e16f82f63a6c69210408a2fa80fa6faf6bfe8c7426a2",
+      "bytes": 7423
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/r2-00000.png",
+      "sha256": "729c3932ac57ac2c244dac4a581dd468b643cd6e76caa36d4272edd782e0e956",
+      "bytes": 119984
+    },
+    {
+      "file": "baseline/run-8ac7340ca3b6-idle-VCcuTl/report.json",
+      "sha256": "e65b8c239025b845a04d16c358ad7b76f729ddfd1f27b4b7179c044d96dbf1e8",
+      "bytes": 25330
+    },
+    {
+      "file": "result.md",
+      "sha256": "089f07e2c7ce6d421033f29ec735bc2443d9293fc08a1049bb900c2b03a71bd7",
+      "bytes": 4080
+    }
+  ]
+}
