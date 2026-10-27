@@ -1,3 +1,4 @@
+import {createTerrainComposition,type TerrainTextures} from './terrain-composition.js';
 import * as THREE from 'three';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import type {ContentCatalog} from '../content/types.js';
@@ -10,7 +11,7 @@ export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
   return `${entity.kind==='minion'?(entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
 }
-export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
+export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,terrainTextures?:TerrainTextures){
   const root=new THREE.Group();root.name='Battlefield';
   const owned:Array<{dispose():void}>=[];
   const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;attackUntil:number;kind:EntitySnapshot['kind'];death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
@@ -19,14 +20,15 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   // camera, while all trees/rocks remain outside the unchanged navigation lane.
   const groundGeometry=new THREE.PlaneGeometry(world.maxX-world.minX+180,180);
   const groundMaterial=new THREE.MeshStandardMaterial({color:'#284c43',roughness:1});owned.push(groundGeometry,groundMaterial);
-  const ground=new THREE.Mesh(groundGeometry,groundMaterial);ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;root.add(ground);
+  const ground=new THREE.Mesh(groundGeometry,groundMaterial);ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;if(!terrainTextures)root.add(ground);
   function decorate(id:string,x:number,z:number,scale=1,angle=0){
     const model=assets.models[id];if(!model)throw new Error(`Missing battle model ${id}`);
     const object=model.scene.clone(true);object.position.set(x,0,z);object.scale.setScalar(scale);object.rotation.y=angle;
     object.traverse(node=>{if((node as THREE.Mesh).isMesh){node.castShadow=id!=='lane-ground';node.receiveShadow=true;}});root.add(object);return object;
   }
-  for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
-  const groundSurfaces=createGroundSurfaces();root.add(groundSurfaces.root);owned.push(groundSurfaces);
+  if(terrainTextures){const terrain=createTerrainComposition(terrainTextures);root.add(terrain.root);owned.push(terrain);}
+  else for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
+  const groundSurfaces=createGroundSurfaces(terrainTextures?.forest);root.add(groundSurfaces.root);owned.push(groundSurfaces);
   // Deterministic art layout only; no simulation random stream consumption.
   for(let group=0;group<26;group++)for(const side of [-1,1]){
     const x=world.minX-18+group*10.4+Math.sin(group*2.1+side)*3.2;

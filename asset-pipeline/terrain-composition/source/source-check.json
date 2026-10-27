@@ -1,0 +1,42 @@
+{
+  "earth-albedo-source.png": {
+    "size": [
+      1254,
+      1254
+    ],
+    "mean_rgb": [
+      129.11,
+      114.08,
+      97.14
+    ],
+    "edge_wrap_mean_absolute_rgb": {
+      "x": 8.093833067517277,
+      "y": 7.387028176501861
+    },
+    "interior_neighbor_mean_absolute_rgb": {
+      "x": 4.635854279341489,
+      "y": 5.047993269104707
+    },
+    "note": "Image edge discontinuity diagnostic, not seamless or gameplay quality pass."
+  },
+  "forest-albedo-source.png": {
+    "size": [
+      1254,
+      1254
+    ],
+    "mean_rgb": [
+      62.78,
+      60.7,
+      28.46
+    ],
+    "edge_wrap_mean_absolute_rgb": {
+      "x": 8.923179160021265,
+      "y": 8.458798511430091
+    },
+    "interior_neighbor_mean_absolute_rgb": {
+      "x": 5.595190150762042,
+      "y": 5.694971727609187
+    },
+    "note": "Image edge discontinuity diagnostic, not seamless or gameplay quality pass."
+  }
+}

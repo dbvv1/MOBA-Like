@@ -4,7 +4,7 @@ import layout from '../../asset-pipeline/ground-surfaces/source/edge-layout.json
 
 // Editable layout, not a world-covering texture. Nothing enters the central
 // combat strip; each patch is a low, discontinuous bank, never an obstacle.
-export function createGroundSurfaces(){
+export function createGroundSurfaces(forestTexture?:THREE.Texture){
   const root=new THREE.Group();root.name='GroundEdgeClusters';
   const owned:Array<{dispose():void}>=[];
   const positions:number[]=[],colours:number[]=[];
@@ -45,8 +45,9 @@ export function createGroundSurfaces(){
   const patchGeometry=new THREE.BufferGeometry();
   patchGeometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
   patchGeometry.setAttribute('color',new THREE.Float32BufferAttribute(colours,3));
+  const uv:number[]=[];for(let i=0;i<positions.length;i+=3)uv.push(positions[i]!/12,positions[i+2]!/12);patchGeometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   patchGeometry.computeVertexNormals();patchGeometry.computeBoundingSphere();
-  const patchMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
+  const patchMaterial=new THREE.MeshStandardMaterial({vertexColors:!forestTexture,map:forestTexture??null,roughness:1});
   const patches=new THREE.Mesh(patchGeometry,patchMaterial);patches.name='GroundShoulderPatches';patches.receiveShadow=true;
   // Battlefield is traversed for living-target picking. Pure decoration must
   // not pay triangle/instance intersections; ground commands use its own plane.

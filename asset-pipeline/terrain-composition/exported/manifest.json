@@ -1,0 +1,36 @@
+{
+  "tool": "built-in image_gen",
+  "rights": "original generated image; not CC0 or open-weight",
+  "files": [
+    {
+      "source": "earth-albedo-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSHA256": "48332be8c86a68a70af5ddfb66ffd8efa8718a10356fdaa1e9661058a4180443",
+      "runtime": "earth-albedo.webp",
+      "runtimeSize": [
+        1024,
+        1024
+      ],
+      "runtimeSHA256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d",
+      "bytes": 244158
+    },
+    {
+      "source": "forest-albedo-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSHA256": "d880a2ecbf80e98e9e1eb365c3a5a2d8a9d4f385590b26f9cb69751febb7879d",
+      "runtime": "forest-albedo.webp",
+      "runtimeSize": [
+        1024,
+        1024
+      ],
+      "runtimeSHA256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67",
+      "bytes": 330634
+    }
+  ]
+}
