@@ -24,7 +24,31 @@ function modelResources(models:Iterable<GLTF>,resources=new Set<{dispose():void}
 export function releaseModels(models:Iterable<GLTF>){
   for(const resource of modelResources(models))resource.dispose();
 }
-export async function loadBattleAssets(load=(url:string)=>new GLTFLoader().loadAsync(url),lighting:LightingStyle='baseline'):Promise<BattleAssets>{
+function orderedModelLoader(){
+  let previous=Promise.resolve();
+  return (url:string)=>{
+    const loader=new GLTFLoader(),manager=loader.manager;
+    // Keep GLTFLoader's extra manager item open through parsing (including textures).
+    manager.itemStart(url);
+    // Fetch every bundled GLB concurrently, but construct its Three resources in
+    // manifest order: native opaque sorting uses material.id. FileLoader retains
+    // URL modifiers, caching and data-URL support. Observe early failures now,
+    // rather than leaving a rejected download unhandled behind a pending parse.
+    const data=new THREE.FileLoader(manager).setResponseType('arraybuffer').loadAsync(url)
+      .then(bytes=>({ok:true as const,bytes}),error=>({ok:false as const,error}));
+    const loaded=previous.then(async()=>{
+      const result=await data;if(!result.ok)throw result.error;
+      // Same URL base as an unconfigured GLTFLoader.load; embedded resources and
+      // relative external references keep their existing resolution contract.
+      return loader.parseAsync(result.bytes as ArrayBuffer,THREE.LoaderUtils.extractUrlBase(url));
+    }).then(model=>{manager.itemEnd(url);return model;},error=>{manager.itemError(url);manager.itemEnd(url);throw error;});
+    // A failed asset must not strand later successes: allSettled owns cleanup.
+    previous=loaded.then(()=>{},()=>{});
+    return loaded;
+  };
+}
+// Injected complete-model loaders retain their own construction/ordering contract.
+export async function loadBattleAssets(load=orderedModelLoader(),lighting:LightingStyle='baseline'):Promise<BattleAssets>{
   const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroManifest.assets.map(asset=>({id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]})),...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))].map(async asset=>{
     const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);
