@@ -35,11 +35,24 @@ export function createEffects(scene:THREE.Scene){
     const seenProjectiles=new Set<number>(),seenZones=new Set<number>(),seenWarnings=new Set<number>();
     for(const entity of snapshot.projectiles){
       seenProjectiles.add(entity.id);let visual=projectiles.get(entity.id);
-      const to=new THREE.Vector3(entity.position.x,entity.width+.1,entity.position.z);
+      const to=new THREE.Vector3(entity.position.x,entity.basicAttack?(entity.basicAttack.sourceKind==='structure'?4.3:entity.basicAttack.sourceKind==='hero'?1.2:.7):entity.width+.1,entity.position.z);
+      if(entity.basicAttack&&visual){
+        // Cosmetic vertical pursuit follows the same 2D flight, connecting the
+        // launch socket to the selected target rather than vanishing overhead.
+        const target=snapshot.entities.find(value=>value.id===entity.basicAttack!.targetId);
+        if(target){
+          const targetY=target.kind==='hero'?1.2:target.kind==='structure'?2:.7;
+          const gap=Math.hypot(target.position.x-visual.to.x,target.position.z-visual.to.z);
+          const travel=Math.hypot(to.x-visual.to.x,to.z-visual.to.z);
+          to.y=visual.to.y+(targetY-visual.to.y)*Math.min(1,travel/Math.max(.001,gap));
+        }else to.y=visual.to.y;
+      }
       if(!visual){
         const group=new THREE.Group();group.name=`projectile-${entity.id}`;
         const heading=new THREE.Mesh(headingGeometry,materials[entity.team]!.projectile);heading.rotation.x=Math.PI/2;heading.position.z=1.4;
-        group.add(new THREE.Mesh(projectileGeometry,materials[entity.team]!.projectile),heading);
+        const body=new THREE.Mesh(projectileGeometry,materials[entity.team]!.projectile);
+        if(entity.basicAttack){body.scale.set(1,.65,2.7);heading.visible=false;group.userData['delivery']='basicAttack';}
+        group.add(body,heading);
         visual={root:group,from:to.clone(),to:to.clone()};projectiles.set(entity.id,visual);root.add(group);
       }else visual.from.copy(visual.to);
       visual.to.copy(to);visual.root.position.copy(to);visual.root.userData['abilityId']=entity.abilityId;

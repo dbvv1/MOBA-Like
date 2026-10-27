@@ -5,6 +5,7 @@ import type {Snapshot,EntitySnapshot} from '../sim/types.js';
 import type {BattleAssets} from './battle-assets.js';
 import {battleManifest} from './battle-assets.js';
 import {createGroundSurfaces} from './ground-surfaces.js';
+import {createMotionState} from '../../asset-pipeline/presentation/motion-state.js';
 
 export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
@@ -13,7 +14,7 @@ export function battleAssetId(entity:EntitySnapshot){
 export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   const root=new THREE.Group();root.name='Battlefield';
   const owned:Array<{dispose():void}>=[];
-  const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;attackUntil:number;kind:EntitySnapshot['kind'];death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
+  const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
   const world=catalog.map.world;
   // The playable strip is not the edge of the world: ground fills the oblique
   // camera, while all trees/rocks remain outside the unchanged navigation lane.
@@ -36,9 +37,9 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
     if(group%3!==1)decorate('rock',x+4,z-side*2,.7+(group%4)*.2,group);
   }
   function remove(id:number){const actor=actors.get(id);if(!actor)return;actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.root);for(const skeleton of actor.skeletons)skeleton.dispose();root.remove(actor.root);actors.delete(id);}
-  let tick=-1,terminal=false;
+  let tick=-1,terminal=false,logicTime=0;
   function sync(snapshot:Snapshot){
-    if(snapshot.tick===tick)return;if(snapshot.tick<tick)throw new Error('Reset battlefield before replay');tick=snapshot.tick;terminal=snapshot.status!=='running';
+    if(snapshot.tick===tick)return;if(snapshot.tick<tick)throw new Error('Reset battlefield before replay');tick=snapshot.tick;terminal=snapshot.status!=='running';logicTime=snapshot.timeSeconds;
     for(const event of snapshot.events){
       if(event.type!=='minionDied')continue;
       const actor=actors.get(event.entityId);if(!actor||actor.kind!=='minion'||actor.death)continue;
@@ -62,19 +63,24 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
         object.scale.setScalar(scale);object.userData['visualHeight']=entry.nominalHeight*scale;object.userData['simEntityId']=entity.id;object.name=`entity-${entity.id}`;
         const mixer=new THREE.AnimationMixer(object),actions=new Map(model.animations.map(clip=>[clip.name,mixer.clipAction(clip)]));
         const to=new THREE.Vector3(entity.position.x,0,entity.position.z);
-        actor={root:object,from:to.clone(),to,mixer,actions,action:'',attackUntil:0,kind:entity.kind,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;
+        actor={root:object,from:to.clone(),to,mixer,actions,action:'',attackUntil:0,events:createMotionState(entity.id,catalog),visualTime:snapshot.timeSeconds,kind:entity.kind,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;
       }
       actor.from.copy(actor.to);actor.to.set(entity.position.x,0,entity.position.z);actor.root.position.copy(actor.to);
       const dx=actor.to.x-actor.from.x,dz=actor.to.z-actor.from.z;
       if(Math.hypot(dx,dz)>1e-5&&snapshot.timeSeconds>=actor.attackUntil)actor.root.rotation.y=Math.atan2(dx,dz);
+      actor.events.consume(snapshot.events,snapshot.timeSeconds,true);
+      if(terminal)actor.events.finish(snapshot.timeSeconds);
       const attack=snapshot.events.find(event=>event.type==='basicAttack'&&event.sourceId===entity.id);
-      if(entity.kind==='minion'&&attack?.type==='basicAttack'){
+      if(entity.kind==='minion'&&attack?.type==='basicAttack'&&!catalog.basicAttacks){
         const target=snapshot.entities.find(value=>value.id===attack.targetId);
         if(target)actor.root.rotation.y=Math.atan2(target.position.x-entity.position.x,target.position.z-entity.position.z);
         const strike=actor.actions.get('attack');
         if(strike){actor.attackUntil=snapshot.timeSeconds+strike.getClip().duration;strike.reset().setLoop(THREE.LoopOnce,1);strike.clampWhenFinished=true;}
       }
-      const next=snapshot.timeSeconds<actor.attackUntil?'attack':Math.hypot(dx,dz)>1e-5?'walk':'idle';
+      const preparation=actor.events.inspect().attack;
+      const cycling=entity.kind==='minion'&&!!catalog.basicAttacks&&preparation!==null&&preparation.cancelledAt===null&&preparation.visualStopAt===undefined&&(preparation.resolvedAt===null||snapshot.timeSeconds-preparation.resolvedAt<.36);
+      if(cycling&&preparation){const target=snapshot.entities.find(value=>value.id===preparation.targetId)??snapshot.events.find(event=>event.type==='minionDied'&&event.entityId===preparation.targetId);if(target&&'position'in target)actor.root.rotation.y=Math.atan2(target.position.x-entity.position.x,target.position.z-entity.position.z);}
+      const next=cycling||snapshot.timeSeconds<actor.attackUntil?'attack':Math.hypot(dx,dz)>1e-5?'walk':'idle';
       if(actor.action!==next){for(const action of actor.actions.values())action.stop();actor.actions.get(next)?.play();actor.action=next;}
     }
     for(const [id,actor] of actors)if(!seen.has(id)&&!actor.death)remove(id);
@@ -86,6 +92,19 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
       actor.death.elapsed+=Math.max(0,seconds);
       if(actor.death.elapsed>=actor.death.duration+.15){remove(id);continue;}
       actor.mixer.update(Math.max(0,seconds));
-    }else{actor.root.position.lerpVectors(actor.from,actor.to,terminal?1:alpha);actor.mixer.update(terminal?0:seconds);}
+    }else{
+      actor.root.position.lerpVectors(actor.from,actor.to,terminal?1:alpha);
+      actor.visualTime=Math.max(actor.visualTime,logicTime-(terminal?0:(1-alpha)/catalog.rules.tickRate));
+      const cycle=actor.events.inspect().attack,strike=actor.actions.get('attack');
+      if(catalog.basicAttacks&&cycle&&actor.action==='attack'&&strike){
+        // Troop source keys: frame 7 anticipation, frame 11 contact/release.
+        // Retiming is presentation-only; a cancelled preparation never reaches 11.
+        const at=cycle.cancelledAt??cycle.visualStopAt??actor.visualTime;
+        const ready=6/30,contact=10/30;
+        strike.paused=true;
+        strike.time=cycle.resolvedAt===null||at<cycle.resolvedAt?ready*Math.min(1,Math.max(0,(at-cycle.startedAt)/cycle.windup)):Math.min(strike.getClip().duration,contact+Math.max(0,at-cycle.resolvedAt));
+        actor.mixer.update(0);
+      }else{if(strike)strike.paused=false;actor.mixer.update(terminal?0:seconds);}
+    }
   }},dispose(){for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();root.clear();}};
 }

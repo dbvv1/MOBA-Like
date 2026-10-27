@@ -1,12 +1,12 @@
 import {createCommandNotice} from './command-notice.js';
-import {battleMessage,matchResult} from './battle-state.js';
+import {basicAttackStatus,battleMessage,matchResult} from './battle-state.js';
 import {skillDescription} from './skill-description.js';
 import {abilityViewModel} from '../../asset-pipeline/presentation/icons.js';
 import type {AbilitySlot,ContentCatalog} from '../content/types.js';
 import type {Snapshot} from '../sim/types.js';
 
 export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:AbilitySlot)=>void,onBuy:(item:string)=>void,onLock:(locked:boolean)=>void){
-  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
+  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span><span class="attack-status" data-attack></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
   const find=(selector:string)=>{const node=root.querySelector<HTMLElement>(selector);if(!node)throw new Error('Missing HUD element');return node;};
   const match=find('[data-match]'),heroText=find('[data-hero]'),skills=find('[data-skills]'),shop=find('[data-shop]'),message=find('[data-message]');
   // Keep the existing live region, but announce only actual text changes.
@@ -25,6 +25,8 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     match.textContent=`${Math.floor(snapshot.timeSeconds/60)}:${String(Math.floor(snapshot.timeSeconds%60)).padStart(2,'0')} · ${result?.label??'running'}`;
     heroText.querySelector<HTMLElement>('[data-name]')!.textContent=hero.name;
     heroText.querySelector<HTMLElement>('[data-level]')!.textContent=`Lv ${hero.level}`;
+    const attack=heroText.querySelector<HTMLElement>('[data-attack]')!;
+    const attackState=basicAttackStatus(snapshot,hero,catalog);attack.textContent=attackState.label;attack.title=attackState.hint;
     heroText.querySelector<HTMLElement>('[data-health]')!.textContent=`HP ${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     heroText.querySelector<HTMLElement>('[data-mana]')!.textContent=`Mana ${Math.floor(hero.mana)} / ${hero.maxMana}`;
     heroText.querySelector<HTMLElement>('[data-gold]')!.textContent=`◆ ${Math.floor(hero.gold)} gold${hero.shield>0?` · Shield ${Math.ceil(hero.shield)}`:''}`;

@@ -85,7 +85,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   const options: CliOptions = {
     games: 1,
     seed: 1,
-    contentVersion: 10,
+    contentVersion: 11,
     blueDifficulty: 'normal',
     redDifficulty: 'normal',
     blueHero: 'veyra',
@@ -115,8 +115,8 @@ function parseArgs(argv: readonly string[]): CliOptions {
         break;
       case '--content-version': {
         const version = positiveInt(next(), '--content-version');
-        if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9 && version !== 10) {
-          throw new Error('--content-version must be 1, 2, 7, 8, 9 or 10');
+        if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11) {
+          throw new Error('--content-version must be 1, 2, 7, 8, 9, 10 or 11');
         }
         options.contentVersion = version;
         break;
@@ -193,7 +193,7 @@ function printHelp(): void {
 
   --games <N>              number of headless matches (default 1)
   --seed <S>               base seed (default 1)
-  --content-version <1|2|7|8|9|10>  content catalog (default 10)
+  --content-version <1|2|7|8|9|10|11>  content catalog (default 11)
   --blue-difficulty <low|normal|high>
   --red-difficulty <low|normal|high>
   --blue-hero <id>         default veyra

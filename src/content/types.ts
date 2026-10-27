@@ -1,5 +1,5 @@
 export type TeamId = 0 | 1;
-export type ContentVersion = 1 | 2 | 7 | 8 | 9 | 10;
+export type ContentVersion = 1 | 2 | 7 | 8 | 9 | 10 | 11;
 export type AbilitySlot = 'Q' | 'W' | 'E' | 'R';
 export type DamageType = 'physical' | 'magic' | 'true';
 export type Difficulty = 'low' | 'normal' | 'high';
@@ -192,7 +192,13 @@ export interface DifficultyTuning {
   mistakeChance: number;
 }
 
+export interface BasicAttackDefinition {
+  windupFraction: number;
+  projectileSpeed: number; // zero is melee contact, not a visual projectile
+}
+
 export interface ContentCatalog {
+  basicAttacks?: { heroes: Readonly<Record<string, BasicAttackDefinition>>; minions: Readonly<Record<MinionKind, BasicAttackDefinition>>; structures: BasicAttackDefinition };
   version: ContentVersion;
   heroes: Readonly<Record<string, HeroDefinition>>;
   abilities: Readonly<Record<string, AbilityDefinition>>;

@@ -10,14 +10,15 @@ export function createMotionState(heroId, catalog) {
         if(!alive)continue;
         if(event.type==='castStarted'&&event.heroId===heroId){
           const ability=catalog.abilities[event.abilityId];
-          if(ability)attack={castId:event.castId,startedAt:time,windup:ability.castTime,resolvedAt:null,cancelledAt:null};
+          if(event.action==='basicAttack')attack={action:'basicAttack',targetId:event.targetId,castId:event.castId,startedAt:time,windup:event.windupTicks/catalog.rules.tickRate,resolvedAt:null,cancelledAt:null};
+          else if(ability)attack={castId:event.castId,startedAt:time,windup:ability.castTime,resolvedAt:null,cancelledAt:null};
         }else if(event.type==='castResolved'&&event.heroId===heroId){
           if(attack?.castId===event.castId)attack.resolvedAt=time;
         }else if(event.type==='castCancelled'&&event.heroId===heroId){
           if(attack?.castId===event.castId)attack.cancelledAt=time;
         }else if(event.type==='basicAttack'&&event.sourceId===heroId){
           // This event is the actual committed swing, not a pre-attack windup or hit.
-          attack={castId:null,startedAt:time,windup:0,resolvedAt:time,cancelledAt:null};
+          if(event.attackId===undefined)attack={castId:null,startedAt:time,windup:0,resolvedAt:time,cancelledAt:null};
         }else if(event.type==='heroDamaged'&&event.targetId===heroId&&event.hpDamage>0)hurtAt=time;
       }
       if(!alive){attack=null;hurtAt=null;}
@@ -32,6 +33,9 @@ export function createMotionState(heroId, catalog) {
 export function attackSample(time,attack,{strike=5/30,recovery=17/30,fade=.06}={}){
   if(!attack)return {weight:0,time:0};
   if(![strike,recovery,fade].every(v=>Number.isFinite(v)&&v>0))throw new Error('Invalid attack visual timing');
+  // Basic attack commitment is the release pose itself. The older spell mapping
+  // keeps its source strike segment; no animation callback owns gameplay contact.
+  const basic=attack.action==='basicAttack';
   const sourceWindup=13/30,sourceStrike=5/30,sourceRecovery=17/30;
   const stopAt=attack.cancelledAt??attack.visualStopAt??null;
   const at=stopAt===null?time:Math.min(time,stopAt);
@@ -40,7 +44,7 @@ export function attackSample(time,attack,{strike=5/30,recovery=17/30,fade=.06}={
     sourceTime=sourceWindup*Math.min(1,Math.max(0,(at-attack.startedAt)/Math.max(attack.windup,1e-9)));
   }else{
     const elapsed=Math.max(0,at-attack.resolvedAt);
-    sourceTime=elapsed<strike?sourceWindup+sourceStrike*elapsed/strike:sourceWindup+sourceStrike+sourceRecovery*Math.min(1,(elapsed-strike)/recovery);
+    sourceTime=basic?sourceWindup+sourceStrike+sourceRecovery*Math.min(1,elapsed/(strike+recovery)):elapsed<strike?sourceWindup+sourceStrike*elapsed/strike:sourceWindup+sourceStrike+sourceRecovery*Math.min(1,(elapsed-strike)/recovery);
     weight*=Math.min(1,Math.max(0,(strike+recovery-elapsed)/fade));
   }
   if(stopAt!==null)weight*=Math.min(1,Math.max(0,1-(time-stopAt)/fade));

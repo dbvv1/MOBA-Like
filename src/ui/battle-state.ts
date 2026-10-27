@@ -44,3 +44,12 @@ export function battleMessage(snapshot:Snapshot,hero:HeroSnapshot,catalog:Conten
   if(nearby)return {tone:'normal',label:'TOWER AHEAD',hint:'Dashed boundary marks tower reach, not who it is targeting.'};
   return {tone:'normal',label:'ADVANCE WITH YOUR WAVE',hint:'Push through the towers to destroy the enemy Heartwood.'};
 }
+
+/** Actual attack eligibility, not animation readiness or a promise of a hit. */
+export function basicAttackStatus(snapshot:Snapshot,hero:HeroSnapshot,catalog:ContentCatalog){
+  const blocked=snapshot.status!=='running'?'ended':!hero.alive?'dead':hero.stunned?'stunned':hero.castSlot!==null?'casting':null;
+  return {
+    label:blocked?`Attack · ${blocked}`:hero.basicAttack?'Attack · preparing':(hero.attackCooldown??0)>0?`Attack · ${((hero.attackCooldown??0)/catalog.rules.tickRate).toFixed(1)}s`:'Attack · ready',
+    hint:blocked?'Attacks are unavailable.':hero.basicAttack?'Move or Stop to cancel before release.':'After release, move or cast while the attack recovers.',
+  };
+}
