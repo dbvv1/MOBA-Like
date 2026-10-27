@@ -14,6 +14,7 @@ import {createHealthBars} from './health.js';
 import {createEffects} from './effects.js';
 import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
+import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
 export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   let renderer:THREE.WebGLRenderer;
@@ -38,8 +39,9 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   const cursor=new THREE.Vector2(0,0);let pointerInside=false;let locked=true;let snapshot:Snapshot|null=null;let playerId:number|null=null;
   const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#d8fbff',side:THREE.DoubleSide,depthWrite:false}));
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
-  function positionCamera(){camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
-  function fit(){const width=Math.max(host.clientWidth,1),height=Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();}
+  let captureView:CaptureView|null=null,savedFocus:THREE.Vector3|null=null;
+  function positionCamera(){if(captureView?.pose){applyCapturePose(camera,captureView.pose);return;}camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
+  function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();}
   fit();positionCamera();
   const onResize=()=>fit();window.addEventListener('resize',onResize);
   function setPointer(clientX:number,clientY:number){const box=renderer.domElement.getBoundingClientRect();cursor.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);pointerInside=true;}
@@ -49,22 +51,36 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
     return {point:point?{x:point.x,z:point.z}:null,entityId};
   }
   function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);reach.sync(next,id);controls.sync(next,actors);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
-  function draw(seconds:number,alpha:number){
+  function draw(seconds:number,alpha:number,render=true){
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
     // While playing, actions share the snapshot interpolation clock. After the
     // terminal snapshot, cosmetic tails may finish without advancing simulation.
     presentation.advance(seconds,snapshot?.status==='running'?alpha:undefined);battlefield.advance(seconds,alpha);effects.draw(alpha);impacts.draw(seconds);reach.draw(seconds);
     const playerRoot=player?presentation.root.getObjectByName(`hero-${player.id}`):null;
-    if(locked && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
+    if(captureView?.pose)focus.set(captureView.pose.target.x,captureView.pose.target.y,captureView.pose.target.z);
+    else if(locked && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
     else if(pointerInside){const speed=24*seconds;if(cursor.x>.88)focus.x+=speed;if(cursor.x<-.88)focus.x-=speed;if(cursor.y>.88)focus.z-=speed;if(cursor.y<-.88)focus.z+=speed;}
     focus.x=THREE.MathUtils.clamp(focus.x,catalog.map.world.minX,catalog.map.world.maxX);
     focus.z=THREE.MathUtils.clamp(focus.z,catalog.map.world.minZ,catalog.map.world.maxZ);
     positionCamera();if(playerRoot&&player?.alive)marker.position.set(playerRoot.position.x,.04,playerRoot.position.z);health.draw(camera);controls.draw();
     targeting.update(player&&snapshot&&pointerInside&&targetingSlot?targetingPlan(player,targetingSlot,aim(),snapshot,catalog):null);
     light.position.set(focus.x-12,26,focus.z+12);light.target.position.copy(focus);light.target.updateMatrixWorld();
-    renderer.render(scene,camera);
+    if(render)renderer.render(scene,camera);
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
+    // Explicit opt-in adapter. Ordinary clients never set it. Pre-roll still
+    // advances every visual frame; renderer-only warmup never advances actors.
+    setCaptureView(value:CaptureView|null){
+      const next=value===null?null:copyCaptureView(value);
+      if(next&&!captureView)savedFocus=focus.clone();
+      captureView=next;
+      if(!next){if(savedFocus)focus.copy(savedFocus);savedFocus=null;}
+      if(!next?.pose)camera.fov=45;
+      renderer.setPixelRatio(next?.pixelRatio??Math.min(window.devicePixelRatio,2));fit();positionCamera();
+    },
+    renderOnly(){renderer.render(scene,camera);},
+    captureContext(){return renderer.getContext();},
+    captureState(){return {camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},
