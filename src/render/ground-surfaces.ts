@@ -1,11 +1,12 @@
 import * as THREE from 'three';
+import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
 import source from '../../asset-pipeline/ground-surfaces/exported/grass-geometries.json';
 import layout from '../../asset-pipeline/ground-surfaces/source/edge-layout.json';
 
 // Editable layout, not a world-covering texture. Nothing enters the central
 // combat strip; each patch is a low, discontinuous bank, never an obstacle.
-export function createGroundSurfaces(){
-  const root=new THREE.Group();root.name='GroundEdgeClusters';
+export function createGroundSurfaces(lighting:LightingStyle='baseline'){
+  const root=new THREE.Group();root.name='GroundEdgeClusters';root.userData['renderRole']='world';
   const owned:Array<{dispose():void}>=[];
   const positions:number[]=[],colours:number[]=[];
   const instances:{blade:THREE.Matrix4[];leaf:THREE.Matrix4[]}={blade:[],leaf:[]};
@@ -46,7 +47,7 @@ export function createGroundSurfaces(){
   patchGeometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
   patchGeometry.setAttribute('color',new THREE.Float32BufferAttribute(colours,3));
   patchGeometry.computeVertexNormals();patchGeometry.computeBoundingSphere();
-  const patchMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
+  const patchMaterial=surfaceMaterial(lighting,{vertexColors:true});
   const patches=new THREE.Mesh(patchGeometry,patchMaterial);patches.name='GroundShoulderPatches';patches.receiveShadow=true;
   // Battlefield is traversed for living-target picking. Pure decoration must
   // not pay triangle/instance intersections; ground commands use its own plane.
@@ -55,7 +56,7 @@ export function createGroundSurfaces(){
     const geometry=new THREE.BufferGeometry(),data=source[kind];
     geometry.setAttribute('position',new THREE.Float32BufferAttribute(data.positions,3));
     geometry.setAttribute('normal',new THREE.Float32BufferAttribute(data.normals,3));
-    const material=new THREE.MeshStandardMaterial({color:layout.palette[kind],roughness:1});
+    const material=surfaceMaterial(lighting,{color:layout.palette[kind]});
     const mesh=new THREE.InstancedMesh(geometry,material,instances[kind].length);mesh.name=`Ground-${kind}`;
     instances[kind].forEach((matrix,index)=>mesh.setMatrixAt(index,matrix));
     mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();mesh.receiveShadow=true;mesh.raycast=()=>{};root.add(mesh);owned.push(geometry,material,mesh);

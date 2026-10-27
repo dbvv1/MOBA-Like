@@ -1,3 +1,4 @@
+import {parseLightingStyle} from '../render/lighting-style.js';
 import {createWorld} from '../render/world.js';
 import {createDetourNavigation} from '../sim/navigation.js';
 import {CAPTURE_SIZE,CAMERAS} from './cameras.js';
@@ -54,7 +55,7 @@ try {
   if(!globalThis.crypto?.subtle||typeof crypto.randomUUID!=='function')throw new Error('Capture requires HTTPS or localhost with Web Crypto support');
   runId=crypto.randomUUID();
   phase('检查拍摄参数');
-  const config=parseCaptureConfig(location.search);
+  const config=parseCaptureConfig(location.search),lighting=parseLightingStyle(location.search);
   if(!config)throw new Error(`Choose ?shot=${Object.keys(CAMERAS).join(' | ')}&seed=1&t=10&input=march&frames=120`);
   phase('核对构建文件');
   const bundle=await verifyBrowserBundle(new URL('./',location.href),import.meta.url,__MOBA_CAPTURE_BUILD__,abort.signal,(done,total)=>phase(`核对构建文件 ${done}/${total}`,done,total));
@@ -66,7 +67,7 @@ try {
   const session=new CaptureSession(config,navigation,lifetime);
   phase('创建 WebGL 场景与加载模型/纹理');
   await yieldCaptureTask(abort.signal);
-  const world=lifetime.own(await createWorld(stage,session.sim.catalog),value=>value.dispose());
+  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting}),value=>value.dispose());
   world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose});
   const gl=world.captureContext(),evidence=rendererEvidence(gl);
   const contextLost=(event:Event)=>{event.preventDefault();fail('WebGL context lost');};

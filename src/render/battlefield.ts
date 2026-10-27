@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import type {ContentCatalog} from '../content/types.js';
 import type {Snapshot,EntitySnapshot} from '../sim/types.js';
@@ -11,8 +12,8 @@ export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
   return `${entity.kind==='minion'?(entity.minionKind==='siege'?'siege':entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
 }
-export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
-  const root=new THREE.Group();root.name='Battlefield';
+export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lighting:LightingStyle='baseline'){
+  const root=new THREE.Group();root.name='Battlefield';root.userData['renderRole']='world';
   const owned:Array<{dispose():void}>=[];
   const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;activeClip:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];siege:boolean;walkNominalSpeed:number;walkTimeScale:number;wheelTravel:number;wheelStep:number;wheelSamples:Array<{bone:THREE.Object3D;sample:THREE.Interpolant}>;death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
   function useClip(actor:NonNullable<ReturnType<typeof actors.get>>,name:string){
@@ -25,7 +26,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   // The playable strip is not the edge of the world: ground fills the oblique
   // camera, while all trees/rocks remain outside the unchanged navigation lane.
   const groundGeometry=new THREE.PlaneGeometry(world.maxX-world.minX+180,180);
-  const groundMaterial=new THREE.MeshStandardMaterial({color:'#284c43',roughness:1});owned.push(groundGeometry,groundMaterial);
+  const groundMaterial=surfaceMaterial(lighting,{color:'#284c43'});owned.push(groundGeometry,groundMaterial);
   const ground=new THREE.Mesh(groundGeometry,groundMaterial);ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;root.add(ground);
   function decorate(id:string,x:number,z:number,scale=1,angle=0){
     const model=assets.models[id];if(!model)throw new Error(`Missing battle model ${id}`);
@@ -33,7 +34,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
     object.traverse(node=>{if((node as THREE.Mesh).isMesh){node.castShadow=id!=='lane-ground';node.receiveShadow=true;}});root.add(object);return object;
   }
   for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
-  const groundSurfaces=createGroundSurfaces();root.add(groundSurfaces.root);owned.push(groundSurfaces);
+  const groundSurfaces=createGroundSurfaces(lighting);root.add(groundSurfaces.root);owned.push(groundSurfaces);
   // Deterministic art layout only; no simulation random stream consumption.
   for(let group=0;group<26;group++)for(const side of [-1,1]){
     const x=world.minX-18+group*10.4+Math.sin(group*2.1+side)*3.2;

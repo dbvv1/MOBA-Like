@@ -1,3 +1,4 @@
+import {parseLightingStyle} from './render/lighting-style.js';
 import {createBattleAudio} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
@@ -32,7 +33,7 @@ async function boot(){
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
     const bot=new HeroBot({team:1,slotIndex:0,difficulty:'normal',seed:1002});
-    const world=await createWorld(stage,sim.catalog);lifetime.defer(()=>world.dispose());
+    const world=await createWorld(stage,sim.catalog,{lighting:parseLightingStyle(location.search)});lifetime.defer(()=>world.dispose());
     let snapshot=sim.snapshot();const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
@@ -69,7 +70,7 @@ async function boot(){
     animation=requestAnimationFrame(frame);
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
-    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
+    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',lighting:world.lightingState(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
   }catch(error){cleanup();stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
   finally{booting=false;heroSelection.setBusy(false);}
 }

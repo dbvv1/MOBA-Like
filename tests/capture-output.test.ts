@@ -1,8 +1,11 @@
-import {afterEach,describe,expect,it} from 'vitest';
+import {afterEach,describe,expect,it,vi} from 'vitest';
 import {mkdtemp,mkdir,readdir,readFile,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createCaptureRun,writeCaptureFrame,writeCaptureReport,captureBundleIdentity,verifyCaptureSource,repeatCheckDescription,verifyServedCaptureBundle} from '../tools/capture-output.js';
+import {spawn} from 'node:child_process';
+import {once} from 'node:events';
+import {createServer} from 'node:http';
+import {createCaptureRun,writeCaptureFrame,writeCaptureReport,captureBundleIdentity,verifyCaptureSource,repeatCheckDescription,verifyServedCaptureBundle,captureLeaseOptions,acquireCaptureLease,createCaptureLifecycle,observeCaptureProcess,captureBrowserExitState,createCaptureBrowserCloser,captureSpawnEvidence,capturePortState,closeCapturePreview,publicCaptureError} from '../tools/capture-output.js';
 const temporary:string[]=[];
 async function output(){const path=await mkdtemp(join(tmpdir(),'moba-capture-output-'));temporary.push(path);return path;}
 afterEach(async()=>{for(const path of temporary.splice(0))await rm(path,{recursive:true,force:true});});
@@ -72,5 +75,125 @@ describe('capture evidence isolation',()=>{
     await expect(verifyServedCaptureBundle(expected,async()=>bytes('different served build'))).rejects.toThrow('mismatch');
     await expect(verifyServedCaptureBundle(expected,async()=>{throw new Error('HTTP 404');})).rejects.toThrow('404');
     await expect(verifyServedCaptureBundle({sha256:'unknown',files:[]},async()=>bytes(''))).rejects.toThrow('empty');
+  });
+});
+
+const noResources={browser:'not-started',preview:'not-started',knownUnclosedResources:0} as const;
+describe('capture ownership and lifecycle receipts (CPU only)',()=>{
+  it('requires an explicit stable root/task pair for GPU and refuses malformed input',()=>{
+    expect(captureLeaseOptions(undefined,undefined,false)).toBeNull();
+    expect(()=>captureLeaseOptions(undefined,undefined,true)).toThrow('needs');
+    for(const [root,task] of [['relative','task'],['/stable',undefined],[undefined,'task'],['/stable','../escape'],['/stable','']])expect(()=>captureLeaseOptions(root,task,true)).toThrow();
+  });
+  it('does not create a missing stable lease root',async()=>{
+    const root=await output();await expect(acquireCaptureLease(join(root,'missing'),'task','run-a')).rejects.toMatchObject({code:'ENOENT'});
+    expect(await readdir(root)).toEqual([]);
+  });
+  it('uses one lock for different task IDs and never steals an existing owner',async()=>{
+    const root=await output(),lease=await acquireCaptureLease(root,'task-a','run-a'),path=join(root,'capture.lock','owner.json'),original=await readFile(path,'utf8');
+    await expect(acquireCaptureLease(root,'task-b','run-b')).rejects.toMatchObject({code:'EEXIST'});
+    expect(await readFile(path,'utf8')).toBe(original);expect(JSON.stringify(lease.owner)).not.toContain(JSON.parse(original).nonce);
+    expect(await lease.release(noResources)).toMatchObject({released:true,ownerMatched:true});expect(await readdir(root)).toEqual([]);
+    await expect(lease.release(noResources)).rejects.toThrow('already');
+  });
+  it('compares the privately held nonce exactly, not just its format',async()=>{
+    const root=await output(),lease=await acquireCaptureLease(root,'task','run'),path=join(root,'capture.lock','owner.json');
+    const owner=JSON.parse(await readFile(path,'utf8'));owner.nonce='0'.repeat(48);await writeFile(path,JSON.stringify(owner));
+    await expect(lease.release(noResources)).rejects.toThrow('mismatch');expect(JSON.parse(await readFile(path,'utf8')).nonce).toBe(owner.nonce);
+  });
+  it('rejects changed owner identity even when the nonce is unchanged',async()=>{
+    const root=await output(),lease=await acquireCaptureLease(root,'task','run'),path=join(root,'capture.lock','owner.json');
+    const owner=JSON.parse(await readFile(path,'utf8'));owner.pid++;await writeFile(path,JSON.stringify(owner));
+    await expect(lease.release(noResources)).rejects.toThrow('mismatch');expect(await readdir(join(root,'capture.lock'))).toEqual(['owner.json']);
+  });
+  it('keeps malformed/missing owners and unexpected files instead of recursively deleting',async()=>{
+    for(const mode of ['malformed','missing','extra']){
+      const root=await output(),lease=await acquireCaptureLease(root,'task','run'),path=join(root,'capture.lock','owner.json');
+      if(mode==='malformed')await writeFile(path,'not json');else if(mode==='missing')await rm(path);else await writeFile(join(root,'capture.lock','foreign'),'keep');
+      await expect(lease.release(noResources)).rejects.toThrow();expect(await readdir(root)).toEqual(['capture.lock']);
+    }
+  });
+  it('retains the lease for unknown launch/preview outcomes or any known unclosed resource',async()=>{
+    const root=await output(),lease=await acquireCaptureLease(root,'task','run');
+    for(const evidence of [{...noResources,browser:'unknown' as const},{...noResources,preview:'unknown' as const},{...noResources,knownUnclosedResources:1}])expect(await lease.release(evidence)).toMatchObject({released:false,ownerMatched:null});
+    expect(await readdir(root)).toEqual(['capture.lock']);
+    expect(await lease.release({...noResources,browser:'owned-handles-closed',preview:'closed-port-refused'})).toMatchObject({released:true,ownerMatched:true});
+  });
+  it('leaves separate write-once lifecycle events for every run, including failed starts',async()=>{
+    const root=await output(),first=await createCaptureRun(root,commit,'idle'),second=await createCaptureRun(root,commit,'idle');
+    for(const run of [first,second]){const record=await createCaptureLifecycle(run);await record('browser-start-requested',{headless:true});await record('browser-close-observed',{state:'unknown'});expect(await readdir(join(run.directory,'lifecycle'))).toEqual(['0001-browser-start-requested.json','0002-browser-close-observed.json']);}
+    await expect(createCaptureLifecycle(first)).rejects.toMatchObject({code:'EEXIST'});
+  });
+  it('records exit on an owned real Node child, with no browser or OS PID lookup',async()=>{
+    const child=spawn(process.execPath,['-e','setTimeout(()=>process.exit(0),30)'],{stdio:'ignore'}),observed=observeCaptureProcess(child);
+    expect(observed.pid).toBe(child.pid);expect(observed.exit).toBeNull();await once(child,'close');
+    expect(observed.exit).toMatchObject({code:0,signal:null,source:'ChildProcess-exit-event'});expect(observed.identitySource).toBe('owned-ChildProcess-handle');
+    expect(observeCaptureProcess(child).exit).toMatchObject({source:'already-exited-ChildProcess'});
+  });
+  it('records abnormal/signal exit without converting it to a normal exit',async()=>{
+    const failed=spawn(process.execPath,['-e','process.exit(3)'],{stdio:'ignore'}),failure=observeCaptureProcess(failed);await once(failed,'close');expect(failure.exit?.code).toBe(3);
+    const child=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore'}),observed=observeCaptureProcess(child);child.kill('SIGTERM');await once(child,'close');
+    expect(observed.exit?.signal).toBe('SIGTERM');expect(observed.exit?.code).toBeNull();
+  });
+  it('shares one signal/finally close and interrupts a pending operation immediately (CPU stub)',async()=>{
+    let connected=true,unblock!:()=>void;const pending=new Promise<void>(resolve=>{unblock=resolve;});
+    const browser={close:vi.fn(async()=>{await pending;connected=false;}),isConnected:()=>connected};
+    const server={close:vi.fn(async()=>{unblock();})},close=createCaptureBrowserCloser(()=>({browser,server}));
+    const signalClose=close();expect(close()).toBe(signalClose);
+    expect(await signalClose).toMatchObject({serverClosed:true,connectionClosed:true,errors:[]});
+    expect(browser.close).toHaveBeenCalledTimes(1);expect(server.close).toHaveBeenCalledTimes(1);
+  });
+  it('bounds a hanging owned close, reports unknown and does not retry or force-kill',async()=>{
+    const server={close:vi.fn(()=>new Promise<void>(()=>{}))},close=createCaptureBrowserCloser(()=>({server}),10);
+    expect(await close()).toMatchObject({serverClosed:null,errors:['owned browser close timeout']});await close();expect(server.close).toHaveBeenCalledTimes(1);
+  });
+  it('does not cache a pre-handle signal as proof that a later launch was cleaned up',async()=>{
+    let server:undefined|{close:()=>Promise<void>};const close=createCaptureBrowserCloser(()=>({server}));
+    expect((await close()).serverClosed).toBeNull();server={close:vi.fn(async()=>{})};
+    expect((await close()).serverClosed).toBe(true);expect(server.close).toHaveBeenCalledTimes(1);
+  });
+  it('retains a failed close result instead of retrying or declaring success',async()=>{
+    const server={close:vi.fn(async()=>{throw new Error('stub close failure');})},close=createCaptureBrowserCloser(()=>({server}));
+    expect(await close()).toMatchObject({serverClosed:false,errors:['BrowserServer close']});await close();expect(server.close).toHaveBeenCalledTimes(1);
+  });
+  it('never treats a failed close, disconnect-only, abnormal exit or missing handle as safe cleanup',()=>{
+    const process={pid:123,parentPid:12,registeredAt:'observed',identitySource:'owned-ChildProcess-handle',exit:{code:0,signal:null,observedAt:'observed',source:'ChildProcess-exit-event'}};
+    expect(captureBrowserExitState(false,null,true,undefined)).toBe('not-started');
+    expect(captureBrowserExitState(true,true,true,process)).toBe('owned-handles-closed');
+    for(const [closed,connected,evidence] of [[false,true,process],[true,false,process],[true,true,undefined],[true,true,{...process,exit:null}],[true,true,{...process,exit:{...process.exit,code:1}}]] as const)expect(captureBrowserExitState(true,closed,connected,evidence)).toBe('unknown');
+  });
+  it('propagates preview close failure rather than certifying a port cleanup',async()=>{
+    const server=createServer();vi.spyOn(server,'close').mockImplementation(callback=>{callback?.(new Error('test-close-failure'));return server;});
+    await expect(closeCapturePreview(server,12345)).rejects.toThrow('test-close-failure');
+  });
+  it('publishes allowlisted actual flags and executable classification, never paths or argv',()=>{
+    const evidence=captureSpawnEvidence({spawnfile:'/private/browser',spawnargs:['/private/browser','--headless=new','--user-data-dir=/private/profile','--no-sandbox','--disable-setuid-sandbox','--enable-unsafe-swiftshader','--use-angle=/private/custom']},'/private/browser');
+    expect(evidence).toMatchObject({source:'ChildProcess.spawnargs',executable:'playwright-bundled',headless:true,noSandbox:true,disableSetuidSandbox:true,unsafeSwiftshader:true,useAngle:'other'});expect(JSON.stringify(evidence)).not.toContain('/private');expect(JSON.stringify(evidence)).not.toContain('user-data-dir');
+    expect(captureSpawnEvidence({spawnfile:'/custom',spawnargs:['/custom']},'/bundled','/custom').executable).toBe('explicit-path');
+  });
+  it('redacts websocket connection capabilities and known private paths from errors',()=>{
+    expect(publicCaptureError(new Error('connect ws://127.0.0.1:1234/private-capability failed /private/root'),['/private/root'])).toBe('connect <browser-endpoint> failed <private-path>');
+  });
+  it('bounds a hung preview close without certifying that its listener has exited',async()=>{
+    const server=createServer();vi.spyOn(server,'close').mockImplementation(()=>server);
+    await expect(closeCapturePreview(server,12345,10)).rejects.toThrow('preview close timeout');
+  });
+  it('records and closes only the actual owned HTTP port, then observes refusal',async()=>{
+    const server=createServer((_req,res)=>res.end('test'));server.listen(0,'127.0.0.1');await once(server,'listening');
+    const address=server.address();if(!address||typeof address==='string')throw new Error('Missing test port');
+    try{expect(await capturePortState(address.port)).toBe('listening');expect(await closeCapturePreview(server,address.port)).toMatchObject({pid:process.pid,port:address.port,listening:false,portState:'refused',exitProven:true});}finally{server.close();}
+  });
+  it('does not close a new holder if the recorded preview port has been reused',async()=>{
+    const server=createServer((_req,res)=>res.end('own')),replacement=createServer((_req,res)=>res.end('replacement'));server.listen(0,'127.0.0.1');await once(server,'listening');
+    const address=server.address();if(!address||typeof address==='string')throw new Error('Missing test port');
+    const original=server.close.bind(server);
+    vi.spyOn(server,'close').mockImplementation(callback=>original(error=>{if(error){callback?.(error);return;}replacement.listen(address.port,'127.0.0.1',()=>callback?.());}));
+    try{expect(await closeCapturePreview(server,address.port)).toMatchObject({listening:false,portState:'listening',exitProven:false});expect(replacement.listening).toBe(true);}finally{await new Promise<void>(resolve=>replacement.close(()=>resolve()));}
+  });
+  it('uses supported BrowserServer process ownership and preserves lighting and exact repeat checks',async()=>{
+    const source=await readFile(new URL('../tools/capture.mjs',import.meta.url),'utf8');
+    expect(source).toContain('chromium.launchServer(launch)');expect(source).toContain('browserServer.process()');expect(source).not.toContain('browser.process()');
+    expect(source).toContain('await closeOwnedBrowser()');expect(source).toContain('chromium.connect(browserServer.wsEndpoint())');expect(source).toContain("host:'127.0.0.1'");
+    expect(source).toContain("!values.software||values['require-gpu']");expect(source).toContain('parseLightingStyle');expect(source).toContain('lighting,shot,seed:values.seed');expect(source).toContain('assert.deepEqual(comparable,baseline[frame]');
   });
 });
