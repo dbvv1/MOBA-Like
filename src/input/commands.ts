@@ -36,6 +36,8 @@ export function validPoint(point:Vec2|null):point is Vec2 {return point!==null &
 export function moveCommand(heroId:number,point:Vec2|null):SimCommand|null {return validPoint(point)?{type:'move',heroId,point:{...point}}:null;}
 export function isInputElement(target:EventTarget|null):boolean {
   // Avoid requiring DOM globals in pure Node tests.
-  const element=target as {tagName?:string;isContentEditable?:boolean}|null;
-  return Boolean(element?.isContentEditable || ['INPUT','TEXTAREA','SELECT'].includes(element?.tagName??''));
+  const element=target as {tagName?:string;isContentEditable?:boolean;closest?:(selector:string)=>unknown}|null;
+  // Native buttons/summary (and their descendants) own keyboard activation too.
+  // Do not prevent their defaults merely because gameplay also listens on window.
+  return Boolean(element?.isContentEditable || ['INPUT','TEXTAREA','SELECT','BUTTON','SUMMARY','A'].includes(element?.tagName??'') || element?.closest?.('input,textarea,select,button,summary,a[href],[contenteditable="true"]'));
 }

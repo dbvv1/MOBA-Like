@@ -13,6 +13,10 @@ export function createControls(world:GameWorld,catalog:ContentCatalog,current:()
     if(ability.targetType==='self'){const command=commandForCast(hero,slot,world.aim(),snapshot,catalog);if(command)enqueue(command);setMode(null);}
     else{setMode({kind:'cast',slot});say(`${slot} ${ability.name}: left-click ${ability.targetType==='enemyUnit'?'an enemy':'the ground'}; dashed lines show requested aim, not a guaranteed cast. Esc cancels.`);}
   }
+  const cancelAim=()=>{const wasAiming=mode!==null;setMode(null);lastPointer=null;world.leavePointer();if(wasAiming)say('Aim cancelled.');};
+  window.addEventListener('blur',cancelAim,options);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAim();},options);
+  window.addEventListener('focusin',event=>{if(isInputElement(event.target))cancelAim();},options);
   world.canvas.addEventListener('contextmenu',event=>event.preventDefault(),options);
   world.canvas.addEventListener('pointermove',event=>world.setPointer(event.clientX,event.clientY),options);
   world.canvas.addEventListener('pointerleave',()=>world.leavePointer(),options);
