@@ -1,0 +1,54 @@
+{
+  "source": {
+    "commit": "9df6192f44f91482c3c05ab8014c86d406c48e18",
+    "tree": "9872ffe993207effcacb4143044e00622b0bc62d",
+    "dirty": false
+  },
+  "startedAt": "2026-10-28T12:09:36.094Z",
+  "finishedAt": "2026-10-28T12:10:31.523Z",
+  "passed": false,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "pid": 85436,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "report.json",
+      "bytes": 68044,
+      "sha256": "cba3e5e5766a2f94f82e02b410e3dc3a01cb8e9b2bfe1b378f05890792f04eef"
+    },
+    {
+      "path": "exit-evidence.json",
+      "bytes": 6235,
+      "sha256": "73b33e11e30789d2d33c0b5ffea337c6e7c54fa2f18bd17515ae1c6b9f89c7cf"
+    },
+    {
+      "path": "build-identity.json",
+      "bytes": 117,
+      "sha256": "fe390911cbaeb509c158a8a5694139fe0399d8be547c7834044edfd761580bba"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 248333,
+      "sha256": "491bd8fe3ba4e3a752c1f07690d9442c4eea6a4704babeb4bc39329f90fd728f"
+    },
+    {
+      "path": "failure.png",
+      "bytes": 1841613,
+      "sha256": "77dea8b6cb8cb47bbe490c6f6fb7e9bc2963c5ee1c9468b3ec7da0dbf0ce6ac8"
+    }
+  ],
+  "derivedFrom": "smoke-artifacts/2026-10-28T12-09-36-086Z-68556",
+  "publicCopyNote": "report.json is sanitized (see its publicCopy field) and file hashes here are computed from the public copies. default-canvas.png and failure.png are byte-identical to the runner originals, whose hashes in the original manifest are 491bd8fe3ba4e3a752c1f07690d9442c4eea6a4704babeb4bc39329f90fd728f and 77dea8b6cb8cb47bbe490c6f6fb7e9bc2963c5ee1c9468b3ec7da0dbf0ce6ac8."
+}

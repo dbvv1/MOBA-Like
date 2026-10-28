@@ -1,0 +1,121 @@
+{
+  "task": "B-MOBA-BACKLOG-SMOKE-20261028",
+  "unitRun": "u1-a0-2026-10-28T120631475Z",
+  "source": {
+    "commit": "9df6192f44f91482c3c05ab8014c86d406c48e18",
+    "tree": "9872ffe993207effcacb4143044e00622b0bc62d",
+    "worktreeClean": true,
+    "headMatchesFixedSource": true,
+    "buildIdentity": {
+      "commit": "9df6192f44f91482c3c05ab8014c86d406c48e18",
+      "tree": "9872ffe993207effcacb4143044e00622b0bc62d",
+      "dirty": false
+    }
+  },
+  "preflight": {
+    "checkedBeforeUtc": "2026-10-28T12:07:55Z",
+    "worktreeStatus": "clean (git status --porcelain empty)",
+    "browserProcesses": "no chrome.exe or chromium.exe process at preflight; chrome-headless-shell.exe was not separately queried until the post-run check, which found none",
+    "previewListeners": "no listener on 7702 or 8757",
+    "sharedGpuLock": "none: the receiver exposes no shared GPU slot or mutex (only receiver.lock for tick mutual exclusion). No lock was created, none was held by this task, so there is no lock-release evidence and none is claimed.",
+    "concurrentWork": "another receiver unit (FPS backlog smoke) was active during this run; its card records document-only report fixes and no new browser smoke. No browser or preview owned by another unit was observed."
+  },
+  "smokeRun": {
+    "command": "MOBA_SMOKE_SOURCE_SHA=9df6192f44f91482c3c05ab8014c86d406c48e18 MOBA_SMOKE_RENDERER=gpu node tests/client/browser-smoke/run.mjs",
+    "requestedRenderer": "gpu",
+    "actualRendererClass": "software",
+    "actualRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "startUtc": "2026-10-28T12:09:32Z",
+    "runnerStartedAt": "2026-10-28T12:09:36.094Z",
+    "runnerFinishedAt": "2026-10-28T12:10:31.523Z",
+    "endUtc": "2026-10-28T12:10:31Z",
+    "wallTimeSeconds": 59,
+    "outerTimeoutSeconds": 180,
+    "outerTimeoutHit": false,
+    "commandExitCode": 1,
+    "runnerPassed": false,
+    "failureStage": "keyboard-and-resume",
+    "failureCategory": "harness",
+    "failureMessage": "page.waitForFunction: Timeout 15000ms exceeded.",
+    "failureSourceLine": "tests/client/browser-smoke/run.mjs:167:151"
+  },
+  "preparation": {
+    "npmCi": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T12:07:55Z",
+      "endedUtc": "2026-10-28T12:08:18Z"
+    },
+    "npmTest": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T12:08:26Z",
+      "endedUtc": "2026-10-28T12:08:44Z",
+      "files": 66,
+      "tests": 442
+    },
+    "npmRunBuild": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T12:08:46Z",
+      "endedUtc": "2026-10-28T12:08:52Z"
+    },
+    "npmRunBuildWeb": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T12:08:54Z",
+      "endedUtc": "2026-10-28T12:09:03Z"
+    },
+    "totalSeconds": 68,
+    "budgetSeconds": 600
+  },
+  "ownedBrowser": {
+    "pid": 85436,
+    "runnerPid": 68556,
+    "runnerPidSource": "output directory suffix created by run.mjs from its own process id",
+    "parentChain": "unknown: the pre-run monitor filtered chrome.exe but the actual executable is chrome-headless-shell.exe, and the OS keeps no parent record after exit",
+    "exitEvent": {
+      "exitCode": 0,
+      "signalCode": null,
+      "exited": true
+    },
+    "exitEventSource": "report.processExit from Playwright browserServer.process()",
+    "postRunProcessCheck": "no browser process at 2026-10-28T12:13:21Z (pid 85436 was by then an unrelated conhost.exe)"
+  },
+  "ownedPreview": {
+    "previewClosed": true,
+    "previewClosedSource": "run.mjs finally block: fetch to the closed preview origin failed",
+    "cleanupErrors": [],
+    "postRunChecks": "no listener on 7702 or 8757 at 2026-10-28T12:13:21Z; the preview binds an ephemeral 127.0.0.1 port that the report does not record, so that port was not probed independently"
+  },
+  "blocker": {
+    "summary": "The fixed smoke stops at the first post-rebind targeting assertion on /candidate.html: after Save & apply, the runner focuses the canvas and presses the remapped key without moving the pointer back over the canvas, while the candidate client clears its pointer state when keyboard settings open.",
+    "evidence": [
+      "src/client.ts:92 calls world.leavePointer() when the settings dialog opens",
+      "src/render/world.ts:79 only updates the targeting preview when pointerInside is true",
+      "src/render/targeting.ts:43 sets root.visible from a non-null plan, so the preview stays hidden while pointerInside is false",
+      "tests/client/browser-smoke/run.mjs:167 asserts targeting.visible after canvas.focus() and the remapped key press, with no pointer move after the dialog closes",
+      "git blame shows both src/client.ts:92 and the keyboard-and-resume block in run.mjs were introduced in the same fixed commit 9df6192, so this fixed source cannot pass its own smoke gate at this stage",
+      "failure.png shows the remap applied (F Rift Lancet), the match running at 0:17 and no failure notice"
+    ],
+    "scopeOfClaim": "Root cause is inferred from the fixed source paths above; it was not re-verified by a second browser run because this task forbids extra reruns and reruns after failure.",
+    "consequences": [
+      "passed before this stage: default v10 entry and advances, candidate v11 init/real GLB assets, live WebGL2, HUD layout at 8 widths, right-click move and S stop, camera unlock/scroll/relock, Q/E targeting and Esc cancel, real E zone effect + Morrow W/Q/E/R casts, two restarts with the hero change and change back",
+      "not reached: the remapped-key cast assertion, the save/reload continue assertion, the final browser-error assertion, and the diffuse entry",
+      "page.png, canvas.png and diffuse-canvas.png were not generated; default-canvas.png and failure.png are the real screenshots from this run"
+    ],
+    "notAFix": "No source, test or renderer change was made; no retry with another browser or renderer."
+  },
+  "publicSafety": {
+    "removed": [
+      "full browser argv",
+      "local absolute paths",
+      "local profile directory",
+      "stack frames"
+    ],
+    "retained": [
+      "raw WebGL renderer/vendor strings",
+      "renderer class",
+      "pids",
+      "exit codes",
+      "timings",
+      "assertion facts"
+    ]
+  }
+}
