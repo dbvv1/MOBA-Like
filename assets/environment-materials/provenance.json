@@ -35,5 +35,32 @@
   "commercialInputs": false,
   "pixelEditsAfterGeneration": false,
   "visualAcceptance": "Source drafts inspected only; not seamless or game-accepted",
-  "licenseNote": "Original AI generation provenance, not a claim of CC0 or exclusive rights. No commercial textures copied."
+  "licenseNote": "Original AI generation provenance, not a claim of CC0 or exclusive rights. No commercial textures copied.",
+  "runtimeImport": {
+    "sourceFilesUnmodified": true,
+    "sourceVerification": "SHA256, byte length, PNG signature and IHDR 1254x1254 before decode",
+    "api": "createImageBitmap",
+    "requestedWidth": 1024,
+    "requestedHeight": 1024,
+    "acceptedActualWidth": 1024,
+    "acceptedActualHeight": 1024,
+    "options": {
+      "resizeQuality": "high",
+      "imageOrientation": "flipY",
+      "premultiplyAlpha": "none",
+      "colorSpaceConversion": "none"
+    },
+    "colorPolicy": "Source base-color samples declared sRGB; no browser color conversion; Three SRGBColorSpace. Not a calibrated-color claim.",
+    "fallback": "Whole optional family rejected; original battlefield materials retained",
+    "estimatedThreeRgba8FullMipBytes": 16777212,
+    "estimateExcludes": [
+      "original image decode",
+      "CPU bitmaps",
+      "driver overhead",
+      "copies"
+    ],
+    "actualBrowserResizeVerified": false,
+    "actualPeakMemoryVerified": false,
+    "gpuVisualAcceptance": false
+  }
 }
