@@ -8,3 +8,5 @@ test-results/
 .env.*
 
 /web-dist/
+
+/smoke-artifacts/

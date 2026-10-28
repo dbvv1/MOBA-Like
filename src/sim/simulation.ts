@@ -27,6 +27,9 @@ import {
 import type { Navigation } from './navigation.js';
 import { SeededRng } from './rng.js';
 import type {
+  BasicAttackCancelReason,
+  BasicAttackState,
+  DamageSource,
   AbilityStats,
   ActiveStatus,
   CastState,
@@ -49,7 +52,7 @@ import type {
   ZoneEntity,
 } from './types.js';
 
-interface UnitAttackIntent { sourceId: number; targetId: number; damage: number; }
+interface UnitAttackIntent { sourceId: number; targetId: number; damage: number; attackId?: number; source?: DamageSource; }
 
 export interface SimulationOptions {
   seed: number;
@@ -259,7 +262,7 @@ export class Simulation {
     this.emit({ type, castId: cast.id, heroId: hero.id, abilityId: cast.abilityId, slot: cast.slot });
   }
 
-  private cancelledCast(hero: HeroEntity, cast: CastState | null, reason: Extract<PresentationEvent, { type: 'castCancelled' }>['reason']): void {
+  private cancelledCast(hero: HeroEntity, cast: CastState | null, reason: Extract<PresentationEvent, { type: 'castCancelled'; action?: 'ability' }>['reason']): void {
     if (cast) this.emit({ type: 'castCancelled', castId: cast.id, heroId: hero.id, abilityId: cast.abilityId, slot: cast.slot, reason });
   }
 
@@ -309,6 +312,7 @@ export class Simulation {
         respawnAtTick: entity.respawnAtTick,
         cooldowns: { ...entity.cooldowns },
         castSlot: entity.cast?.slot ?? null,
+        ...(this.catalog.basicAttacks ? { attackCooldown: entity.attackCooldown, ...(entity.basicAttack ? { basicAttack: { ...entity.basicAttack } } : {}) } : {}),
         targetId: entity.targetId,
         moveGoal: entity.moveGoal ? copyVec(entity.moveGoal) : null,
         stunned: this.isStunned(entity),
@@ -319,7 +323,7 @@ export class Simulation {
     }
 
     return {
-      events: this.stepEvents.map(event => event.type === 'minionDied' ? { ...event, position: copyVec(event.position) } : { ...event }),
+      events: this.stepEvents.map(event => event.type === 'minionDied' || event.type === 'basicAttackHit' ? { ...event, position: copyVec(event.position) } : { ...event }),
       tick: this.state.tick,
       timeSeconds: this.state.timeSeconds,
       status: this.state.status,
@@ -348,6 +352,7 @@ export class Simulation {
         position: copyVec(projectile.position),
         direction: copyVec(projectile.direction),
         width: projectile.width,
+        ...(projectile.basicAttack ? { basicAttack: { targetId: projectile.basicAttack.targetId, sourceId: projectile.sourceHeroId, sourceKind: projectile.basicAttack.source.kind } } : {}),
       })),
       delayedAreas: this.state.delayedAreas.map((area) => ({
         id: area.id,
@@ -546,6 +551,7 @@ export class Simulation {
       case 'attack':
         return this.commandAttack(hero, command.targetId, fail);
       case 'stop':
+        this.cancelBasicAttack(hero, 'stop');
         delete hero.attackMoveGoal;
         hero.targetId = null;
         hero.moveGoal = null;
@@ -584,6 +590,7 @@ export class Simulation {
       this.state.diagnostics.pathFailures += 1;
       return fail('pathNotFound');
     }
+    this.cancelBasicAttack(hero, 'move');
     delete hero.attackMoveGoal;
     hero.targetId = null;
     hero.moveGoal = snapped;
@@ -611,6 +618,7 @@ export class Simulation {
     if (target.kind === 'structure' && target.invulnerable) {
       return fail('targetInvulnerable');
     }
+    if (hero.basicAttack && hero.basicAttack.targetId !== targetId) this.cancelBasicAttack(hero, 'retarget');
     delete hero.attackMoveGoal;
     hero.targetId = targetId;
     hero.moveGoal = null;
@@ -686,6 +694,7 @@ export class Simulation {
       point = snapped;
     }
 
+    this.cancelBasicAttack(hero, 'cast');
     hero.mana -= ability.manaCost;
     const cooldownTicks = Math.max(
       1,
@@ -914,8 +923,28 @@ export class Simulation {
 
   private advanceProjectiles(): void {
     const survivors: ProjectileEntity[] = [];
+    const basicContacts: UnitAttackIntent[] = [];
     for (const projectile of this.state.projectiles) {
       if (!projectile.alive) {
+        continue;
+      }
+      if (projectile.basicAttack) {
+        const { targetId, damage, source } = projectile.basicAttack;
+        const target = this.getEntityById(targetId);
+        // Targeted attacks never retarget or hit intervening units. A dead/invalid
+        // target consumes the committed shot without inventing contact feedback.
+        if (!target || !target.alive || target.team === projectile.team || (target.kind === 'structure' && target.invulnerable)) continue;
+        const delta = sub(target.position, projectile.position);
+        const travel = Math.min(projectile.remainingDistance, projectile.speed * this.dt);
+        const gap = distance(projectile.position, target.position);
+        projectile.direction = normalize(delta);
+        if (gap <= travel + target.radius + projectile.width) {
+          basicContacts.push({ sourceId: source.id, targetId, damage, attackId: projectile.castId, source });
+          continue;
+        }
+        projectile.position = add(projectile.position, scale(projectile.direction, travel));
+        projectile.remainingDistance -= travel;
+        if (projectile.remainingDistance > 0) survivors.push(projectile);
         continue;
       }
       const source = this.getEntityById(projectile.sourceHeroId);
@@ -969,6 +998,7 @@ export class Simulation {
       survivors.push(projectile);
     }
     this.state.projectiles = survivors;
+    if (basicContacts.length) this.settleUnitAttacks(basicContacts);
   }
 
   private advanceZones(): void {
@@ -1055,7 +1085,8 @@ export class Simulation {
     if (!target.alive) {
       return;
     }
-    const sourceHero = source.kind === 'hero' ? source : null;
+    const candidate = source.kind === 'hero' ? this.getEntityById(source.id) : null;
+    const sourceHero = candidate?.kind === 'hero' ? candidate : null;
     const level = sourceHero?.level ?? 1;
     const attackDamage = sourceHero?.stats.attackDamage ?? 0;
     const stats = abilityId ? this.ensureAbilityStats(abilityId) : null;
@@ -1208,7 +1239,7 @@ export class Simulation {
     return mitigated;
   }
 
-  private notifyTowerAggro(attacker: HeroEntity, victim: HeroEntity): void {
+  private notifyTowerAggro(attacker: DamageSource, victim: HeroEntity): void {
     for (const entity of this.state.entities) {
       if (
         entity.kind !== 'structure' ||
@@ -1238,6 +1269,7 @@ export class Simulation {
     if (!target.alive) {
       return;
     }
+    this.cancelBasicAttack(target, 'dead');
     target.alive = false;
     target.hp = 0;
     target.targetId = null;
@@ -1270,8 +1302,9 @@ export class Simulation {
 
   }
 
-  private awardDeathRewards(target: Entity, source: Entity, keepDeadHpZero = false): void {
-    const sourceHero = source.kind === 'hero' ? source : null;
+  private awardDeathRewards(target: Entity, source: DamageSource, keepDeadHpZero = false): void {
+    const candidate = source.kind === 'hero' ? this.getEntityById(source.id) : null;
+    const sourceHero = candidate?.kind === 'hero' ? candidate : null;
     if (target.kind === 'hero') {
       this.state.stats.heroKills[otherTeam(target.team)] += 1;
       if (sourceHero) {
@@ -1448,10 +1481,10 @@ export class Simulation {
     const readById = new Map(readEntities.map(entity => [entity.id, entity]));
     const liveById = new Map(this.state.entities.map(entity => [entity.id, entity]));
     const attacks: UnitAttackIntent[] = [];
-    // Planning order deliberately follows storage order; eligibility only reads the
-    // canonical entry snapshot, so reversing this order must not change the result.
+    // v9 preserves its storage planning order. v11 also allocates action IDs in
+    // canonical order; both read eligibility from the common entry snapshot.
     const plans: Entity[] = [];
-    for (const live of this.state.entities) {
+    for (const live of (this.catalog.basicAttacks ? [...this.state.entities].sort((a,b) => a.id-b.id) : this.state.entities)) {
       if (!live.alive || live.kind === 'structure') continue;
       const planned = this.unitPhaseCopy(readById.get(live.id)!);
       this.planUnitPhase(planned, readEntities, readById, attacks);
@@ -1462,17 +1495,23 @@ export class Simulation {
       Object.assign(live, planned);
       // Object.assign does not propagate deletion of an optional order field.
       if (live.kind === 'hero' && planned.kind === 'hero' && !planned.attackMoveGoal) delete live.attackMoveGoal;
+      if (!planned.basicAttack) delete live.basicAttack;
     }
 
+    this.settleUnitAttacks(attacks, readById, liveById);
+  }
+
+  private settleUnitAttacks(attacks: UnitAttackIntent[], readById: ReadonlyMap<number, Entity> = new Map(this.state.entities.map(entity => [entity.id, this.unitPhaseCopy(entity)])), liveById: ReadonlyMap<number, Entity> = new Map(this.state.entities.map(entity => [entity.id, entity]))): void {
     const damage = new Map<number, { hp: number; shield: number; killerId: number | null }>();
     // A target's contenders are enemies from one team: this preserves stable
     // effective-hit crossing-zero credit, not a largest-contribution economy.
     attacks.sort((a, b) => a.sourceId - b.sourceId || a.targetId - b.targetId);
     for (const attack of attacks) {
-      const source = liveById.get(attack.sourceId)!;
-      this.emit({ type: 'basicAttack', sourceId: attack.sourceId, targetId: attack.targetId });
+      const source = liveById.get(attack.sourceId) ?? attack.source;
+      if (!source) continue;
+      if (attack.attackId === undefined) this.emit({ type: 'basicAttack', sourceId: attack.sourceId, targetId: attack.targetId });
       const target = readById.get(attack.targetId)!;
-      if (!target.alive || (target.kind === 'structure' && target.invulnerable) || attack.damage <= 0) continue;
+      if (!target || !target.alive || (target.kind === 'structure' && target.invulnerable) || attack.damage <= 0) continue;
       let tally = damage.get(target.id);
       if (!tally) {
         tally = { hp: target.hp, shield: target.kind === 'hero' && target.shieldExpiresTick > this.state.tick ? target.shield : 0, killerId: null };
@@ -1488,6 +1527,7 @@ export class Simulation {
         if (target.kind === 'hero') this.state.stats.basicAttackHeroDamage += mitigated;
       }
       const absorbed = Math.min(tally.shield, mitigated);
+      if (attack.attackId !== undefined) this.emit({ type: 'basicAttackHit', sourceId: source.id, targetId: target.id, attackId: attack.attackId, position: copyVec(target.position), targetTeam: target.team, hpDamage: Math.min(tally.hp, mitigated - absorbed), shieldAbsorbed: absorbed });
       if (target.kind === 'hero') this.emit({ type: 'heroDamaged', targetId: target.id, sourceId: source.id, hpDamage: Math.min(tally.hp, mitigated - absorbed), shieldAbsorbed: absorbed, abilityId: null });
       tally.shield -= absorbed;
       tally.hp -= mitigated - absorbed;
@@ -1495,7 +1535,7 @@ export class Simulation {
       const liveTarget = liveById.get(target.id)!;
       if (source.kind === 'hero' && liveTarget.kind === 'hero') this.notifyTowerAggro(source, liveTarget);
     }
-    const deaths: { live: Entity; rewardTarget: Entity; source: Entity }[] = [];
+    const deaths: { live: Entity; rewardTarget: Entity; source: DamageSource }[] = [];
     for (const [id, tally] of [...damage].sort(([a], [b]) => a - b)) {
       const live = liveById.get(id)!;
       live.hp = tally.hp;
@@ -1503,7 +1543,7 @@ export class Simulation {
       if (tally.killerId !== null) {
         // Freeze victim level/bounty data before any kill reward can level another
         // victim. XP-aura positions are sampled after the common movement commit.
-        deaths.push({ live, rewardTarget: { ...readById.get(id)!, position: copyVec(live.position) }, source: liveById.get(tally.killerId)! });
+        deaths.push({ live, rewardTarget: { ...readById.get(id)!, position: copyVec(live.position) }, source: liveById.get(tally.killerId) ?? attacks.find(attack => attack.sourceId === tally.killerId)!.source! });
       }
     }
     for (const death of deaths) this.markDeath(death.live);
@@ -1518,11 +1558,14 @@ export class Simulation {
       entity.attackCooldown = Math.max(0, entity.attackCooldown - 1);
 
       if (this.isStunned(entity)) {
+        this.cancelBasicAttack(entity, 'stunned');
         return;
       }
       if (entity.kind === 'hero' && entity.cast) {
+        this.cancelBasicAttack(entity, 'cast');
         return;
       }
+      if (entity.basicAttack && this.advanceBasicAttack(entity, readById, attacks)) return;
 
       if (entity.kind === 'minion' && this.state.tick >= entity.targetRefreshTick) {
         this.refreshMinionTarget(entity, readEntities);
@@ -1543,8 +1586,11 @@ export class Simulation {
           entity.pathIndex = 0;
           entity.facing = normalize(sub(target.position, entity.position));
           if (entity.attackCooldown <= 0) {
-            attacks.push({ sourceId: entity.id, targetId: target.id, damage: this.basicAttackDamage(entity, target) });
-            entity.attackCooldown = this.basicAttackIntervalTicks(entity);
+            if (this.catalog.basicAttacks) this.startBasicAttack(entity, target);
+            else {
+              attacks.push({ sourceId: entity.id, targetId: target.id, damage: this.basicAttackDamage(entity, target) });
+              entity.attackCooldown = this.basicAttackIntervalTicks(entity);
+            }
           }
           return;
         }
@@ -1655,6 +1701,7 @@ export class Simulation {
         continue;
       }
       entity.attackCooldown = Math.max(0, entity.attackCooldown - 1);
+      if (entity.basicAttack && this.advanceBasicAttack(entity, new Map(this.state.entities.map(value => [value.id, value])), [])) continue;
       if (this.state.tick >= entity.targetRefreshTick) {
         this.refreshStructureTarget(entity);
         entity.targetRefreshTick = this.state.tick + this.catalog.rules.structureTargetingIntervalTicks;
@@ -1667,9 +1714,12 @@ export class Simulation {
         if (distance(entity.position, target.position) <= entity.attackRange + target.radius) {
           entity.facing = normalize(sub(target.position, entity.position));
           if (entity.attackCooldown <= 0) {
-            this.emit({ type: 'basicAttack', sourceId: entity.id, targetId: target.id });
-            this.dealDamage(entity, target, entity.attackDamage, 'physical', null);
-            entity.attackCooldown = Math.max(1, Math.ceil(entity.attackInterval * this.tickRate));
+            if (this.catalog.basicAttacks) this.startBasicAttack(entity, target);
+            else {
+              this.emit({ type: 'basicAttack', sourceId: entity.id, targetId: target.id });
+              this.dealDamage(entity, target, entity.attackDamage, 'physical', null);
+              entity.attackCooldown = Math.max(1, Math.ceil(entity.attackInterval * this.tickRate));
+            }
           }
         }
     }
@@ -1732,6 +1782,57 @@ export class Simulation {
     ) {
       entity.targetId = null;
     }
+  }
+
+  private cancelBasicAttack(source: Entity, reason: BasicAttackCancelReason): void {
+    const attack = source.basicAttack;
+    if (!attack) return;
+    this.emit({ type: 'castCancelled', action: 'basicAttack', castId: attack.id, heroId: source.id, abilityId: 'basicAttack', slot: null, targetId: attack.targetId, reason });
+    delete source.basicAttack;
+  }
+
+  private basicAttackDefinition(source: Entity) {
+    const definitions = this.catalog.basicAttacks!;
+    return source.kind === 'hero' ? definitions.heroes[source.definitionId]! : source.kind === 'minion' ? definitions.minions[source.minionKind] : definitions.structures;
+  }
+
+  private basicAttackEvent(source: Entity, attack: BasicAttackState, type: 'castStarted' | 'castResolved'): void {
+    this.emit({ type, action: 'basicAttack', castId: attack.id, heroId: source.id, abilityId: 'basicAttack', slot: null, targetId: attack.targetId, windupTicks: attack.windupTicks });
+  }
+
+  private startBasicAttack(source: Entity, target: Entity): void {
+    const intervalTicks = source.kind === 'structure' ? Math.max(1, Math.ceil(source.attackInterval * this.tickRate)) : this.basicAttackIntervalTicks(source);
+    const windupTicks = Math.max(1, Math.min(intervalTicks - 1, Math.ceil(intervalTicks * this.basicAttackDefinition(source).windupFraction)));
+    const attack = { id: this.state.nextCastId++, targetId: target.id, startedTick: this.state.tick, commitTick: this.state.tick + windupTicks, windupTicks, intervalTicks };
+    source.basicAttack = attack;
+    this.basicAttackEvent(source, attack, 'castStarted');
+  }
+
+  /** Return true while the actor owns a preparation/commit; movement is free next tick. */
+  private advanceBasicAttack(source: Entity, readById: ReadonlyMap<number, Entity>, contacts: UnitAttackIntent[]): boolean {
+    const attack = source.basicAttack!;
+    const target = readById.get(attack.targetId);
+    if (!target || !target.alive || target.team === source.team || (target.kind === 'structure' && target.invulnerable)) {
+      this.cancelBasicAttack(source, 'invalidTarget'); return false;
+    }
+    if (source.targetId !== target.id) { this.cancelBasicAttack(source, 'retarget'); return false; }
+    if (distance(source.position, target.position) > this.attackRange(source) + target.radius) {
+      this.cancelBasicAttack(source, 'outOfRange'); return false;
+    }
+    source.facing = normalize(sub(target.position, source.position));
+    if (this.state.tick < attack.commitTick) return true;
+    const speed = this.basicAttackDefinition(source).projectileSpeed;
+    const damage = source.kind === 'structure' ? source.attackDamage : this.basicAttackDamage(source, target);
+    // Pay the remaining interval only at commitment. Cancellation cannot reset a
+    // previously paid cooldown; animation recovery never controls this timer.
+    source.attackCooldown = Math.max(1, attack.intervalTicks - (this.state.tick - attack.startedTick));
+    delete source.basicAttack;
+    this.basicAttackEvent(source, attack, 'castResolved');
+    this.emit({ type: 'basicAttack', sourceId: source.id, targetId: target.id, attackId: attack.id, delivery: speed > 0 ? 'projectile' : 'melee' });
+    if (speed > 0) {
+      this.state.projectiles.push({ id: this.state.nextProjectileId++, team: source.team, sourceHeroId: source.id, abilityId: 'basicAttack', castId: attack.id, position: copyVec(source.position), direction: copyVec(source.facing), speed, width: .12, remainingDistance: speed * 4, effects: [], alive: true, hitTarget: false, basicAttack: { targetId: target.id, damage, source: { id: source.id, team: source.team, kind: source.kind } } });
+    } else contacts.push({ sourceId: source.id, targetId: target.id, damage, attackId: attack.id });
+    return true;
   }
 
   private basicAttack(source: Entity, target: Entity): void {

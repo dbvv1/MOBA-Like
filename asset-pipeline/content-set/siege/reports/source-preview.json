@@ -1,0 +1,58 @@
+{
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "scope": "Source GLBs before rear-handle removal and deck normalization; retained for team-color and pose direction only. Not current geometry, game screenshot, WebGL test or gameplay acceptance.",
+  "sourceAssets": [
+    {
+      "id": "siege-teal",
+      "sha256": "e300a49f87a07825aa420218961370a8f9c81e6c76a70060aba354f912be8388"
+    },
+    {
+      "id": "siege-rust",
+      "sha256": "2894d01fb20af9d565a21fede7eabdc1c17a2c2a0cd61dc4a56daf040d9777ef"
+    }
+  ],
+  "images": [
+    {
+      "path": "reports/source-lineup-320.png",
+      "sha256": "f28b637c9dc9da4a692ce88d291ba4ed67836e8d49f26c8daad080094bf093eb",
+      "dimensions": [
+        320,
+        180
+      ]
+    },
+    {
+      "path": "reports/source-lineup.png",
+      "sha256": "7fe8d73fc4d6a0164a76fbe4ae9b84df3fa9fd79a2234aaae5fa8549348d52c2",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "reports/source-poses.png",
+      "sha256": "7a0938f6dee8e15a159da285d0a71f180f31a7846d62ef5c66c8a4d5ba7f8a70",
+      "dimensions": [
+        1400,
+        700
+      ]
+    }
+  ],
+  "cameraContract": {
+    "normalViewport": [
+      1280,
+      720
+    ],
+    "smallSourcePreview": [
+      320,
+      180
+    ],
+    "verticalFovDegrees": 45,
+    "runtimeOffset": [
+      0,
+      24,
+      18
+    ]
+  },
+  "status": "pre-chassis-correction-reference",
+  "currentGeometryMatch": false
+}

@@ -1,12 +1,13 @@
 import {createCommandNotice} from './command-notice.js';
-import {battleMessage,matchResult} from './battle-state.js';
+import {basicAttackStatus,battleMessage,matchResult} from './battle-state.js';
 import {skillDescription} from './skill-description.js';
 import {abilityViewModel} from '../../asset-pipeline/presentation/icons.js';
 import type {AbilitySlot,ContentCatalog} from '../content/types.js';
 import type {Snapshot} from '../sim/types.js';
+import type {KeyboardBindings} from '../input/bindings.js';
 
-export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:AbilitySlot)=>void,onBuy:(item:string)=>void,onLock:(locked:boolean)=>void){
-  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
+export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:AbilitySlot)=>void,onBuy:(item:string)=>void,onLock:(locked:boolean)=>void,bindings?:Pick<KeyboardBindings,'label'>){
+  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span><span class="attack-status" data-attack></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
   const find=(selector:string)=>{const node=root.querySelector<HTMLElement>(selector);if(!node)throw new Error('Missing HUD element');return node;};
   const match=find('[data-match]'),heroText=find('[data-hero]'),skills=find('[data-skills]'),shop=find('[data-shop]'),message=find('[data-message]');
   // Keep the existing live region, but announce only actual text changes.
@@ -25,6 +26,8 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     match.textContent=`${Math.floor(snapshot.timeSeconds/60)}:${String(Math.floor(snapshot.timeSeconds%60)).padStart(2,'0')} · ${result?.label??'running'}`;
     heroText.querySelector<HTMLElement>('[data-name]')!.textContent=hero.name;
     heroText.querySelector<HTMLElement>('[data-level]')!.textContent=`Lv ${hero.level}`;
+    const attack=heroText.querySelector<HTMLElement>('[data-attack]')!;
+    const attackState=basicAttackStatus(snapshot,hero,catalog);attack.textContent=attackState.label;attack.title=attackState.hint;
     heroText.querySelector<HTMLElement>('[data-health]')!.textContent=`HP ${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     heroText.querySelector<HTMLElement>('[data-mana]')!.textContent=`Mana ${Math.floor(hero.mana)} / ${hero.maxMana}`;
     heroText.querySelector<HTMLElement>('[data-gold]')!.textContent=`◆ ${Math.floor(hero.gold)} gold${hero.shield>0?` · Shield ${Math.ceil(hero.shield)}`:''}`;
@@ -32,14 +35,14 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     heroText.querySelector<HTMLElement>('[data-mana-fill]')!.style.width=`${Math.max(0,Math.min(100,hero.mana/hero.maxMana*100))}%`;
     const objective=battleMessage(snapshot,hero,catalog);find('[data-status]').dataset['tone']=objective.tone;find('[data-objective]').textContent=objective.label;find('[data-hint]').textContent=objective.hint;
     for(const model of abilityViewModel(hero,catalog)){
-      const button=skillButtons.get(model.slot)!;button.disabled=model.disabled||snapshot.status!=='running';button.title=skillDescription(model.name,catalog.abilities[model.abilityId]!.targetType,snapshot.status==='running'?model.reasons:[...model.reasons,'match ended']);
+      const button=skillButtons.get(model.slot)!;button.disabled=model.disabled||snapshot.status!=='running';button.title=`${bindings?.label(model.slot)??model.slot}: `+skillDescription(model.name,catalog.abilities[model.abilityId]!.targetType,snapshot.status==='running'?model.reasons:[...model.reasons,'match ended']);
       // Names are text, and the optional icon URL is generated from our fixed semantic set.
       if(button.dataset['icon']!==(model.icon??'')){
         button.dataset['icon']=model.icon??'';button.replaceChildren();
         if(model.icon){const image=document.createElement('img');image.src=model.icon;image.alt='';image.width=32;image.height=32;button.append(image);}
       }
       let label=button.querySelector('span');if(!label){label=document.createElement('span');button.append(label);}
-      label.textContent=`${model.slot}  ${model.name}${model.cooldownSeconds>0?' · '+model.cooldownSeconds.toFixed(1)+'s':''}`;button.dataset['cooling']=String(model.cooldownSeconds>0);
+      label.textContent=`${bindings?.label(model.slot)??model.slot}  ${model.name}${model.cooldownSeconds>0?' · '+model.cooldownSeconds.toFixed(1)+'s':''}`;button.dataset['cooling']=String(model.cooldownSeconds>0);
     }
     for(const [id,button]of itemButtons){const item=catalog.items[id]!;button.disabled=!hero.alive||snapshot.status!=='running'||hero.gold<item.cost||hero.items.includes(id);}
   }

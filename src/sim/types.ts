@@ -68,7 +68,20 @@ export interface CastState {
   point: Vec2 | null;
 }
 
+export interface BasicAttackState {
+  id: number;
+  targetId: number;
+  startedTick: number;
+  commitTick: number;
+  windupTicks: number;
+  intervalTicks: number;
+}
+export type BasicAttackCancelReason = 'move' | 'stop' | 'retarget' | 'cast' | 'stunned' | 'dead' | 'invalidTarget' | 'outOfRange';
+export type DamageSource = { id: number; team: TeamId; kind: 'hero' | 'minion' | 'structure' };
+
 interface EntityBase {
+  /** Absent in old content versions: do not alter their authoritative hash. */
+  basicAttack?: BasicAttackState;
   id: number;
   team: TeamId;
   name: string;
@@ -134,6 +147,7 @@ export interface StructureEntity extends EntityBase {
 export type Entity = HeroEntity | MinionEntity | StructureEntity;
 
 export interface ProjectileEntity {
+  basicAttack?: { targetId: number; damage: number; source: DamageSource };
   id: number;
   team: TeamId;
   sourceHeroId: number;
@@ -254,6 +268,8 @@ export interface HeroSnapshot {
   readonly respawnAtTick: number;
   readonly cooldowns: Readonly<Record<AbilitySlot, number>>;
   readonly castSlot: AbilitySlot | null;
+  readonly basicAttack?: Readonly<BasicAttackState>;
+  readonly attackCooldown?: number;
   readonly targetId: number | null;
   readonly moveGoal: Readonly<Vec2> | null;
   readonly stunned: boolean;
@@ -314,11 +330,14 @@ export interface SnapshotDiagnostics {
 
 /** Derived output for one completed logic tick; never part of authoritative state/hash. */
 export type PresentationEvent = Readonly<{ tick: number; ordinal: number } & (
-  | { type: 'castStarted' | 'castResolved'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot }
-  | { type: 'castCancelled'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot;
+  | { type: 'castStarted' | 'castResolved'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot; action?: 'ability' }
+  | { type: 'castStarted' | 'castResolved'; action: 'basicAttack'; castId: number; heroId: number; abilityId: 'basicAttack'; slot: null; targetId: number; windupTicks: number }
+  | { type: 'castCancelled'; action: 'basicAttack'; castId: number; heroId: number; abilityId: 'basicAttack'; slot: null; targetId: number; reason: BasicAttackCancelReason }
+  | { type: 'castCancelled'; action?: 'ability'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot;
       reason: 'stunned' | 'dead' | 'missingAbility' | 'invalidTarget' | 'missingPoint' | 'invalidDestination' }
   | { type: 'minionDied'; entityId: number; team: TeamId; position: Readonly<Vec2> }
-  | { type: 'basicAttack'; sourceId: number; targetId: number }
+  | { type: 'basicAttack'; sourceId: number; targetId: number; attackId?: number; delivery?: 'melee' | 'projectile' }
+  | { type: 'basicAttackHit'; sourceId: number; targetId: number; attackId: number; position: Readonly<Vec2>; targetTeam: TeamId; hpDamage: number; shieldAbsorbed: number }
   | { type: 'heroDamaged'; targetId: number; sourceId: number; hpDamage: number; shieldAbsorbed: number; abilityId: string | null }
 )>;
 
@@ -339,6 +358,7 @@ export interface Snapshot {
     readonly position: Readonly<Vec2>;
     readonly direction: Readonly<Vec2>;
     readonly width: number;
+    readonly basicAttack?: Readonly<{ targetId: number; sourceId: number; sourceKind: DamageSource['kind'] }>;
   }[];
   readonly delayedAreas: readonly {
     readonly id: number;

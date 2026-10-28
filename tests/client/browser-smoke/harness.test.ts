@@ -9,11 +9,12 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
   it('defaults to sandbox; explicit binary/sandbox options never silently fall back',()=>{
     expect(launchOptions({}).chromiumSandbox).toBe(true);
     expect(launchOptions({}).ignoreDefaultArgs).toEqual(['--enable-unsafe-swiftshader']);
-    expect(launchOptions({}).args).toEqual(['--use-angle=swiftshader']);
+    expect(launchOptions({}).args).toEqual([]);
+    expect(launchOptions({MOBA_SMOKE_RENDERER:'software'}).args).toEqual(['--use-angle=swiftshader']);
     expect(launchOptions({MOBA_SMOKE_CHROMIUM:'/example/chromium'}).executablePath).toBe('/example/chromium');
-    expect(launchOptions({MOBA_SMOKE_CLOUD_NO_SANDBOX:'1'}).chromiumSandbox).toBe(false);
+    expect(()=>launchOptions({MOBA_SMOKE_CLOUD_NO_SANDBOX:'1'})).toThrow('not permitted');
     expect(()=>launchOptions({MOBA_SMOKE_CHROMIUM:'chromium'})).toThrow('absolute');
-    expect(()=>launchOptions({MOBA_SMOKE_CLOUD_NO_SANDBOX:'0'})).toThrow('unset or 1');
+    expect(()=>launchOptions({MOBA_SMOKE_CLOUD_NO_SANDBOX:'0'})).toThrow('not permitted');
   });
   it('rejects blank/near-blank canvas and accepts varied pixels without claiming WebGL',()=>{
     const data=new Uint8Array(100*100*4).fill(255);

@@ -96,3 +96,8 @@ const view = createPresentation({catalog, assets,
 
 `motionState()` 返回实际挂接角色与生效AnimationAction的clip/track数/weight/time副本，
 供严格smoke核E施放后的真正 `attack.upper` 动作；它不接受写入模拟或控制动画的指令。
+
+
+### v11 普攻周期
+
+`action: basicAttack` 的 cast 事件同样由模拟决定准备／提交／取消；motion-state 读取实际 `windupTicks`，不从冷却倒推准备。提交时采释放姿态，后续恢复仅为表现，移动／新技能可同时进行。旧版本仅有 `basicAttack` 时仍保持零虚构前摇。小兵的源动作重定时在客户端 battlefield，真实命中仍由 `basicAttackHit` 而非动作回调结算。

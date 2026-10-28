@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MOBA 拍摄控制台</title>
+<style>
+html,body{margin:0;background:#142b2b;color:#e6eeee;font:16px system-ui}header,nav,details{padding:12px 16px}header{background:#0e2222;border-bottom:1px solid #416260}h1{font-size:20px;margin:0 0 8px}p{margin:8px 0}.controls,.downloads{display:flex;gap:12px;align-items:center;flex-wrap:wrap}button{font:inherit;padding:9px 14px;border:1px solid #a5e6e0;border-radius:5px;background:#24524e;color:#fff;cursor:pointer}button:disabled{opacity:.45;cursor:default}a{color:#a5e6e0}button:focus-visible,a:focus-visible{outline:3px solid #ffdb8d;outline-offset:3px}progress{width:240px;max-width:100%;height:16px}#capture-stage{width:1280px;height:720px}#capture-stage canvas{display:block;width:1280px;height:720px}#capture-error{color:#ffd1b9;white-space:pre-wrap}#capture-identity{font-size:13px;overflow-wrap:anywhere;color:#bed6d3}pre{white-space:pre-wrap;overflow-wrap:anywhere}[hidden]{display:none!important}
+</style></head>
+<body><header><h1>MOBA 确定性拍摄</h1>
+<p id="capture-notice" role="status" aria-live="polite">加载拍摄模块…</p><progress id="capture-progress" aria-label="当前准备阶段进度"></progress>
+<div class="controls"><button id="capture-next" type="button" disabled>下一帧</button><button id="capture-next-15" type="button" disabled>前进 15 帧</button><button id="capture-save" type="button" disabled>保存当前 PNG 与元数据</button><a id="capture-exit" href="./">返回普通游戏</a></div>
+<p id="capture-error" role="alert" hidden></p><p id="capture-identity"></p>
+<div id="capture-downloads" class="downloads" hidden><span id="capture-download-label"></span><a id="capture-png">下载 PNG</a><a id="capture-json">下载元数据 JSON</a></div>
+</header><div id="capture-stage" aria-label="1280 × 720 确定性 WebGL 场景"></div>
+<details><summary>当前帧元数据</summary><pre id="capture-metadata">尚未就绪</pre></details>
+<nav>Escape 也可退出。文件来自实际 WebGL 画布（1280 × 720），不包含控制台。拍摄不等于玩家操作、GPU 或画面品质验收。</nav><script type="module" src="/src/capture/client.ts"></script></body></html>

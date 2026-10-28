@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import type {CombatTextures} from './combat-textures.js';
 import type {Snapshot} from '../sim/types.js';
-/** Short-lived confirmed hero impacts; basic swings get a trail, never a fabricated hit. */
+/** Contact effects follow authoritative hits, including lethal minion cleanup. */
 export function createImpacts(scene:THREE.Scene,textures?:CombatTextures){
   const root=new THREE.Group();root.name='battle-feedback';scene.add(root);
   const geometry=new THREE.RingGeometry(.62,1,20),swingGeometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3(0,0,1)]);
-  // A short instantaneous release streak, not a simulated travelling projectile.
+  // Legacy instant attacks keep their whole release streak. v11 uses only a
+  // short source cue here; the authoritative travelling projectile is in effects.
   // Two narrow geometric layers stay legible where a one-pixel line disappears.
   function streakGeometry(color:number){
     const positions:number[]=[],colors:number[]=[];
@@ -29,8 +30,9 @@ export function createImpacts(scene:THREE.Scene,textures?:CombatTextures){
     }
     for(const event of snapshot.events){
       if(event.tick<tick||(event.tick===tick&&event.ordinal<=ordinal))continue;tick=event.tick;ordinal=event.ordinal;
-      if(event.type==='heroDamaged'){
-        const target=snapshot.entities.find(entity=>entity.id===event.targetId);if(!target)continue;
+      if(event.type==='heroDamaged'||event.type==='basicAttackHit'){
+        if(event.type==='heroDamaged'&&event.abilityId===null&&snapshot.events.some(hit=>hit.type==='basicAttackHit'&&hit.sourceId===event.sourceId&&hit.targetId===event.targetId))continue;
+        const target=event.type==='basicAttackHit'?{position:event.position,team:event.targetTeam}:snapshot.entities.find(entity=>entity.id===event.targetId);if(!target)continue;
         const shield=event.hpDamage<=0,color=shield?0x95e1ee:target.team===0?0xfff0bd:0xffb39a;
         const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false});
         const mesh=new THREE.Mesh(geometry,material);mesh.rotation.x=-Math.PI/2;mesh.position.set(target.position.x,.15,target.position.z);root.add(mesh);
@@ -46,7 +48,7 @@ export function createImpacts(scene:THREE.Scene,textures?:CombatTextures){
         line.name=hero?'hero-release-streak':'unit-release-trail';
         const startY=source.kind==='structure'?4.3:source.kind==='hero'?1.2:.7;
         const endY=target.kind==='hero'?1.2:target.kind==='structure'?2:.7;
-        line.position.set(source.position.x,startY,source.position.z);line.lookAt(target.position.x,endY,target.position.z);line.scale.z=Math.hypot(dx,dz,endY-startY);root.add(line);
+        line.position.set(source.position.x,startY,source.position.z);line.lookAt(target.position.x,endY,target.position.z);line.scale.z=event.delivery==='projectile'?.8:Math.hypot(dx,dz,endY-startY);root.add(line);
         if(bursts.length>=48){const old=bursts.shift();if(old)remove(old);}
         bursts.push({object:line,material,age:0,drawn:false,duration:tower?.22:hero?.16:.10});
       }

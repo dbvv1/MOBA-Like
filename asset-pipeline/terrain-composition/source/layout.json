@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "world": {"minX": -110, "maxX": 110, "halfDepth": 90},
+  "road": {"halfWidth": 3.5, "tileMeters": 10, "sampleMeters": 1},
+  "forest": {"tileMeters": 12},
+  "clearings": [
+    {"x": -101, "radius": 8.5, "kind": "base"},
+    {"x": -82, "radius": 5.2, "kind": "barracks"},
+    {"x": -56, "radius": 4.8, "kind": "tower"},
+    {"x": -28, "radius": 4.8, "kind": "tower"},
+    {"x": 28, "radius": 4.8, "kind": "tower"},
+    {"x": 56, "radius": 4.8, "kind": "tower"},
+    {"x": 82, "radius": 5.2, "kind": "barracks"},
+    {"x": 101, "radius": 8.5, "kind": "base"}
+  ]
+}

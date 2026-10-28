@@ -1,0 +1,69 @@
+{
+  "kenney": {
+    "page": "https://kenney.nl/assets/fantasy-town-kit",
+    "version": "2.0",
+    "license": "CC0-1.0",
+    "archiveURL": "https://kenney.nl/media/pages/assets/fantasy-town-kit/efe948d309-1754222374/kenney_fantasy-town-kit_2.0.zip",
+    "archiveSha256": "1a7530c09f4d2fa2cdee259876f089334f8b1f27fa86a0c4f54ef86cdd8676ef",
+    "archiveBytes": 3854691,
+    "acquisition": "Reuse existing official archive; selected files compared byte-for-byte with ZIP members; no download",
+    "files": [
+      {
+        "path": "kenney/cart.glb",
+        "archiveMember": "Models/GLB format/cart.glb",
+        "sha256": "63503cd0a7398310e01aabc8e3663f711a7517394d23d179d0695157fee99d40",
+        "bytes": 52920
+      },
+      {
+        "path": "kenney/Textures/colormap.png",
+        "archiveMember": "Models/GLB format/Textures/colormap.png",
+        "sha256": "4aac939dc33195e35caf8c382ee3cb170054da763577f22d3c22692ec6afccdf",
+        "bytes": 11143
+      },
+      {
+        "path": "LICENSE-Kenney.txt",
+        "archiveMember": "License.txt",
+        "originalSha256": "fb8e4817197ef9f62215e95b4451a0f09c769c8e03e416e3a2ce108dfa6117e4",
+        "sha256": "f2720411b1996b1ad82ebe40694b018326dd41db786ccdb9b79e43a95b03687c",
+        "note": "Legal text unchanged; normalized whitespace; original bytes preserved in zip"
+      }
+    ]
+  },
+  "kaykit": {
+    "commit": "84fa4e91af6a88989be7c99e0891cede11f2ca38",
+    "page": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+    "license": "CC0-1.0",
+    "licenseFile": "asset-pipeline/battle/source/KAYKIT-LICENSE.txt",
+    "selectedNodes": [
+      "catapult_turret_red/green",
+      "catapult_arm_red/green"
+    ],
+    "excludedNode": "building_tower_catapult_red/green",
+    "files": [
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/red/building_tower_catapult_red.gltf",
+        "sha256": "338440a8120a9180f166e43504c9638d5cc743ae922c486df76b250fe64f5169"
+      },
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/red/building_tower_catapult_red.bin",
+        "sha256": "a0ae8566b37251199e31347350126ea23e5090961e86a632a6ac47b8c3e696fc"
+      },
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/red/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      },
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/green/building_tower_catapult_green.gltf",
+        "sha256": "5897198b0f5caf37ea614365be1272dc7eba9aa05502e1e1157ff174117878d7"
+      },
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/green/building_tower_catapult_green.bin",
+        "sha256": "5903461ea3fe0c2887a915cf46cbfaf89871e0c10125f8ceceb3e40b7b350277"
+      },
+      {
+        "path": "asset-pipeline/battle/source/kaykit/buildings/green/hexagons_medieval.png",
+        "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+      }
+    ]
+  }
+}

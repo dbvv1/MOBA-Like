@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "status": "source-candidate",
+  "license": "CC0-1.0",
+  "up": "+Y",
+  "forward": "+Z",
+  "fps": 30,
+  "nominalGroundY": 0,
+  "assets": [
+    {
+      "id": "siege-teal",
+      "file": "exported/siege-teal.glb",
+      "bytes": 226244,
+      "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5",
+      "restBoundsBlender": {
+        "min": [
+          -0.6697682738304138,
+          -0.5,
+          -1.6919799104398645e-17
+        ],
+        "max": [
+          0.6697679758071899,
+          0.8318303227424622,
+          1.2187044620513916
+        ]
+      },
+      "bones": [
+        "Root",
+        "Carriage",
+        "Wheel_L",
+        "Wheel_R",
+        "Turret",
+        "Arm"
+      ],
+      "clipFrames": {
+        "idle": 30,
+        "walk": 18,
+        "attack": 22,
+        "hurt": 12,
+        "death": 30,
+        "attack_prepare": 13,
+        "attack_release": 5,
+        "attack_recover": 17,
+        "attack_cycle_preview_only": 35
+      },
+      "staticChassisBoundsBlender": {
+        "min": [
+          -0.48749998211860657,
+          -0.5,
+          0.2549999952316284
+        ],
+        "max": [
+          0.48749998211860657,
+          0.5010000467300415,
+          0.8032520413398743
+        ]
+      },
+      "staticChassisHorizontalRadius": 0.698323873690168,
+      "wheelRadius": 0.3508201539516449,
+      "distancePerWalkCycle": 2.2042680367714556,
+      "nominalWalkSpeed": 3.6737800612857594,
+      "teamPanelTriangles": 50,
+      "sourceGeometry": "Kenney cart deck and two wheels, rear pull handles/parking legs removed and cuts capped, deck longitudinal scale 2/3; original KayKit turret and arm; stone tower excluded"
+    },
+    {
+      "id": "siege-rust",
+      "file": "exported/siege-rust.glb",
+      "bytes": 226260,
+      "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748",
+      "restBoundsBlender": {
+        "min": [
+          -0.6697682738304138,
+          -0.5,
+          -1.6919799104398645e-17
+        ],
+        "max": [
+          0.6697679758071899,
+          0.8318300843238831,
+          1.2187044620513916
+        ]
+      },
+      "bones": [
+        "Root",
+        "Carriage",
+        "Wheel_L",
+        "Wheel_R",
+        "Turret",
+        "Arm"
+      ],
+      "clipFrames": {
+        "idle": 30,
+        "walk": 18,
+        "attack": 22,
+        "hurt": 12,
+        "death": 30,
+        "attack_prepare": 13,
+        "attack_release": 5,
+        "attack_recover": 17,
+        "attack_cycle_preview_only": 35
+      },
+      "staticChassisBoundsBlender": {
+        "min": [
+          -0.48749998211860657,
+          -0.5,
+          0.2549999952316284
+        ],
+        "max": [
+          0.48749998211860657,
+          0.5010000467300415,
+          0.8032520413398743
+        ]
+      },
+      "staticChassisHorizontalRadius": 0.698323873690168,
+      "wheelRadius": 0.3508201539516449,
+      "distancePerWalkCycle": 2.2042680367714556,
+      "nominalWalkSpeed": 3.6737800612857594,
+      "teamPanelTriangles": 50,
+      "sourceGeometry": "Kenney cart deck and two wheels, rear pull handles/parking legs removed and cuts capped, deck longitudinal scale 2/3; original KayKit turret and arm; stone tower excluded"
+    }
+  ],
+  "animationContract": {
+    "defaultAttack": "release-first 5/30s + recover 17/30s; triggered only at real basicAttack",
+    "optionalPhases": "prepare 13/30s, release 5/30s, recover 17/30s; consumer must have authoritative phase events",
+    "previewOnly": "attack_cycle_preview_only is an author comparison, NOT a gameplay clip",
+    "movement": "no Root motion; v11 wheels sample authored walk rotation by actual travelled distance independently of cast phase; v10 walk uses speed ratio",
+    "death": "cosmetic mechanical collapse only, no projectile/hit/splash particles; use real minionDied"
+  },
+  "runtimeConsumer": "src/render/battlefield.ts"
+}

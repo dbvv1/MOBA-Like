@@ -4,12 +4,14 @@ export type BattleCue={kind:'swing'|'cast'|'hit'|'shield';strength:number;pan:nu
 export function battleCue(event:PresentationEvent,snapshot:Snapshot,playerId:number):BattleCue|null{
   if(event.type==='minionDied')return null; // no invented death sound
   const player=snapshot.heroes.find(hero=>hero.id===playerId);if(!player)return null;
-  const id=event.type==='heroDamaged'?event.targetId:'heroId'in event?event.heroId:event.sourceId;
-  const source=snapshot.entities.find(entity=>entity.id===id);if(!source)return null;
+  if(event.type==='heroDamaged'&&event.abilityId===null&&snapshot.events.some(hit=>hit.type==='basicAttackHit'&&hit.sourceId===event.sourceId&&hit.targetId===event.targetId))return null;
+  const id=event.type==='heroDamaged'||event.type==='basicAttackHit'?event.targetId:'heroId'in event?event.heroId:event.sourceId;
+  const source=event.type==='basicAttackHit'?{position:event.position,kind:snapshot.entities.find(entity=>entity.id===id)?.kind??'minion'}:snapshot.entities.find(entity=>entity.id===id);if(!source)return null;
   const distance=Math.hypot(source.position.x-player.position.x,source.position.z-player.position.z);
   if(distance>24)return null;
   const strength=Math.max(.12,1-distance/30),pan=Math.max(-.8,Math.min(.8,(source.position.x-player.position.x)/16));
-  if(event.type==='castResolved')return {kind:'cast',strength,pan};
+  if(event.type==='castResolved'&&event.action!=='basicAttack')return {kind:'cast',strength,pan};
+  if(event.type==='basicAttackHit')return {kind:event.hpDamage>0?'hit':'shield',strength:strength*(event.sourceId===playerId?.85:source.kind==='hero'?.65:.2),pan};
   if(event.type==='heroDamaged')return {kind:event.hpDamage>0?'hit':'shield',strength:strength*(event.hpDamage>0?.8:.4),pan};
   if(event.type==='basicAttack'&&source.kind==='hero')return {kind:'swing',strength:strength*.45,pan};
   return null;

@@ -1,5 +1,9 @@
+import {execFileSync} from 'node:child_process';
+import {resolve,dirname} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
-import {mkdir,rm,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile,readdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
 import {PNG} from 'pngjs';
@@ -31,22 +35,28 @@ async function checkHudLayout(page){
   return layouts;
 }
 
-const output=new URL('./reports/',import.meta.url);
-await mkdir(output,{recursive:true});
-for (const name of ['page.png','canvas.png','failure.png','report.json']) await rm(new URL(name,output),{force:true});
+const output=pathToFileURL(resolve(process.env.MOBA_SMOKE_OUTPUT??`smoke-artifacts/${new Date().toISOString().replace(/[:.]/g,'-')}-${process.pid}`)+'/');
+await mkdir(dirname(fileURLToPath(output)),{recursive:true});
+await mkdir(output,{recursive:false}); // Each run owns a new directory; never overwrite prior evidence.
+const expectedSha=process.env.MOBA_SMOKE_SOURCE_SHA??execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const report={startedAt:new Date().toISOString(),passed:false,consoleErrors:[],pageErrors:[],httpErrors:[],requestFailures:[],warnings:[],characterAssets:[]};
-const resources={};let page,stage='configure';
+const resources={};let browserServer,browserProcess,page,stage='configure';
 try {
   const options=launchOptions();report.launch=options;
   resources.server=await startServer();const {origin}=resources.server;
-  stage='launch';resources.browser=await chromium.launch(options);report.browserVersion=resources.browser.version();
+  stage='launch';browserServer=await chromium.launchServer(options);browserProcess=browserServer.process();report.browserProcess={pid:browserProcess.pid,args:browserProcess.spawnargs};assert.ok(!browserProcess.spawnargs.some(arg=>arg==='--no-sandbox'||arg==='--disable-setuid-sandbox'||arg==='--enable-unsafe-swiftshader'),'Unsafe browser argument');resources.browser=await chromium.connect(browserServer.wsEndpoint());report.browserVersion=resources.browser.version();
   page=await resources.browser.newPage({viewport:{width:1280,height:900}});page.setDefaultTimeout(15000);
   page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());else if(message.type()==='warning')report.warnings.push(message.text());});
   page.on('pageerror',error=>report.pageErrors.push(String(error)));
   page.on('requestfailed',request=>report.requestFailures.push({url:request.url(),error:request.failure()?.errorText}));
   page.on('response',response=>{if(response.ok()&&new URL(response.url()).pathname.endsWith('.glb'))report.characterAssets.push(new URL(response.url()).pathname);if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
   await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
-  stage='navigate';const response=await page.goto(origin,{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
+  stage='identity';const identity=await (await fetch(origin+'/build-identity.json')).json();report.source=identity;assert.equal(identity.commit,expectedSha);assert.equal(identity.tree,execFileSync('git',['rev-parse',`${expectedSha}^{tree}`],{encoding:'utf8'}).trim());assert.equal(identity.dirty,false,'Smoke must target committed clean source');
+  stage='default-entry';await page.goto(origin,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.mobaClient?.state().ready);
+  const beforeDefault=await page.evaluate(()=>window.mobaClient.snapshot());assert.equal(beforeDefault.contentVersion,10);await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,beforeDefault.tick);
+  report.defaultEntry={contentVersion:beforeDefault.contentVersion,initialTick:beforeDefault.tick,finalTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),pixels:pixelEvidence(PNG.sync.read(await page.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('default-canvas.png',output))})))};assert.ok(report.defaultEntry.pixels.nonBackground);
+  report.defaultCharacterAssets=[...report.characterAssets];report.characterAssets=[];
+  stage='navigate';const response=await page.goto(origin+'/candidate.html',{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
   stage='initialize';
   await page.waitForFunction(()=>window.mobaClient?.state().ready || (!document.querySelector('#restart').disabled && !document.querySelector('#notice').hidden));
   const notice=await page.locator('#notice').textContent();
@@ -54,10 +64,10 @@ try {
   assert.equal(await page.evaluate(()=>window.mobaClient.state().backend),'three-webgl2');
   for(const id of ['hero-teal','hero-rust','melee-teal','ranged-rust','tower-teal','lane-ground'])assert.ok(report.characterAssets.some(path=>new RegExp(`/${id}-[^/]+\\.glb$`).test(path)),`Adopted battle GLB ${id} must load successfully in the real build`);
   stage='context';
-  report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER)}:null;});
-  assert.ok(report.webgl2,'A live WebGL2 context is required');
+  report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');const ext=gl?.getExtension('WEBGL_debug_renderer_info');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER),vendor:gl.getParameter(gl.VENDOR),unmaskedRenderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):null,unmaskedVendor:ext?gl.getParameter(ext.UNMASKED_VENDOR_WEBGL):null}:null;});
+  assert.ok(report.webgl2,'A live WebGL2 context is required');const raw=report.webgl2.unmaskedRenderer??'';report.rendererClass=/swiftshader|llvmpipe|softpipe|software/i.test(raw)?'software':/NVIDIA|AMD|Intel|Apple|Radeon|GeForce|Adreno|Mali/i.test(raw)?'gpu':'unknown';
   stage='hud-layout';report.hudLayout=await checkHudLayout(page);
-  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,10,'Integrated browser entry must use v10 minion-spacing content');
+  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,11,'Candidate browser entry must use the versioned basic attack cycle');
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
   const canvas=page.locator('#stage canvas');const box=await canvas.boundingBox();assert.ok(box,'Canvas visible');
@@ -153,6 +163,10 @@ try {
   assert.match(await page.locator('[data-skills]').textContent(),/Slipstream/);
   assert.equal(await page.locator('#stage canvas').count(),1,'Restarts must replace, not accumulate, renderers');
   report.heroSelection.restartPreserved=true;report.heroSelection.changedBack=true;
+  stage='keyboard-and-resume';await page.locator('footer details').evaluate(node=>{node.open=true;});await page.locator('#keyboard-settings').click();await page.locator('[data-binding-action="Q"]').click();await page.keyboard.press('f');await page.locator('[data-binding-save]').click();
+  assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);await canvas.focus();await page.keyboard.press('f');await page.waitForFunction(()=>window.mobaClient.state().targeting.visible);await page.keyboard.press('Escape');
+  const beforeResume=await page.evaluate(()=>window.mobaClient.snapshot());await page.getByRole('button',{name:'Save match',exact:true}).click();await page.reload({waitUntil:'networkidle'});await page.getByRole('button',{name:'Continue saved match',exact:true}).click();await page.waitForFunction(()=>window.mobaClient?.state().ready);
+  const resumed=await page.evaluate(()=>window.mobaClient.snapshot());assert.ok(resumed.tick>=beforeResume.tick);assert.equal(resumed.contentVersion,11);assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);report.resume={savedTick:beforeResume.tick,resumedTick:resumed.tick,remappedQ:'F'};
   report.finalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
   await page.screenshot({path:fileURLToPath(new URL('page.png',output))});
   stage='pixels';
@@ -160,13 +174,25 @@ try {
   report.pixels=pixelEvidence(PNG.sync.read(bytes));assert.ok(report.pixels.nonBackground,'Canvas must have non-background scene pixels');
   stage='errors';assert.equal(await page.locator('#notice').isVisible(),false,'Runtime failure notice');
   for(const key of ['consoleErrors','pageErrors','httpErrors','requestFailures'])assert.deepEqual(report[key],[],key);
+  stage='diffuse-entry';await page.close();const diffuse=await resources.browser.newPage({viewport:{width:1280,height:900}});diffuse.setDefaultTimeout(15000);page=diffuse;
+  diffuse.on('pageerror',error=>report.pageErrors.push(String(error)));diffuse.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
+  await diffuse.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
+  await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await diffuse.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='stylized-diffuse');
+  report.diffuseEntry={contentVersion:await diffuse.evaluate(()=>window.mobaClient.snapshot().contentVersion),lighting:await diffuse.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await diffuse.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('diffuse-canvas.png',output))})))};
+  assert.equal(report.diffuseEntry.contentVersion,11);assert.ok(report.diffuseEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
   report.passed=true;
 }catch(error){
   report.failure={stage,category:failureCategory(stage,String(error)),message:error.stack||String(error)};process.exitCode=1;
   if(page){try{report.notice=await page.locator('#notice').textContent({timeout:1000});await page.screenshot({path:fileURLToPath(new URL('failure.png',output)),timeout:3000});}catch(captureError){report.captureError=String(captureError);}}
 }finally{
   report.cleanupErrors=await cleanup(resources);
+  if(browserServer){try{await browserServer.close();}catch(error){report.cleanupErrors.push(`browserServer: ${error}`);}}
+  report.processExit=browserProcess?{pid:browserProcess.pid,exitCode:browserProcess.exitCode,signalCode:browserProcess.signalCode,exited:browserProcess.exitCode!==null||browserProcess.signalCode!==null}:null;
+  if(browserProcess&&!report.processExit.exited)report.cleanupErrors.push('Owned browser process exit not confirmed');
+  if(resources.server){try{await fetch(resources.server.origin);report.cleanupErrors.push('Owned preview port remains reachable');}catch{report.previewClosed=true;}}
   if(report.cleanupErrors.length){report.passed=false;process.exitCode=1;}
   report.finishedAt=new Date().toISOString();
+  const files=[];for(const name of await readdir(output)){const bytes=await readFile(new URL(name,output));files.push({path:name,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});}
+  await writeFile(new URL('manifest.json',output),JSON.stringify({source:report.source,startedAt:report.startedAt,finishedAt:report.finishedAt,passed:report.passed,renderer:report.webgl2,rendererClass:report.rendererClass??'unknown',processExit:report.processExit,previewClosed:report.previewClosed??false,files},null,2)+'\n');
   await writeFile(new URL('report.json',output),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }

@@ -37,5 +37,5 @@ export function moveCommand(heroId:number,point:Vec2|null):SimCommand|null {retu
 export function isInputElement(target:EventTarget|null):boolean {
   // Avoid requiring DOM globals in pure Node tests.
   const element=target as {tagName?:string;isContentEditable?:boolean}|null;
-  return Boolean(element?.isContentEditable || ['INPUT','TEXTAREA','SELECT'].includes(element?.tagName??''));
+  return Boolean(element?.isContentEditable || ['INPUT','TEXTAREA','SELECT','BUTTON','SUMMARY'].includes(element?.tagName??''));
 }
