@@ -9,6 +9,7 @@ import {createWorld} from './render/world.js';
 import {FixedClock} from './render/clock.js';
 import {createLifetime} from './render/lifetime.js';
 import {createControls} from './input/controls.js';
+import {matchGuideEnabled} from './ui/match-guide.js';
 import {createHud} from './ui/hud.js';
 
 function element<T extends HTMLElement>(id:string):T {const result=document.getElementById(id);if(!result)throw new Error(`Missing ${id}`);return result as T;}
@@ -20,6 +21,7 @@ async function boot(){
   if(booting)return;booting=true;restart.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
   const lifetime=createLifetime();cleanup=()=>{const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};
   try{
+    const guideEnabled=matchGuideEnabled(location.search);
     const heroIdsByTeam=heroSelection.read();
     const response=await fetch(new URL('./sim/nav/lane.navmesh',import.meta.url));
     if(!response.ok)throw new Error(`Navigation asset failed: HTTP ${response.status}`);
@@ -39,7 +41,7 @@ async function boot(){
     const commands:SimCommand[]=[];lifetime.defer(()=>{commands.length=0;});
     const enqueue=(command:SimCommand)=>{if(commands.length<32&&snapshot.status==='running')commands.push(command);};
     let controls:ReturnType<typeof createControls>;
-    const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>world.setLocked(locked));
+    const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>world.setLocked(locked),guideEnabled);
     lifetime.defer(()=>hud.dispose());
     controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);});
     lifetime.defer(()=>controls.dispose());
