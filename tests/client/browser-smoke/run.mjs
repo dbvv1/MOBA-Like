@@ -164,7 +164,12 @@ try {
   assert.equal(await page.locator('#stage canvas').count(),1,'Restarts must replace, not accumulate, renderers');
   report.heroSelection.restartPreserved=true;report.heroSelection.changedBack=true;
   stage='keyboard-and-resume';await page.locator('footer details').evaluate(node=>{node.open=true;});await page.locator('#keyboard-settings').click();await page.locator('[data-binding-action="Q"]').click();await page.keyboard.press('f');await page.locator('[data-binding-save]').click();
-  assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);await canvas.focus();await page.keyboard.press('f');await page.waitForFunction(()=>window.mobaClient.state().targeting.visible);await page.keyboard.press('Escape');
+  assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);
+  // Closing settings intentionally clears pointer ownership. Focus alone is not a pointer event.
+  // Re-enter the current canvas through real page input before checking the remapped aim.
+  await canvas.focus();const reboundBox=await canvas.boundingBox();assert.ok(reboundBox,'Current canvas must be visible after settings');
+  await page.mouse.move(reboundBox.x+reboundBox.width*.58,reboundBox.y+reboundBox.height*.52);
+  await page.keyboard.press('f');await page.waitForFunction(()=>window.mobaClient.state().targeting.visible);await page.keyboard.press('Escape');
   const beforeResume=await page.evaluate(()=>window.mobaClient.snapshot());await page.getByRole('button',{name:'Save match',exact:true}).click();await page.reload({waitUntil:'networkidle'});await page.getByRole('button',{name:'Continue saved match',exact:true}).click();await page.waitForFunction(()=>window.mobaClient?.state().ready);
   const resumed=await page.evaluate(()=>window.mobaClient.snapshot());assert.ok(resumed.tick>=beforeResume.tick);assert.equal(resumed.contentVersion,11);assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);report.resume={savedTick:beforeResume.tick,resumedTick:resumed.tick,remappedQ:'F'};
   report.finalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
