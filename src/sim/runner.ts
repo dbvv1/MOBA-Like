@@ -10,6 +10,7 @@ export interface BotMatchOptions {
   contentVersion: ContentVersion;
   navigation: Navigation;
   heroesPerTeam?: number;
+  laneFormation?: 'spread-v1';
   heroIdsByTeam?: readonly [readonly string[], readonly string[]];
   blueDifficulty: Difficulty;
   redDifficulty: Difficulty;
@@ -26,6 +27,7 @@ export interface BotMatchResult {
 export function runBotMatch(options: BotMatchOptions): BotMatchResult {
   const heroesPerTeam = options.heroesPerTeam ?? 1;
   const simulation = new Simulation({
+    ...(options.laneFormation !== undefined ? {laneFormation:options.laneFormation} : {}),
     seed: options.seed,
     contentVersion: options.contentVersion,
     navigation: options.navigation,
@@ -91,6 +93,7 @@ export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerif
     throw new Error(`unknown replay content version: ${String(replay.contentVersion)}`);
   }
   const simulation = new Simulation({
+    ...(replay.laneFormation !== undefined ? {laneFormation:replay.laneFormation} : {}),
     seed: replay.seed,
     contentVersion: replay.contentVersion,
     navigation,

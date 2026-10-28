@@ -22,9 +22,13 @@ npm run preview:web
 
 网页产物在 `web-dist/`；`npm run build` 单独构建无画面模拟工具，输出到 `dist/`。
 
+## 离线组队候选
+
+在地址后加 `?match=offline-5v5` 开启单线离线 5v5：你控制蓝方第一名英雄，另有 4 名队友机器人和 5 名敌方机器人；Veyra 与 Morrow 交错编组。沿兵线推塔、摧毁基地结束，Restart 以当前英雄选择重开。可用 `&seed=72` 固定另一组机器人决策种子。不加参数仍是原来的 1v1；不包含联网。
+
 ## 操作
 
-- **Next match hero → Restart**：选择 Veyra 或 Morrow 后开启新局；更改选择不会修改当前对局，直接 Restart 保留上次选择。Morrow 的 W 为立即施放的自身护盾，Q 为方向弹道，E/R 为地面技能；技能名与操作提示随英雄切换。对手仍为 Veyra。
+- **Next match hero → Restart**：选择 Veyra 或 Morrow 后开启新局；更改选择不会修改当前对局，直接 Restart 保留上次选择。Morrow 的 W 为立即施放的自身护盾，Q 为方向弹道，E/R 为地面技能；技能名与操作提示随英雄切换。默认 1v1 的对手仍为 Veyra。
 
 - **右键敌人**：指定目标，追入射程后普攻；不是攻击命中保证。
 - **右键地面／友方单位**：移动；点无敌敌方建筑不会自动走进其脚下。

@@ -145,3 +145,35 @@ it('an old successful world cannot replace the restored successful visit canvas'
   expect(current.host.style).toEqual({position:'absolute',inset:'0'});
   win.dispatchEvent(new Event('pagehide'));expect(current.dispose).toHaveBeenCalledTimes(1);
 });
+
+it('real client frames consume nine team bots and restart a fresh ten-hero match',async()=>{
+  const {win,elements}=page();Object.assign(win,{location:{search:'?match=offline-5v5&seed=72'}});
+  const {readFile}=await import('node:fs/promises');
+  const actual=await vi.importActual<typeof import('../../src/sim/navigation.js')>('../../src/sim/navigation.js');
+  const bytes=await readFile(new URL('../../src/sim/nav/lane.navmesh',import.meta.url));
+  state.navigation.mockImplementation(()=>actual.createDetourNavigation(new Uint8Array(bytes)));
+  state.sound.mockImplementation(()=>({dispose:vi.fn(),sync:vi.fn()}));
+  state.world.mockImplementation(async()=>({dispose:vi.fn(),sync:vi.fn(),draw:vi.fn()}));
+  elements.set('sound-toggle',Object.assign(new Element(),{setAttribute:vi.fn()}));
+  let frame:FrameRequestCallback=()=>{};
+  vi.stubGlobal('requestAnimationFrame',vi.fn((callback:FrameRequestCallback)=>{frame=callback;return 1;}));vi.stubGlobal('cancelAnimationFrame',vi.fn());
+  vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)})));
+  await import('../../src/client.js');await flush();
+  const initial=Reflect.get(win,'mobaClient').snapshot();expect(initial.heroes).toHaveLength(10);
+  let now=performance.now();for(let i=0;i<180;i++){now+=34;frame(now);}
+  const progressed=Reflect.get(win,'mobaClient').snapshot();expect(progressed.tick).toBeGreaterThan(150);
+  expect(progressed.heroes[0].position).toEqual(initial.heroes[0].position);
+  expect(progressed.heroes.slice(1).filter((hero:any,index:number)=>hero.position.x!==initial.heroes[index+1].position.x)).toHaveLength(9);
+  elements.get('restart')!.dispatchEvent(new Event('click'));await flush();
+  expect(Reflect.get(win,'mobaClient').snapshot().tick).toBe(0);
+  expect(Reflect.get(win,'mobaClient').snapshot().heroes).toEqual(initial.heroes);
+  win.dispatchEvent(new Event('pagehide'));
+});
+
+it.each(['?match=unknown','?match=offline-5v5&match=offline-5v5','?match=offline-5v5&seed=','?match=offline-5v5&seed=2&seed=3'])('real client rejects invalid mode configuration before creating a game: %s',async search=>{
+  const {win,elements}=page();Object.assign(win,{location:{search}});const fetch=vi.fn();vi.stubGlobal('fetch',fetch);
+  await import('../../src/client.js');await flush();
+  expect(elements.get('notice')!.textContent).toMatch(/Invalid (match|seed)/);
+  expect(elements.get('notice')!.hidden).toBe(false);expect(elements.get('restart')!.disabled).toBe(false);
+  expect(fetch).not.toHaveBeenCalled();expect(state.navigation).not.toHaveBeenCalled();expect(state.world).not.toHaveBeenCalled();expect(Reflect.has(win,'mobaClient')).toBe(false);
+});

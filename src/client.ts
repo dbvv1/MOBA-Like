@@ -2,7 +2,7 @@ import {createBattleAudio} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
 import {Simulation} from './sim/simulation.js';
-import {HeroBot} from './sim/ai.js';
+import {createOfflineBots,offlineMatchOptions} from './session/offline-match.js';
 import {createDetourNavigation} from './sim/navigation.js';
 import type {SimCommand} from './sim/types.js';
 import {createWorld} from './render/world.js';
@@ -22,19 +22,20 @@ async function boot(){
   const loading=new AbortController();lifetime.defer(()=>loading.abort());
   try{
     const heroIdsByTeam=heroSelection.read();
+    const match=offlineMatchOptions(window.location?.search??'',getContent(contentVersion),heroIdsByTeam);
     const response=await fetch(new URL('./sim/nav/lane.navmesh',import.meta.url),{signal:loading.signal});
     if(!current())return;
     if(!response.ok)throw new Error(`Navigation asset failed: HTTP ${response.status}`);
     const bytes=await response.arrayBuffer();if(!current())return;
     const navigation=await createDetourNavigation(new Uint8Array(bytes));lifetime.defer(()=>navigation.destroy());
-    const sim=new Simulation({seed:1,contentVersion,navigation,heroesPerTeam:1,heroIdsByTeam});
+    const sim=new Simulation({contentVersion,navigation,...match});
     const sound=createBattleAudio(soundEnabled);lifetime.defer(()=>sound.dispose());
     const soundButton=element<HTMLButtonElement>('sound-toggle');const soundEvents=new AbortController();lifetime.defer(()=>soundEvents.abort());
     soundButton.textContent=soundEnabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundEnabled));
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const bot=new HeroBot({team:1,slotIndex:0,difficulty:'normal',seed:1002});
+    const bots=createOfflineBots(sim);lifetime.defer(()=>bots.dispose());
     // Async world creation may attach its canvas before returning. Never give an
     // old boot the shared stage: each visit gets a sized, independently owned host.
     const worldHost=document.createElement('div');worldHost.style.position='absolute';worldHost.style.inset='0';
@@ -63,8 +64,8 @@ async function boot(){
         if(!document.hidden){
           const alpha=clock.advance(delta,()=>{
             if(sim.isComplete())return;
-            const issued=commands.splice(0);const results=sim.step([...issued,...bot.think(sim)]);
-            snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
+            const issued=commands.splice(0);const results=sim.step([...issued,...bots.think()]);
+            snapshot=sim.snapshot();if(sim.isComplete())bots.dispose();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.reject(rejection.reason??'unknown reason');
           });
@@ -76,7 +77,7 @@ async function boot(){
     animation=requestAnimationFrame(frame);
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
-    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
+    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',match:match.heroesPerTeam===5?'offline-5v5':'duel',bots:bots.roster(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
   }catch(error){releaseCurrent();if(!current())return;stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
   finally{if(current()){booting=false;heroSelection.setBusy(false);}}
 }

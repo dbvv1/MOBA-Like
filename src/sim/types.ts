@@ -42,6 +42,7 @@ export interface Replay {
   contentVersion: ContentVersion;
   seed: number;
   heroesPerTeam: number;
+  laneFormation?: 'spread-v1';
   heroIdsByTeam: readonly [readonly string[], readonly string[]];
   maxMatchSeconds: number;
   commands: readonly TimedCommand[];

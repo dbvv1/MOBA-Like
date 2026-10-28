@@ -56,6 +56,8 @@ export interface SimulationOptions {
   contentVersion: ContentVersion;
   navigation: Navigation;
   heroesPerTeam?: number;
+  /** Opt-in formation rules; absent preserves historical replay behavior. */
+  laneFormation?: 'spread-v1';
   heroIdsByTeam?: readonly [readonly string[], readonly string[]];
   maxMatchSeconds?: number;
 }
@@ -64,6 +66,7 @@ export interface SimulationConfigSummary {
   seed: number;
   contentVersion: ContentVersion;
   heroesPerTeam: number;
+  laneFormation?: 'spread-v1';
   heroIdsByTeam: readonly [readonly string[], readonly string[]];
   maxMatchSeconds: number;
 }
@@ -148,6 +151,7 @@ export class Simulation {
     this.maxMatchSeconds = options.maxMatchSeconds ?? this.catalog.rules.maxMatchSeconds;
 
     const heroesPerTeam = options.heroesPerTeam ?? 1;
+    if(options.laneFormation !== undefined && (options.laneFormation !== 'spread-v1' || heroesPerTeam !== 5))throw new Error('spread-v1 requires five heroes per team');
     if (!Number.isInteger(heroesPerTeam) || heroesPerTeam < 1) {
       throw new Error('heroesPerTeam must be a positive integer');
     }
@@ -159,6 +163,7 @@ export class Simulation {
       seed: this.seed,
       contentVersion: options.contentVersion,
       heroesPerTeam,
+      ...(options.laneFormation !== undefined ? {laneFormation:options.laneFormation} : {}),
       heroIdsByTeam,
       maxMatchSeconds: this.maxMatchSeconds,
     };
@@ -273,6 +278,7 @@ export class Simulation {
       contentVersion: this.catalog.version,
       seed: this.seed,
       heroesPerTeam: this.config.heroesPerTeam,
+      ...(this.config.laneFormation ? {laneFormation:this.config.laneFormation} : {}),
       heroIdsByTeam: this.config.heroIdsByTeam,
       maxMatchSeconds: this.maxMatchSeconds,
       commands: timedCommands,
@@ -423,12 +429,18 @@ export class Simulation {
     }
   }
 
+  private formationSpawn(team:TeamId,slot:number):Vec2 | undefined {
+    if(!this.config.laneFormation || slot<3)return undefined;
+    const side=team===0?1:-1;
+    return {x:(slot===3?-94:-91)*side,z:(slot===3?-4.8:1.2)*side};
+  }
+
   private createHero(team: TeamId, slotIndex: number, heroId: string): void {
     const def = this.catalog.heroes[heroId];
     if (!def) {
       throw new Error(`unknown hero definition: ${heroId}`);
     }
-    const spawn = this.catalog.map.heroSpawns[team][slotIndex] ?? {
+    const spawn = this.formationSpawn(team,slotIndex) ?? this.catalog.map.heroSpawns[team][slotIndex] ?? {
       x: this.catalog.map.heroSpawns[team][0]?.x ?? 0,
       z: 0,
     };
@@ -1892,7 +1904,7 @@ export class Simulation {
         continue;
       }
       const spawn =
-        this.catalog.map.heroSpawns[entity.team][entity.slotIndex] ??
+        this.formationSpawn(entity.team,entity.slotIndex) ?? this.catalog.map.heroSpawns[entity.team][entity.slotIndex] ??
         this.catalog.map.heroSpawns[entity.team][0] ?? { x: 0, z: 0 };
       entity.alive = true;
       entity.position = this.navigation.closestPoint(spawn) ?? copyVec(spawn);

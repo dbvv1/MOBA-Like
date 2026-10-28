@@ -412,7 +412,7 @@ export class HeroBot {
     }
     const danger = this.enemyHeroes(sim, 11);
     const allies = this.ownMinions(sim, 12, structure.position);
-    if (allies.length === 0 && danger.length > 0 && structure.hp / structure.maxHp > 0.35) {
+    if (allies.length === 0 && (danger.length > 0 || sim.config.laneFormation === 'spread-v1') && structure.hp / structure.maxHp > 0.35) {
       return this.advance(sim, hero);
     }
     const commands: SimCommand[] = [];
@@ -471,7 +471,7 @@ export class HeroBot {
     const commands: SimCommand[] = [];
     if (nextStructure && ownMinions.length === 0) {
       const safe = this.safePushPoint(sim, hero);
-      commands.push({ type: 'move', heroId: hero.id, point: safe });
+      commands.push({ type: 'move', heroId: hero.id, point: this.formationPoint(sim,hero,safe) });
       return commands;
     }
     if (ownMinions.length > 0) {
@@ -483,12 +483,20 @@ export class HeroBot {
           front.position,
           { x: this.team === 0 ? -2.2 : 2.2, z: clamp(-front.position.z * 0.1, -1.2, 1.2) },
         );
-        commands.push({ type: 'move', heroId: hero.id, point: behind });
+        commands.push({ type: 'move', heroId: hero.id, point: this.formationPoint(sim,hero,behind) });
         return commands;
       }
     }
-    commands.push({ type: 'move', heroId: hero.id, point: this.stagingPoint(sim, hero) });
+    commands.push({ type: 'move', heroId: hero.id, point: this.formationPoint(sim,hero,this.stagingPoint(sim, hero)) });
     return commands;
+  }
+
+  private formationPoint(sim:Simulation,hero:HeroEntity,point:Vec2):Vec2 {
+    if(!sim.config.laneFormation)return point;
+    // Spread the rally/behind-wave destinations, not attacks or retreat paths.
+    // This is lane formation, not collision avoidance or extra movement authority.
+    const offset=[0,-2,2,-4,4][hero.slotIndex]??0;
+    return {x:point.x,z:clamp(point.z+offset*(hero.team===0?1:-1),-5,5)};
   }
 
   private safePushPoint(sim: Simulation, hero: HeroEntity): Vec2 {
