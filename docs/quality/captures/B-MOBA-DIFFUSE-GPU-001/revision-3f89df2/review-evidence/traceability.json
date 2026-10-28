@@ -1,0 +1,526 @@
+{
+  "task": "B-MOBA-DIFFUSE-GPU-001",
+  "document": "existing-run-claims-and-receipt-traceability",
+  "generatedAt": "2026-10-28T02:09:33.762Z",
+  "generatedAtSemantics": "Content-finalization time of this corrected record. It is later than every checkedAt recorded in this file. The earlier draft value 2026-10-28T01:37:29.738Z is superseded; it predated the worktree checks and could not bind the supplemented evidence in time. The filesystem mtime is the authoritative write-completion time and may trail generatedAt by the write latency.",
+  "mode": "read-only traceability; no build, install, test, browser, GPU, capture, rerun, diagnosis, cleanup or code change",
+  "verdict": "Original revision-3f89df2 archive is intact and internally consistent (baseline exit 1, repeat RGBA mismatch, stylized-diffuse not executed); its bundle hash is a pre-run binding only, because end-of-run bundle verification was not executed. The reviewer claim that two commands were rerun successfully has no located raw evidence: claim unverified; the alleged extra runs and their cleanup are unknown. GPU and quality are not adjudicated.",
+  "sources": [
+    {
+      "id": "S1",
+      "type": "public-git-doc",
+      "repo": "dbvv1/a1dbv",
+      "commit": "e17b197ecf3b3d4a58d96d3b7cd759a22c2da24f",
+      "path": "docs/collaboration/local-jobs/B-MOBA-DIFFUSE-GPU-001.md",
+      "locator": "section 当前结果",
+      "read": true,
+      "exported": "summary only",
+      "summary": "Runtime reviewer allegedly reran both commands and both passed; the card notes this conflicts with the archived failure record and was not independently re-verified by the receiver."
+    },
+    {
+      "id": "S2",
+      "type": "public-git-doc",
+      "repo": "dbvv1/a1dbv",
+      "commit": "df47c465afd6c1a1e30790a228c8bb8993bb6980",
+      "path": "docs/collaboration/local-jobs/B-MOBA-DIFFUSE-GPU-001.md",
+      "locator": "section 已核事实",
+      "read": true,
+      "exported": "summary only",
+      "summary": "The historical card is said to relay a runtime reviewer claim that both commands passed; explicitly marked as not independently re-verified."
+    },
+    {
+      "id": "S3",
+      "type": "local-structured-execution-result",
+      "locator": "receiver task run u1-a0-2026-10-27T231508425Z, execution.json field result.text (RECEIVER_RESULT summary); also u1-a0-2026-10-27T205727160Z for the 8ac7340 round",
+      "read": true,
+      "exported": "summary only",
+      "summary": "Receiver final result repeats the claim and marks it as a reviewer-side rerun not independently re-verified. Contains no reviewer raw output."
+    },
+    {
+      "id": "S4",
+      "type": "repo-committed-capture-artifacts",
+      "repo": "dbvv1/MOBA-Like",
+      "commit": "8a824802f771ab6a18381517c51966a754a20ec0",
+      "path": "docs/quality/captures/B-MOBA-DIFFUSE-GPU-001/revision-3f89df2",
+      "read": true,
+      "exported": "hashes and summaries only; no file copies",
+      "summary": "16 archived files for a single baseline run run-3f89df2bcfca-idle-gtjcpZ."
+    },
+    {
+      "id": "S5",
+      "type": "repo-committed-capture-artifacts",
+      "repo": "dbvv1/MOBA-Like",
+      "commit": "79685125d2489c8e1edd2a5785eb49e2b5b78ae7",
+      "path": "docs/quality/captures/B-MOBA-DIFFUSE-GPU-001",
+      "read": true,
+      "exported": "hashes only; no file copies",
+      "summary": "Older 7968512 archive preserved and unchanged."
+    }
+  ],
+  "archiveIntegrity": {
+    "revision3f89df2": {
+      "repoPath": "docs/quality/captures/B-MOBA-DIFFUSE-GPU-001/revision-3f89df2",
+      "commit": "8a824802f771ab6a18381517c51966a754a20ec0",
+      "fileCount": 16,
+      "manifestListedFileCount": 15,
+      "manifestSelfListed": false,
+      "manifestSha256": "885d7f2d80c33e1ffc8ecd421013f534f21bdf22a0b7d054a57d602eaebebf3f",
+      "manifestBytes": 17142,
+      "allListedHashesAndBytesMatch": true,
+      "runDirectories": [
+        "baseline/run-3f89df2bcfca-idle-gtjcpZ"
+      ],
+      "stylizedDiffuseArtifactCount": 0,
+      "files": [
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0001-runner-started.json",
+          "bytes": 188,
+          "sha256": "23e56e6d5992972f4885cb8c6de784034b294d4db44d9f81643a2e86ddcd99e8",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0002-lease-acquired.json",
+          "bytes": 351,
+          "sha256": "e77f1713ae902d458ba09cde82abccd62f04ca87c08b88b4719d9a6db46932ad",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0003-preview-start-requested.json",
+          "bytes": 161,
+          "sha256": "5bb812edc114d5a3945179a4473a98495f6674117ce90cff803b391da671b13a",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0004-preview-listening.json",
+          "bytes": 215,
+          "sha256": "ff35dad080ff9b0f521d18905f08a3b5e04c82b8a6ba46bd716db0c58791220e",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0005-browser-start-requested.json",
+          "bytes": 610,
+          "sha256": "ec39a48361122390c8390a397b4e36245ee7a343e8dc1001717349eca15504c1",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0006-browser-process-observed.json",
+          "bytes": 600,
+          "sha256": "a1ddce6d4e4358bfdea672c3549a25879322647aec04d20efd43a1df50630947",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0007-browser-close-observed.json",
+          "bytes": 541,
+          "sha256": "8cc056204b1f746b92049172de393ad0973a5c6d131345d8937e2f9b70442739",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0008-preview-close-observed.json",
+          "bytes": 351,
+          "sha256": "a173ffa0df357ba700ca778711c0a4a200a114f09e94f7c0f286bd4cf8e7d787",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0009-lease-release-observed.json",
+          "bytes": 239,
+          "sha256": "e03eec56d8d24a11deac59ce49ba90e43281aa7ffad9353a801e4e2b4c1da064",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.json",
+          "bytes": 7423,
+          "sha256": "2125fde728e92973930fd789f4172ecc18795672d9e2efac9b55a27ee6795256",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.png",
+          "bytes": 119985,
+          "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.json",
+          "bytes": 7423,
+          "sha256": "2b5a4541654c1e76a42264220731172e6d5f180ffaaa49a7491bae1024c95508",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.png",
+          "bytes": 119983,
+          "sha256": "f62d1d753f19a02741dfd3ad82d5c15f634755254e9d3d763d78d14404ddf6f8",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "baseline/run-3f89df2bcfca-idle-gtjcpZ/report.json",
+          "bytes": 25330,
+          "sha256": "38a6ebc1eebe6000eac78c753da1fd2eeca90762189604a1c0b69c2907a2ea80",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "result.md",
+          "bytes": 6759,
+          "sha256": "ce937283a6871e2374d9689cb78d301660b12cf0eaea81403988d4b438fd3c6d",
+          "manifestListed": true,
+          "verified": true
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 17142,
+          "sha256": "885d7f2d80c33e1ffc8ecd421013f534f21bdf22a0b7d054a57d602eaebebf3f",
+          "manifestListed": false,
+          "verified": "self-hash recomputed; no expected value is stored in the manifest"
+        }
+      ]
+    },
+    "legacy7968512": {
+      "repoPath": "docs/quality/captures/B-MOBA-DIFFUSE-GPU-001",
+      "commit": "79685125d2489c8e1edd2a5785eb49e2b5b78ae7",
+      "fileCount": 16,
+      "manifestListedFileCount": 15,
+      "manifestSha256": "a3919eb61b106914f9aa92bac23f2f03b6404c9c51ca41d258532503413adf04",
+      "manifestGeneratedAt": "2026-10-27T21:05:02.001Z",
+      "allListedHashesAndBytesMatch": true,
+      "modifiedByThisAudit": false
+    },
+    "worktree": {
+      "head": "8a824802f771ab6a18381517c51966a754a20ec0",
+      "gitStatusPorcelain": "?? docs/quality/captures/B-MOBA-DIFFUSE-GPU-001/revision-3f89df2/review-evidence/",
+      "gitStatusCommand": "git status --porcelain",
+      "gitStatusCheckedAt": "2026-10-28T02:08:46.497Z",
+      "gitStatusRecordedAfterEvidenceWrite": true,
+      "gitStatusBeforeEvidenceWrite": "",
+      "gitStatusBeforeEvidenceWriteCheckedAt": null,
+      "gitStatusBeforeEvidenceWriteTimestampNote": "The empty status was observed in this worktree before review-evidence/ was created, but that check was not separately timestamped. null is recorded rather than inferring a time; this field is not the same check as gitStatusCheckedAt.",
+      "gitStatusPorcelainUntrackedFilesNo": "",
+      "gitDiffTracked": "",
+      "hasNodeModules": false,
+      "hasOutputsDir": false,
+      "hasDistOrWebDist": false,
+      "note": "Time points: gitStatusCheckedAt (2026-10-28T02:08:46.497Z) is the time of the check whose gitStatusPorcelain value is stored above; that check ran after review-evidence/ existed, which is why the directory appears as untracked. gitStatusRecordedAfterEvidenceWrite=true describes that same check and does not claim it ran before the write. gitStatusBeforeEvidenceWrite='' is a separate empty status observed before review-evidence/ was created; its check was not separately timestamped and gitStatusBeforeEvidenceWriteCheckedAt is therefore null, not an inferred time. generatedAt is the final content-finalization time and is later than gitStatusCheckedAt. Tracked files are unmodified (git diff empty). No unarchived capture outputs remain in this task worktree (no outputs/, dist/, node_modules/). The committed 16-file revision-3f89df2 archive is present in this worktree and unchanged. This only describes this worktree and is not machine-wide evidence."
+    }
+  },
+  "originalInvocations": [
+    {
+      "invocation": 1,
+      "lighting": "baseline",
+      "status": "stopped-after-failure",
+      "exitCode": 1,
+      "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+      "sourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+      "tree": "66207211aa8cf9ca178ec5f08ca1fe7658e268a2",
+      "runnerSourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+      "sourceDirty": false,
+      "bundleSha256": "0c339a1a19c96e5800c883fcb0a1731e83014cf773dcab80487c20ebbb8a7c28",
+      "bundleFileCount": 33,
+      "bundleBinding": "served-files-verified-against-local-artifact (pre-run verification only)",
+      "bundleEndVerification": "not-executed",
+      "bundleEndVerificationDetail": "The baseline repeat frame-0 assertion failed before the end-of-run served-file recheck and the build-unchanged assertion in tools/capture.mjs, so bundleSha256 is a pre-run binding and not a fully verified build identity for the whole run.",
+      "buildIdentity": "one clean build of the fixed base_ref in a detached checkout under the native ignored outputs directory",
+      "startedAtObserved": "2026-10-27T23:22:17.753Z",
+      "endedAtObserved": "2026-10-27T23:22:48.825Z",
+      "commandLevelStartEnd": "not separately recorded; the window is from runner-started to lease-release lifecycle events",
+      "capturePassed": false,
+      "passed": false,
+      "reportSha256": "38a6ebc1eebe6000eac78c753da1fd2eeca90762189604a1c0b69c2907a2ea80",
+      "repeatComparisonPassed": false,
+      "firstMismatchFrame": 0
+    },
+    {
+      "invocation": 2,
+      "lighting": "stylized-diffuse",
+      "status": "not-executed",
+      "exitCode": null,
+      "runId": null,
+      "startedAt": null,
+      "endedAt": null,
+      "sourceCommitAtExecution": null,
+      "runnerSourceCommitAtExecution": null,
+      "sourceDirtyAtExecution": null,
+      "artifacts": null,
+      "lifecycleOrCleanupReceipts": null,
+      "note": "No runId, PNG, frame JSON, report or lifecycle exists. The shared build identity of the planned comparison is recorded in the manifest but is not evidence that this command executed."
+    }
+  ],
+  "originalRepeatEvidence": [
+    {
+      "repeat": 1,
+      "frame": 0,
+      "virtualFrame": 6060,
+      "simTick": 3030,
+      "simTime": 101,
+      "stateHash": "45ddcfd7f7a45536",
+      "pngSha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+      "pngBytes": 119985,
+      "rgbaSha256": "384f3cd20fa35f9abeed10ef8ff6d25114e45153bb21b8f51791078c09b3208f",
+      "jsonSha256": "2125fde728e92973930fd789f4172ecc18795672d9e2efac9b55a27ee6795256",
+      "jsonBytes": 7423,
+      "pngDimensions": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "repeat": 2,
+      "frame": 0,
+      "virtualFrame": 6060,
+      "simTick": 3030,
+      "simTime": 101,
+      "stateHash": "45ddcfd7f7a45536",
+      "pngSha256": "f62d1d753f19a02741dfd3ad82d5c15f634755254e9d3d763d78d14404ddf6f8",
+      "pngBytes": 119983,
+      "rgbaSha256": "f896e602f26eaca357c9e66b77489d78adae17d294e986cc37f685ef26525486",
+      "jsonSha256": "2b5a4541654c1e76a42264220731172e6d5f180ffaaa49a7491bae1024c95508",
+      "jsonBytes": 7423,
+      "pngDimensions": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  ],
+  "originalReportRawFields": {
+    "passed": false,
+    "capturePassed": false,
+    "sourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+    "runnerSourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+    "sourceDirty": false,
+    "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+    "parameters": {
+      "lighting": "baseline",
+      "shots": [
+        "first-tower"
+      ],
+      "seed": "61",
+      "t": "101",
+      "input": "idle",
+      "frames": "1",
+      "repeat": 2
+    },
+    "qualityAcceptance": "not-performed; capture infrastructure is not lighting/material or player-control approval",
+    "errorCount": 1,
+    "errorSummary": "first-tower frame 0 must repeat pixel-identically on the same renderer",
+    "warnings": [
+      "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.",
+      "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead."
+    ],
+    "rendererClass": "gpu",
+    "rendererVendor": "Google Inc. (NVIDIA)",
+    "rendererUnmasked": true,
+    "browserVersion": "156.0.8078.4"
+  },
+  "originalPreflight": {
+    "checkedAt": "immediately before the baseline command; lease createdAt 2026-10-27T23:22:17.755Z",
+    "method": "read-only receiver state/*.json and job cards; checked shared root locks and chrome.exe before the command",
+    "concurrentOwnTasks": [
+      {
+        "id": "A-RESUME-CONTRACT-SOURCES-20261028",
+        "phase": "running",
+        "gpu": "not required; job card states no GPU"
+      },
+      {
+        "id": "B-MOBA-CLIENT-SMOKE-001",
+        "phase": "idle/cancelled",
+        "gpu": "local graphics verification withdrawn; no browser/GPU"
+      }
+    ],
+    "gpuTaskForThisRun": "B-MOBA-DIFFUSE-GPU-001",
+    "sharedLocksBeforeStart": "none at the existing shared root",
+    "chromeProcessesDuringPreflight": 0,
+    "userEdge": "left running and untouched",
+    "scope": "task metadata only; not a machine-wide GPU or process certification",
+    "stylizedDiffusePreflight": "not executed; no second-command preflight record",
+    "claimedExtraRunPreflight": "no evidence located"
+  },
+  "originalSpawnAndCleanup": {
+    "actualFlagsSource": "ChildProcess.spawnargs (spawnEvidence); launch options are request configuration only and do not replace actual flags",
+    "spawnEvidence": {
+      "executable": "playwright-bundled",
+      "headless": true,
+      "headed": false,
+      "noSandbox": false,
+      "disableSetuidSandbox": false,
+      "unsafeSwiftshader": false,
+      "useAngle": null,
+      "software": false
+    },
+    "browser": {
+      "identitySource": "owned-ChildProcess-handle",
+      "pid": 84524,
+      "parentPid": 94800,
+      "registeredAt": "2026-10-27T23:22:27.133Z",
+      "exit": {
+        "code": 0,
+        "signal": null,
+        "observedAt": "2026-10-27T23:22:48.629Z",
+        "source": "ChildProcess-exit-event"
+      },
+      "connectionClosed": true,
+      "serverClosed": true
+    },
+    "preview": {
+      "pid": 94800,
+      "port": 5293,
+      "closedAt": "2026-10-27T23:22:48.822Z",
+      "listening": false,
+      "portState": "refused",
+      "exitProven": true
+    },
+    "lease": {
+      "released": true,
+      "ownerMatched": true,
+      "observedAt": "2026-10-27T23:22:48.825Z"
+    },
+    "scope": "this invocation owned BrowserServer/ChildProcess/connection/preview only; osProcessTree not observed; global GPU availability not assessed",
+    "binding": "all receipts above are bound to run-3f89df2bcfca-idle-gtjcpZ and cannot substitute for receipts of any later or alleged run"
+  },
+  "claimedExtraInvocations": [
+    {
+      "claimRef": "S1/S2",
+      "invocation": "baseline (alleged rerun)",
+      "claimedOutcome": "passed",
+      "runId": null,
+      "startedAt": null,
+      "endedAt": null,
+      "sourceCommit": null,
+      "tree": null,
+      "runnerSourceCommit": null,
+      "sourceDirty": null,
+      "bundleSha256": null,
+      "buildIdentity": null,
+      "exitCode": null,
+      "artifacts": null,
+      "lifecycleOrCleanupReceipts": null,
+      "status": "unverified-no-raw-evidence; value not fabricated"
+    },
+    {
+      "claimRef": "S1/S2",
+      "invocation": "stylized-diffuse (alleged rerun)",
+      "claimedOutcome": "passed",
+      "runId": null,
+      "startedAt": null,
+      "endedAt": null,
+      "sourceCommit": null,
+      "tree": null,
+      "runnerSourceCommit": null,
+      "sourceDirty": null,
+      "bundleSha256": null,
+      "buildIdentity": null,
+      "exitCode": null,
+      "artifacts": null,
+      "lifecycleOrCleanupReceipts": null,
+      "status": "unverified-no-raw-evidence; value not fabricated"
+    }
+  ],
+  "reviewOutputLocation": {
+    "claimPublicLocations": [
+      "S1: a1dbv commit e17b197ecf3b3d4a58d96d3b7cd759a22c2da24f, docs/collaboration/local-jobs/B-MOBA-DIFFUSE-GPU-001.md, section 当前结果",
+      "S2: a1dbv commit df47c465afd6c1a1e30790a228c8bb8993bb6980, same path, section 已核事实"
+    ],
+    "safeFactSummary": "A runtime reviewer allegedly reran both capture commands and both passed; the card says this conflicts with the archived failure record and was not independently re-verified by the receiver.",
+    "structuredResultLocations": [
+      "S3: receiver run u1-a0-2026-10-27T231508425Z execution.json result.text (RECEIVER_RESULT summary only)"
+    ],
+    "rawReviewerOutputLocated": false,
+    "rawReviewerOutputGap": "No public or approved file contains the three-way review details, openIssues payload, reviewer run records or reviewer artifacts. The review agent outputs were not persisted as a standalone artifact in the located sources. native.stdout.jsonl, scratch session directories and transcripts were not read or exported.",
+    "isolatedAsGap": true
+  },
+  "gaps": [
+    "The original review's raw output (three-way review details, openIssues payload, reviewer run records) is not located in any public or approved file; only the card relay (S1/S2) and the receiver summary (S3) exist. Do not infer whether the review ran.",
+    "The alleged extra baseline invocation has none of: runId, start/end time, sourceCommit, tree, runnerSourceCommit, sourceDirty, bundle hash, build identity, exit code, report, PNG, frame JSON, lifecycle or cleanup receipt.",
+    "The alleged extra stylized-diffuse invocation has the same complete absence of the fields listed above.",
+    "No per-command preflight or shared-lease evidence exists for either alleged extra invocation; the gtjcpZ lease and cleanup receipts cannot substitute.",
+    "The location of the alleged extra runs (another local directory, another machine, or not materialized) cannot be determined. The absence of unarchived outputs/ and node_modules in this worktree is not machine-wide evidence and does not cover other directories or machines.",
+    "No stylized-diffuse before/after artifacts exist, so the before-after comparison and quality conclusion cannot be established."
+  ],
+  "conflicts": [
+    {
+      "id": "C1",
+      "statement": "S1/S2 claim both commands were rerun and passed, while the original archive shows baseline exit 1 with a frame-0 RGBA mismatch and stylized-diffuse not executed.",
+      "resolution": "unresolved; the only raw evidence supports the blocked result, not a pass",
+      "action": "report the conflict; do not treat the review pass or empty openIssues as acceptance"
+    }
+  ],
+  "checksPerformed": [
+    {
+      "check": "Enumerate revision-3f89df2 files",
+      "method": "find + file count",
+      "result": "16 files: 9 lifecycle JSON, 2 PNG, 2 frame JSON, report.json, manifest.json, result.md"
+    },
+    {
+      "check": "Verify archived file hashes",
+      "method": "recompute SHA-256 and byte length for every manifest-listed file",
+      "result": "15/15 match; manifest self SHA-256 recomputed as 885d7f2d80c33e1ffc8ecd421013f534f21bdf22a0b7d054a57d602eaebebf3f"
+    },
+    {
+      "check": "Verify legacy 7968512 archive",
+      "method": "same hash and byte-length verification",
+      "result": "15/15 match; manifest SHA-256 a3919eb61b106914f9aa92bac23f2f03b6404c9c51ca41d258532503413adf04; unchanged"
+    },
+    {
+      "check": "Search for stylized-diffuse artifacts",
+      "method": "recursive filename search under the capture directory",
+      "result": "0 matching files"
+    },
+    {
+      "check": "Enumerate run directories",
+      "method": "recursive directory search for run-*",
+      "result": "only baseline/run-3f89df2bcfca-idle-gtjcpZ and legacy baseline/run-8ac7340ca3b6-idle-VCcuTl"
+    },
+    {
+      "check": "Parse report, frame JSON and lifecycle JSON",
+      "method": "JSON.parse and field extraction",
+      "result": "all valid; fields match manifest and card facts"
+    },
+    {
+      "check": "Check worktree state",
+      "method": "git rev-parse HEAD, git status --porcelain, git status --porcelain --untracked-files=no, git diff, directory listing",
+      "result": "HEAD 8a824802f771ab6a18381517c51966a754a20ec0; tracked files unmodified (git diff empty; git status --porcelain --untracked-files=no empty); the stored git status --porcelain check at 2026-10-28T02:08:46.497Z ran after review-evidence/ existed and shows only that untracked directory; the separate pre-write empty status is recorded in worktree.gitStatusBeforeEvidenceWrite and has no timestamp because that earlier check was not separately time-stamped; no node_modules, outputs, dist or web-dist"
+    },
+    {
+      "check": "Verify traceability timestamp ordering and field semantics",
+      "method": "parse generatedAt and every checkedAt; confirm no recorded internal check postdates generatedAt, and that the pre-write field is not presented as the same check as the recorded post-write status",
+      "result": "generatedAt is later than gitStatusCheckedAt 2026-10-28T02:08:46.497Z; all other checkedAt values are historical (2026-10-27 or earlier); gitStatusBeforeEvidenceWriteCheckedAt is null by design because that earlier check was not separately timestamped; no recorded check postdates generatedAt"
+    },
+    {
+      "check": "Check public repository for independent review output",
+      "method": "git grep for the task id in the a1dbv reference copy",
+      "result": "only the task card and one TASKS.md status row; no review result file"
+    },
+    {
+      "check": "Public scan of this new evidence",
+      "method": "regex scan for drive-letter or POSIX absolute paths, ws endpoints, nonce values, credential fields, local user names and transcript content",
+      "result": "no absolute path, ws endpoint, nonce value, credential value, local user name or transcript content found; matches were limited to prohibition/negative-label wording"
+    }
+  ],
+  "exportAndPreservation": {
+    "originalFilesModified": false,
+    "originalFilesByteIdentical": true,
+    "newFilesOnlyUnder": "docs/quality/captures/B-MOBA-DIFFUSE-GPU-001/revision-3f89df2/review-evidence/",
+    "exportedContent": "desensitized fact summary and hashes only",
+    "notExported": [
+      "full argv",
+      "wsEndpoint",
+      "nonce",
+      "absolute lease root path",
+      "DEBUG raw logs",
+      "credentials",
+      "review dialogue or transcript",
+      "reviewer session data"
+    ],
+    "runIndependence": "revision-3f89df2 and the legacy 7968512 archive remain separate; no run id, timestamp, PID or conclusion was rewritten",
+    "acceptance": "GPU/quality not declared passed; final acceptance, renewed GPU authorization and release remain with dot-B"
+  }
+}
