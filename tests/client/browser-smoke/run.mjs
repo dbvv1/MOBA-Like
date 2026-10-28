@@ -9,6 +9,7 @@ import {chromium} from 'playwright';
 import {PNG} from 'pngjs';
 import {launchOptions,pixelEvidence,failureCategory,cleanup} from './options.mjs';
 import {startServer} from './server.mjs';
+import {installMovementProbe,assertActiveMoveAtStop,assertStoppedAtKeyPosition} from './movement-probe.mjs';
 
 // Check real ready/cooling HUD labels without altering simulation state.
 async function checkHudLayout(page){
@@ -71,17 +72,25 @@ try {
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
   const canvas=page.locator('#stage canvas');const box=await canvas.boundingBox();assert.ok(box,'Canvas visible');
-  // Real pointer events, not direct calls to Simulation or the command queue.
-  await page.mouse.click(box.x+box.width*.6,box.y+box.height*.5,{button:'right'});
-  await page.waitForFunction(({id,start})=>{const hero=window.mobaClient.snapshot().heroes.find(h=>h.id===id);return Math.hypot(hero.position.x-start.x,hero.position.z-start.z)>.1;},{id:hero.id,start:hero.position});
-  assert.ok(await page.evaluate(id=>window.mobaClient.snapshot().heroes.find(h=>h.id===id).moveGoal,hero.id),'Move must still be active before stop');
+  // Observe the actual stop keydown, not a separate cross-process sample that can race arrival.
+  await page.evaluate(installMovementProbe,hero.id);
+  const moveStart=await page.evaluate(()=>window.__mobaMovementProbe.beforeMove);
+  report.movement={beforeMove:moveStart};
+  // A deliberate traversal across the visible lane leaves room for a stop test, unlike a nearby click.
+  // This remains real pointer input; command type and active movement are checked, never assumed.
+  await page.mouse.click(box.x+box.width*.85,box.y+box.height*.5,{button:'right'});
+  await page.waitForFunction(({id,start})=>{const hero=window.mobaClient.snapshot().heroes.find(h=>h.id===id);return Math.hypot(hero.position.x-start.x,hero.position.z-start.z)>.1;},{id:hero.id,start:moveStart.hero.position});
   await page.keyboard.press('s');
+  report.movement=await page.evaluate(()=>window.__mobaMovementProbe);
+  assertActiveMoveAtStop(report.movement);
   await page.waitForFunction(id=>window.mobaClient.snapshot().heroes.find(h=>h.id===id).moveGoal===null,hero.id);
   const stopped=await page.evaluate(()=>window.mobaClient.snapshot());
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+6,stopped.tick);
   const stoppedHero=stopped.heroes.find(h=>h.id===hero.id);
   const laterHero=await page.evaluate(id=>window.mobaClient.snapshot().heroes.find(h=>h.id===id),hero.id);
-  assert.ok(Math.hypot(stoppedHero.position.x-laterHero.position.x,stoppedHero.position.z-laterHero.position.z)<1e-8,'S must stop movement across simulation ticks');
+  report.movement.stopped={tick:stopped.tick,hero:stoppedHero};report.movement.later=laterHero;
+  assertStoppedAtKeyPosition(report.movement,stoppedHero,laterHero);
+  await page.evaluate(()=>window.__mobaMovementProbeCleanup());
   await page.locator('[data-lock]').uncheck();
   assert.equal(await page.evaluate(()=>window.mobaClient.state().camera.locked),false);
   const cameraBefore=await page.evaluate(()=>window.mobaClient.state().camera.position);
@@ -187,6 +196,7 @@ try {
   assert.equal(report.diffuseEntry.contentVersion,11);assert.ok(report.diffuseEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
   report.passed=true;
 }catch(error){
+  if(page){try{const observed=await page.evaluate(()=>window.__mobaMovementProbe);if(observed)report.movement={...report.movement,...observed};}catch{}}
   report.failure={stage,category:failureCategory(stage,String(error)),message:error.stack||String(error)};process.exitCode=1;
   if(page){try{report.notice=await page.locator('#notice').textContent({timeout:1000});await page.screenshot({path:fileURLToPath(new URL('failure.png',output)),timeout:3000});}catch(captureError){report.captureError=String(captureError);}}
 }finally{
