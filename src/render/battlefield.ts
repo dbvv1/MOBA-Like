@@ -4,14 +4,21 @@ import type {ContentCatalog} from '../content/types.js';
 import type {Snapshot,EntitySnapshot} from '../sim/types.js';
 import type {BattleAssets} from './battle-assets.js';
 import {battleManifest} from './battle-assets.js';
+import {loadEnvironmentFamily,type EnvironmentFamily} from './environment-materials.js';
 import {createGroundSurfaces} from './ground-surfaces.js';
 
 export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
   return `${entity.kind==='minion'?(entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
 }
-export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
+export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,options:{environmentMaterials?:boolean;loadEnvironment?:typeof loadEnvironmentFamily}={}){
   const root=new THREE.Group();root.name='Battlefield';
+  let disposed=false;const environmentAbort=new AbortController();let environment:EnvironmentFamily|undefined;
+  function applyEnvironment(object:THREE.Object3D){object.traverse(node=>{
+    const mesh=node as THREE.Mesh;if(!mesh.isMesh)return;
+    const kind=mesh.name==='EnvironmentGround'||mesh.name==='GroundShoulderPatches'?'forest':mesh.name==='stone-path'||mesh.name.startsWith('worn-edge-')?'lane':mesh.name==='worn-foundation'?'structure':null;
+    if(kind)environment?.apply(mesh,kind);
+  });}
   const owned:Array<{dispose():void}>=[];
   const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;attackUntil:number;kind:EntitySnapshot['kind'];death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
   const world=catalog.map.world;
@@ -19,7 +26,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   // camera, while all trees/rocks remain outside the unchanged navigation lane.
   const groundGeometry=new THREE.PlaneGeometry(world.maxX-world.minX+180,180);
   const groundMaterial=new THREE.MeshStandardMaterial({color:'#284c43',roughness:1});owned.push(groundGeometry,groundMaterial);
-  const ground=new THREE.Mesh(groundGeometry,groundMaterial);ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;root.add(ground);
+  const ground=new THREE.Mesh(groundGeometry,groundMaterial);ground.name='EnvironmentGround';ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;root.add(ground);
   function decorate(id:string,x:number,z:number,scale=1,angle=0){
     const model=assets.models[id];if(!model)throw new Error(`Missing battle model ${id}`);
     const object=model.scene.clone(true);object.position.set(x,0,z);object.scale.setScalar(scale);object.rotation.y=angle;
@@ -27,6 +34,9 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
   }
   for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
   const groundSurfaces=createGroundSurfaces();root.add(groundSurfaces.root);owned.push(groundSurfaces);
+  const environmentReady=options.environmentMaterials?(options.loadEnvironment??loadEnvironmentFamily)(environmentAbort.signal).then(family=>{
+    if(disposed){family.dispose();return;}environment=family;root.updateMatrixWorld(true);applyEnvironment(root);
+  }).catch(error=>{if(!disposed)console.warn('Environment material candidate failed; stable materials retained.',error);}):Promise.resolve();
   // Deterministic art layout only; no simulation random stream consumption.
   for(let group=0;group<26;group++)for(const side of [-1,1]){
     const x=world.minX-18+group*10.4+Math.sin(group*2.1+side)*3.2;
@@ -62,7 +72,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
         object.scale.setScalar(scale);object.userData['visualHeight']=entry.nominalHeight*scale;object.userData['simEntityId']=entity.id;object.name=`entity-${entity.id}`;
         const mixer=new THREE.AnimationMixer(object),actions=new Map(model.animations.map(clip=>[clip.name,mixer.clipAction(clip)]));
         const to=new THREE.Vector3(entity.position.x,0,entity.position.z);
-        actor={root:object,from:to.clone(),to,mixer,actions,action:'',attackUntil:0,kind:entity.kind,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;
+        actor={root:object,from:to.clone(),to,mixer,actions,action:'',attackUntil:0,kind:entity.kind,death:null,skeletons};actors.set(entity.id,actor);root.add(object);object.rotation.y=entity.team===0?Math.PI/2:-Math.PI/2;object.position.copy(to);applyEnvironment(object);
       }
       actor.from.copy(actor.to);actor.to.set(entity.position.x,0,entity.position.z);actor.root.position.copy(actor.to);
       const dx=actor.to.x-actor.from.x,dz=actor.to.z-actor.from.z;
@@ -79,7 +89,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
     }
     for(const [id,actor] of actors)if(!seen.has(id)&&!actor.death)remove(id);
   }
-  return {root,sync,advance(seconds:number,alpha:number){for(const [id,actor] of actors){
+  return {root,sync,environmentReady,advance(seconds:number,alpha:number){for(const [id,actor] of actors){
     if(actor.death){
       // A bounded presentation-only tail; hidden tabs do not draw, and final
       // match state may finish the tail without advancing gameplay.
@@ -87,5 +97,5 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets){
       if(actor.death.elapsed>=actor.death.duration+.15){remove(id);continue;}
       actor.mixer.update(Math.max(0,seconds));
     }else{actor.root.position.lerpVectors(actor.from,actor.to,terminal?1:alpha);actor.mixer.update(terminal?0:seconds);}
-  }},dispose(){for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();root.clear();}};
+  }},dispose(){if(disposed)return;disposed=true;environmentAbort.abort();environment?.dispose();for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();root.clear();}};
 }

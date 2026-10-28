@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "created": "2026-10-28",
+  "sources": [
+    {
+      "file": "lane-stone-albedo.png",
+      "sha256": "a5878abeb7e6ff3ea87e30f74f14bc66a71d77cdbd3802c67e12326605e524c9",
+      "bytes": 2389508,
+      "width": 1254,
+      "height": 1254,
+      "source": "Original AI-generated base-color candidate; image_gen",
+      "prompt": "Asset type: original production videogame surface albedo texture, square. Original MOBA battlefield material family: weathered warm grey-ochre stone and muted cool deep forest green, compatible with teal and rust team accents without incorporating those accents. Painterly stylized low-poly-compatible material; broad quiet shapes, low contrast, restrained detail, never photorealistic noise. Entire image is flat surface sampled orthographically straight down, no perspective, no border, no text, no logos, no objects, no UI. Seamless periodic tile in both axes, edges must continue. Uniform neutral diffuse lighting, no directional shadow, no ambient occlusion vignette, no specular highlight, no baked sunlight, no fake bevel illumination. Base color only, not normal/roughness map. Full square 1024x1024 intended at 128 texels/metre, read at oblique distant MOBA camera. Not a scene or concept illustration. Create lane paving: mostly broad warm grey-brown irregular fitted stone slabs, 4 to 6 large slabs across an 8-metre tile; muted ochre undertone, small softened charcoal-olive joints, occasional very subtle worn cracks. Combat readability first: low value contrast and no bright stones or symbols; mild moss confined to a few seams. Match reference palette path warm brown, forest green surroundings. No raised stones, no strong black grooves."
+    },
+    {
+      "file": "structure-stone-albedo.png",
+      "sha256": "67f45b31e7b603c167458e4b3522b79acbe46e70714467cafea2843950490e92",
+      "bytes": 2443606,
+      "width": 1254,
+      "height": 1254,
+      "source": "Original AI-generated base-color candidate; image_gen",
+      "prompt": "Asset type: original production videogame surface albedo texture, square. Original MOBA battlefield material family: weathered warm grey-ochre stone and muted cool deep forest green, compatible with teal and rust team accents without incorporating those accents. Painterly stylized low-poly-compatible material; broad quiet shapes, low contrast, restrained detail, never photorealistic noise. Entire image is flat surface sampled orthographically straight down, no perspective, no border, no text, no logos, no objects, no UI. Seamless periodic tile in both axes, edges must continue. Uniform neutral diffuse lighting, no directional shadow, no ambient occlusion vignette, no specular highlight, no baked sunlight, no fake bevel illumination. Base color only, not normal/roughness map. Full square 1024x1024 intended at 128 texels/metre, read at oblique distant MOBA camera. Not a scene or concept illustration. Create tower base and architectural stone: large weathered ash-grey sandstone blocks with warm ochre undertone, broad 3 to 5 block courses across tile, quiet irregular block sizes, subtle chisel marks and broad worn patches, muted olive staining in sparse joints. Slightly lighter than lane paving but never white. No decorative insignia, gems, metal, emissive seams or team colors. Pattern suitable for wrapping tower plinth sidewalls and base blocks."
+    },
+    {
+      "file": "forest-edge-albedo-v2.png",
+      "sha256": "e1569f6e4133a47c7859263da7a6a61403b3b3fdf206c3436462a8dd03dce59d",
+      "bytes": 1734711,
+      "width": 1254,
+      "height": 1254,
+      "source": "Original AI-generated base-color candidate; image_gen",
+      "prompt": "Edit this game ground albedo candidate only. Preserve its entire square orthographic top-down flat-surface framing, overall dark desaturated olive-green and warm earth-brown palette, mean brightness, and broad distribution of moss and soil. One targeted production correction: REMOVE all individually readable tiny leaf shapes, pebble dots, and small stone objects. Merge those tiny motifs into much larger soft moss-and-soil color masses, at least four times broader; suppress microtexture and high-frequency edges dramatically. Broad, quiet, softly blending patches with only very subtle brush variation. It must support distant MOBA gameplay readability, not compete with small units or skill effects. No new objects, grass, roots, flowers, symbols, text, highlights, shadows or central motif. Keep uniform nondirectional flat diffuse color; no perspective, no vignette, no baked sunlight. Preserve edge continuity where possible, seamless tiling in both axes is intended but do not draw borders. Output a single square original texture, not a collage or scene. Preserve original size if supported.",
+      "editParentPrompt": "Asset type: original production videogame surface albedo texture, square. Original MOBA battlefield material family: weathered warm grey-ochre stone and muted cool deep forest green, compatible with teal and rust team accents without incorporating those accents. Painterly stylized low-poly-compatible material; broad quiet shapes, low contrast, restrained detail, never photorealistic noise. Entire image is flat surface sampled orthographically straight down, no perspective, no border, no text, no logos, no objects, no UI. Seamless periodic tile in both axes, edges must continue. Uniform neutral diffuse lighting, no directional shadow, no ambient occlusion vignette, no specular highlight, no baked sunlight, no fake bevel illumination. Base color only, not normal/roughness map. Full square 1024x1024 intended at 128 texels/metre, read at oblique distant MOBA camera. Not a scene or concept illustration. Create quiet forest-edge ground surface: deep desaturated green earth and low moss, broad interlocking patches of cool olive-green moss and muted warm brown compact soil, tiny sparse dull stone fragments. No visible grass blades, flowers, roots, foliage objects, twigs or bright flecks. Low frequency, softly distinct patches, supports separate instanced grass geometry. Overall darker than lane paving to frame combat lane; no directional shadow or obvious central motif.",
+      "editParentSha256": "927d8f9448cd3587578d809e871f754725912ec84d1a9ef60f3a93d0312b7b7a"
+    }
+  ],
+  "commercialInputs": false,
+  "pixelEditsAfterGeneration": false,
+  "visualAcceptance": "Source drafts inspected only; not seamless or game-accepted",
+  "licenseNote": "Original AI generation provenance, not a claim of CC0 or exclusive rights. No commercial textures copied."
+}

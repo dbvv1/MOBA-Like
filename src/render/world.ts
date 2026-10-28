@@ -3,6 +3,7 @@ import {disposeOwnedRenderer} from './owned-renderer.js';
 import {createControlMarkers} from './control-state.js';
 import {createTowerReach} from './tower-reach.js';
 import {loadBattleAssets,type BattleAssets} from './battle-assets.js';
+import {environmentCandidate} from './environment-materials.js';
 import {createBattlefield} from './battlefield.js';
 import {createImpacts} from './impact.js';
 import * as THREE from 'three';
@@ -31,7 +32,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog){
   try{assets=await loadBattleAssets();combatTextures=await loadCombatTextures();statusTexture=await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href);statusTexture.colorSpace=THREE.SRGBColorSpace;view=createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true});}
   catch(error){disposeOwnedRenderer(renderer,()=>{statusTexture?.dispose();combatTextures?.dispose();assets?.dispose();});throw error;}
   const loadedAssets=assets, presentation=view;
-  const battlefield=createBattlefield(catalog,loadedAssets);const actors=new THREE.Group();actors.add(presentation.root,battlefield.root);
+  const battlefield=createBattlefield(catalog,loadedAssets,{environmentMaterials:environmentCandidate(window.location.search)});const actors=new THREE.Group();actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
   scene.add(actors);const controls=createControlMarkers(scene,statusTexture!);const reach=createTowerReach(scene,catalog);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene,combatTextures);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
