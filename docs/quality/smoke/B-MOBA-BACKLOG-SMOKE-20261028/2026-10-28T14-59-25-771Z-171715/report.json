@@ -1,0 +1,885 @@
+{
+  "startedAt": "2026-10-28T14:59:28.709Z",
+  "passed": false,
+  "consoleErrors": [],
+  "pageErrors": [],
+  "httpErrors": [],
+  "requestFailures": [],
+  "warnings": [
+    "[]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.",
+    "[.WebGL-0xac00425600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0xac00425600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0xac00425600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0xac00425600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+    "[]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead."
+  ],
+  "characterAssets": [
+    "/assets/tower-teal-BQ2jCRMr.glb",
+    "/assets/base-teal-L4GVNWxZ.glb",
+    "/assets/tower-rust-B3YjHLZt.glb",
+    "/assets/barracks-rust-ELYrhKWW.glb",
+    "/assets/base-rust-CiTXTXEl.glb",
+    "/assets/barracks-teal-DplTNS_l.glb",
+    "/assets/tree-CawC7zP0.glb",
+    "/assets/rock-DnYfbnCK.glb",
+    "/assets/melee-teal-fyp_u-7O.glb",
+    "/assets/ranged-teal-B_rlZWgD.glb",
+    "/assets/hero-teal-sUFSV1Mz.glb",
+    "/assets/hero-rust-6hnVVH5H.glb",
+    "/assets/melee-rust-DlZVcWSl.glb",
+    "/assets/ranged-rust-rsnFKRRJ.glb",
+    "/assets/lane-ground-BkV_wW4P.glb",
+    "/assets/veyra-teal-CpkKDg1w.glb",
+    "/assets/veyra-rust-BSIRU2oZ.glb",
+    "/assets/siege-teal-CsgCrOmN.glb",
+    "/assets/siege-rust-1xQRoxFB.glb"
+  ],
+  "launch": {
+    "headless": true,
+    "chromiumSandbox": true,
+    "timeout": 30000,
+    "args": [],
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ]
+  },
+  "browserProcess": {
+    "pid": 45124,
+    "argvRedacted": true,
+    "argCount": 44,
+    "executableName": "chrome-headless-shell.exe",
+    "headlessMode": "chrome-headless-shell (Playwright 1.64.1 default headless)",
+    "forbiddenFlags": {
+      "noSandbox": false,
+      "disableSetuidSandbox": false,
+      "enableUnsafeSwiftshader": false
+    },
+    "chromiumOwnSoftwareFallback": "observed on the child GPU/utility processes as --use-angle=swiftshader-webgl --use-gl=angle; not present on the 44-arg main browser argv. The harness launch args were empty.",
+    "note": "Full argv and its user-data/profile paths were removed from this public copy; the local raw report keeps them."
+  },
+  "browserVersion": "156.0.8078.4",
+  "source": {
+    "commit": "c1d65ffe3509cb7899880c3278f89c79b6fd876b",
+    "tree": "b62b81ccd511285fcd6886f54441fb117d59aff1",
+    "dirty": false
+  },
+  "defaultEntry": {
+    "contentVersion": 10,
+    "initialTick": 16,
+    "finalTick": 22,
+    "pixels": {
+      "width": 1280,
+      "height": 900,
+      "quantizedColors": 1685,
+      "dominantFraction": 0.4347404513888889,
+      "nonBackground": true
+    }
+  },
+  "defaultCharacterAssets": [
+    "/assets/tower-teal-BQ2jCRMr.glb",
+    "/assets/base-teal-L4GVNWxZ.glb",
+    "/assets/barracks-teal-DplTNS_l.glb",
+    "/assets/tower-rust-B3YjHLZt.glb",
+    "/assets/base-rust-CiTXTXEl.glb",
+    "/assets/barracks-rust-ELYrhKWW.glb",
+    "/assets/tree-CawC7zP0.glb",
+    "/assets/hero-teal-sUFSV1Mz.glb",
+    "/assets/rock-DnYfbnCK.glb",
+    "/assets/melee-teal-fyp_u-7O.glb",
+    "/assets/ranged-teal-B_rlZWgD.glb",
+    "/assets/hero-rust-6hnVVH5H.glb",
+    "/assets/melee-rust-DlZVcWSl.glb",
+    "/assets/ranged-rust-rsnFKRRJ.glb",
+    "/assets/lane-ground-BkV_wW4P.glb",
+    "/assets/veyra-teal-CpkKDg1w.glb",
+    "/assets/veyra-rust-BSIRU2oZ.glb"
+  ],
+  "webgl2": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "hudLayout": [
+    {
+      "width": 320,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 20.6015625,
+          "right": 87.2890625,
+          "top": 742,
+          "bottom": 818,
+          "width": 66.6875,
+          "height": 76,
+          "lines": [
+            {
+              "left": 40.1015625,
+              "right": 67.7890625,
+              "top": 785,
+              "bottom": 798
+            },
+            {
+              "left": 38.3203125,
+              "right": 69.5703125,
+              "top": 797,
+              "bottom": 810
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 91.2890625,
+          "right": 157.9921875,
+          "top": 742,
+          "bottom": 818,
+          "width": 66.703125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 119.5390625,
+              "right": 129.7265625,
+              "top": 785,
+              "bottom": 798
+            },
+            {
+              "left": 99.5859375,
+              "right": 149.6796875,
+              "top": 797,
+              "bottom": 810
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 161.9921875,
+          "right": 228.6953125,
+          "top": 742,
+          "bottom": 818,
+          "width": 66.703125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 175.4140625,
+              "right": 215.2734375,
+              "top": 785,
+              "bottom": 798
+            },
+            {
+              "left": 179.8203125,
+              "right": 210.8515625,
+              "top": 797,
+              "bottom": 810
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 232.6953125,
+          "right": 299.3984375,
+          "top": 742,
+          "bottom": 818,
+          "width": 66.703125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 245.8671875,
+              "right": 286.2109375,
+              "top": 785,
+              "bottom": 798
+            },
+            {
+              "left": 256.2265625,
+              "right": 275.8671875,
+              "top": 797,
+              "bottom": 810
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 22.25,
+          "right": 101.875,
+          "top": 742,
+          "bottom": 818,
+          "width": 79.625,
+          "height": 76,
+          "lines": [
+            {
+              "left": 31.109375,
+              "right": 93,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 105.875,
+          "right": 185.5,
+          "top": 742,
+          "bottom": 818,
+          "width": 79.625,
+          "height": 76,
+          "lines": [
+            {
+              "left": 114.078125,
+              "right": 177.296875,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 189.5,
+          "right": 269.125,
+          "top": 742,
+          "bottom": 818,
+          "width": 79.625,
+          "height": 76,
+          "lines": [
+            {
+              "left": 209.375,
+              "right": 249.234375,
+              "top": 785,
+              "bottom": 798
+            },
+            {
+              "left": 213.796875,
+              "right": 244.828125,
+              "top": 797,
+              "bottom": 810
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 273.125,
+          "right": 352.75,
+          "top": 742,
+          "bottom": 818,
+          "width": 79.625,
+          "height": 76,
+          "lines": [
+            {
+              "left": 281.46875,
+              "right": 344.40625,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 420,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 23.6015625,
+          "right": 113.7890625,
+          "top": 742,
+          "bottom": 818,
+          "width": 90.1875,
+          "height": 76,
+          "lines": [
+            {
+              "left": 37.7421875,
+              "right": 99.6328125,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 117.7890625,
+          "right": 207.9921875,
+          "top": 742,
+          "bottom": 818,
+          "width": 90.203125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 131.2734375,
+              "right": 194.4921875,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 211.9921875,
+          "right": 302.1953125,
+          "top": 742,
+          "bottom": 818,
+          "width": 90.203125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 220.1640625,
+              "right": 294.0078125,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 306.1953125,
+          "right": 396.3984375,
+          "top": 742,
+          "bottom": 818,
+          "width": 90.203125,
+          "height": 76,
+          "lines": [
+            {
+              "left": 319.8203125,
+              "right": 382.7578125,
+              "top": 791,
+              "bottom": 804
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 421,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 177.3671875,
+          "right": 229.3671875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 189.5234375,
+              "right": 217.2109375,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 187.7421875,
+              "right": 218.9921875,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 233.3671875,
+          "right": 285.3671875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 254.2734375,
+              "right": 264.4609375,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 234.3359375,
+              "right": 284.4296875,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 289.3671875,
+          "right": 341.3671875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 312.6171875,
+              "right": 318.1171875,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 299.6640625,
+              "right": 331.0703125,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 299.8515625,
+              "right": 330.8828125,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 345.3671875,
+          "right": 397.3671875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 368.1015625,
+              "right": 374.6328125,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 355.9296875,
+              "right": 386.7890625,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 361.5390625,
+              "right": 381.1796875,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 640,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 389.796875,
+          "right": 441.796875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 401.953125,
+              "right": 429.640625,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 400.171875,
+              "right": 431.421875,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 445.796875,
+          "right": 497.796875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 466.703125,
+              "right": 476.890625,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 446.765625,
+              "right": 496.859375,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 501.796875,
+          "right": 553.796875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 525.046875,
+              "right": 530.546875,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 512.09375,
+              "right": 543.5,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 512.28125,
+              "right": 543.3125,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 557.796875,
+          "right": 609.796875,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 580.53125,
+              "right": 587.0625,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 568.359375,
+              "right": 599.21875,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 573.96875,
+              "right": 593.609375,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 750,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 496.5,
+          "right": 548.5,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 508.65625,
+              "right": 536.34375,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 506.875,
+              "right": 538.125,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 552.5,
+          "right": 604.5,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 573.40625,
+              "right": 583.59375,
+              "top": 770.5,
+              "bottom": 783.5
+            },
+            {
+              "left": 553.46875,
+              "right": 603.5625,
+              "top": 782.5,
+              "bottom": 795.5
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 608.5,
+          "right": 660.5,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 631.75,
+              "right": 637.25,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 618.796875,
+              "right": 650.203125,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 618.984375,
+              "right": 650.015625,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 664.5,
+          "right": 716.5,
+          "top": 722.5,
+          "bottom": 808.5,
+          "width": 52,
+          "height": 86,
+          "lines": [
+            {
+              "left": 687.234375,
+              "right": 693.765625,
+              "top": 764.5,
+              "bottom": 777.5
+            },
+            {
+              "left": 675.0625,
+              "right": 705.921875,
+              "top": 776.5,
+              "bottom": 789.5
+            },
+            {
+              "left": 680.671875,
+              "right": 700.3125,
+              "top": 788.5,
+              "bottom": 801.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 751,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 283.53125,
+          "right": 367.53125,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 294.578125,
+              "right": 356.46875,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 375.53125,
+          "right": 459.53125,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 385.921875,
+              "right": 449.140625,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 467.53125,
+          "right": 551.53125,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 489.59375,
+              "right": 529.453125,
+              "top": 767.5,
+              "bottom": 780.5
+            },
+            {
+              "left": 494.015625,
+              "right": 525.046875,
+              "top": 779.5,
+              "bottom": 792.5
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 559.53125,
+          "right": 643.53125,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 570.0625,
+              "right": 633,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "buttons": [
+        {
+          "text": "Q  Rift Lancet",
+          "left": 579,
+          "right": 663,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 590.046875,
+              "right": 651.9375,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        },
+        {
+          "text": "W  Slipstream",
+          "left": 671,
+          "right": 755,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 681.390625,
+              "right": 744.609375,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        },
+        {
+          "text": "E  Cinder Bloom",
+          "left": 763,
+          "right": 847,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 785.0625,
+              "right": 824.921875,
+              "top": 767.5,
+              "bottom": 780.5
+            },
+            {
+              "left": 789.484375,
+              "right": 820.515625,
+              "top": 779.5,
+              "bottom": 792.5
+            }
+          ]
+        },
+        {
+          "text": "R  Skyfall Seal",
+          "left": 855,
+          "right": 939,
+          "top": 714.5,
+          "bottom": 802.5,
+          "width": 84,
+          "height": 88,
+          "lines": [
+            {
+              "left": 865.53125,
+              "right": 928.46875,
+              "top": 773.5,
+              "bottom": 786.5
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "initialTick": 306,
+  "contentVersion": 11,
+  "failure": {
+    "stage": "input",
+    "category": "input-or-simulation",
+    "message": "AssertionError [ERR_ASSERTION]: Move must still be active before stop",
+    "failureSourceLine": "tests/client/browser-smoke/run.mjs:77:10",
+    "stackRedacted": true,
+    "note": "Stack frames removed because they contained local absolute paths; the runner source line is recorded in the exit evidence."
+  },
+  "notice": "Loading simulation and Three.js assets…",
+  "cleanupErrors": [],
+  "processExit": {
+    "pid": 45124,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "finishedAt": "2026-10-28T15:00:41.634Z",
+  "publicCopy": {
+    "redacted": [
+      "browserProcess.args (full argv incl. profile paths)",
+      "failure stack frames"
+    ],
+    "retained": [
+      "raw WebGL renderer/vendor/version strings",
+      "console warnings",
+      "source build identity",
+      "timestamps",
+      "PIDs and exit fields"
+    ],
+    "note": "All other fields are unchanged from the local raw report.json."
+  }
+}
