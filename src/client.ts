@@ -15,15 +15,18 @@ function element<T extends HTMLElement>(id:string):T {const result=document.getE
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
 const contentVersion=10 as const;
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion));
-let cleanup:()=>void=()=>{};let booting=false;let soundEnabled=true;
+let cleanup:()=>void=()=>{};let booting=false;let soundEnabled=true;let generation=0;let departed=false;
 async function boot(){
-  if(booting)return;booting=true;restart.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
-  const lifetime=createLifetime();cleanup=()=>{const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};
+  if(booting||departed)return;const request=++generation;const current=()=>!departed&&request===generation;booting=true;restart.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
+  const lifetime=createLifetime();const releaseCurrent=()=>{const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};cleanup=releaseCurrent;
+  const loading=new AbortController();lifetime.defer(()=>loading.abort());
   try{
     const heroIdsByTeam=heroSelection.read();
-    const response=await fetch(new URL('./sim/nav/lane.navmesh',import.meta.url));
+    const response=await fetch(new URL('./sim/nav/lane.navmesh',import.meta.url),{signal:loading.signal});
+    if(!current())return;
     if(!response.ok)throw new Error(`Navigation asset failed: HTTP ${response.status}`);
-    const navigation=await createDetourNavigation(new Uint8Array(await response.arrayBuffer()));lifetime.defer(()=>navigation.destroy());
+    const bytes=await response.arrayBuffer();if(!current())return;
+    const navigation=await createDetourNavigation(new Uint8Array(bytes));lifetime.defer(()=>navigation.destroy());
     const sim=new Simulation({seed:1,contentVersion,navigation,heroesPerTeam:1,heroIdsByTeam});
     const sound=createBattleAudio(soundEnabled);lifetime.defer(()=>sound.dispose());
     const soundButton=element<HTMLButtonElement>('sound-toggle');const soundEvents=new AbortController();lifetime.defer(()=>soundEvents.abort());
@@ -32,7 +35,11 @@ async function boot(){
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
     const bot=new HeroBot({team:1,slotIndex:0,difficulty:'normal',seed:1002});
-    const world=await createWorld(stage,sim.catalog);lifetime.defer(()=>world.dispose());
+    // Async world creation may attach its canvas before returning. Never give an
+    // old boot the shared stage: each visit gets a sized, independently owned host.
+    const worldHost=document.createElement('div');worldHost.style.position='absolute';worldHost.style.inset='0';
+    stage.replaceChildren(worldHost);lifetime.defer(()=>worldHost.remove());
+    const world=await createWorld(worldHost,sim.catalog);lifetime.defer(()=>world.dispose());
     let snapshot=sim.snapshot();const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
@@ -70,9 +77,11 @@ async function boot(){
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
     Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
-  }catch(error){cleanup();stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
-  finally{booting=false;heroSelection.setBusy(false);}
+  }catch(error){releaseCurrent();if(!current())return;stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
+  finally{if(current()){booting=false;heroSelection.setBusy(false);}}
 }
 restart.addEventListener('click',()=>void boot());
-window.addEventListener('pagehide',()=>cleanup(),{once:true});
+// A cached document can return; each visit owns a fresh boot and cleanup.
+window.addEventListener('pagehide',()=>{departed=true;++generation;booting=false;cleanup();cleanup=()=>{};Reflect.deleteProperty(window,'mobaClient');});
+window.addEventListener('pageshow',event=>{if((event as PageTransitionEvent).persisted&&departed){departed=false;void boot();}});
 void boot();
