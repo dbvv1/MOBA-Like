@@ -1,0 +1,9 @@
+{
+  "sequence": 9,
+  "event": "lease-release-observed",
+  "observedAt": "2026-10-27T23:22:48.825Z",
+  "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+  "released": true,
+  "ownerMatched": true,
+  "reason": "owned-handles-closed-or-not-started"
+}

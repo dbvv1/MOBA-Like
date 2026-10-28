@@ -1,0 +1,14 @@
+{
+  "sequence": 8,
+  "event": "preview-close-observed",
+  "observedAt": "2026-10-27T23:22:48.822Z",
+  "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+  "pid": 94800,
+  "port": 5293,
+  "closedAt": "2026-10-27T23:22:48.822Z",
+  "listening": false,
+  "portState": "refused",
+  "exitProven": true,
+  "state": "closed-port-refused",
+  "externalNotOwned": false
+}

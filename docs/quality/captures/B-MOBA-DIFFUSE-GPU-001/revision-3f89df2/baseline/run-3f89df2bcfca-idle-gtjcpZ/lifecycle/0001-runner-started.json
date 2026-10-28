@@ -1,0 +1,8 @@
+{
+  "sequence": 1,
+  "event": "runner-started",
+  "observedAt": "2026-10-27T23:22:17.753Z",
+  "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+  "pid": 94800,
+  "task": "B-MOBA-DIFFUSE-GPU-001"
+}

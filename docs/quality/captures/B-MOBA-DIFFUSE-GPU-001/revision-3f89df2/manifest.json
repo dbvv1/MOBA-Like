@@ -1,0 +1,452 @@
+{
+  "task": "B-MOBA-DIFFUSE-GPU-001",
+  "revision": "revision-3f89df2",
+  "generatedAt": "2026-10-27T23:23:43.793Z",
+  "archiveNote": "Original frame files are preserved byte-for-byte; their long source directory names were flattened to r1/r2 to stay under the Windows path limit. originalFile records the source-relative name reported by capture.",
+  "source": {
+    "commit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+    "tree": "66207211aa8cf9ca178ec5f08ca1fe7658e268a2",
+    "baseRef": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+    "sourceDirty": false,
+    "treeClean": true,
+    "bundleSha256": "0c339a1a19c96e5800c883fcb0a1731e83014cf773dcab80487c20ebbb8a7c28",
+    "bundleFileCount": 33,
+    "bundleBinding": "served-files-verified-against-local-artifact",
+    "bundleEndVerification": "not-executed (baseline repeat assertion failed before the end-of-run served-file recheck and the build-unchanged assertion in tools/capture.mjs; bundleBinding records the pre-run verification only)",
+    "build": "one clean build of the fixed base_ref in a detached checkout under the native ignored outputs directory",
+    "resultBranchSource": "result branch worktree source untouched; the prior 7968512 evidence archive is preserved byte-for-byte"
+  },
+  "fixedParameters": {
+    "shot": "first-tower",
+    "seed": 61,
+    "input": "idle",
+    "t": 101,
+    "frames": 1,
+    "repeat": 2,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "pixelRatio": 1,
+      "bufferWidth": 1280,
+      "bufferHeight": 720
+    },
+    "camera": {
+      "position": {
+        "x": -28,
+        "y": 24,
+        "z": 18
+      },
+      "target": {
+        "x": -28,
+        "y": 0,
+        "z": 0
+      },
+      "fov": 45,
+      "aspect": 1.7777777777777777
+    },
+    "frame": 0,
+    "virtualFrame": 6060,
+    "simTick": 3030,
+    "simTime": 101,
+    "stateHash": "45ddcfd7f7a45536",
+    "contentVersion": 11,
+    "warmupFrames": 12,
+    "alpha": 0
+  },
+  "renderer": {
+    "raw": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmasked": true,
+    "rendererClass": "gpu",
+    "browserVersion": "156.0.8078.4"
+  },
+  "controlledVariable": {
+    "name": "lighting",
+    "before": "baseline",
+    "after": "stylized-diffuse",
+    "sameSourceTreeBundle": true,
+    "sameStateCameraRendererIfAfterRuns": true,
+    "note": "the single build is the fixed identity for both commands; the after command was not executed"
+  },
+  "runs": [
+    {
+      "lighting": "baseline",
+      "status": "failed",
+      "exitCode": 1,
+      "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+      "requestedLighting": "baseline",
+      "configuredLighting": "baseline",
+      "activeLighting": "baseline",
+      "lightingStage": "frame-submitted",
+      "capturePassed": false,
+      "passed": false,
+      "reportSha256": "38a6ebc1eebe6000eac78c753da1fd2eeca90762189604a1c0b69c2907a2ea80",
+      "repeatComparison": {
+        "passed": false,
+        "firstMismatchFrame": 0,
+        "expectedRgbaSha256": "384f3cd20fa35f9abeed10ef8ff6d25114e45153bb21b8f51791078c09b3208f",
+        "actualRgbaSha256": "f896e602f26eaca357c9e66b77489d78adae17d294e986cc37f685ef26525486",
+        "stateHashEqual": true,
+        "cameraEqual": true,
+        "rendererEqual": true,
+        "lightingEqual": true,
+        "viewportEqual": true
+      },
+      "repeats": [
+        {
+          "run": 1,
+          "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00000.png",
+          "archivedFile": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.png",
+          "archivedJson": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.json",
+          "originalJsonFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r1/00000.json",
+          "rgbaSha256": "384f3cd20fa35f9abeed10ef8ff6d25114e45153bb21b8f51791078c09b3208f",
+          "pngSha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+          "png": {
+            "width": 1280,
+            "height": 720,
+            "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11"
+          },
+          "jsonSha256": "2125fde728e92973930fd789f4172ecc18795672d9e2efac9b55a27ee6795256",
+          "frame": 0,
+          "virtualFrame": 6060,
+          "simTick": 3030,
+          "simTime": 101,
+          "stateHash": "45ddcfd7f7a45536",
+          "contentVersion": 11,
+          "warmupFrames": 12,
+          "alpha": 0,
+          "seed": 61,
+          "shot": "first-tower",
+          "input": "idle",
+          "camera": {
+            "position": {
+              "x": -28,
+              "y": 24,
+              "z": 18
+            },
+            "target": {
+              "x": -28,
+              "y": 0,
+              "z": 0
+            },
+            "fov": 45,
+            "aspect": 1.7777777777777777
+          },
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "unmasked": true,
+          "rendererClass": "gpu",
+          "lighting": {
+            "requested": "baseline",
+            "configured": "baseline",
+            "active": "baseline",
+            "stage": "frame-submitted",
+            "diffuse": "source-materials",
+            "environment": {
+              "kind": "ambient-and-hemisphere",
+              "sky": "#d7e9e3",
+              "ground": "#3c4333",
+              "hemisphereIntensity": 1.65,
+              "ambientIntensity": 0
+            },
+            "directSun": {
+              "color": "#fff0cf",
+              "intensity": 2.5,
+              "shadow": "original-pcf-soft"
+            },
+            "toneMapping": "ACESFilmic",
+            "exposure": 1.12
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "pixelRatio": 1,
+            "bufferWidth": 1280,
+            "bufferHeight": 720
+          },
+          "sourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+          "sourceDirty": false,
+          "bundleSha256": "0c339a1a19c96e5800c883fcb0a1731e83014cf773dcab80487c20ebbb8a7c28",
+          "bundleBinding": "served-files-verified-against-local-artifact"
+        },
+        {
+          "run": 2,
+          "originalFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00000.png",
+          "archivedFile": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.png",
+          "archivedJson": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.json",
+          "originalJsonFile": "first-tower-gpu-ANGLE-NVIDIA-NVIDIA-GeForce-RTX-5070-0x00002F04-Direct3D11-vs-5-9baae1ed29-seed61-frame6060-r2/00000.json",
+          "rgbaSha256": "f896e602f26eaca357c9e66b77489d78adae17d294e986cc37f685ef26525486",
+          "pngSha256": "f62d1d753f19a02741dfd3ad82d5c15f634755254e9d3d763d78d14404ddf6f8",
+          "png": {
+            "width": 1280,
+            "height": 720,
+            "sha256": "f62d1d753f19a02741dfd3ad82d5c15f634755254e9d3d763d78d14404ddf6f8"
+          },
+          "jsonSha256": "2b5a4541654c1e76a42264220731172e6d5f180ffaaa49a7491bae1024c95508",
+          "frame": 0,
+          "virtualFrame": 6060,
+          "simTick": 3030,
+          "simTime": 101,
+          "stateHash": "45ddcfd7f7a45536",
+          "contentVersion": 11,
+          "warmupFrames": 12,
+          "alpha": 0,
+          "seed": 61,
+          "shot": "first-tower",
+          "input": "idle",
+          "camera": {
+            "position": {
+              "x": -28,
+              "y": 24,
+              "z": 18
+            },
+            "target": {
+              "x": -28,
+              "y": 0,
+              "z": 0
+            },
+            "fov": 45,
+            "aspect": 1.7777777777777777
+          },
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "unmasked": true,
+          "rendererClass": "gpu",
+          "lighting": {
+            "requested": "baseline",
+            "configured": "baseline",
+            "active": "baseline",
+            "stage": "frame-submitted",
+            "diffuse": "source-materials",
+            "environment": {
+              "kind": "ambient-and-hemisphere",
+              "sky": "#d7e9e3",
+              "ground": "#3c4333",
+              "hemisphereIntensity": 1.65,
+              "ambientIntensity": 0
+            },
+            "directSun": {
+              "color": "#fff0cf",
+              "intensity": 2.5,
+              "shadow": "original-pcf-soft"
+            },
+            "toneMapping": "ACESFilmic",
+            "exposure": 1.12
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "pixelRatio": 1,
+            "bufferWidth": 1280,
+            "bufferHeight": 720
+          },
+          "sourceCommit": "3f89df2bcfcaca1dde86cc1412d1649090a09d60",
+          "sourceDirty": false,
+          "bundleSha256": "0c339a1a19c96e5800c883fcb0a1731e83014cf773dcab80487c20ebbb8a7c28",
+          "bundleBinding": "served-files-verified-against-local-artifact"
+        }
+      ]
+    }
+  ],
+  "preflight": {
+    "checkedAt": "immediately before the baseline command; lease createdAt 2026-10-27T23:22:17.755Z",
+    "method": "read-only receiver state/*.json and job cards; checked shared root locks and chrome.exe before the command",
+    "concurrentOwnTasks": [
+      {
+        "id": "A-RESUME-CONTRACT-SOURCES-20261028",
+        "phase": "running",
+        "gpu": "not required; job card states 无 GPU"
+      },
+      {
+        "id": "B-MOBA-CLIENT-SMOKE-001",
+        "phase": "idle/cancelled",
+        "gpu": "local graphics verification withdrawn; no browser/GPU"
+      }
+    ],
+    "gpuTaskForThisRun": "B-MOBA-DIFFUSE-GPU-001",
+    "sharedLocksBeforeStart": "none at the existing shared root",
+    "chromeProcessesDuringPreflight": 0,
+    "userEdge": "left running and untouched",
+    "leaseRoot": "existing shared root; path not published",
+    "scope": "task metadata only; not a machine-wide GPU or process certification"
+  },
+  "comparison": {
+    "afterStatus": "not-executed",
+    "reason": "baseline command exited 1 (repeat RGBA mismatch); task requires stopping before the second command and not rerunning, diagnosing or adjusting thresholds",
+    "beforeAfterSameStateCameraRenderer": "not-establishable without after run"
+  },
+  "cleanup": {
+    "scope": "this invocation owned BrowserServer/ChildProcess/connection/preview only",
+    "osProcessTree": "not-observed",
+    "globalGpuAvailability": "not-assessed",
+    "leaseOwner": {
+      "task": "B-MOBA-DIFFUSE-GPU-001",
+      "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+      "pid": 94800,
+      "runtimeStartedAt": "2026-10-27T23:22:15.392Z",
+      "createdAt": "2026-10-27T23:22:17.755Z"
+    },
+    "browser": {
+      "state": "owned-handles-closed",
+      "serverClosed": true,
+      "connectionClosed": true,
+      "process": {
+        "pid": 84524,
+        "parentPid": 94800,
+        "registeredAt": "2026-10-27T23:22:27.133Z",
+        "identitySource": "owned-ChildProcess-handle",
+        "exit": {
+          "code": 0,
+          "signal": null,
+          "observedAt": "2026-10-27T23:22:48.629Z",
+          "source": "ChildProcess-exit-event"
+        }
+      }
+    },
+    "preview": {
+      "pid": 94800,
+      "port": 5293,
+      "closedAt": "2026-10-27T23:22:48.822Z",
+      "listening": false,
+      "portState": "refused",
+      "exitProven": true,
+      "state": "closed-port-refused",
+      "externalNotOwned": false
+    },
+    "lease": {
+      "released": true,
+      "ownerMatched": true,
+      "reason": "owned-handles-closed-or-not-started"
+    },
+    "spawnEvidence": {
+      "source": "ChildProcess.spawnargs",
+      "executable": "playwright-bundled",
+      "headless": true,
+      "headed": false,
+      "noSandbox": false,
+      "disableSetuidSandbox": false,
+      "unsafeSwiftshader": false,
+      "useAngle": null,
+      "software": false
+    }
+  },
+  "errors": [
+    "first-tower frame 0 must repeat pixel-identically on the same renderer\n+ actual - expected\n... Skipped lines\n\n  {\n    camera: {\n      aspect: 1.7777777777777777,\n      fov: 45,\n      position: {\n...\n    },\n+   hash: 'f896e602f26eaca357c9e66b77489d78adae17d294e986cc37f685ef26525486',\n-   hash: '384f3cd20fa35f9abeed10ef8ff6d25114e45153bb21b8f51791078c09b3208f',\n    lighting: {\n      active: 'baseline',\n      configured: 'baseline',\n      diffuse: 'source-materials',\n      directSun: {\n"
+  ],
+  "warnings": [
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.",
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead."
+  ],
+  "verdict": "blocked: baseline repeat RGBA mismatch; stylized-diffuse not executed; no quality conclusion",
+  "files": [
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0001-runner-started.json",
+      "sha256": "23e56e6d5992972f4885cb8c6de784034b294d4db44d9f81643a2e86ddcd99e8",
+      "bytes": 188
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0002-lease-acquired.json",
+      "sha256": "e77f1713ae902d458ba09cde82abccd62f04ca87c08b88b4719d9a6db46932ad",
+      "bytes": 351
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0003-preview-start-requested.json",
+      "sha256": "5bb812edc114d5a3945179a4473a98495f6674117ce90cff803b391da671b13a",
+      "bytes": 161
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0004-preview-listening.json",
+      "sha256": "ff35dad080ff9b0f521d18905f08a3b5e04c82b8a6ba46bd716db0c58791220e",
+      "bytes": 215
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0005-browser-start-requested.json",
+      "sha256": "ec39a48361122390c8390a397b4e36245ee7a343e8dc1001717349eca15504c1",
+      "bytes": 610
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0006-browser-process-observed.json",
+      "sha256": "a1ddce6d4e4358bfdea672c3549a25879322647aec04d20efd43a1df50630947",
+      "bytes": 600
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0007-browser-close-observed.json",
+      "sha256": "8cc056204b1f746b92049172de393ad0973a5c6d131345d8937e2f9b70442739",
+      "bytes": 541
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0008-preview-close-observed.json",
+      "sha256": "a173ffa0df357ba700ca778711c0a4a200a114f09e94f7c0f286bd4cf8e7d787",
+      "bytes": 351
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/lifecycle/0009-lease-release-observed.json",
+      "sha256": "e03eec56d8d24a11deac59ce49ba90e43281aa7ffad9353a801e4e2b4c1da064",
+      "bytes": 239
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.json",
+      "sha256": "2125fde728e92973930fd789f4172ecc18795672d9e2efac9b55a27ee6795256",
+      "bytes": 7423
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r1-00000.png",
+      "sha256": "9533ab2e77619705194b2d741fb83321f4f6c408e6e470d092ca16a4322caf11",
+      "bytes": 119985
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.json",
+      "sha256": "2b5a4541654c1e76a42264220731172e6d5f180ffaaa49a7491bae1024c95508",
+      "bytes": 7423
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/r2-00000.png",
+      "sha256": "f62d1d753f19a02741dfd3ad82d5c15f634755254e9d3d763d78d14404ddf6f8",
+      "bytes": 119983
+    },
+    {
+      "file": "baseline/run-3f89df2bcfca-idle-gtjcpZ/report.json",
+      "sha256": "38a6ebc1eebe6000eac78c753da1fd2eeca90762189604a1c0b69c2907a2ea80",
+      "bytes": 25330
+    },
+    {
+      "file": "result.md",
+      "sha256": "ce937283a6871e2374d9689cb78d301660b12cf0eaea81403988d4b438fd3c6d",
+      "bytes": 6759
+    }
+  ],
+  "buildChecks": [
+    {
+      "command": "npm ci",
+      "exitCode": 0,
+      "note": "81 packages"
+    },
+    {
+      "command": "npx tsc -p tsconfig.capture.json",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "testFiles": 53,
+      "tests": 373
+    },
+    {
+      "command": "npx vite build --config vite.capture.config.ts",
+      "exitCode": 0,
+      "bundleSha256": "0c339a1a19c96e5800c883fcb0a1731e83014cf773dcab80487c20ebbb8a7c28",
+      "bundleFileCount": 33
+    }
+  ],
+  "invocation": [
+    {
+      "command": "node --import tsx tools/capture.mjs --require-gpu --task-id B-MOBA-DIFFUSE-GPU-001 --lease-root <existing shared root> --shot first-tower --seed 61 --input idle --t 101 --frames 1 --repeat 2 --lighting baseline",
+      "exitCode": 1,
+      "status": "stopped-after-failure"
+    },
+    {
+      "command": "node --import tsx tools/capture.mjs --require-gpu --task-id B-MOBA-DIFFUSE-GPU-001 --lease-root <existing shared root> --shot first-tower --seed 61 --input idle --t 101 --frames 1 --repeat 2 --lighting stylized-diffuse",
+      "exitCode": null,
+      "status": "not-executed"
+    }
+  ]
+}

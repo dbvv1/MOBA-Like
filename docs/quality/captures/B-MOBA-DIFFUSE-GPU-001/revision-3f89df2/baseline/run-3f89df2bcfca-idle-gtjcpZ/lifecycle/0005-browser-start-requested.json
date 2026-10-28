@@ -1,0 +1,24 @@
+{
+  "sequence": 5,
+  "event": "browser-start-requested",
+  "observedAt": "2026-10-27T23:22:17.895Z",
+  "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+  "launch": {
+    "host": "127.0.0.1",
+    "handleSIGINT": false,
+    "handleSIGTERM": false,
+    "handleSIGHUP": false,
+    "headless": true,
+    "chromiumSandbox": true,
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ],
+    "args": [
+      "--disable-background-timer-throttling",
+      "--disable-renderer-backgrounding",
+      "--disable-backgrounding-occluded-windows"
+    ],
+    "channel": "chromium",
+    "explicitExecutable": false
+  }
+}

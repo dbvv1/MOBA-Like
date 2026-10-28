@@ -1,0 +1,13 @@
+{
+  "sequence": 2,
+  "event": "lease-acquired",
+  "observedAt": "2026-10-27T23:22:17.756Z",
+  "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+  "owner": {
+    "task": "B-MOBA-DIFFUSE-GPU-001",
+    "runId": "run-3f89df2bcfca-idle-gtjcpZ",
+    "pid": 94800,
+    "runtimeStartedAt": "2026-10-27T23:22:15.392Z",
+    "createdAt": "2026-10-27T23:22:17.755Z"
+  }
+}
