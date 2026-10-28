@@ -1,0 +1,239 @@
+{
+  "task": "B-MOBA-BACKLOG-SMOKE-20261028",
+  "unitRun": "u1-a0-2026-10-28T165406270Z",
+  "runId": "2026-10-28T16-59-50-659Z-192910",
+  "runIdSource": "UTC time formatted YYYY-MM-DDTHH-MM-SS-mmmZ plus \"-\" plus the launcher shell PID 192910. The suffix is the launcher shell PID, not the node runner; the runner PID was 71820.",
+  "source": {
+    "commit": "935bf8e76929aeeb0af707a1dbf9f98ee3597aef",
+    "tree": "7d32caebd680f11790d7bf04badcfe2f92dad4f0",
+    "headMatchesFixedSource": true,
+    "worktreeCleanDuringRun": true,
+    "checkoutUtc": "2026-10-28T16:58:43Z",
+    "identityCheck": "git rev-parse HEAD = 935bf8e76929aeeb0af707a1dbf9f98ee3597aef; git rev-parse HEAD^{tree} = 7d32caebd680f11790d7bf04badcfe2f92dad4f0; git status --porcelain --untracked-files=no empty",
+    "buildIdentity": {
+      "commit": "935bf8e76929aeeb0af707a1dbf9f98ee3597aef",
+      "tree": "7d32caebd680f11790d7bf04badcfe2f92dad4f0",
+      "dirty": false
+    },
+    "resultBranch": "relay/b-moba-backlog-smoke-20261028",
+    "localWorktreeBranch": "receiver/B-MOBA-BACKLOG-SMOKE-20261028 at 5347117d7a4faabbfd937172bb382efbc8eded14",
+    "testedSourceCheckout": "Build and smoke ran with a detached HEAD at the fixed commit 935bf8e; the worktree was returned to the result branch at 5347117 before publishing. No commit was made by the executor.",
+    "runnerFixUnderTest": "The tested source 935bf8e contains two distinct runner commits. c1d65ff (935bf8e's parent) holds the remapped-pointer mouse return: after the keybinding save it re-reads the current canvas bounds (reboundBox) and issues a real page.mouse.move back into that canvas before the remapped F targeting check, plus tests/client/browser-smoke/remapped-pointer.test.ts. 935bf8e itself only adds the read-only movement probe (movement-probe.mjs, movement-probe.test.ts, movement-simulation.test.ts) and the movement/stop assertions in run.mjs, which observe the real pointer command and the real S keydown snapshot and require the stopped and later ticks to stay at the keydown position. Because c1d65ff is 935bf8e's parent, checking out 935bf8e exercised both fixes. No product, renderer or timeout rule changed in this unit.",
+    "resultBranchRelation": "The result branch at 5347117 contains neither c1d65ff nor 935bf8e: `git merge-base --is-ancestor c1d65ff 5347117` and the same check for 935bf8e are both false, because its evidence commits sit on 9df6192 while the fixed runner is on dot-b/playable-backlog-20261028. The receiver must merge the fixed branch (which contains both c1d65ff and 935bf8e), or cherry-pick both c1d65ff and 935bf8e together, while keeping the 02e1aa2 and 5347117 failed-run records, then commit this round's evidence directory. Cherry-picking only 935bf8e is not enough: it would drop c1d65ff, the remapped-pointer mouse return into the current canvas, and the next round's remapped-F targeting and save-refresh-resume smoke could fail again."
+  },
+  "preflight": {
+    "checkedBeforeUtc": "2026-10-28T16:58:43Z",
+    "worktreeStatus": "clean before checkout (git status --porcelain empty)",
+    "browserProcesses": "no chrome-headless-shell.exe or other Playwright Chromium at preflight; four user-owned desktop chrome.exe processes (PIDs 57304, 56624, 81444, 9372) were present and were not touched",
+    "nodeProcesses": "no node process ran tests/client/browser-smoke/run.mjs and no vite preview/dev server appeared among node command lines",
+    "previewListeners": "no LISTENING socket on 7702, 8757, 4173, 5173, 3000 or 8080 at preflight",
+    "sharedGpuLock": "none found: no receiver lock, GPU slot or mutex state file exists under the receiver work state or work root. No lock was created, held or released by this task; no slot-return evidence is claimed.",
+    "concurrentWork": "B-FPS-BACKLOG-SMOKE-20261028 and B-STAR-BACKLOG-SMOKE-20261028 are accepted and had no observed running browser or preview; a user-owned desktop Chrome and unrelated node MCP/session processes were present and untouched.",
+    "receiverState": "at preflight the receiver state file work/state/B-MOBA-BACKLOG-SMOKE-20261028.json held phase=running, unit=1, pid=71400 for this unit only; no shared GPU slot or lock state existed."
+  },
+  "preparation": {
+    "npmCi": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T16:58:47Z",
+      "endedUtc": "2026-10-28T16:59:02Z"
+    },
+    "npmTest": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T16:59:04Z",
+      "endedUtc": "2026-10-28T16:59:19Z",
+      "files": 69,
+      "tests": 454
+    },
+    "npmRunBuild": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T16:59:21Z",
+      "endedUtc": "2026-10-28T16:59:25Z"
+    },
+    "npmRunBuildWeb": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-28T16:59:25Z",
+      "endedUtc": "2026-10-28T16:59:31Z"
+    },
+    "totalSeconds": 44,
+    "budgetSeconds": 600,
+    "focusedRunnerTests": {
+      "command": "npm test (full suite; no browser launched)",
+      "exitCode": 0,
+      "results": {
+        "tests/client/browser-smoke/harness.test.ts": 5,
+        "tests/client/browser-smoke/remapped-pointer.test.ts": 3,
+        "tests/client/browser-smoke/movement-simulation.test.ts": 1,
+        "tests/client/browser-smoke/movement-probe.test.ts": 8
+      },
+      "note": "The 935bf8e runner regression tests ran inside the full 69-file/454-test suite."
+    }
+  },
+  "smokeRun": {
+    "command": "MOBA_SMOKE_OUTPUT=smoke-artifacts/<runId> MOBA_SMOKE_SOURCE_SHA=935bf8e76929aeeb0af707a1dbf9f98ee3597aef MOBA_SMOKE_RENDERER=gpu timeout 180 node tests/client/browser-smoke/run.mjs",
+    "requestedRenderer": "gpu",
+    "actualRendererClass": "software",
+    "actualRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "runnerWebgl2": {
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "renderer": "WebKit WebGL",
+      "vendor": "WebKit",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "unmaskedVendor": "Google Inc. (Google)"
+    },
+    "startUtc": "2026-10-28T16:59:50Z",
+    "runnerStartedAt": "2026-10-28T16:59:51.489Z",
+    "runnerFinishedAt": "2026-10-28T17:00:33.234Z",
+    "endUtc": "2026-10-28T17:00:34Z",
+    "wallTimeSeconds": 44,
+    "outerTimeoutSeconds": 180,
+    "outerTimeoutHit": false,
+    "commandExitCode": null,
+    "commandExitCodeCaptured": false,
+    "commandExitCodeNote": "No exit-status receipt exists for the smoke command, so the value is null (not captured), not an inferred 0. The monitoring wrapper's final bookkeeping command failed, and the wrapper itself exited 1 after the passing run (recorded by this unit's launcher/publish note). That wrapper status is not the smoke command's status: the node runner's own exit code was never written to a file or otherwise captured.",
+    "commandExitCodeRaw": null,
+    "commandExitCodeBasis": "Inference only, not a measured receipt: the runner sets process.exitCode=1 on any assertion failure or cleanup error; this run has report.passed=true, cleanupErrors=[], processExit.exited=true and a normal end-of-report EOF, so node is inferred to have set no failure exit code (i.e. 0). The outer timeout 180 did not fire (44s). The only actually observed exit status is the wrapper's own 1 from its failed bookkeeping tail; it must not be read as the smoke command's exit code.",
+    "runnerPassed": true,
+    "failureStage": null,
+    "screenshotsPresent": [
+      "default-canvas.png",
+      "page.png",
+      "canvas.png",
+      "diffuse-canvas.png"
+    ],
+    "screenshotsMissing": [],
+    "acceptance": {
+      "defaultEntry": {
+        "contentVersion": 10,
+        "initialTick": 17,
+        "finalTick": 24,
+        "nonBackground": true
+      },
+      "candidateEntry": {
+        "contentVersion": 11,
+        "initialTick": 103,
+        "initialMatchFinalTick": 363,
+        "finalTick": 111,
+        "nonBackground": true
+      },
+      "characterAssets": 95,
+      "hudLayoutViewports": 8,
+      "cooldownHudLayoutViewports": 8,
+      "morrowHudLayoutViewports": 8,
+      "projectileIcon": {
+        "width": 64,
+        "height": 64,
+        "complete": true
+      },
+      "targetingCancelled": true,
+      "persistedEffectZone": true,
+      "heroSelection": {
+        "selected": "morrow",
+        "restartPreserved": true,
+        "changedBack": true
+      },
+      "resume": {
+        "savedTick": 77,
+        "resumedTick": 100,
+        "remappedQ": "F"
+      },
+      "diffuseEntry": {
+        "contentVersion": 11,
+        "lighting": "stylized-diffuse",
+        "nonBackground": true
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "requestFailures": [],
+      "cameraAndRestarts": {
+        "cameraLockToggleAndRecentering": "assertions passed in the input stage before targeting",
+        "twoMatchRestarts": "restartPreserved=true, changedBack=true"
+      }
+    },
+    "movement": {
+      "realPointer": {
+        "trusted": true,
+        "x": 1088,
+        "y": 450,
+        "command": "move"
+      },
+      "beforeMove": {
+        "tick": 121,
+        "position": {
+          "x": -94,
+          "z": 1.2000000476837158
+        }
+      },
+      "beforeStop": {
+        "tick": 136,
+        "trusted": true,
+        "key": "s",
+        "position": {
+          "x": -91.19999999999999,
+          "z": 1.2000000476837158
+        },
+        "moveGoal": {
+          "x": -81.62882232666016,
+          "z": 1.2000000476837158
+        }
+      },
+      "stopped": {
+        "tick": 145,
+        "position": {
+          "x": -91.19999999999999,
+          "z": 1.2000000476837158
+        },
+        "moveGoal": null
+      },
+      "later": {
+        "tick": null,
+        "position": {
+          "x": -91.19999999999999,
+          "z": 1.2000000476837158
+        },
+        "moveGoal": null,
+        "note": "The runner stores the later sample as the hero snapshot only, so no tick is attached to it; it was read after waiting more than six further ticks past the stopped snapshot."
+      },
+      "note": "Active moveGoal and moved position were sampled at the real S keydown; stopped and later snapshots equal the keydown position, so natural arrival cannot pass the assertion."
+    }
+  },
+  "ownedBrowser": {
+    "pid": 66072,
+    "runnerPid": 71820,
+    "runnerParentPid": 112564,
+    "parentChain": "112564 -> 71820 (node tests/client/browser-smoke/run.mjs) -> 66072 (chrome-headless-shell.exe)",
+    "observedAt": "2026-10-28T17:00:01Z",
+    "creationTimes": {
+      "nodeUtc": "2026-10-28T16:59:51.008Z",
+      "browserUtc": "2026-10-28T16:59:51.581Z"
+    },
+    "exitEvent": {
+      "exitCode": 0,
+      "signalCode": null,
+      "exited": true
+    },
+    "exitEventSource": "report.processExit from Playwright browserServer.process()",
+    "forbiddenFlags": {
+      "noSandbox": false,
+      "disableSetuidSandbox": false,
+      "enableUnsafeSwiftshader": false
+    },
+    "argvNote": "Full argv and local profile paths are kept only in the local raw report, not in this public evidence.",
+    "postRunProcessCheck": "after the run, PIDs 66072, 71820 and 112564 were all absent and no chrome-headless-shell.exe remained"
+  },
+  "preview": {
+    "host": "127.0.0.1",
+    "port": "ephemeral (vite preview port 0); the assigned port was not retained in the runner report",
+    "runnerPreviewClosed": true,
+    "runnerPreviewClosedMeaning": "the runner fetched its own preview origin after server.close(); the fetch rejected, so the same-process listener was closed and the port was unreachable",
+    "postRunProcessCheck": "the owning node process 71820 is gone, so no listener can remain"
+  },
+  "cleanup": {
+    "reportCleanupErrors": [],
+    "processExitExited": true,
+    "previewClosed": true,
+    "verifiedByExecutor": true,
+    "ownedResourcesGone": true
+  },
+  "rendererCaveat": "MOBA_SMOKE_RENDERER=gpu was requested, but the actual WebGL renderer was SwiftShader (software). The requested value is not evidence of a real GPU, and no browser or renderer substitution was made."
+}

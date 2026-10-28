@@ -1,0 +1,64 @@
+{
+  "source": {
+    "commit": "935bf8e76929aeeb0af707a1dbf9f98ee3597aef",
+    "tree": "7d32caebd680f11790d7bf04badcfe2f92dad4f0",
+    "dirty": false
+  },
+  "startedAt": "2026-10-28T16:59:51.489Z",
+  "finishedAt": "2026-10-28T17:00:33.234Z",
+  "passed": true,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "pid": 66072,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "build-identity.json",
+      "bytes": 117,
+      "sha256": "f07cb315454d0ce1f7ecbcd6d6d81910eacf9145232821b8c1b90d24832086cb"
+    },
+    {
+      "path": "canvas.png",
+      "bytes": 1860817,
+      "sha256": "c581171dcf133760f85bc1553425db66b74193007f908889fbea7a5a4c2c86da"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 248328,
+      "sha256": "f8423795afc53c12c580b5938d5bdd8da81f292c12d44d6bd1a7e238ea041dad"
+    },
+    {
+      "path": "diffuse-canvas.png",
+      "bytes": 1935514,
+      "sha256": "e9365d2b81a9dd9ba9a7c698728966e8593ea0e378dcdaec561e2ef42da65208"
+    },
+    {
+      "path": "exit-evidence.json",
+      "bytes": 12062,
+      "sha256": "39c0adfc2aac070478a8bf64cd27988b1e2a4363ada8a86632cc8c6434459de5"
+    },
+    {
+      "path": "page.png",
+      "bytes": 1861025,
+      "sha256": "c4710810eae9028c95fa14f47fcc3e4981769fbc98ad0cd4e37d74666e2d1c6c"
+    },
+    {
+      "path": "report.json",
+      "bytes": 75340,
+      "sha256": "d95d35faf30d8ccb5e3acca72a9246adab3860ab6be7a10987366381cf99c869"
+    }
+  ],
+  "derivedFrom": "smoke-artifacts/2026-10-28T16-59-50-659Z-192910",
+  "publicCopyNote": "report.json is sanitized (see its publicCopy field); browser argv and local profile paths were removed. File bytes and SHA256 here are computed from the public copies in this directory."
+}
