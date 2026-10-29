@@ -1,0 +1,45 @@
+{
+  "task": "B-MOBA-TOWER-STANDARDS-SMOKE-20261029",
+  "unit": 1,
+  "unitRun": "u1-a0-2026-10-29T015614381Z",
+  "status": "blocked",
+  "result": "full smoke passed functionally (exit 0, report.passed true) but the actual WebGL renderer class was software, not the required gpu; stopped before the standards capture per the task rule, with no retry or renderer/browser/security change",
+  "source": {
+    "commit": "b7687337231df4d275800643472c7f878a885211",
+    "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+    "headMatchesFixedSource": true,
+    "worktreeCleanDuringRun": true,
+    "buildIdentity": {
+      "commit": "b7687337231df4d275800643472c7f878a885211",
+      "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+      "dirty": false
+    }
+  },
+  "serialPreflight": {
+    "checkedUtc": "2026-10-29T02:01:46Z",
+    "sourceIdentity": "git rev-parse HEAD = b7687337231df4d275800643472c7f878a885211; tree = bc48db509ec097c4e3b918c199325eb8a1a744fd; git status --porcelain --untracked-files=no empty",
+    "previousOwnedBrowser": "no chrome-headless-shell.exe, chromium.exe or chrome.exe process was running at preflight (tasklist)",
+    "previousPreview": "no LISTENING socket on ports 7702, 8757, 4173, 5173, 3000 or 8080; no node process command line matched tests/client/browser-smoke or a vite preview/dev server",
+    "previousEvidencePids": "the browser, runner and parent PIDs recorded by the prior receiver smoke (66072, 71820, 112564) were absent",
+    "sharedGpuLock": "no capture lock or GPU lock file exists under the receiver work root; this unit created, held and released none",
+    "unrelatedProcesses": "unrelated node MCP/dev-tool and benchmark processes were present and were not touched",
+    "serialCondition": "known-clear; one GPU task only"
+  },
+  "acceptance": {
+    "fullSmoke": "passed",
+    "fullSmokeExitCode": 0,
+    "rendererClassRequired": "gpu",
+    "rendererClassActual": "software",
+    "standardsManifest": "not-run",
+    "standardsPngsExpected": 8,
+    "standardsPngsProduced": 0
+  },
+  "evidence": {
+    "smokeDir": "docs/quality/smoke/B-MOBA-TOWER-STANDARDS-SMOKE-20261029/2026-10-29T02-02-05Z",
+    "smokeManifestSha256": "9952a5906e7a6aef6c6ed582f85616e39e8983701a99ee5ddcec9b25b9d5f7cb",
+    "standardsDir": null
+  },
+  "blockedReason": "The fixed command launches Playwright chrome-headless-shell in this environment, whose WebGL2 unmasked renderer is ANGLE/SwiftShader (software). The task requires class=gpu and forbids switching renderer, browser or security parameters or retrying.",
+  "recovery": "Run the same fixed-SHA smoke and standards capture on a headless GPU configuration whose raw WebGL renderer matches a hardware vendor family (class=gpu), then produce the two exclusive run directories, 8 PNGs and the standards manifest.",
+  "scope": "Only docs/quality/smoke/ is written by this unit. No source, default entry, model, main merge or deployment change."
+}

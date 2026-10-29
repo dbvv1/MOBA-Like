@@ -1,0 +1,106 @@
+{
+  "task": "B-MOBA-TOWER-STANDARDS-SMOKE-20261029",
+  "unitRun": "u1-a0-2026-10-29T015614381Z",
+  "publicRunDir": "2026-10-29T02-02-05Z",
+  "source": {
+    "commit": "b7687337231df4d275800643472c7f878a885211",
+    "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+    "headMatchesFixedSource": true,
+    "worktreeCleanDuringRun": true,
+    "buildIdentity": {
+      "commit": "b7687337231df4d275800643472c7f878a885211",
+      "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+      "dirty": false
+    }
+  },
+  "serialPreflight": {
+    "checkedUtc": "2026-10-29T02:01:46Z",
+    "sourceIdentity": "git rev-parse HEAD = b7687337231df4d275800643472c7f878a885211; tree = bc48db509ec097c4e3b918c199325eb8a1a744fd; git status --porcelain --untracked-files=no empty",
+    "previousOwnedBrowser": "no chrome-headless-shell.exe, chromium.exe or chrome.exe process was running at preflight (tasklist)",
+    "previousPreview": "no LISTENING socket on ports 7702, 8757, 4173, 5173, 3000 or 8080; no node process command line matched tests/client/browser-smoke or a vite preview/dev server",
+    "previousEvidencePids": "the browser, runner and parent PIDs recorded by the prior receiver smoke (66072, 71820, 112564) were absent",
+    "sharedGpuLock": "no capture lock or GPU lock file exists under the receiver work root; this unit created, held and released none",
+    "unrelatedProcesses": "unrelated node MCP/dev-tool and benchmark processes were present and were not touched",
+    "serialCondition": "known-clear; one GPU task only"
+  },
+  "preparation": {
+    "npmCiOffline": {
+      "exitCode": 0,
+      "packagesAdded": 123,
+      "seconds": 21
+    },
+    "npmRunBuildWeb": {
+      "exitCode": 0,
+      "startedUtc": "2026-10-29T02:01:28Z",
+      "finishedUtc": "2026-10-29T02:01:38Z"
+    },
+    "npmTest": "not rerun on this machine; the task reuses the dot-verified 468/468 CPU tests and non-author source review for the fixed tree"
+  },
+  "fullSmoke": {
+    "command": "MOBA_SMOKE_RENDERER=gpu node tests/client/browser-smoke/run.mjs",
+    "commandEnvironment": "MOBA_SMOKE_SOURCE_SHA fixed to b7687337231df4d275800643472c7f878a885211; output kept in a per-run local directory",
+    "requestedRenderer": "gpu",
+    "startedUtc": "2026-10-29T02:02:05Z",
+    "finishedUtc": "2026-10-29T02:02:53Z",
+    "wallTimeSeconds": 48,
+    "outerTimeoutSeconds": 1800,
+    "outerTimeoutHit": false,
+    "commandExitCode": 0,
+    "commandExitCodeCaptured": true,
+    "runnerPassed": true,
+    "reportCleanupErrors": [],
+    "reportPreviewClosed": true,
+    "ownedBrowserExit": {
+      "exitCode": 0,
+      "signalCode": null,
+      "exited": true
+    },
+    "renderer": {
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "renderer": "WebKit WebGL",
+      "vendor": "WebKit",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "unmaskedVendor": "Google Inc. (Google)"
+    },
+    "actualRendererClass": "software",
+    "requestedClassMatchesActual": false,
+    "acceptanceFailure": "The acceptance rule requires raw renderer class=gpu. The actual class is software (SwiftShader). Per the task rule, this unit preserves the result and stops without switching renderer, browser or security parameters and without retrying."
+  },
+  "standardsCapture": {
+    "status": "not-run",
+    "reason": "Stopped after the full smoke because the actual renderer class was software, not the required gpu.",
+    "commandsNotRun": [
+      "npx tsc -p tsconfig.capture.json && npx vite build --config vite.capture.config.ts",
+      "MOBA_SMOKE_RENDERER=gpu node tests/client/browser-smoke/standards.mjs"
+    ]
+  },
+  "cleanup": {
+    "verifiedByExecutor": true,
+    "ownedBrowserPidAbsentAfterRun": true,
+    "noChromiumProcessAfterRun": true,
+    "noBrowserSmokeNodeProcessAfterRun": true,
+    "noPreviewListenerAfterRun": true,
+    "previewClosed": true,
+    "processExitExited": true
+  },
+  "observations": {
+    "ownedBrowserExecutableClass": "Playwright's chrome-headless-shell (the process name in the local raw evidence); its WebGL2 unmasked renderer was ANGLE/SwiftShader, so the requested gpu class is not supported in this configuration.",
+    "boundary": "This is a renderer-class result, not a visual-quality or performance verdict. No standards capture, model adoption or pixel comparison is claimed."
+  },
+  "publicCopy": {
+    "sanitized": true,
+    "removed": [
+      "full browser argv",
+      "process IDs",
+      "parent chain",
+      "local executable and profile paths",
+      "raw timing/process logs"
+    ],
+    "kept": [
+      "exit codes",
+      "serial preflight summary",
+      "raw WebGL renderer strings",
+      "functional assertion summary"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "source": {
+    "commit": "b7687337231df4d275800643472c7f878a885211",
+    "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+    "headMatchesFixedSource": true,
+    "worktreeCleanDuringRun": true,
+    "buildIdentity": {
+      "commit": "b7687337231df4d275800643472c7f878a885211",
+      "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+      "dirty": false
+    }
+  },
+  "startedAt": "2026-10-29T02:02:07.173Z",
+  "finishedAt": "2026-10-29T02:02:52.358Z",
+  "passed": true,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "build-identity.json",
+      "bytes": 117,
+      "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+    },
+    {
+      "path": "canvas.png",
+      "bytes": 1860867,
+      "sha256": "74acf9ab86ca7bda1fcc02c9db597b7cccfcdf70a754eeed11e393f4a5e0b186"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 248300,
+      "sha256": "2d28f7d897146b84c1c0254323707a3e4f2a2e5e5490f052f23279ee13894772"
+    },
+    {
+      "path": "diffuse-canvas.png",
+      "bytes": 1935383,
+      "sha256": "bce03a35b3cfb85c4eb68d223004d46c125af1873c37111980bbbddd3932bea4"
+    },
+    {
+      "path": "exit-evidence.json",
+      "bytes": 4740,
+      "sha256": "b03d2f2ea354586def4a1cc8cb075e9bfc36eb2ef1cc08c5c7fe5178f6d2b4b1"
+    },
+    {
+      "path": "page.png",
+      "bytes": 1861080,
+      "sha256": "268e086afab834d5fefec86370778bb2c06b11112e95ffc03514e0b42b6103a0"
+    },
+    {
+      "path": "report.json",
+      "bytes": 74776,
+      "sha256": "de494ecbe0d3a3ab74b1bdc6b4e66b6b39862b27afcd34fbd85194ddf7fab47f"
+    }
+  ]
+}
