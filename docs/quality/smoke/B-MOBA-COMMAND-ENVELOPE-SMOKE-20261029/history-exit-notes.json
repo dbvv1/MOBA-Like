@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "task": "B-MOBA-COMMAND-ENVELOPE-SMOKE-20261029",
+  "kind": "history-and-exit-addendum",
+  "generatedAt": "2026-10-29T04:39:43Z",
+  "revisedAt": "2026-10-29T05:12:00Z",
+  "fixedSource": {
+    "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+    "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026"
+  },
+  "scope": "Documentation-only revision. This documentation revision ran no smoke, CPU suite, build, GPU capture, screenshot or functional assertion; the review-phase full-smoke rerun recorded below occurred before this revision (04:07:41Z-04:12:10Z) and is included only as prior exit evidence. The published run directory 2026-10-29T03-31-16Z keeps its original nine files and hashes; this addendum is a separate task-level file.",
+  "exitFactSeparation": {
+    "originalSmoke": {
+      "startedAt": "2026-10-29T03:31:48.556Z",
+      "finishedAt": "2026-10-29T03:32:47.796Z",
+      "npmExitCode": 0,
+      "browserExitCode": 0,
+      "browserSignalCode": null,
+      "browserExited": true,
+      "previewClosed": true,
+      "cleanupErrors": [],
+      "postRunProcessCheckUtc": "2026-10-29T03:33:57Z",
+      "note": "These exit facts belong only to the original run.mjs smoke."
+    },
+    "rule": "The original smoke's exit facts are not applied to any extra read-only call. The 14.467-unit bot advancement comes from a separate read-only snapshot observation and is not a run.mjs assertion."
+  },
+  "extraBotSnapshotCalls": [
+    {
+      "label": "fix-phase read-only bot observation that produced the published 14.467 record",
+      "callId": "call_00_2ZLw8rhWunL5tW0963DU1008",
+      "taskId": "buat5ajxj",
+      "description": "Read-only headless bot snapshot observation",
+      "issuedAt": "2026-10-29T04:01:10.588Z",
+      "returnedAt": "2026-10-29T04:01:21.936Z",
+      "durationMs": 11348,
+      "method": "Read-only window.mobaClient.snapshot() on the fixed candidate.html in headless chrome-headless-shell with the existing software renderer launch options (MOBA_SMOKE_RENDERER=software, args containing --use-angle=swiftshader). No input events, no simulation-state injection, no script or source change.",
+      "samples": {
+        "sampleA": {
+          "tick": 13,
+          "bot": {
+            "id": 10,
+            "team": 1,
+            "definitionId": "veyra",
+            "position": {
+              "x": 90.9668133907807,
+              "z": -1.1701654241124302
+            },
+            "moveGoal": {
+              "x": -28,
+              "z": 0
+            },
+            "targetId": 4
+          }
+        },
+        "sampleB": {
+          "tick": 75,
+          "bot": {
+            "id": 10,
+            "team": 1,
+            "definitionId": "veyra",
+            "position": {
+              "x": 76.50084648527327,
+              "z": -1.0278772193878372
+            },
+            "moveGoal": {
+              "x": -28,
+              "z": 0
+            },
+            "targetId": 4
+          }
+        },
+        "tickDelta": 62,
+        "distanceTravelled": 14.467,
+        "playerHero": {
+          "id": 9,
+          "team": 0,
+          "position": {
+            "x": -94,
+            "z": 1.2000000476837158
+          },
+          "moveGoal": null
+        }
+      },
+      "result": "Tool result returned normally (non-error). The returned JSON contained no error, browser-close, browser-server-close or preview-close field.",
+      "exitEvidence": "Call-level completion only. The browser process exit code and signal were not captured by this call, and the preview close is evidenced only by the script's finally path reporting no close error. No process census was taken at this instant."
+    },
+    {
+      "label": "fix-phase confirmation page load",
+      "callId": "call_00_VAhmRP8dVDN8aQzNHWvt4908",
+      "taskId": "bxt190c4j",
+      "description": "Confirm initial bot snapshot fields",
+      "issuedAt": "2026-10-29T04:01:25.661Z",
+      "returnedAt": "2026-10-29T04:01:34.247Z",
+      "durationMs": 8586,
+      "method": "Same read-only snapshot method, fixed candidate.html and software renderer launch options as the first call (MOBA_SMOKE_RENDERER=software, args containing --use-angle=swiftshader); a fresh page load read the initial bot state at tick 13 and closed the page, browser and preview in a finally block.",
+      "samples": {
+        "contentVersion": 11,
+        "tick": 13,
+        "bot": {
+          "id": 10,
+          "team": 1,
+          "definitionId": "veyra",
+          "position": {
+            "x": 90.9668133907807,
+            "z": -1.1701654241124302
+          },
+          "moveGoal": {
+            "x": -28,
+            "z": 0
+          },
+          "targetId": 4
+        },
+        "playerHero": {
+          "id": 9,
+          "team": 0,
+          "position": {
+            "x": -94,
+            "z": 1.2000000476837158
+          },
+          "moveGoal": null
+        }
+      },
+      "result": "Tool result returned normally (non-error), confirming that two independent page loads produced the identical tick-13 bot position. The returned JSON contained no error or close-error field.",
+      "exitEvidence": "Call-level completion only. Browser process exit code and signal were not captured."
+    },
+    {
+      "label": "review-phase independent reproduction (ticks 17 and 79)",
+      "callId": "call_00_zLf93UTvT26hVBXosZRg4432",
+      "description": "Reproduce bot snapshot observation",
+      "issuedAt": "2026-10-29T04:12:28.344Z",
+      "returnedAt": "2026-10-29T04:12:40.735Z",
+      "durationMs": 12391,
+      "method": "Read-only snapshot on the fixed candidate.html launched by the reviewer's own reproduction script (node .review-bot/repro.mjs, not npm run smoke). MOBA_SMOKE_RENDERER was not set, so tests/client/browser-smoke/options.mjs defaulted to renderer='gpu' and launchOptions() returned args: []; --use-angle=swiftshader was absent. chromiumSandbox stayed true and --enable-unsafe-swiftshader stayed removed through ignoreDefaultArgs, with no new launch flag. Off-origin requests were blocked, no input events were sent and no state was injected. The actual WebGL renderer class of this call was not captured.",
+      "samples": {
+        "sampleA": {
+          "tick": 17,
+          "botPosition": {
+            "x": 90.03352520332861,
+            "z": -1.16098553993665
+          }
+        },
+        "sampleB": {
+          "tick": 79,
+          "botPosition": {
+            "x": 75.56755829782118,
+            "z": -1.018697335212057
+          }
+        },
+        "botId": 10,
+        "team": 1,
+        "targetId": 4,
+        "moveGoal": {
+          "x": -28,
+          "z": 0
+        },
+        "playerHero": {
+          "id": 9,
+          "team": 0,
+          "position": {
+            "x": -94,
+            "z": 1.2000000476837158
+          },
+          "moveGoal": null
+        }
+      },
+      "result": "Node process printed EXIT=0; the in-page errors array was empty; page, browser and preview were closed in a finally block. This call sampled ticks 17 and 79 rather than 13 and 75; it matched the published samples by the same 62-tick delta and did not recreate them exactly.",
+      "exitEvidence": "Node-level exit 0 only. Browser process exit code and signal were not separately captured, and the actual renderer class was not captured."
+    }
+  ],
+  "extraCallLifecycle": {
+    "parentChain": "The two fix-phase calls were foreground local_bash tasks issued by the unit's fix-1 subagent (active 03:59:13Z-04:03:07Z). The review-phase reproduction was issued by the unit's review:run subagent (active 04:03:07Z-04:14:19Z). All belong to the same unit workflow; none was launched by the original run.mjs runner process.",
+    "browser": {
+      "fixPhaseCalls": "The two fix-phase bot snapshot calls (call_00_2ZLw8rhWunL5tW0963DU1008 and call_00_VAhmRP8dVDN8aQzNHWvt4908) used the existing tests/client/browser-smoke/options.mjs launch options with MOBA_SMOKE_RENDERER=software: --use-angle=swiftshader was present, chromiumSandbox was true, and --enable-unsafe-swiftshader was removed through ignoreDefaultArgs. No new launch flag was added.",
+      "reviewReproduction": "The review-phase reproduction (call_00_zLf93UTvT26hVBXosZRg4432) ran the reviewer's own reproduction script (node .review-bot/repro.mjs) without setting MOBA_SMOKE_RENDERER. options.mjs therefore took the default renderer='gpu' branch and launchOptions() returned args: []; --use-angle=swiftshader was absent. chromiumSandbox was still true and --enable-unsafe-swiftshader was still removed through ignoreDefaultArgs, and no new launch flag was added, but this call's actual WebGL renderer class was not captured and the software classification of the fix-phase calls does not apply to it.",
+      "reviewerFullSmoke": "The independent reviewer full-smoke rerun (call_00_2ayn42Z1dHMOAWn31YeZ6782) used the existing npm run smoke with MOBA_SMOKE_RENDERER=software and recorded rendererClass 'software' in its own receipt.",
+      "noNewFlags": "Across all of these calls no new launch flag was introduced: no --no-sandbox, no --disable-setuid-sandbox and no --enable-unsafe-swiftshader."
+    },
+    "preview": "The existing tests/client/browser-smoke/server.mjs loopback ephemeral preview over web-dist; no fixed port.",
+    "page": "The fixed candidate.html in an isolated clean worktree; no player input.",
+    "cleanup": "Each script closed page, browser, browser server and preview in a finally block. The fix-phase outputs contained no close-error fields; the review-phase reproduction's in-page error array was empty and its Node process printed EXIT=0. A review-phase process check at 04:13:39Z found no chrome-headless-shell process and no preview listener on the checked ports.",
+    "exitFacts": {
+      "fixPhaseCalls": "Call-level completion only; browser process exit code and signal were not captured; no close error was reported.",
+      "reviewReproduction": "Node EXIT=0; in-page errors empty; browser process exit code and signal not separately captured.",
+      "reviewerFullSmoke": "Its own receipt records npmExitCode 0, browserExitCode 0, browserSignalCode null, browserExited true, previewClosed true and empty error/cleanup arrays.",
+      "notInherited": "No original-smoke exit fact is reused for these calls."
+    },
+    "serialRelation": "The original smoke ran 03:31:48.556Z-03:32:47.796Z and its post-run process check was 03:33:57Z. The extra calls ran later, 04:01:10Z-04:01:34Z and 04:12:28Z-04:12:40Z, with no overlapping interval among them. No process census was captured at the exact call instants, so simultaneous unrelated receiver tasks cannot be excluded from those instants alone; the original smoke had already ended and closed its preview."
+  },
+  "reviewPhaseExtraFullSmoke": {
+    "label": "Independent reviewer re-run of the full smoke",
+    "callId": "call_00_2ayn42Z1dHMOAWn31YeZ6782",
+    "issuedAt": "2026-10-29T04:07:41.427Z",
+    "returnedAt": "2026-10-29T04:12:10.470Z",
+    "durationMs": 269043,
+    "command": "Existing npm run smoke with the fixed source, software renderer (MOBA_SMOKE_RENDERER=software) and a temporary exclusive output directory.",
+    "receipt": {
+      "npmExitCode": 0,
+      "reportPassed": true,
+      "sourceMatchesFixed": true,
+      "sourceDirty": false,
+      "rendererClass": "software",
+      "browserExitCode": 0,
+      "browserSignalCode": null,
+      "browserExited": true,
+      "previewClosed": true,
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "httpErrors": 0,
+      "requestFailures": 0,
+      "cleanupErrors": 0,
+      "finishedAt": "2026-10-29T04:12:09.999Z"
+    },
+    "cleanup": "The temporary output directory was removed at 04:13:59Z; the 04:13:39Z process check found no leftover browser or preview listener.",
+    "note": "This is an independent reviewer execution that occurred before this documentation revision; it is not the original run.mjs submission. It is not used to overwrite or extend the original published run directory."
+  },
+  "serialTimeline": [
+    {
+      "at": "2026-10-29T02:35:37.322Z-2026-10-29T02:35:37.588Z",
+      "event": "prior tower unit's implement subagent issued two separate grep|head -30 local_bash pipelines 0.27 s apart; each produced one head.exe (created 02:35:38.399Z and 02:35:38.938Z)"
+    },
+    {
+      "at": "2026-10-29T02:37:37.853Z",
+      "event": "both grep|head -30 calls hit their 120 s timeout and were moved to the background; the tracked tasks later stopped, but the head.exe children were still present in the 03:30Z census"
+    },
+    {
+      "at": "2026-10-29T03:30:05Z",
+      "event": "preflight census: both prior head.exe -30 filters (and their grep parents) were present, one matching the prior tower unit's registered subtree creation-time window and one with an unregistered parent chain"
+    },
+    {
+      "at": "2026-10-29T03:31:48.556Z",
+      "event": "original run.mjs smoke started"
+    },
+    {
+      "at": "2026-10-29T03:32:47.796Z",
+      "event": "original smoke finished; browser exit 0 and preview closed per its own receipt"
+    },
+    {
+      "at": "2026-10-29T03:33:57Z",
+      "event": "original post-run process check: no browser, no smoke/preview node process, no preview listener"
+    },
+    {
+      "at": "2026-10-29T04:01:10.588Z-2026-10-29T04:01:34.247Z",
+      "event": "two fix-phase read-only bot snapshot calls (14.467 record and confirmation)"
+    },
+    {
+      "at": "2026-10-29T04:07:41.427Z-2026-10-29T04:12:10.470Z",
+      "event": "reviewer full-smoke re-run with its own exit receipt"
+    },
+    {
+      "at": "2026-10-29T04:12:28.344Z-2026-10-29T04:12:40.735Z",
+      "event": "review-phase independent bot reproduction at ticks 17 and 79"
+    },
+    {
+      "at": "2026-10-29T04:13:39Z",
+      "event": "review-phase process check: no chrome-headless-shell process and no preview listener on checked ports (point-in-time census, not an exit receipt)"
+    },
+    {
+      "at": "2026-10-29T04:15:03.293Z",
+      "event": "original unit run ended"
+    },
+    {
+      "at": "2026-10-29T04:39:43Z",
+      "event": "fresh head.exe census used by this addendum; both prior head.exe -30 filters are absent, which is not an exit receipt"
+    }
+  ],
+  "priorHeadExeLeftover": {
+    "processCount": 2,
+    "what": "Two Git for Windows head.exe text filters, each invoked with the argument -30 at the end of its own grep|head -30 pipeline.",
+    "createdAt": "2026-10-29T02:35:38.399Z and 2026-10-29T02:35:38.938Z",
+    "owningCommands": "Two separate grep -ril ... | head -30 pipelines issued by the prior tower unit's implement subagent at 2026-10-29T02:35:37.322Z and 2026-10-29T02:35:37.588Z (0.27 s apart). Each pipeline was a local_bash call that hit its 120 s timeout at 2026-10-29T02:37:37Z and continued in the background; each produced exactly one head.exe child.",
+    "parentChain": "One head.exe matched the prior tower unit's registered process-subtree entry in the same creation-time window; the recorded parent of that entry was already exited at census time. The other head.exe came from the second call and its recorded parent chain was not registered in that subtree.",
+    "attribution": "Both belonged to the prior tower job's two shell pipelines, run by this receiver seat's earlier unit. Neither was spawned by this fixed-candidate unit and neither was an unrelated user or desktop process.",
+    "identityAtPreflight": "At the 2026-10-29T03:30:05Z preflight census both head.exe -30 processes were present. One matched the prior tower unit's registered subtree entry by process identifier and creation-time window with no identity mismatch; the second was identified by its creation time and its association with the second call, and its parent chain had no entry in that registered subtree.",
+    "role": "Inert text filters. Neither was a browser, preview server, GPU task or process ancestor, and neither held a serial slot.",
+    "cleanup": "No kill, signal or process-termination command was issued by this revision. No lock was cleared or modified.",
+    "exit": "Both processes were present in the point-in-time census at 03:30Z and both are absent from the fresh head.exe census at 2026-10-29T04:39:43Z; neither census is an exit receipt. A read-only check found no OS process-termination audit records, and because both were already absent no exit code or time receipt could be produced; both exits remain unknown. 'Not a GPU task' is not offered as a substitute for the missing exit receipts.",
+    "identifierPolicy": "Both process identifiers are retained only in local raw logs and are not published."
+  },
+  "serialScheduling": {
+    "asOf": "2026-10-29T05:12:00Z",
+    "state": "Blocked for further local serial scheduling. The published limited delivery stays receivable; this is not a whole-card compliance declaration.",
+    "unclosedExitFacts": "Only the three read-only bot snapshot calls lack a captured browser exit code/signal: call_00_2ZLw8rhWunL5tW0963DU1008, call_00_VAhmRP8dVDN8aQzNHWvt4908 and call_00_zLf93UTvT26hVBXosZRg4432. The original run.mjs smoke (browserExitCode 0) and the reviewer full-smoke rerun call_00_2ayn42Z1dHMOAWn31YeZ6782 (browserExitCode 0) both have their own exit receipts. The two prior tower unit head.exe -30 filters produced by the two 02:35:37Z pipelines also have no exit receipt: both were present in the 03:30Z census and both are absent from the 04:39:43Z census, and both exit times and codes are unknown.",
+    "releaseCondition": "Either (a) the receiver records written acceptance of the missing browser exit receipts for the three bot snapshot calls and of the two unknown head.exe exits, or (b) real exit receipts for those processes are obtained. A point-in-time process census (04:13:39Z or 04:39:43Z) is not an exit receipt and does not by itself release the block.",
+    "receiverFirstStep": "Accept the limited delivery by the published nine-file run directory plus the 37-file bundle digest; do not start the next local serial smoke until the release condition is met.",
+    "blockedScope": "Only subsequent local serial scheduling. The fixed-source functional smoke and the 37-file bundle hash match remain independently usable for code and website delivery."
+  },
+  "deliveryImpact": {
+    "usableForDelivery": "The fixed-source functional smoke from the original run.mjs and the 37-file bundle hash match remain independently usable for code and website delivery.",
+    "blocked": "The only unclosed exit facts are those of the three read-only bot snapshot calls (browser exit code/signal not captured) and the two prior head.exe filters (exit times/codes unknown). The review-phase full-smoke rerun has its own browserExitCode 0 receipt and is not part of this gap. These gaps block only subsequent local serial scheduling; see serialScheduling for the release condition and the receiver's first step.",
+    "notDeclared": "This addendum does not declare the whole card fully compliant. Status remains review_ready for limited acceptance."
+  },
+  "sanitization": "No absolute paths, process identifiers, full argv, user-profile paths, session identifiers or private addresses are published here. Raw logs, argv and process identifiers remain in the local run scratch."
+}

@@ -3,7 +3,7 @@
   "unit": 1,
   "unitRun": "u1-a0-2026-10-29T032620467Z",
   "status": "review_ready",
-  "result": "The existing full smoke passed on the exact fixed candidate 9777b84/8b3a239 with class=software (SwiftShader). Default entry stayed v10 and advanced (tick 12->18); candidate v11 passed real player move/stop, targeting, effect, hero selection, key remap, and Save match -> reload -> Continue saved match (savedTick 27 -> resumedTick 37, Q remapped to F); the diffuse sidecar loaded with stylized-diffuse lighting. Bot hero id 10 (team 1) advanced 14.467 units over 62 ticks (tick 13 -> 75) toward its moveGoal while the player hero stayed at spawn, from a post-run read-only snapshot observation; run.mjs itself does not directly assert bot position/advance, so that bot result is not a runner assertion. All console/page/http/request gates and cleanup arrays were empty; browser exit 0 and the preview port closed.",
+  "result": "The existing full smoke passed on the exact fixed candidate 9777b84/8b3a239 with class=software (SwiftShader). Default entry stayed v10 and advanced (tick 12->18); candidate v11 passed real player move/stop, targeting, effect, hero selection, key remap, and Save match -> reload -> Continue saved match (savedTick 27 -> resumedTick 37, Q remapped to F); the diffuse sidecar loaded with stylized-diffuse lighting. Bot hero id 10 (team 1) advanced 14.467 units over 62 ticks (tick 13 -> 75) toward its moveGoal while the player hero stayed at spawn, from a post-run read-only snapshot observation; run.mjs itself does not directly assert bot position/advance, so that bot result is not a runner assertion. All console/page/http/request gates and cleanup arrays were empty; browser exit 0 and the preview port closed. History/exit addendum (history-exit-notes.json): the 14.467 observation and a review-phase reproduction are separate read-only calls with their own call identifiers and times, but their browser process exit codes were not captured and the original smoke's exit 0 is not applied to them. The two prior Git head.exe -30 filters were each produced by one of two grep|head -30 pipelines issued by the prior tower unit's implement subagent at 02:35:37Z; both were local_bash calls that hit their 120 s timeout at 02:37:37Z and continued in the background, and both belong to that prior unit rather than this one. One matched the prior tower unit's registered process-subtree creation-time window; the other came from the second call and its parent chain was not registered. Both were present in the 03:30Z census and both are absent from the 04:39:43Z census; neither has an exit receipt, so both exit times/codes are unknown; no lock was cleared. The fixed-source smoke and 37-file hash match stay usable for delivery; the unknown exits block only subsequent local serial scheduling.",
   "source": {
     "commit": "9777b84044e19dd297be1675195cfe41d0152159",
     "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
@@ -12,12 +12,22 @@
   },
   "serialPreflight": {
     "checkedUtc": "2026-10-29T03:30:05Z",
-    "priorTowerInvocation": "closed: CLI exit 0 with close seen, turn ended, tools settled; its browser and preview cleanup receipts were empty.",
-    "priorResidualProcess": "Only one inert Git head.exe text filter from a prior shell pipeline remained; it is not a browser, preview, GPU task or ancestor and holds no serial slot.",
+    "priorTowerInvocation": "closed as a CLI/browser run: CLI exit 0 with close seen, turn ended, and its browser and preview cleanup receipts were empty. It did not fully settle at the process level: its two grep|head -30 local_bash pipelines hit their 120 s timeout and stayed in the background (see priorResidualProcess).",
+    "priorResidualProcess": "At preflight, two inert Git head.exe -30 text filters from the prior tower unit's two 02:35:37Z grep|head -30 pipelines remained; neither is a browser, preview server, GPU task or ancestor and neither holds a serial slot. One matched that unit's registered process-subtree creation-time window; the other came from the second call and its parent chain was not registered. See historyAndExit.priorHeadExeLeftover: no kill was issued by this revision, both are absent from the 04:39:43Z census, and their exit times and codes are unknown.",
     "otherBrowserOrGpuTasks": "none: no Chrome/Chromium/headless-shell process, no smoke/preview node process and no known preview listener.",
     "userDesktopApps": "User-owned Edge, VS Code and Unity editor apps were present; they are not receiver GPU/browser jobs and were not touched.",
     "sharedGpuLock": "No GPU slot or capture lock state existed; the receiver job lock held this unit and was not cleared, modified or used as exit evidence.",
-    "serialCondition": "known-clear; one headless software-renderer smoke task"
+    "serialCondition": "Historical preflight value at 2026-10-29T03:30:05Z: known-clear; one headless software-renderer smoke task. This is not the current serial state; see serialScheduling below.",
+    "historical": true
+  },
+  "serialScheduling": {
+    "asOf": "2026-10-29T05:12:00Z",
+    "state": "blocked for further local serial scheduling; the published limited delivery remains receivable",
+    "unclosedExitFacts": "Only the three read-only bot snapshot calls lack a captured browser exit code/signal: call_00_2ZLw8rhWunL5tW0963DU1008, call_00_VAhmRP8dVDN8aQzNHWvt4908 and call_00_zLf93UTvT26hVBXosZRg4432. The original run.mjs smoke and the reviewer full-smoke rerun (call_00_2ayn42Z1dHMOAWn31YeZ6782) each have their own browserExitCode 0 receipt. The two prior tower unit head.exe -30 filters produced by the two 02:35:37Z pipelines also have no exit receipt: both were present in the 03:30Z census and both are absent from the 04:39:43Z census, and both exit times and codes are unknown.",
+    "releaseCondition": "Either (a) the receiver records written acceptance of the missing browser exit receipts for the three bot snapshot calls and of the two unknown head.exe exits, or (b) real exit receipts for those processes are obtained. A point-in-time process census (04:13:39Z or 04:39:43Z) is not an exit receipt and does not by itself release the block.",
+    "receiverFirstStep": "Accept the limited delivery by the published nine-file run directory plus the 37-file bundle digest; do not start the next local serial smoke until the release condition is met.",
+    "blockedScope": "Only subsequent local serial scheduling. The fixed-source functional smoke and the 37-file bundle hash match remain independently usable for code and website delivery.",
+    "detail": "See history-exit-notes.json serialScheduling for the same current state."
   },
   "renderer": {
     "kind": "chrome-headless-shell (Playwright 1.64.1 default headless)",
@@ -74,6 +84,15 @@
     "botAdvanceEvidence": "Post-run read-only snapshot observation: tick 13 -> 75, bot hero id 10 (team 1) moved 14.467 units toward moveGoal x=-28; player hero id 9 stayed at spawn with no input; reproducible across two page loads. The unlabeled motion actor id 10 walk clip is animation only, not advancement evidence.",
     "botThroughEnvelope": "Source-verified LocalMatch.step -> Simulation.commandFrame -> Simulation.step; envelope boundary not instrumented at runtime."
   },
+  "historyAndExit": {
+    "addendum": "history-exit-notes.json",
+    "extraBotSnapshotCalls": "Three separate read-only page loads in the unit's fix/review phase: the first captured the published tick-13 starting sample and the tick-75 sample behind the 14.467 record, the second confirmed the identical tick-13 starting sample on a fresh load, and the third independently reproduced ticks 17 and 79. None is a run.mjs assertion. Their call identifiers and times are published in the addendum, but their browser process exit codes were not captured; the original smoke's exit 0 is not applied to them.",
+    "reviewPhaseExtraFullSmoke": "A reviewer re-ran the full fixed smoke at 04:07:41Z-04:12:10Z with its own receipt: npm exit 0, report passed, browser exit 0, preview closed, all error and cleanup arrays empty. Its temporary output was removed and the original published run directory was not overwritten.",
+    "priorHeadExeLeftover": "Two Git head.exe -30 text filters, each the tail of a separate grep|head -30 pipeline issued by the prior tower unit's implement subagent at 02:35:37Z (0.27 s apart). Both were local_bash calls that hit their 120 s timeout at 02:37:37Z and continued in the background; each pipeline produced one head.exe. One matched that unit's registered process-subtree creation-time window; the other came from the second call and its parent chain was not registered. Both were inert at preflight: neither a browser, preview server, GPU task nor ancestor, and neither held a serial slot. No kill or signal was issued by this revision and no lock was cleared; both were present in the 03:30Z census and both are absent from the fresh census at 04:39:43Z, but their actual exit times and codes are unknown. Neither belongs to this fixed-candidate unit and neither is an unrelated user or desktop process.",
+    "serialRelation": "All extra calls ran after the original smoke finished (03:32:47Z) and after its post-run process check (03:33:57Z), sequentially in the unit's fix and review phase, before the unit ended (04:15:03Z). No process census was captured at the exact call instants, so the addendum does not claim more than the recorded call order.",
+    "deliveryImpact": "The fixed-source functional smoke and 37-file bundle hash match remain independently usable for code and website delivery. The only unclosed exit facts are those of the three read-only bot snapshot calls (browser exit code/signal not captured) and the two prior head.exe filters (exit times/codes unknown); the reviewer full-smoke rerun at 04:07:41Z-04:12:10Z has its own browserExitCode 0 receipt and is not part of this gap. These gaps block only subsequent local serial scheduling; this is not a full-card compliance declaration. See serialScheduling for the release condition and the receiver's first step.",
+    "scope": "Documentation only: this revision ran no smoke, CPU suite, build, GPU capture, screenshot or functional assertion; the review-phase full-smoke rerun recorded above occurred before this revision (04:07:41Z-04:12:10Z) and is included only as prior exit evidence. The original nine-file run directory is byte-identical."
+  },
   "evidence": {
     "publishedRunDir": "2026-10-29T03-31-16Z",
     "publishedFiles": [
@@ -123,7 +142,15 @@
         "sha256": "23af448d4a58d1989e31f71b244811473060ebb90d1ce1e42d5def505b662dac"
       }
     ],
-    "publishedFilesNote": "sha256 for every file in the published run directory; status.json is the top-level card result and is not listed in its own hash list.",
+    "publishedFilesNote": "sha256 for every file in the published run directory; status.json is the top-level card result and is not listed in its own hash list. history-exit-notes.json sits at task level and is listed under addenda.",
+    "addenda": [
+      {
+        "path": "history-exit-notes.json",
+        "bytes": 19192,
+        "sha256": "329a947c3aec381ce2d3322c1a2c034c7a513136a86849aff8116c8ceb99e92e",
+        "note": "History and exit addendum: extra read-only bot snapshot call identifiers, times, per-call launch conditions (software for the two fix-phase calls, default gpu for the review-phase reproduction), browser/preview lifecycle and the exit-fact separation; the two prior head.exe filters, their attribution and both unknown exits; current serial scheduling, release condition and receiver first step; delivery impact. Task-level file, not part of the original nine-file run directory."
+      }
+    ],
     "buildIdentity": {
       "commit": "9777b84044e19dd297be1675195cfe41d0152159",
       "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
