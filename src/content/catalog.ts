@@ -594,7 +594,7 @@ function catalog(version: ContentVersion): ContentCatalog {
     };
   }
 
-  if (version === 2 || version === 7 || version === 8 || version === 9 || version === 10 || version === 11) {
+  if (version === 2 || version === 7 || version === 8 || version === 9 || version === 10 || version === 11 || version === 12) {
     return {
       version,
       heroes: { veyra: veyra(veyraQProjectile), morrow },
@@ -611,12 +611,12 @@ function catalog(version: ContentVersion): ContentCatalog {
       items,
       minions,
       map,
-      ...(version === 11 ? { basicAttacks: {
+      ...(version >= 11 ? { basicAttacks: {
         heroes: { veyra: { windupFraction: .25, projectileSpeed: 18 }, morrow: { windupFraction: .3, projectileSpeed: 18 } },
         minions: { melee: { windupFraction: .3, projectileSpeed: 0 }, ranged: { windupFraction: .3, projectileSpeed: 16 }, siege: { windupFraction: .3, projectileSpeed: 16 } },
         structures: { windupFraction: .25, projectileSpeed: 22 },
       } } : {}),
-      rules: version === 11 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, minionContactSpacing: true, stagedUnitPhase: true } : version === 10 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, minionContactSpacing: true } : version === 9 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, stagedUnitPhase: true } : version === 8 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true } : version === 7 ? { ...rules, liveTowerAnchors: true } : rules,
+      rules: version >= 11 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, minionContactSpacing: true, stagedUnitPhase: true } : version === 10 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, minionContactSpacing: true } : version === 9 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true, stagedUnitPhase: true } : version === 8 ? { ...rules, liveTowerAnchors: true, resetReactionOnDeath: true } : version === 7 ? { ...rules, liveTowerAnchors: true } : rules,
       difficulty,
       defaultHeroId: 'veyra',
     };
@@ -625,10 +625,10 @@ function catalog(version: ContentVersion): ContentCatalog {
   throw new Error(`unknown content version: ${String(version)}`);
 }
 
-export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2, 7, 8, 9, 10, 11] as const;
+export const CONTENT_VERSIONS: readonly ContentVersion[] = [1, 2, 7, 8, 9, 10, 11, 12] as const;
 
 export function getContent(version: ContentVersion): ContentCatalog {
-  if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11) {
+  if (version !== 1 && version !== 2 && version !== 7 && version !== 8 && version !== 9 && version !== 10 && version !== 11 && version !== 12) {
     throw new Error(`unknown content version: ${String(version)}`);
   }
   return catalog(version);

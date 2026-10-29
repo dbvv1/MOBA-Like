@@ -33,6 +33,7 @@ export interface CommandFrame {
 }
 
 export interface CommandResult {
+  queued?: boolean;
   command: SimCommand;
   accepted: boolean;
   reason: string | null;
@@ -110,6 +111,8 @@ interface EntityBase {
 }
 
 export interface HeroEntity extends EntityBase {
+  /** v12 only; one last-valid-command slot, serialized in authoritative state. */
+  queuedCommand?: SimCommand;
   kind: 'hero';
   attackMoveGoal?: Vec2;
   definitionId: string;

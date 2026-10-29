@@ -20,6 +20,9 @@ export function saveSourceFingerprint(root:string):string{
  * The command-envelope entry is populated only after old-source replay comparison.
  */
 const COMPATIBLE_SOURCE_REVISIONS:Readonly<Record<string,string>>=Object.freeze({
+  // v12 is opt-in; v1–v11 source paths and historical save continuation stay exact.
+  '0d72f0b19b4f50a21a93e8fa8f173f39f8578fdc2e7a8f943812308817d6276e':
+    '344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f',
   // Main 261034a -> command-envelope seam: fixed old v1/v2 bytes + continuation
   // hashes in tests/save/envelope-legacy-compatibility.test.ts. Never auto-update.
   '89ab269c54f1d38cba633ca64eaea42b072d0953e78ead0ad02a1328b72ec16a':

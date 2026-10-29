@@ -33,3 +33,23 @@ DOM `pointerdown/keydown` → 队列 → rAF 的 `FixedClock`（30 Hz）→ `Loc
 标杆来源：[Movement speed](https://wiki.leagueoflegends.com/en-us/Movement_speed)、[Basic attack](https://wiki.leagueoflegends.com/en-us/Basic_attack)、[Attack speed](https://wiki.leagueoflegends.com/en-us/Attack_speed)。这是社区维护 wiki，不是 Riot 游戏内测量。2026-10-29 本轮读取前两页被 robots 拒绝，未改用镜像；上表只追溯 a1dbv `f4b4e801` 的规范转引，没有独立核实。没有选定英雄／攻速／装备／录像帧率与单位映射，不能声称任意数值符合 ±20%。
 
 下一手感单元只追**施法中合法下一技能的缓冲与提交边界**；先保留上述可复现输入，取得真实帧对照，再决定取消窗，不在本轮改玩法。
+
+## 指令缓冲旁置候选（v12，2026-10-29）
+
+入口 `candidate.html?commands=buffer-v1`，无参数仍为 v11，主页仍为 v10。玩家与机器人共用模拟层单槽队列；只在施法或普攻准备占用中排队，最后一条**合法**的 move／attackMove／attack／cast 替换前条；非法输入不覆盖。stop 是立即取消普攻与清队的逃生输入，buyItem 不占队列。排队时不支付技能资源，释放当 tick 重验存活、控制、目标、距离、法力和冷却，失败即丢弃，不自动重试。死亡／眩晕清队。普攻准备中移动改为发射后当 tick 移动，想取消这次普攻用 stop；这是明确的操作取舍。
+
+同一 `tools/measure-feel.ts`、同种子1、同英雄/位置/输入，分别以参数11/12运行；原场景保留，额外增加只有Q→W、不含随后move覆盖的隔离对照，两版均运行。原始逐tick日志：[v11](quality/feel-command-buffer-before.json)、[v12](quality/feel-command-buffer.json)。
+
+| 同一输入场景 | v11 | v12 |
+|---|---|---|
+| Q tick1，ready W tick2，之后不再输入（两英雄） | W `alreadyCasting`，21tick内不执行 | W接收入队；Q释放tick5同时开始W，释放到消费间隔0tick |
+| Q tick1，W及move同在tick2，move排在后（原首测脚本） | W拒绝，move在tick5移动 | W先入队、随后被合法move覆盖；tick5移动，无偷执行W |
+| Veyra普攻tick1，tick7提前move | tick7取消普攻且移动 | 保留普攻、tick8发射并移动 |
+| Morrow普攻tick1，tick9提前move | tick9取消普攻且移动 | 保留普攻、tick10发射并移动 |
+| move恰好在发射tick8／10输入 | 取消尚未提交的普攻 | 本tick发射并移动，单tick位移≤速度/30 |
+
+普攻前摇仍233.33／300ms、连续周期866.67／966.67ms，未改参数。队列保存在权威英雄状态且纳入hash；存档仍按输入重放重建队列，v12独立浏览器槽避免覆盖旧候选存档。旧v1/v2固定fixture和旧v11默认回放须继续通过。
+
+相位边界：输入阶段直接施法会参与本tick的advanceCasts；释放后接续的非零前摇技能在本tick只开始，下一tick才扣第一个前摇tick，不重复推进其他英雄。比如普攻tick8释放后接Q：tick8开始、tick13释放；这是当前固定阶段合同，相比同tick输入阶段直接Q晚1tick提交，仍需手感对照。零前摇W在tick5开始并提交。
+
+本轮只证明CPU指令与状态时序变化；不是屏幕首反馈帧、动画衔接、音频同步或真人手感验收。下一步同输入实机smoke及逐帧反馈对照，默认版本不切换。

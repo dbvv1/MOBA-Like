@@ -1,0 +1,7610 @@
+{
+  "schema": 1,
+  "source": "b7debc25b3a0f403e73f9ac869afe60bfc7ef088",
+  "productionSourceDirty": true,
+  "contentVersion": 11,
+  "seed": 1,
+  "tickRate": 30,
+  "scope": "CPU deterministic isolated arena; initialized at (0,0)/(5,0), production stats unchanged; no bot inputs; not screen latency, animation, sound or human feel",
+  "summary": [
+    {
+      "hero": "veyra",
+      "movement": {
+        "firstMovementTick": 1,
+        "speedUnitsPerSecond": 7,
+        "turnTick": 7,
+        "turnFacing": {
+          "x": -0.2696299255199709,
+          "z": 0.9629640197141818
+        },
+        "stopTick": 8,
+        "stopDistance": 0
+      },
+      "attack": {
+        "starts": [
+          1,
+          27,
+          53
+        ],
+        "launches": [
+          8,
+          34,
+          60
+        ],
+        "hits": [
+          16,
+          42
+        ],
+        "windupTicks": 7,
+        "cycleTicks": 26,
+        "boundaries": [
+          {
+            "commandTick": 7,
+            "accepted": true,
+            "moved": 0.23333333333333334,
+            "cancelled": true,
+            "released": false
+          },
+          {
+            "commandTick": 8,
+            "accepted": true,
+            "moved": 0.23333333333333334,
+            "cancelled": true,
+            "released": false
+          },
+          {
+            "commandTick": 9,
+            "accepted": true,
+            "moved": 0.23333333333333334,
+            "cancelled": false,
+            "released": true
+          }
+        ]
+      },
+      "cast": {
+        "readyWStartTicks": [],
+        "events": [
+          {
+            "type": "castStarted",
+            "castId": 1,
+            "heroId": 9,
+            "abilityId": "veyra.q",
+            "slot": "Q",
+            "tick": 1,
+            "ordinal": 0
+          },
+          {
+            "type": "castResolved",
+            "castId": 1,
+            "heroId": 9,
+            "abilityId": "veyra.q",
+            "slot": "Q",
+            "tick": 5,
+            "ordinal": 0
+          }
+        ],
+        "secondInputResults": [
+          {
+            "command": {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            },
+            "accepted": false,
+            "reason": "alreadyCasting"
+          },
+          {
+            "command": {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            },
+            "accepted": true,
+            "reason": null
+          }
+        ],
+        "firstMovementTick": 5
+      }
+    },
+    {
+      "hero": "morrow",
+      "movement": {
+        "firstMovementTick": 1,
+        "speedUnitsPerSecond": 6.8,
+        "turnTick": 7,
+        "turnFacing": {
+          "x": -0.2624641541525338,
+          "z": 0.9649417432078451
+        },
+        "stopTick": 8,
+        "stopDistance": 0
+      },
+      "attack": {
+        "starts": [
+          1,
+          30,
+          59
+        ],
+        "launches": [
+          10,
+          39
+        ],
+        "hits": [
+          18,
+          47
+        ],
+        "windupTicks": 9,
+        "cycleTicks": 29,
+        "boundaries": [
+          {
+            "commandTick": 9,
+            "accepted": true,
+            "moved": 0.22666666666666666,
+            "cancelled": true,
+            "released": false
+          },
+          {
+            "commandTick": 10,
+            "accepted": true,
+            "moved": 0.22666666666666666,
+            "cancelled": true,
+            "released": false
+          },
+          {
+            "commandTick": 11,
+            "accepted": true,
+            "moved": 0.22666666666666666,
+            "cancelled": false,
+            "released": true
+          }
+        ]
+      },
+      "cast": {
+        "readyWStartTicks": [],
+        "events": [
+          {
+            "type": "castStarted",
+            "castId": 1,
+            "heroId": 9,
+            "abilityId": "morrow.q",
+            "slot": "Q",
+            "tick": 1,
+            "ordinal": 0
+          },
+          {
+            "type": "castResolved",
+            "castId": 1,
+            "heroId": 9,
+            "abilityId": "morrow.q",
+            "slot": "Q",
+            "tick": 5,
+            "ordinal": 0
+          }
+        ],
+        "secondInputResults": [
+          {
+            "command": {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": null
+            },
+            "accepted": false,
+            "reason": "alreadyCasting"
+          },
+          {
+            "command": {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            },
+            "accepted": true,
+            "reason": null
+          }
+        ],
+        "firstMovementTick": 5
+      }
+    }
+  ],
+  "traces": [
+    {
+      "hero": "veyra",
+      "scenario": "move-6-ticks-turn-stop",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": 10,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": 10,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0.23333333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.4666666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.7,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.23333333333333328,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.9333333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.1666666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.4000000000000001,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": 0,
+                "z": 5
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": 0,
+                  "z": 5
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 1.337086350712007,
+            "z": 0.22469160459997575
+          },
+          "facing": {
+            "x": -0.2696299255199709,
+            "z": 0.9629640197141818
+          },
+          "distance": 0.2333333333333333,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [
+            {
+              "type": "stop",
+              "heroId": 9
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "stop",
+                "heroId": 9
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 1.337086350712007,
+            "z": 0.22469160459997575
+          },
+          "facing": {
+            "x": -0.2696299255199709,
+            "z": 0.9629640197141818
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.337086350712007,
+            "z": 0.22469160459997575
+          },
+          "facing": {
+            "x": -0.2696299255199709,
+            "z": 0.9629640197141818
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "continuous-attack",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 8,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "delivery": "projectile",
+              "tick": 8,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 17,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 16,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 15,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 14,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 13,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 12,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 11,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "basicAttackHit",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "position": {
+                "x": 5,
+                "z": 0
+              },
+              "targetTeam": 1,
+              "hpDamage": 46.55172413793103,
+              "shieldAbsorbed": 0,
+              "tick": 16,
+              "ordinal": 0
+            },
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 46.55172413793103,
+              "shieldAbsorbed": 0,
+              "abilityId": null,
+              "tick": 16,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 10,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 9,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 8,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 7,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 6,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 5,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 23,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 4,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 24,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 3,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 25,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 2,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 26,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 1,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 27,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 2,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 27,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 28,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 29,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 30,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 31,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 32,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 33,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 27,
+            "commitTick": 34,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 34,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 2,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 34,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 2,
+              "delivery": "projectile",
+              "tick": 34,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 35,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 36,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 17,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 37,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 16,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 38,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 15,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 39,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 14,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 40,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 13,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 41,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 12,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 42,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 11,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "basicAttackHit",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 2,
+              "position": {
+                "x": 5,
+                "z": 0
+              },
+              "targetTeam": 1,
+              "hpDamage": 46.55172413793103,
+              "shieldAbsorbed": 0,
+              "tick": 42,
+              "ordinal": 0
+            },
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 46.55172413793103,
+              "shieldAbsorbed": 0,
+              "abilityId": null,
+              "tick": 42,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 43,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 10,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 44,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 9,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 45,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 8,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 46,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 7,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 47,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 6,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 48,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 5,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 49,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 4,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 50,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 3,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 51,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 2,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 52,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 1,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 53,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 3,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 53,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 54,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 55,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 56,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 57,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 58,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 59,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 53,
+            "commitTick": 60,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 60,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 3,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 60,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 3,
+              "delivery": "projectile",
+              "tick": 60,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 61,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 62,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 17,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 63,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 16,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 64,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 15,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 65,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 14,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 66,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 13,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "move-at-7",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.23333333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castCancelled",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "reason": "move",
+              "tick": 7,
+              "ordinal": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "move-at-8",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.23333333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castCancelled",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "reason": "move",
+              "tick": 8,
+              "ordinal": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "move-at-9",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 8,
+            "windupTicks": 7,
+            "intervalTicks": 26
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 7,
+              "tick": 8,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "delivery": "projectile",
+              "tick": 8,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.23333333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "Q-then-W-and-move",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "Q",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "Q",
+                "targetId": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                },
+                "point": null
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 4,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": [
+            {
+              "type": "castStarted",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "veyra.q",
+              "slot": "Q",
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            },
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "W",
+                "targetId": null,
+                "point": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                }
+              },
+              "accepted": false,
+              "reason": "alreadyCasting"
+            },
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 3,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 2,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 1,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.23333333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "veyra.q",
+              "slot": "Q",
+              "tick": 5,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.4666666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.7,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333328,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.9333333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 68.30645161290322,
+              "shieldAbsorbed": 0,
+              "abilityId": "veyra.q",
+              "tick": 8,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.1666666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.4000000000000001,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.6333333333333335,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.866666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.1,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333317,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.3333333333333335,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.566666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.8000000000000003,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.0333333333333337,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.266666666666667,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.5000000000000004,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.733333333333334,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.9666666666666672,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.2333333333333334,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -4.2,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.23333333333333295,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "veyra",
+      "scenario": "Q-then-ready-W-only",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "Q",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "Q",
+                "targetId": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                },
+                "point": null
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 4,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": [
+            {
+              "type": "castStarted",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "veyra.q",
+              "slot": "Q",
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "W",
+                "targetId": null,
+                "point": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                }
+              },
+              "accepted": false,
+              "reason": "alreadyCasting"
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 3,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 2,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "veyra.q",
+            "remainingTicks": 1,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "veyra.q",
+              "slot": "Q",
+              "tick": 5,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 68.30645161290322,
+              "shieldAbsorbed": 0,
+              "abilityId": "veyra.q",
+              "tick": 8,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "move-6-ticks-turn-stop",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": 10,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": 10,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0.22666666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.4533333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.6799999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666663,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0.9066666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666668,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.1333333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666668,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.3599999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": 0,
+                "z": 5
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": 0,
+                  "z": 5
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 1.300508125058759,
+            "z": 0.2187201284604449
+          },
+          "facing": {
+            "x": -0.2624641541525338,
+            "z": 0.9649417432078451
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [
+            {
+              "type": "stop",
+              "heroId": 9
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "stop",
+                "heroId": 9
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 1.300508125058759,
+            "z": 0.2187201284604449
+          },
+          "facing": {
+            "x": -0.2624641541525338,
+            "z": 0.9649417432078451
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 1.300508125058759,
+            "z": 0.2187201284604449
+          },
+          "facing": {
+            "x": -0.2624641541525338,
+            "z": 0.9649417432078451
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "continuous-attack",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 20,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 10,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "delivery": "projectile",
+              "tick": 10,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 17,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 16,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 15,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 14,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 13,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 12,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "basicAttackHit",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "position": {
+                "x": 5,
+                "z": 0
+              },
+              "targetTeam": 1,
+              "hpDamage": 41.66666666666667,
+              "shieldAbsorbed": 0,
+              "tick": 18,
+              "ordinal": 0
+            },
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 41.66666666666667,
+              "shieldAbsorbed": 0,
+              "abilityId": null,
+              "tick": 18,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 11,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 10,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 9,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 8,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 23,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 7,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 24,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 6,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 25,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 5,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 26,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 4,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 27,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 3,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 28,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 2,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 29,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 1,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 30,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 2,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 30,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 31,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 32,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 33,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 34,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 35,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 36,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 37,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 38,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 2,
+            "targetId": 10,
+            "startedTick": 30,
+            "commitTick": 39,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 39,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 20,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 2,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 39,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 2,
+              "delivery": "projectile",
+              "tick": 39,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 40,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 41,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 18,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 42,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 17,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 43,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 16,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 44,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 15,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 45,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 14,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 46,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 13,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 47,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 12,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "basicAttackHit",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 2,
+              "position": {
+                "x": 5,
+                "z": 0
+              },
+              "targetTeam": 1,
+              "hpDamage": 41.66666666666667,
+              "shieldAbsorbed": 0,
+              "tick": 47,
+              "ordinal": 0
+            },
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 41.66666666666667,
+              "shieldAbsorbed": 0,
+              "abilityId": null,
+              "tick": 47,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 48,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 11,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 49,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 10,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 50,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 9,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 51,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 8,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 52,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 7,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 53,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 6,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 54,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 5,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 55,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 4,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 56,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 3,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 57,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 2,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 58,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 1,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 59,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 3,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 59,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 60,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 61,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 62,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 63,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 64,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 65,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 66,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 3,
+            "targetId": 10,
+            "startedTick": 59,
+            "commitTick": 68,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "move-at-9",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.22666666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castCancelled",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "reason": "move",
+              "tick": 9,
+              "ordinal": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "move-at-10",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.22666666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castCancelled",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "reason": "move",
+              "tick": 10,
+              "ordinal": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "move-at-11",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "attack",
+              "heroId": 9,
+              "targetId": 10
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "attack",
+                "heroId": 9,
+                "targetId": 10
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": [
+            {
+              "type": "castStarted",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": {
+            "id": 1,
+            "targetId": 10,
+            "startedTick": 1,
+            "commitTick": 10,
+            "windupTicks": 9,
+            "intervalTicks": 29
+          },
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 20,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "action": "basicAttack",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "basicAttack",
+              "slot": null,
+              "targetId": 10,
+              "windupTicks": 9,
+              "tick": 10,
+              "ordinal": 0
+            },
+            {
+              "type": "basicAttack",
+              "sourceId": 9,
+              "targetId": 10,
+              "attackId": 1,
+              "delivery": "projectile",
+              "tick": 10,
+              "ordinal": 1
+            }
+          ]
+        },
+        {
+          "tick": 11,
+          "input": [
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": -0.22666666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 19,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "Q-then-W-and-move",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "Q",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "Q",
+                "targetId": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                },
+                "point": null
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 4,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": [
+            {
+              "type": "castStarted",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "morrow.q",
+              "slot": "Q",
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": null
+            },
+            {
+              "type": "move",
+              "heroId": 9,
+              "point": {
+                "x": -5,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "W",
+                "targetId": null,
+                "point": null,
+                "direction": null
+              },
+              "accepted": false,
+              "reason": "alreadyCasting"
+            },
+            {
+              "command": {
+                "type": "move",
+                "heroId": 9,
+                "point": {
+                  "x": -5,
+                  "z": 0
+                }
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 3,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 2,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 1,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.22666666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "morrow.q",
+              "slot": "Q",
+              "tick": 5,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.4533333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666666,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.6799999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666663,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -0.9066666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666668,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 56.640625,
+              "shieldAbsorbed": 0,
+              "abilityId": "morrow.q",
+              "tick": 8,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.1333333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666668,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.3599999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.5866666666666664,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -1.813333333333333,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.0399999999999996,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.266666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.4933333333333327,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.7199999999999993,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -2.946666666666666,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.1733333333333325,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.399999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.6266666666666656,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -3.853333333333332,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666657,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": -4.079999999999999,
+            "z": 0
+          },
+          "facing": {
+            "x": -1,
+            "z": 0
+          },
+          "distance": 0.22666666666666702,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    },
+    {
+      "hero": "morrow",
+      "scenario": "Q-then-ready-W-only",
+      "rows": [
+        {
+          "tick": 1,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "Q",
+              "targetId": null,
+              "point": null,
+              "direction": {
+                "x": 1,
+                "z": 0
+              }
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "Q",
+                "targetId": null,
+                "direction": {
+                  "x": 1,
+                  "z": 0
+                },
+                "point": null
+              },
+              "accepted": true,
+              "reason": null
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 4,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": [
+            {
+              "type": "castStarted",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "morrow.q",
+              "slot": "Q",
+              "tick": 1,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 2,
+          "input": [
+            {
+              "type": "cast",
+              "heroId": 9,
+              "slot": "W",
+              "targetId": null,
+              "point": null,
+              "direction": null
+            }
+          ],
+          "result": [
+            {
+              "command": {
+                "type": "cast",
+                "heroId": 9,
+                "slot": "W",
+                "targetId": null,
+                "point": null,
+                "direction": null
+              },
+              "accepted": false,
+              "reason": "alreadyCasting"
+            }
+          ],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 3,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 3,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 2,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 4,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": {
+            "id": 1,
+            "slot": "Q",
+            "abilityId": "morrow.q",
+            "remainingTicks": 1,
+            "targetId": null,
+            "direction": {
+              "x": 1,
+              "z": 0
+            },
+            "point": null
+          },
+          "events": []
+        },
+        {
+          "tick": 5,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "castResolved",
+              "castId": 1,
+              "heroId": 9,
+              "abilityId": "morrow.q",
+              "slot": "Q",
+              "tick": 5,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 6,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 7,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 8,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": [
+            {
+              "type": "heroDamaged",
+              "targetId": 10,
+              "sourceId": 9,
+              "hpDamage": 56.640625,
+              "shieldAbsorbed": 0,
+              "abilityId": "morrow.q",
+              "tick": 8,
+              "ordinal": 0
+            }
+          ]
+        },
+        {
+          "tick": 9,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 10,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 11,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 12,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 13,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 14,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 15,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 16,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 17,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 18,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 19,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 20,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 21,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        },
+        {
+          "tick": 22,
+          "input": [],
+          "result": [],
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "facing": {
+            "x": 1,
+            "z": 0
+          },
+          "distance": 0,
+          "cooldown": 0,
+          "basicAttack": null,
+          "cast": null,
+          "events": []
+        }
+      ]
+    }
+  ]
+}

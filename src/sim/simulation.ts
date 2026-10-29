@@ -284,10 +284,12 @@ export class Simulation {
     }
 
     this.advanceCasts();
+    this.consumeCommandBuffers();
     this.advanceProjectiles();
     this.advanceZones();
     this.advanceDelayedAreas();
     this.updateUnits();
+    this.consumeCommandBuffers(true);
     if(this.catalog.rules.minionContactSpacing)this.resolveMinionContacts();
     this.updateStructures();
     this.updateRespawns();
@@ -587,6 +589,27 @@ export class Simulation {
       return fail('heroDead');
     }
 
+    if (this.catalog.version === 12) {
+      // Stop is an immediate explicit escape, not an accidentally buffered cancel.
+      if (command.type === 'stop') delete hero.queuedCommand;
+      else if (command.type !== 'buyItem' && (hero.cast || hero.basicAttack)) {
+        if (this.isStunned(hero)) return fail('stunned');
+        let validation: CommandResult | undefined;
+        if (command.type === 'cast') validation = this.commandCast(hero, command, fail, true);
+        else if (command.type === 'move' || command.type === 'attackMove') {
+          if (!isFiniteVec(command.point)) return fail('invalidPoint');
+          const snapped = this.navigation.closestPoint(this.clampToWorld(command.point));
+          if (!snapped || !this.navigation.findPath(hero.position, snapped).success) return fail('pathNotFound');
+        } else if (command.type === 'attack') {
+          const target = this.getEntityById(command.targetId);
+          if (!target || !target.alive || target.team === hero.team || (target.kind === 'structure' && target.invulnerable)) return fail('invalidTarget');
+        }
+        if (validation && !validation.accepted) return validation;
+        hero.queuedCommand = structuredClone(command);
+        return { command: structuredClone(command), accepted: true, queued: true, reason: null };
+      }
+    }
+
     switch (command.type) {
       case 'move':
         return this.commandMove(hero, command.point, fail);
@@ -614,6 +637,22 @@ export class Simulation {
         const exhaustive: never = command;
         return fail(`unknownCommand:${String(exhaustive)}`);
       }
+    }
+  }
+
+  private consumeCommandBuffers(afterUnits = false): void {
+    if (this.catalog.version !== 12) return;
+    for (const hero of this.state.entities) {
+      if (hero.kind !== 'hero' || !hero.queuedCommand) continue;
+      if (!hero.alive || this.isStunned(hero)) { delete hero.queuedCommand; continue; }
+      if (hero.cast || hero.basicAttack) continue;
+      const command = hero.queuedCommand;
+      // Consume exactly once, including when cooldown/resources/target became invalid.
+      delete hero.queuedCommand;
+      const result = this.applyCommand(command);
+      // The unit phase held this actor for its attack commitment; a queued move
+      // may use exactly its one displacement now, before contact separation.
+      if (afterUnits && result.accepted && (command.type === 'move' || command.type === 'attackMove')) this.moveAlongPath(hero);
     }
   }
 
@@ -684,11 +723,12 @@ export class Simulation {
     hero: HeroEntity,
     command: Extract<SimCommand, { type: 'cast' }>,
     fail: (reason: string) => CommandResult,
+    validateOnly = false,
   ): CommandResult {
     if (this.isStunned(hero)) {
       return fail('stunned');
     }
-    if (hero.cast) {
+    if (hero.cast && !validateOnly) {
       return fail('alreadyCasting');
     }
     const abilityId = this.catalog.heroes[hero.definitionId]?.abilities[command.slot];
@@ -742,6 +782,7 @@ export class Simulation {
       point = snapped;
     }
 
+    if (validateOnly) return { command, accepted: true, reason: null };
     this.cancelBasicAttack(hero, 'cast');
     hero.mana -= ability.manaCost;
     const cooldownTicks = Math.max(
@@ -1319,6 +1360,7 @@ export class Simulation {
     }
     this.cancelBasicAttack(target, 'dead');
     target.alive = false;
+    if (target.kind === 'hero') delete target.queuedCommand;
     target.hp = 0;
     target.targetId = null;
     target.moveGoal = null;
@@ -1614,6 +1656,9 @@ export class Simulation {
         return;
       }
       if (entity.basicAttack && this.advanceBasicAttack(entity, readById, attacks)) return;
+      // A cancelled windup also releases its queued intent this tick. Reserve
+      // this actor's sole displacement for buffer consumption, not old chasing.
+      if (this.catalog.version === 12 && entity.kind === 'hero' && entity.queuedCommand) return;
 
       if (entity.kind === 'minion' && this.state.tick >= entity.targetRefreshTick) {
         this.refreshMinionTarget(entity, readEntities);

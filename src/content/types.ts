@@ -1,5 +1,5 @@
 export type TeamId = 0 | 1;
-export type ContentVersion = 1 | 2 | 7 | 8 | 9 | 10 | 11;
+export type ContentVersion = 1 | 2 | 7 | 8 | 9 | 10 | 11 | 12;
 export type AbilitySlot = 'Q' | 'W' | 'E' | 'R';
 export type DamageType = 'physical' | 'magic' | 'true';
 export type Difficulty = 'low' | 'normal' | 'high';

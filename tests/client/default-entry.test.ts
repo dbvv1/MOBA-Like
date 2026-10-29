@@ -12,6 +12,6 @@ describe('side-by-side candidate isolation',()=>{
   expect(readFileSync('index.html','utf8')).toContain('src="/default-src/client.ts"');
   expect(readFileSync('candidate.html','utf8')).toContain('src="/src/client.ts"');
   expect(readFileSync('default-src/client.ts','utf8')).toContain('contentVersion=10');
-  expect(readFileSync('src/client.ts','utf8')).toContain('contentVersion=11');
+  expect(readFileSync('src/client.ts','utf8')).toContain("get('commands')==='buffer-v1'?12:11");
  });
 });

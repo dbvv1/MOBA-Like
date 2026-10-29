@@ -17,7 +17,7 @@ import {controlsHelp,createKeyboardSettings} from './ui/keyboard-settings.js';
 
 function element<T extends HTMLElement>(id:string):T {const result=document.getElementById(id);if(!result)throw new Error(`Missing ${id}`);return result as T;}
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
-const contentVersion=11 as const;
+const contentVersion=new URLSearchParams(location.search).get('commands')==='buffer-v1'?12:11;
 const bindings=new KeyboardBindings(()=>window.localStorage);
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion),slot=>bindings.label(slot));
 const help=element<HTMLElement>('controls-help'),settingsTrigger=element<HTMLButtonElement>('keyboard-settings');
@@ -33,7 +33,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const panel=createSavePanel();lifetime.defer(()=>panel.dispose());
     const releaseSave=await acquireSaveOwnership(abort.signal);if(releaseSave)lifetime.defer(releaseSave);
     current();
-    const slot=createSaveSlot(()=>window.localStorage,SAVE_COMPATIBILITY_ID);
+    const slot=createSaveSlot(()=>contentVersion===12?{getItem:(key:string)=>window.localStorage.getItem(key+'-buffer-v1'),setItem:(key:string,value:string)=>window.localStorage.setItem(key+'-buffer-v1',value),removeItem:(key:string)=>window.localStorage.removeItem(key+'-buffer-v1')}:window.localStorage,SAVE_COMPATIBILITY_ID);
     let saving=releaseSave!==null,saved:MatchSave|undefined;
     if(saving){
       const read=slot.read();
