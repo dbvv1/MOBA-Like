@@ -32,7 +32,7 @@ export class CaptureSession {
     this.alpha=this.clock.advance(1/CAPTURE_HZ,()=>{
       if(this.sim.isComplete())return;
       const commands:SimCommand[]=this.config.input==='march'&&this.sim.snapshot().tick===0?[{type:'move',heroId:this.playerId,point:{x:-18,z:1.2}}]:[];
-      this.sim.step([...commands,...this.bot.think(this.sim)]);consumer.sync(this.sim.snapshot(),this.playerId);
+      this.sim.step(this.sim.commandFrame([...commands,...this.bot.think(this.sim)]));consumer.sync(this.sim.snapshot(),this.playerId);
     });
     this.virtualFrame++;consumer.draw(1/CAPTURE_HZ,this.sim.isComplete()?1:this.alpha,render);
   }

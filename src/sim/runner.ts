@@ -58,12 +58,12 @@ export function runBotMatch(options: BotMatchOptions): BotMatchResult {
     for (const command of issued) {
       commands.push({ tick, command });
     }
-    simulation.step(issued);
+    simulation.step(simulation.commandFrame(issued));
   }
 
   return {
     simulation,
-    replay: simulation.createReplay(commands),
+    replay: simulation.createReplay(commands, 'stable-seats-v1'),
     commands,
     commandCount: commands.length,
   };
@@ -81,6 +81,7 @@ export interface ReplayVerification {
 }
 
 export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerification {
+  if (replay.inputProtocol !== undefined && replay.inputProtocol !== 'stable-seats-v1') throw new Error('unsupported input protocol');
   if (replay.formatVersion !== 1 && replay.formatVersion !== 2) {
     throw new Error(`unsupported replay format version: ${String(replay.formatVersion)}`);
   }
@@ -107,7 +108,7 @@ export function replayMatch(replay: Replay, navigation: Navigation): ReplayVerif
   const maxTicks = Math.ceil(replay.maxMatchSeconds * simulation.tickRateHz) + 2;
   while (!simulation.isComplete() && simulation.state.tick < maxTicks) {
     const commands = byTick.get(simulation.state.tick + 1) ?? [];
-    simulation.step(commands);
+    simulation.step(replay.inputProtocol === 'stable-seats-v1' ? simulation.commandFrame(commands) : commands);
   }
   const actualHash = simulation.finalHash();
   return {
