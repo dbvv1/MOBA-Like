@@ -1,6 +1,6 @@
 # 当前质量记分卡（2026-10-29）
 
-基线 main `8ade2d1`／运行实现 `9777b840`，Site v14 的 `candidate.html` 为 v11；默认 v10 保留。当前 brief 阶段 A：随一波兵线进入塔前、施放／命中／受击并撤回。离线完整一局是已有功能，不据此把阶段 A 的质量认作完成。
+本轮固定基线 main `8fcab371`；已接收的 Site v15 中 `candidate.html` 为 v11、显式 `commands=buffer-v1` 为 v12，默认 v10 保留。本节固定机位拍摄内容仍为 v11。当前 brief 阶段 A：随一波兵线进入塔前、施放／命中／受击并撤回。离线完整一局是已有功能，不据此把阶段 A 的质量认作完成。
 
 | 线 | 达标线 | 当前 | 最大差距 | 下一单元 |
 |---|---|---|---|---|
@@ -88,7 +88,7 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 
 待补：gameplay、spawn、spawn-to-tower的同构图原创目标及独立校准，完整1–5档锚图包，然后按两位较低分逐机位正式复评。现有first-tower目标历史4/5是目标校准，不是当前画面分。阶段A内容验收覆盖0/89不因临时审图改变。
 
-## 灯光层旁置 forest-light-v1（视觉验收待本轮同机位实测）
+## 灯光层旁置 forest-light-v1（小幅改善，保留旁置；不替换默认）
 
 显式 `?lighting=forest-light-v1`；默认 baseline 和旧 stylized-diffuse 都保留。依据首塔当前图与既有目标：当前暗部偏黄褐、塔与路肩接触关系弱，目标是冷绿外围与暖路面的明暗分工。本层不补目标里的石板、植物体量或塔基几何。
 
@@ -96,7 +96,23 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 
 实施依据为安装的 Three 0.186.1 源码：lights_fragment_begin、lights_physical_pars_fragment、SSAOPass、EffectComposer 和 OutputPass；[官方文档入口](https://threejs.org/docs/)用于核对路径。候选显式使用 PCFShadowMap；baseline仍保原配置 PCFSoftShadowMap及其运行时PCF回退，不能把配置名当生效算法。额外 normal/AO/blur/grade/output、世界深度及cue绘制增加成本，不承诺性能改善。
 
-独立代码审查发现并已修复 cue 后处理污染、Sprite排除、AO投影更新及上游dispose遗漏。CPU与构建、真实图像重复、两位非作者首塔对照及另外三机位回归均以本轮实际结果补充；此段不预填通过。
+独立代码审查发现并已修复 cue 后处理污染、Sprite排除、AO投影更新及上游dispose遗漏。CPU全量475项中474项首轮通过，world-cancel旧注入夹具缺新增lightingState绑定导致失败；补齐后相关13项复测全部通过。网页构建及capture类型检查通过。公开文件／提交身份扫描无发现。
+
+### 同构建实图比较与采用边界
+
+拍摄源码 `83bc9762178ee1de6f51f763cd95ebbb0674cc82`，clean；baseline与候选四机位各2次，共16 PNG，全部重复像素／状态／机位检查通过，errors为空。同一1280×720、DPR1、seed1、march、t10、frame600、simTick300；每机位前后camera/stateHash/renderer严格相同，候选像素确实不同。新baseline四图与既有8fcab原图PNG hash逐一相同，默认画面未变。两轮浏览器与runner真实退出0、signal=null；两个独占预览端口均关闭且拒绝连接。
+
+原始renderer仍为 `ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)`，software。MAX_SAMPLES=4、默认framebuffer SAMPLES=4、各向异性上限16、支持压缩格式列表为空；候选配置HalfFloatType离屏缓冲及4样本MSAA，实际纹理内部格式未观测。baseline配置PCFSoft但实际回退PCF；候选明确PCF。render统计仅反映最后一次draw，不是候选整条多pass总成本；不可用它声称调用数减少。候选双次四机位捕获约191秒，baseline约58秒，这是整批截图耗时，不能当实时FPS。
+
+两名新的独立非作者只看匿名X/Y实图与首塔目标，不给代码、版本先后或另一人的结论。两人都选Y，揭盲为forest-light-v1：塔侧明暗、投影与接地**小幅**更近目标；角色可读性基本持平。共同仍见三大差距：地表缺少目标的大块冷暖光影组织；路面／草缘／塔基过渡生硬；稀疏几何树与细碎地纹削弱场景焦点。候选没有解决这些结构性差距。
+
+| 回归机位 | 双方共同观察 |
+|---|---|
+| gameplay | 体积／接地略强，白圈和血条可读性保持；道路略冷灰、树底更黑 |
+| spawn | 建筑层叠体积略强，但檐下和凹处细节被压暗；主要建筑轮廓和血条保持 |
+| spawn-to-tower | 路网和建筑仍清楚，拉远后接地收益弱；没有可确认的角色可读性提升 |
+
+两位均未见明显过曝、大面积压黑或主要路网／角色轮廓丢失，均支持**保留旁置，不切默认**。道路暖感减弱与树下黑块是明确代价，不描述为全屏显著提升。其他三机位没有目标、完整1–5锚图仍缺，不给正式品质分。此轮未上传PNG，不以文档链接声称远端已收到图片；原报告及两组PNG留在云工作区 `outputs/lighting-baseline/`、`outputs/lighting-forest-light-v1/`。功能截图不是完整手感／声音验收。
 
 ## 阶段A内容清单与验收分母
 
