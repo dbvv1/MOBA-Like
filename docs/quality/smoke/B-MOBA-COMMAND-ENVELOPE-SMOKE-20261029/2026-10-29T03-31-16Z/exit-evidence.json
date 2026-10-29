@@ -1,0 +1,201 @@
+{
+  "task": "B-MOBA-COMMAND-ENVELOPE-SMOKE-20261029",
+  "unit": 1,
+  "unitRun": "u1-a0-2026-10-29T032620467Z",
+  "publicRunDir": "2026-10-29T03-31-16Z",
+  "status": "passed",
+  "source": {
+    "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+    "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+    "dirtyDuringBuild": false,
+    "worktreeCleanDuringRun": true,
+    "sourceCheck": "HEAD and tree read back in the isolated worktree matched the fixed candidate exactly; git status --porcelain --untracked-files=no was empty; the build-emitted identity matched commit/tree/clean and the runner asserted it before navigation.",
+    "buildIdentity": {
+      "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+      "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+      "dirty": false
+    }
+  },
+  "serialPreflight": {
+    "checkedUtc": "2026-10-29T03:30:05Z",
+    "priorTowerInvocation": "Closed. The tower unit result recorded the CLI closed with exit code 0 (close seen), the turn ended with a result, and tools settled. Its own exit evidence recorded empty cleanup arrays, zero remaining Chromium processes, and no preview listener.",
+    "priorResidualProcessCheck": "Cross-checking the tower unit registered process subtree against the current process census by PID and creation time found every registered entry exited except one inert Git head.exe text-filter process left by a prior shell pipeline. It is not a browser, preview server or GPU task, is not an ancestor of the tower invocation, and holds no serial slot. Full PID evidence is retained locally only.",
+    "browserProcesses": "No Chrome, Chromium or headless-shell browser process was present.",
+    "nodeSmokeProcesses": "No node process ran browser-smoke/run.mjs and no vite preview/dev server process was present.",
+    "previewListeners": "No LISTENING socket on 3000, 4173, 4174, 5173, 5174, 7702, 8000, 8080, 8757, 9222 or 12765.",
+    "userDesktopApps": "User-owned desktop apps (Edge, VS Code and a Unity editor) were present. They are not receiver GPU/browser jobs and were not touched; no receiver browser or GPU task was running.",
+    "sharedGpuLock": "No GPU slot or capture lock state existed. The receiver's own job lock held this unit and was not cleared, modified or used as exit evidence; the receiver state listed only this unit as running.",
+    "serialCondition": "Known-clear; this unit ran one headless browser and one software-renderer smoke task."
+  },
+  "preparation": {
+    "method": "Used the existing tests/client/browser-smoke/run.mjs unchanged. Movement is a real page.mouse right-click followed by a real S keydown; targeting and abilities use real Q/E/R key presses; save/resume uses the real Save match button, a real page reload and the real Continue saved match button. No simulation state was injected, and no source, script, lockfile, browser security configuration or test threshold was modified.",
+    "npmCiOffline": {
+      "exitCode": 0,
+      "network": "offline",
+      "note": "Existing lockfile only; no network install and no browser download."
+    },
+    "cpuSuitesNotRerun": "Per task, the same-tree 71-file/464-item CPU suite, npm run build, final npm run build:web and the already-run sim checks were reused, not rerun in this unit.",
+    "smokeBuild": {
+      "command": "npm run build:web (inside npm run smoke)",
+      "exitCode": 0,
+      "exitCodeBasis": "The single npm run smoke chain returned 0; build:web runs first and the browser runner executed afterward, so a build failure would have aborted the chain.",
+      "note": "A fresh build produced web-dist and its emitted build-identity.json; no cached or stale bundle was reused."
+    }
+  },
+  "smokeRun": {
+    "command": "MOBA_SMOKE_SOURCE_SHA=<fixed 9777b84> MOBA_SMOKE_RENDERER=software MOBA_SMOKE_OUTPUT=<exclusive run dir> npm run smoke",
+    "requestedRenderer": "software",
+    "actualRendererClass": "software",
+    "actualRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "actualVendor": "Google Inc. (Google)",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "startedAt": "2026-10-29T03:31:48.556Z",
+    "finishedAt": "2026-10-29T03:32:47.796Z",
+    "npmExitCode": 0,
+    "npmExitCodeCaptured": true,
+    "reportPassed": true,
+    "manifestPassed": true,
+    "assertionHighlights": {
+      "defaultEntry": {
+        "contentVersion": 10,
+        "initialTick": 12,
+        "finalTick": 18,
+        "tickAdvanced": true,
+        "nonBackground": true
+      },
+      "candidateEntry": {
+        "contentVersion": 11,
+        "moveCommand": "move",
+        "activeMoveAtStop": true,
+        "stopHeldAtKeyPosition": true,
+        "targetingDirectionVertices": 12,
+        "targetingAreaVertices": 96,
+        "targetingCancelled": true,
+        "effectZone": "veyra.e",
+        "effectMeshes": 2,
+        "attackClipWeight": 1,
+        "heroSelection": {
+          "selected": "morrow",
+          "restartPreserved": true,
+          "changedBack": true
+        },
+        "keybindingRemap": "F",
+        "saveResume": {
+          "savedTick": 27,
+          "resumedTick": 37,
+          "resumedContentVersion": 11,
+          "resumedTickNotBehindSaved": true
+        },
+        "pixels": {
+          "width": 1280,
+          "height": 900,
+          "quantizedColors": 1997,
+          "dominantFraction": 0.05317795138888889,
+          "nonBackground": true
+        },
+        "botAdvance": {
+          "heroId": 10,
+          "team": 1,
+          "directlyAssertedByRunner": false,
+          "tickFrom": 13,
+          "tickTo": 75,
+          "distanceTravelled": 14.467,
+          "basis": "post-run read-only snapshot observation; see report.json botAdvance"
+        }
+      },
+      "diffuseEntry": {
+        "contentVersion": 11,
+        "lightingActive": "stylized-diffuse",
+        "nonBackground": true
+      },
+      "errorGates": {
+        "consoleErrors": 0,
+        "pageErrors": 0,
+        "httpErrors": 0,
+        "requestFailures": 0
+      }
+    }
+  },
+  "browser": {
+    "kind": "chrome-headless-shell (Playwright 1.64.1 default headless)",
+    "version": "156.0.8078.4",
+    "headless": true,
+    "chromiumSandbox": true,
+    "requestedArgs": [
+      "--use-angle=swiftshader"
+    ],
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ],
+    "actualArgvChecks": {
+      "argCount": 45,
+      "executableName": "chrome-headless-shell.exe",
+      "headless": true,
+      "useAngleSwiftshader": true,
+      "enableUnsafeSwiftshader": false,
+      "noSandbox": false,
+      "disableSetuidSandbox": false
+    },
+    "argvNote": "Full argv and the local user-data/profile path are retained only in the local raw report."
+  },
+  "exit": {
+    "browserExitCode": 0,
+    "browserSignalCode": null,
+    "browserExited": true,
+    "browserExitSource": "Playwright browserServer.process()",
+    "previewClosed": true,
+    "previewClosedMeaning": "After server.close() the runner fetched its own preview origin; the fetch rejected, so the same-process listener was closed and the ephemeral port was unreachable.",
+    "cleanupErrors": [],
+    "commandExitCodes": {
+      "npmRunSmoke": 0
+    },
+    "postRunProcessCheck": "The recorded browser process was absent after the run; zero chrome/chromium/headless-shell processes, zero smoke/preview node processes and no preview listener remained. The npm/runner chain used for this run had exited. Full PIDs are retained locally only."
+  },
+  "rendererCaveat": "MOBA_SMOKE_RENDERER=software was requested and the actual WebGL renderer was SwiftShader software. This round passes the functional gate only; it is not a GPU capture, does not claim GPU rendering, and does not judge visual quality, feel, audio, multiplayer, or superiority over the default.",
+  "boundary": "Functional smoke evidence only. Default entry remains v10 and candidate.html remains v11. No source, script, lockfile, browser security configuration or test threshold was changed; no default-entry switch, merge or deployment was made.",
+  "botObservation": {
+    "basis": "post-run read-only snapshot observation; same record as report.json botAdvance; not a run.mjs assertion",
+    "heroId": 10,
+    "team": 1,
+    "definitionId": "veyra",
+    "directlyAssertedByRunner": false,
+    "sampleA": {
+      "tick": 13,
+      "position": {
+        "x": 90.9668133907807,
+        "z": -1.1701654241124302
+      },
+      "moveGoal": {
+        "x": -28,
+        "z": 0
+      },
+      "targetId": 4
+    },
+    "sampleB": {
+      "tick": 75,
+      "position": {
+        "x": 76.50084648527327,
+        "z": -1.0278772193878372
+      },
+      "moveGoal": {
+        "x": -28,
+        "z": 0
+      },
+      "targetId": 4
+    },
+    "tickDelta": 62,
+    "distanceTravelled": 14.467,
+    "playerHero": {
+      "id": 9,
+      "team": 0,
+      "position": {
+        "x": -94,
+        "z": 1.2000000476837158
+      },
+      "moveGoal": null
+    },
+    "envelopePath": "LocalMatch.step -> Simulation.commandFrame -> Simulation.step (source-verified; boundary not instrumented at runtime)",
+    "cleanup": "The observation page, browser and preview server were closed in the script finally block with no reported close error.",
+    "motionClipNote": "report.motion actor id 10 walk clip is animation only, not advancement evidence; advancement comes from the read-only snapshot tick/position delta."
+  }
+}

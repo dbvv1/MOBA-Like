@@ -1,0 +1,47 @@
+{
+  "source": {
+    "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+    "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+    "dirty": false
+  },
+  "startedAt": "2026-10-29T03:31:48.556Z",
+  "finishedAt": "2026-10-29T03:32:47.796Z",
+  "passed": true,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "canvas.png",
+      "bytes": 1850943,
+      "sha256": "4a5953f417b0d8de0280d596e2bf8ac43c3fbca8dc4d0c4c7727ac5e40b6b666"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 241056,
+      "sha256": "095dd0a0cc6e3cc1876c344a9fa3785ba97219b4091c8b42282e78a2913d60f0"
+    },
+    {
+      "path": "diffuse-canvas.png",
+      "bytes": 1929466,
+      "sha256": "b12d41d87fbb54866bd844873828f01e615768d48a6712a0c79aa3bf078f947d"
+    },
+    {
+      "path": "page.png",
+      "bytes": 1850943,
+      "sha256": "5be6ba355e280b22cb54d3dc5b44f81f6109cbf10412b2cbc99e999b17fc0aee"
+    }
+  ],
+  "publicCopyNote": "Runner-produced manifest; only processExit.pid and full browser argv were removed from this public copy. File hashes are unchanged."
+}

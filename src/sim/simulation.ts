@@ -1,3 +1,4 @@
+import { validFrameCommand } from './command-frame.js';
 import { minionSpacing } from './minion-spacing.js';
 import type {
   AbilitySlot,
@@ -10,7 +11,7 @@ import type {
   Vec2,
 } from '../content/types.js';
 import { getContent } from '../content/catalog.js';
-import { hashValue } from './hash.js';
+import { hashValue, stableStringify } from './hash.js';
 import {
   add,
   clamp,
@@ -34,6 +35,7 @@ import type {
   ActiveStatus,
   CastState,
   CommandResult,
+  CommandFrame,
   DelayedAreaEntity,
   Diagnostics,
   Entity,
@@ -217,7 +219,52 @@ export class Simulation {
     return this.state.status !== 'running';
   }
 
-  step(commands: readonly SimCommand[]): CommandResult[] {
+  /** Simulation-owned seat IDs: team-major, then roster slot; never connection arrival order. */
+  get inputSeats(): readonly { seat: number; heroId: number }[] {
+    const seats: { seat: number; heroId: number }[] = [];
+    for (const team of [0, 1] as const) {
+      for (let slot = 0; slot < this.config.heroesPerTeam; slot++) {
+        seats.push({ seat: seats.length, heroId: this.getHero(team, slot)!.id });
+      }
+    }
+    return seats;
+  }
+
+  /** Local producers explicitly send empty seats too. Not a network queue or input barrier. */
+  commandFrame(commands: readonly SimCommand[]): CommandFrame {
+    const inputs = this.inputSeats.map(({ seat, heroId }) => ({ seat, heroId, commands: [] as SimCommand[] }));
+    for (const command of commands) {
+      const input = inputs.find(input => input.heroId === command.heroId);
+      if (!input) throw new Error('input does not own a simulation seat');
+      input.commands.push(structuredClone(command));
+    }
+    return { tick: this.state.tick + 1, inputs: inputs.map(({ seat, commands }) => ({ seat, commands })) };
+  }
+
+  private frameCommands(frame: CommandFrame): SimCommand[] {
+    if (!frame || typeof frame !== 'object' || Array.isArray(frame) || Object.keys(frame).length !== 2 || !Object.hasOwn(frame, 'tick') || !Object.hasOwn(frame, 'inputs')) throw new Error('invalid command frame');
+    if (!Number.isSafeInteger(frame.tick) || frame.tick !== this.state.tick + 1) throw new Error('input tick is not the next simulation tick');
+    if (!Array.isArray(frame.inputs)) throw new Error('invalid input seats');
+    const seats = this.inputSeats;
+    const bySeat = new Map<number, readonly SimCommand[]>();
+    for (const input of frame.inputs) {
+      if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).length !== 2 || !Object.hasOwn(input, 'seat') || !Object.hasOwn(input, 'commands')) throw new Error('invalid input envelope');
+      const owner = seats[input.seat];
+      if (!Number.isSafeInteger(input.seat) || !owner || !Array.isArray(input.commands)) throw new Error('invalid input seat');
+      if (!input.commands.every(validFrameCommand)) throw new Error('malformed frame command');
+      if (input.commands.some((command: SimCommand) => command.heroId !== owner.heroId)) throw new Error('input does not own this hero');
+      const previous = bySeat.get(input.seat);
+      if (previous && stableStringify(previous) !== stableStringify(input.commands)) throw new Error('conflicting input retry');
+      bySeat.set(input.seat, input.commands);
+    }
+    if (bySeat.size !== seats.length) throw new Error('missing input seat (send explicit empty commands)');
+    return seats.flatMap(({ seat }) => [...bySeat.get(seat)!]);
+  }
+
+  step(input: readonly SimCommand[] | CommandFrame): CommandResult[] {
+    // Legacy ordered commands remain readable for historical replays; live producers use frames.
+    // Validate the entire frame before mutating tick, diagnostics, events or RNG.
+    const commands = Array.isArray(input) ? input : this.frameCommands(input as CommandFrame);
     if (this.state.status !== 'running') {
       this.state.diagnostics.commandRejections += commands.length;
       return commands.map((command) => ({
@@ -270,8 +317,9 @@ export class Simulation {
     return hashValue(this.state);
   }
 
-  createReplay(timedCommands: Replay['commands']): Replay {
+  createReplay(timedCommands: Replay['commands'], inputProtocol?: Replay['inputProtocol']): Replay {
     return {
+      ...(inputProtocol ? { inputProtocol } : {}),
       formatVersion: timedCommands.some(entry => entry.command.type === 'attackMove') ? 2 : 1,
       contentVersion: this.catalog.version,
       seed: this.seed,

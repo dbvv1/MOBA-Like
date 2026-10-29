@@ -1,0 +1,69 @@
+{
+  "formatVersion": 2,
+  "compatibilityId": "344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f",
+  "recipe": {
+    "seed": 17,
+    "contentVersion": 11,
+    "heroIdsByTeam": [
+      [
+        "morrow"
+      ],
+      [
+        "veyra"
+      ]
+    ],
+    "maxMatchSeconds": 1200,
+    "botSeed": 1002,
+    "botDifficulty": "normal"
+  },
+  "tick": 360,
+  "stateHash": "c97fc2e5f71c5faf",
+  "inputs": [
+    {
+      "tick": 1,
+      "commands": [
+        {
+          "type": "move",
+          "heroId": 9,
+          "point": {
+            "x": 0,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "tick": 90,
+      "commands": [
+        {
+          "type": "move",
+          "heroId": 9,
+          "point": {
+            "x": 9,
+            "z": 1
+          }
+        },
+        {
+          "type": "stop",
+          "heroId": 9
+        }
+      ]
+    },
+    {
+      "tick": 150,
+      "commands": [
+        {
+          "type": "attackMove",
+          "heroId": 9,
+          "point": {
+            "x": 22,
+            "z": 0
+          }
+        }
+      ]
+    }
+  ],
+  "view": {
+    "cameraLocked": false
+  }
+}

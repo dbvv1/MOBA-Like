@@ -26,6 +26,12 @@ export type SimCommand =
     }
   | { type: 'buyItem'; heroId: number; itemId: string };
 
+/** A complete next-tick input batch. Array order inside each seat is gameplay order. */
+export interface CommandFrame {
+  tick: number;
+  inputs: readonly { seat: number; commands: readonly SimCommand[] }[];
+}
+
 export interface CommandResult {
   command: SimCommand;
   accepted: boolean;
@@ -38,6 +44,7 @@ export interface TimedCommand {
 }
 
 export interface Replay {
+  inputProtocol?: 'stable-seats-v1';
   formatVersion: 1 | 2;
   contentVersion: ContentVersion;
   seed: number;

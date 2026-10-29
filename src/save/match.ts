@@ -99,7 +99,7 @@ export class LocalMatch {
       else this.inputs.push({tick:this.simulation.state.tick+1,commands:owned});
     }
     // Original ordering: player commands first, bot observes the PRE-step state exactly once.
-    return this.simulation.step([...commands,...this.bot.think(this.simulation)]);
+    return this.simulation.step(this.simulation.commandFrame([...commands,...this.bot.think(this.simulation)]));
   }
   checkpoint(view:SavedView={cameraLocked:true}):MatchSave {
     if(!this.recordable)throw new SaveError('limit','Input history exceeded the local save limit.');
