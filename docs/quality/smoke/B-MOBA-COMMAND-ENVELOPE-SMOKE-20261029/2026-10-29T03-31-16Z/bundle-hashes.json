@@ -1,0 +1,200 @@
+{
+  "buildIdentity": {
+    "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+    "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+    "dirty": false
+  },
+  "generatedAt": "2026-10-29T03:39:12.008Z",
+  "buildCommand": "npm run build:web (executed by npm run smoke)",
+  "root": "web-dist",
+  "fileCount": 37,
+  "totalBytes": 6136658,
+  "bundleDigestSha256": "3e9fa1d7da39ea864674e7089226890c27e1ee72df8ff4ac4d3e8a14b6ec321e",
+  "files": [
+    {
+      "path": "assets/amber-B-DIcLhT.glb",
+      "bytes": 199712,
+      "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+    },
+    {
+      "path": "assets/barracks-rust-ELYrhKWW.glb",
+      "bytes": 243900,
+      "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+    },
+    {
+      "path": "assets/barracks-teal-DplTNS_l.glb",
+      "bytes": 243936,
+      "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+    },
+    {
+      "path": "assets/base-rust-CiTXTXEl.glb",
+      "bytes": 324628,
+      "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+    },
+    {
+      "path": "assets/base-teal-L4GVNWxZ.glb",
+      "bytes": 324632,
+      "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+    },
+    {
+      "path": "assets/blue-reactions-CcPaxMLZ.glb",
+      "bytes": 221620,
+      "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+    },
+    {
+      "path": "assets/candidate-B0IBg-Yw.css",
+      "bytes": 904,
+      "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+    },
+    {
+      "path": "assets/candidate-D9TRl9pb.js",
+      "bytes": 161267,
+      "sha256": "90bedfc40bb37411c7cbc830692f0396cc8eb2122efa079c4fb9c2e2a9fdd9c0"
+    },
+    {
+      "path": "assets/cast-Ca76kIp9.ogg",
+      "bytes": 16508,
+      "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+    },
+    {
+      "path": "assets/earth-albedo-gB4RPNB7.webp",
+      "bytes": 244158,
+      "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+    },
+    {
+      "path": "assets/forest-albedo-CcYmo4k8.webp",
+      "bytes": 330634,
+      "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+    },
+    {
+      "path": "assets/hero-rust-6hnVVH5H.glb",
+      "bytes": 169896,
+      "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+    },
+    {
+      "path": "assets/hero-teal-sUFSV1Mz.glb",
+      "bytes": 169036,
+      "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+    },
+    {
+      "path": "assets/hit-ClSpEb3w.ogg",
+      "bytes": 5351,
+      "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+    },
+    {
+      "path": "assets/lane-ground-BkV_wW4P.glb",
+      "bytes": 5476,
+      "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+    },
+    {
+      "path": "assets/lane-rEqk0SD2.navmesh",
+      "bytes": 11180,
+      "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+    },
+    {
+      "path": "assets/main-BbfnGZ0I.js",
+      "bytes": 116936,
+      "sha256": "d866c4d73201a13f34f6a96501187023309156529c4f8e231b193f77cd575cc4"
+    },
+    {
+      "path": "assets/melee-rust-DlZVcWSl.glb",
+      "bytes": 164608,
+      "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+    },
+    {
+      "path": "assets/melee-teal-fyp_u-7O.glb",
+      "bytes": 164592,
+      "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+    },
+    {
+      "path": "assets/ranged-rust-rsnFKRRJ.glb",
+      "bytes": 157568,
+      "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+    },
+    {
+      "path": "assets/ranged-teal-B_rlZWgD.glb",
+      "bytes": 157556,
+      "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+    },
+    {
+      "path": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+      "bytes": 726226,
+      "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+    },
+    {
+      "path": "assets/rock-DnYfbnCK.glb",
+      "bytes": 8264,
+      "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+    },
+    {
+      "path": "assets/shield-CiyT-Gb-.ogg",
+      "bytes": 7651,
+      "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+    },
+    {
+      "path": "assets/siege-rust-1xQRoxFB.glb",
+      "bytes": 226260,
+      "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+    },
+    {
+      "path": "assets/siege-teal-CsgCrOmN.glb",
+      "bytes": 226244,
+      "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+    },
+    {
+      "path": "assets/swing-B45xdEEZ.ogg",
+      "bytes": 15532,
+      "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+    },
+    {
+      "path": "assets/targeted-BNqf0n8k.js",
+      "bytes": 743976,
+      "sha256": "f4a78a35d4927c3ce517e73d4b9208a34597ea0014e077f9deda9507e40be23e"
+    },
+    {
+      "path": "assets/tower-rust-B3YjHLZt.glb",
+      "bytes": 160320,
+      "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+    },
+    {
+      "path": "assets/tower-teal-BQ2jCRMr.glb",
+      "bytes": 160360,
+      "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+    },
+    {
+      "path": "assets/trace_02-KaZGZY6K.png",
+      "bytes": 39395,
+      "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+    },
+    {
+      "path": "assets/tree-CawC7zP0.glb",
+      "bytes": 9640,
+      "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+    },
+    {
+      "path": "assets/veyra-rust-BSIRU2oZ.glb",
+      "bytes": 182508,
+      "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+    },
+    {
+      "path": "assets/veyra-teal-CpkKDg1w.glb",
+      "bytes": 181652,
+      "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+    },
+    {
+      "path": "build-identity.json",
+      "bytes": 117,
+      "sha256": "d3d24cd11ebeb9a8ed7ea4d613934cad3e2e9eded3fc1867097d20f674bb3f42"
+    },
+    {
+      "path": "candidate.html",
+      "bytes": 7908,
+      "sha256": "a23d9a079d6725cb31d4e05fff4f5a70ce6cf81fc3afba2d913c0464beae1398"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6507,
+      "sha256": "ede98a3e9221826bbae2a4a0d2027ab31b3439d0b2c5a6258898cc3d8162eb8a"
+    }
+  ]
+}

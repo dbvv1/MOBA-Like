@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "sourceCommit": "9777b84044e19dd297be1675195cfe41d0152159",
+  "sourceTree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+  "sourceDirty": false,
+  "sourceCheck": "Isolated worktree at the fixed candidate; git rev-parse HEAD/tree matched 9777b84/8b3a239 exactly and git status --porcelain --untracked-files=no was empty. The fresh build emitted this identity and the runner asserted it before navigating.",
+  "expectedSourceCommit": "9777b84044e19dd297be1675195cfe41d0152159",
+  "expectedSourceTree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+  "identityMatchesFixedSource": true,
+  "buildCommand": "npm run build:web (executed by npm run smoke)",
+  "buildExitCode": 0,
+  "buildExitCodeBasis": "The single npm run smoke chain returned 0; build:web is its first link and the browser runner executed only after it, so a build failure would have aborted the chain.",
+  "entryHtml": {
+    "candidate.html": "a23d9a079d6725cb31d4e05fff4f5a70ce6cf81fc3afba2d913c0464beae1398",
+    "index.html": "ede98a3e9221826bbae2a4a0d2027ab31b3439d0b2c5a6258898cc3d8162eb8a"
+  },
+  "candidateEntry": {
+    "html": "candidate.html",
+    "urlPrefix": "/",
+    "scripts": [
+      "assets/candidate-D9TRl9pb.js"
+    ],
+    "stylesheets": [
+      "assets/candidate-B0IBg-Yw.css"
+    ],
+    "sha256": {
+      "assets/candidate-D9TRl9pb.js": "90bedfc40bb37411c7cbc830692f0396cc8eb2122efa079c4fb9c2e2a9fdd9c0"
+    }
+  },
+  "defaultEntry": {
+    "html": "index.html",
+    "urlPrefix": "/",
+    "scripts": [
+      "assets/main-BbfnGZ0I.js"
+    ],
+    "sha256": {
+      "assets/main-BbfnGZ0I.js": "d866c4d73201a13f34f6a96501187023309156529c4f8e231b193f77cd575cc4"
+    }
+  },
+  "bundleFiles": 37,
+  "bundleTotalBytes": 6136658,
+  "bundleDigestSha256": "3e9fa1d7da39ea864674e7089226890c27e1ee72df8ff4ac4d3e8a14b6ec321e",
+  "bundleDigestNote": "sha256 over sorted \"path<TAB>sha256<LF>\" lines for every file under web-dist."
+}

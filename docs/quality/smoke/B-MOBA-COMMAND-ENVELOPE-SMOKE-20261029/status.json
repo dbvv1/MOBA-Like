@@ -1,0 +1,136 @@
+{
+  "task": "B-MOBA-COMMAND-ENVELOPE-SMOKE-20261029",
+  "unit": 1,
+  "unitRun": "u1-a0-2026-10-29T032620467Z",
+  "status": "review_ready",
+  "result": "The existing full smoke passed on the exact fixed candidate 9777b84/8b3a239 with class=software (SwiftShader). Default entry stayed v10 and advanced (tick 12->18); candidate v11 passed real player move/stop, targeting, effect, hero selection, key remap, and Save match -> reload -> Continue saved match (savedTick 27 -> resumedTick 37, Q remapped to F); the diffuse sidecar loaded with stylized-diffuse lighting. Bot hero id 10 (team 1) advanced 14.467 units over 62 ticks (tick 13 -> 75) toward its moveGoal while the player hero stayed at spawn, from a post-run read-only snapshot observation; run.mjs itself does not directly assert bot position/advance, so that bot result is not a runner assertion. All console/page/http/request gates and cleanup arrays were empty; browser exit 0 and the preview port closed.",
+  "source": {
+    "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+    "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+    "dirty": false,
+    "sourceCheck": "Isolated clean worktree at the exact fixed candidate; fresh build identity matched commit/tree/clean before the runner navigated."
+  },
+  "serialPreflight": {
+    "checkedUtc": "2026-10-29T03:30:05Z",
+    "priorTowerInvocation": "closed: CLI exit 0 with close seen, turn ended, tools settled; its browser and preview cleanup receipts were empty.",
+    "priorResidualProcess": "Only one inert Git head.exe text filter from a prior shell pipeline remained; it is not a browser, preview, GPU task or ancestor and holds no serial slot.",
+    "otherBrowserOrGpuTasks": "none: no Chrome/Chromium/headless-shell process, no smoke/preview node process and no known preview listener.",
+    "userDesktopApps": "User-owned Edge, VS Code and Unity editor apps were present; they are not receiver GPU/browser jobs and were not touched.",
+    "sharedGpuLock": "No GPU slot or capture lock state existed; the receiver job lock held this unit and was not cleared, modified or used as exit evidence.",
+    "serialCondition": "known-clear; one headless software-renderer smoke task"
+  },
+  "renderer": {
+    "kind": "chrome-headless-shell (Playwright 1.64.1 default headless)",
+    "version": "156.0.8078.4",
+    "requested": "software",
+    "actualClass": "software",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "vendor": "Google Inc. (Google)",
+    "chromiumSandbox": true,
+    "actualArgvChecks": {
+      "argCount": 45,
+      "executableName": "chrome-headless-shell.exe",
+      "headless": true,
+      "useAngleSwiftshader": true,
+      "enableUnsafeSwiftshader": false,
+      "noSandbox": false,
+      "disableSetuidSandbox": false
+    }
+  },
+  "acceptance": {
+    "reportPassed": true,
+    "manifestPassed": true,
+    "rendererClassRequested": "software",
+    "rendererClassActual": "software",
+    "sourceMatchesFixedCandidate": true,
+    "defaultEntryContentVersion": 10,
+    "defaultEntryTickAdvanced": true,
+    "candidateContentVersion": 11,
+    "movementStopHeld": true,
+    "targetingDirection": true,
+    "targetingArea": true,
+    "targetingCancelled": true,
+    "effectZoneCreated": true,
+    "attackClipPlaying": true,
+    "heroSelectionMorrow": true,
+    "keybindingRemap": "F",
+    "savedMatchResumed": true,
+    "diffuseSidecarLoaded": true,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "httpErrors": 0,
+    "requestFailures": 0,
+    "cleanupErrors": 0,
+    "npmExitCode": 0,
+    "browserExitCode": 0,
+    "browserSignalCode": null,
+    "browserExited": true,
+    "previewClosed": true,
+    "botAdvance": true,
+    "botHeroId": 10,
+    "botTeam": 1,
+    "botAdvanceDirectlyAssertedByRunner": false,
+    "botAdvanceEvidence": "Post-run read-only snapshot observation: tick 13 -> 75, bot hero id 10 (team 1) moved 14.467 units toward moveGoal x=-28; player hero id 9 stayed at spawn with no input; reproducible across two page loads. The unlabeled motion actor id 10 walk clip is animation only, not advancement evidence.",
+    "botThroughEnvelope": "Source-verified LocalMatch.step -> Simulation.commandFrame -> Simulation.step; envelope boundary not instrumented at runtime."
+  },
+  "evidence": {
+    "publishedRunDir": "2026-10-29T03-31-16Z",
+    "publishedFiles": [
+      {
+        "path": "build-identity.json",
+        "bytes": 1914,
+        "sha256": "51a52cc8c2bfd643ba3db262752eaf844cad26238a3bc648de60496bd6868077"
+      },
+      {
+        "path": "bundle-hashes.json",
+        "bytes": 6535,
+        "sha256": "4fba4f2fb38e899269ff2badf6af5d82a9be989c19d5f211c9f619339cb6e0d6"
+      },
+      {
+        "path": "canvas.png",
+        "bytes": 1850943,
+        "sha256": "4a5953f417b0d8de0280d596e2bf8ac43c3fbca8dc4d0c4c7727ac5e40b6b666"
+      },
+      {
+        "path": "default-canvas.png",
+        "bytes": 241056,
+        "sha256": "095dd0a0cc6e3cc1876c344a9fa3785ba97219b4091c8b42282e78a2913d60f0"
+      },
+      {
+        "path": "diffuse-canvas.png",
+        "bytes": 1929466,
+        "sha256": "b12d41d87fbb54866bd844873828f01e615768d48a6712a0c79aa3bf078f947d"
+      },
+      {
+        "path": "exit-evidence.json",
+        "bytes": 9399,
+        "sha256": "b707cc79357e00923e0e1308e2710a26094b3ceb9ee1428819d3d54c098cfa80"
+      },
+      {
+        "path": "manifest.json",
+        "bytes": 1474,
+        "sha256": "31e225505d5abd724c171ab0dbf20dc4a552dffe43ec1b543ca0e1b65d95bc3e"
+      },
+      {
+        "path": "page.png",
+        "bytes": 1850943,
+        "sha256": "5be6ba355e280b22cb54d3dc5b44f81f6109cbf10412b2cbc99e999b17fc0aee"
+      },
+      {
+        "path": "report.json",
+        "bytes": 77529,
+        "sha256": "23af448d4a58d1989e31f71b244811473060ebb90d1ce1e42d5def505b662dac"
+      }
+    ],
+    "publishedFilesNote": "sha256 for every file in the published run directory; status.json is the top-level card result and is not listed in its own hash list.",
+    "buildIdentity": {
+      "commit": "9777b84044e19dd297be1675195cfe41d0152159",
+      "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026",
+      "dirty": false
+    },
+    "bundleDigestSha256": "3e9fa1d7da39ea864674e7089226890c27e1ee72df8ff4ac4d3e8a14b6ec321e",
+    "bundleFiles": 37
+  },
+  "boundary": "Functional gate only. Not GPU evidence and not a visual-quality, feel, audio, multiplayer or default-superiority verdict. Default entry unchanged; no source, script, lockfile or security-config change; not merged or deployed."
+}
