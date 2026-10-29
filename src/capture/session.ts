@@ -1,3 +1,6 @@
+import {LocalMatch} from '../save/match.js';
+import {SkillFeelTape} from './feel.js';
+import {getContent} from '../content/catalog.js';
 import {Simulation} from '../sim/simulation.js';
 import {HeroBot} from '../sim/ai.js';
 import type {Navigation} from '../sim/navigation.js';
@@ -13,6 +16,7 @@ export class CaptureSession {
   readonly sim:Simulation;
   readonly playerId:number;
   private readonly bot:HeroBot;
+  private readonly feel:SkillFeelTape|undefined;
   private readonly clock:FixedClock;
   private virtualFrame=0;
   private frame=0;
@@ -21,18 +25,22 @@ export class CaptureSession {
   constructor(readonly config:CaptureConfig,navigation:Navigation,private lifetime=new CaptureLifetime()){
     // Same roster, bot and rules as this candidate's normal client. Only the
     // clock, input tape and camera differ; no relocation or state edits.
-    this.sim=new Simulation({seed:config.seed,contentVersion:CONTENT_VERSION,navigation,heroesPerTeam:1,heroIdsByTeam:[['veyra'],['veyra']]});
+    if(config.feel){
+      const match=new LocalMatch({seed:1,contentVersion:CONTENT_VERSION,heroIdsByTeam:[['veyra'],['veyra']],maxMatchSeconds:getContent(CONTENT_VERSION).rules.maxMatchSeconds,botSeed:1002,botDifficulty:'normal'},navigation,'feel-capture-no-save');
+      this.sim=match.simulation;this.feel=new SkillFeelTape(match);
+    }else this.sim=new Simulation({seed:config.seed,contentVersion:CONTENT_VERSION,navigation,heroesPerTeam:1,heroIdsByTeam:[['veyra'],['veyra']]});
     this.playerId=this.sim.getHero(0,0)!.id;
     this.bot=new HeroBot({team:1,slotIndex:0,difficulty:'normal',seed:1002});
     this.clock=new FixedClock(1/this.sim.tickRateHz);
   }
-  get metadata(){return {shot:this.config.shot,seed:this.config.seed,input:this.config.input,requestedTime:this.config.requestedTime,t:this.virtualFrame/CAPTURE_HZ,virtualFrame:this.virtualFrame,fixedDt:1/CAPTURE_HZ,simTick:this.sim.snapshot().tick,simTime:this.sim.snapshot().timeSeconds,contentVersion:CONTENT_VERSION,stateHash:this.sim.finalHash(),frame:this.frame,frames:this.config.frames,complete:this.frame===this.config.frames-1,warmupFrames:WARMUP_FRAMES,alpha:this.alpha};}
+  get metadata(){return {feel:this.feel?.metadata??null,shot:this.config.shot,seed:this.config.seed,input:this.config.input,requestedTime:this.config.requestedTime,t:this.virtualFrame/CAPTURE_HZ,virtualFrame:this.virtualFrame,fixedDt:1/CAPTURE_HZ,simTick:this.sim.snapshot().tick,simTime:this.sim.snapshot().timeSeconds,contentVersion:CONTENT_VERSION,stateHash:this.sim.finalHash(),frame:this.frame,frames:this.config.frames,complete:this.frame===this.config.frames-1,warmupFrames:WARMUP_FRAMES,alpha:this.alpha};}
   private step(consumer:CaptureConsumer,render:boolean){
     this.lifetime.assertActive();
+    this.feel?.enter(this.frame);
     this.alpha=this.clock.advance(1/CAPTURE_HZ,()=>{
       if(this.sim.isComplete())return;
       const commands:SimCommand[]=this.config.input==='march'&&this.sim.snapshot().tick===0?[{type:'move',heroId:this.playerId,point:{x:-18,z:1.2}}]:[];
-      this.sim.step(this.sim.commandFrame([...commands,...this.bot.think(this.sim)]));consumer.sync(this.sim.snapshot(),this.playerId);
+      if(this.feel)this.feel.step(this.frame+1);else this.sim.step(this.sim.commandFrame([...commands,...this.bot.think(this.sim)]));consumer.sync(this.sim.snapshot(),this.playerId);
     });
     this.virtualFrame++;consumer.draw(1/CAPTURE_HZ,this.sim.isComplete()?1:this.alpha,render);
   }

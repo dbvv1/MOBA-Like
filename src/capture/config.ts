@@ -2,9 +2,14 @@ import {CAMERAS,type CameraName} from './cameras.js';
 export const CAPTURE_HZ=60,WARMUP_FRAMES=12,CONTENT_VERSION=11 as const;
 export const INPUT_NAMES=['idle','march'] as const;
 export type InputName=typeof INPUT_NAMES[number];
-export interface CaptureConfig {readonly shot:CameraName;readonly seed:number;readonly requestedTime:number;readonly startFrame:number;readonly frames:number;readonly input:InputName;}
+export interface CaptureConfig {readonly shot:CameraName;readonly seed:number;readonly requestedTime:number;readonly startFrame:number;readonly frames:number;readonly input:InputName;readonly feel?:'skill-buffer';}
 export function parseCaptureConfig(search:string):CaptureConfig|null {
   const query=new URLSearchParams(search);
+  if(query.has('feel')) {
+    if(query.getAll('feel').length!==1||query.get('feel')!=='skill-buffer'||query.getAll('shot').length!==1||query.get('shot')!=='gameplay')throw new Error('feel requires one gameplay shot and skill-buffer tape');
+    for(const key of query.keys())if(!['feel','shot'].includes(key))throw new Error('Feel tape is fixed; unsupported '+key);
+    return Object.freeze({shot:'gameplay',seed:1,requestedTime:0,startFrame:0,frames:45,input:'idle',feel:'skill-buffer'});
+  }
   if(!query.has('shot'))return null;
   for(const key of ['shot','seed','t','frames','input'])if(query.getAll(key).length>1)throw new Error(`Duplicate capture parameter: ${key}`);
   const shot=query.get('shot')!;
