@@ -1,0 +1,4530 @@
+{
+  "passed": true,
+  "frames": [
+    {
+      "file": "first-tower-baseline-0.png",
+      "repeat": 0,
+      "pngSha256": "e948b6cccfccf21ed40d91f44af9d42a2840fb1404426f7f116e2f5f941ecac1",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1383,
+        "dominantFraction": 0.0536328125,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 206,
+          "triangles": 78232,
+          "geometries": 47,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "first-tower-baseline-1.png",
+      "repeat": 1,
+      "pngSha256": "e948b6cccfccf21ed40d91f44af9d42a2840fb1404426f7f116e2f5f941ecac1",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1383,
+        "dominantFraction": 0.0536328125,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 206,
+          "triangles": 78232,
+          "geometries": 47,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "first-tower-tower-standards-0.png",
+      "repeat": 0,
+      "pngSha256": "e60193cb56fb3eea81e8b3e401fb93ebecc11aef5af92f2f5ab3f90f07ef615a",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1156,
+        "dominantFraction": 0.17690755208333334,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 200,
+          "triangles": 71164,
+          "geometries": 45,
+          "textures": 19
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "first-tower-tower-standards-1.png",
+      "repeat": 1,
+      "pngSha256": "e60193cb56fb3eea81e8b3e401fb93ebecc11aef5af92f2f5ab3f90f07ef615a",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1156,
+        "dominantFraction": 0.17690755208333334,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 200,
+          "triangles": 71164,
+          "geometries": 45,
+          "textures": 19
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "barracks-road-baseline-0.png",
+      "repeat": 0,
+      "pngSha256": "847cddd154e8004d61b584b598ff1bf250114ffa30eedba75d4461964749318c",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1554,
+        "dominantFraction": 0.04904296875,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 91686,
+          "geometries": 50,
+          "textures": 21
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "barracks-road-baseline-1.png",
+      "repeat": 1,
+      "pngSha256": "847cddd154e8004d61b584b598ff1bf250114ffa30eedba75d4461964749318c",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1554,
+        "dominantFraction": 0.04904296875,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 91686,
+          "geometries": 50,
+          "textures": 21
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "barracks-road-tower-standards-0.png",
+      "repeat": 0,
+      "pngSha256": "fbd2973cb9c0d8921b90940c83037454e6cede7bda6a7dd29de8b7fdd84a8477",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1426,
+        "dominantFraction": 0.20932291666666666,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 81732,
+          "geometries": 49,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "file": "barracks-road-tower-standards-1.png",
+      "repeat": 1,
+      "pngSha256": "fbd2973cb9c0d8921b90940c83037454e6cede7bda6a7dd29de8b7fdd84a8477",
+      "pixels": {
+        "width": 1280,
+        "height": 720,
+        "quantizedColors": 1426,
+        "dominantFraction": 0.20932291666666666,
+        "nonBackground": true
+      },
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 81732,
+          "geometries": 49,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    }
+  ],
+  "observations": [
+    {
+      "shot": "first-tower",
+      "standards": "baseline",
+      "repeat": 0,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 206,
+          "triangles": 78232,
+          "geometries": 47,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "first-tower",
+      "standards": "baseline",
+      "repeat": 1,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 206,
+          "triangles": 78232,
+          "geometries": 47,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "first-tower",
+      "standards": "tower-standards",
+      "repeat": 0,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 200,
+          "triangles": 71164,
+          "geometries": 45,
+          "textures": 19
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "first-tower",
+      "standards": "tower-standards",
+      "repeat": 1,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "first-tower",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -28,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -28,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 200,
+          "triangles": 71164,
+          "geometries": 45,
+          "textures": 19
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "barracks-road",
+      "standards": "baseline",
+      "repeat": 0,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 91686,
+          "geometries": 50,
+          "textures": 21
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "barracks-road",
+      "standards": "baseline",
+      "repeat": 1,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "baseline",
+          "models": {},
+          "road": "baseline"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 91686,
+          "geometries": 50,
+          "textures": 21
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "barracks-road",
+      "standards": "tower-standards",
+      "repeat": 0,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 81732,
+          "geometries": 49,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    },
+    {
+      "shot": "barracks-road",
+      "standards": "tower-standards",
+      "repeat": 1,
+      "metadata": {
+        "ready": true,
+        "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+        "sourceDirty": false,
+        "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+        "bundle": {
+          "sha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+          "files": [
+            {
+              "file": "assets/amber-B-DIcLhT.glb",
+              "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+            },
+            {
+              "file": "assets/barracks-rust-ELYrhKWW.glb",
+              "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+            },
+            {
+              "file": "assets/barracks-teal-DplTNS_l.glb",
+              "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+            },
+            {
+              "file": "assets/barracks-teal-nM8ZOyq2.glb",
+              "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+            },
+            {
+              "file": "assets/base-rust-CiTXTXEl.glb",
+              "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+            },
+            {
+              "file": "assets/base-teal-L4GVNWxZ.glb",
+              "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+            },
+            {
+              "file": "assets/blue-reactions-CcPaxMLZ.glb",
+              "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+            },
+            {
+              "file": "assets/candidate-B0IBg-Yw.css",
+              "sha256": "451d45b9ca9edfe25e1b6a7acdf89960c9ce126655d6507493cc87dd0cff6dfb"
+            },
+            {
+              "file": "assets/candidate-DPUuYznu.js",
+              "sha256": "79a7af3c8d1c5fdd95084c200c96f7d68989f46eaac01264fb173d24fa4b910c"
+            },
+            {
+              "file": "assets/capture-DsScUWjT.js",
+              "sha256": "3cbdfdd7c27372ea70d5524353576e60d139421d62859959e8d286a540959a29"
+            },
+            {
+              "file": "assets/cast-Ca76kIp9.ogg",
+              "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+            },
+            {
+              "file": "assets/clock-CctM_U-6.js",
+              "sha256": "c3a076424c3e13165d00cf1f342629d8efc31cae3526c026dc959d414826af83"
+            },
+            {
+              "file": "assets/earth-albedo-gB4RPNB7.webp",
+              "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+            },
+            {
+              "file": "assets/edge-layout-JEBrZqZc.js",
+              "sha256": "028002477d288a29b5fbbceb19f9f47b7c454bf14971f1b9ebc6da63acbe2562"
+            },
+            {
+              "file": "assets/fixed-source-build-vh7SwTXg.js",
+              "sha256": "72b1bafc4136c3c78c9327ce4fbe05ec94328ce371c4d0004a99aec419204d12"
+            },
+            {
+              "file": "assets/forest-albedo-CcYmo4k8.webp",
+              "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+            },
+            {
+              "file": "assets/hero-rust-6hnVVH5H.glb",
+              "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+            },
+            {
+              "file": "assets/hero-teal-sUFSV1Mz.glb",
+              "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+            },
+            {
+              "file": "assets/hit-ClSpEb3w.ogg",
+              "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+            },
+            {
+              "file": "assets/lane-ground-BkV_wW4P.glb",
+              "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+            },
+            {
+              "file": "assets/lane-rEqk0SD2.navmesh",
+              "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+            },
+            {
+              "file": "assets/main-DVRJqauU.js",
+              "sha256": "024f95717408cbda6f1e2d40240c4009ab27af01f11bf2c274b34cd7eff96f25"
+            },
+            {
+              "file": "assets/melee-rust-DlZVcWSl.glb",
+              "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+            },
+            {
+              "file": "assets/melee-teal-fyp_u-7O.glb",
+              "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+            },
+            {
+              "file": "assets/ranged-rust-rsnFKRRJ.glb",
+              "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+            },
+            {
+              "file": "assets/ranged-teal-B_rlZWgD.glb",
+              "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+            },
+            {
+              "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+              "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+            },
+            {
+              "file": "assets/road-albedo-BUtjg479.png",
+              "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+            },
+            {
+              "file": "assets/rock-DnYfbnCK.glb",
+              "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+            },
+            {
+              "file": "assets/shield-CiyT-Gb-.ogg",
+              "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+            },
+            {
+              "file": "assets/siege-rust-1xQRoxFB.glb",
+              "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+            },
+            {
+              "file": "assets/siege-teal-CsgCrOmN.glb",
+              "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+            },
+            {
+              "file": "assets/swing-B45xdEEZ.ogg",
+              "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+            },
+            {
+              "file": "assets/targeted-CuESyGQG.js",
+              "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+            },
+            {
+              "file": "assets/tower-rust-B3YjHLZt.glb",
+              "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+            },
+            {
+              "file": "assets/tower-teal-BQ2jCRMr.glb",
+              "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+            },
+            {
+              "file": "assets/tower-teal-Dwf5ADxq.glb",
+              "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+            },
+            {
+              "file": "assets/trace_02-KaZGZY6K.png",
+              "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+            },
+            {
+              "file": "assets/tree-CawC7zP0.glb",
+              "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+            },
+            {
+              "file": "assets/veyra-rust-BSIRU2oZ.glb",
+              "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+            },
+            {
+              "file": "assets/veyra-teal-CpkKDg1w.glb",
+              "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+            },
+            {
+              "file": "build-identity.json",
+              "sha256": "b9e2d542e70bcb6b77925b4cf4c87a5b8b5f3b1b3546ac5734b55a185c854e91"
+            },
+            {
+              "file": "candidate.html",
+              "sha256": "13949ac35374dcd8906a15d26380d37ae3a098aba08d8eedbf8a3b9c0d5a0aff"
+            },
+            {
+              "file": "capture.html",
+              "sha256": "5bbfd2f0f0ae839b035bc5d9fa51ebc213785c1c3d3d9c51f32a4e4bb9b73fcb"
+            },
+            {
+              "file": "index.html",
+              "sha256": "47306b415ad6432ccb9aac6e7cf7b8f369b4ac5753d9709e94e6e8175522baa5"
+            }
+          ]
+        },
+        "shot": "barracks-road",
+        "seed": 1,
+        "input": "march",
+        "requestedTime": 10,
+        "t": 10,
+        "virtualFrame": 600,
+        "fixedDt": 0.016666666666666666,
+        "simTick": 300,
+        "simTime": 10,
+        "contentVersion": 11,
+        "stateHash": "4e0d5f7902a525e0",
+        "frame": 0,
+        "frames": 1,
+        "complete": true,
+        "warmupFrames": 12,
+        "alpha": 0,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "gpu",
+        "standards": {
+          "requested": "tower-standards",
+          "models": {
+            "tower-teal": "candidate",
+            "barracks-teal": "candidate"
+          },
+          "road": "candidate"
+        },
+        "lighting": {
+          "requested": "baseline",
+          "configured": "baseline",
+          "active": "baseline",
+          "stage": "frame-submitted",
+          "diffuse": "source-materials",
+          "environment": {
+            "kind": "ambient-and-hemisphere",
+            "sky": "#d7e9e3",
+            "ground": "#3c4333",
+            "hemisphereIntensity": 1.65,
+            "ambientIntensity": 0
+          },
+          "directSun": {
+            "color": "#fff0cf",
+            "intensity": 2.5,
+            "shadow": "original-pcf-soft"
+          },
+          "toneMapping": "ACESFilmic",
+          "exposure": 1.12
+        },
+        "camera": {
+          "position": {
+            "x": -82,
+            "y": 24,
+            "z": 18
+          },
+          "target": {
+            "x": -82,
+            "y": 0,
+            "z": 0
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        },
+        "render": {
+          "calls": 210,
+          "triangles": 81732,
+          "geometries": 49,
+          "textures": 20
+        },
+        "backend": "three-webgl2",
+        "audio": "not-captured",
+        "hud": "world-bars-only",
+        "expectedViewport": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "cleanup": [],
+  "launch": {
+    "rendererRequested": "gpu",
+    "browserKind": "full Chromium (existing local Playwright executable)",
+    "browserVersion": "156.0.8078.4",
+    "headless": true,
+    "chromiumSandbox": true,
+    "executablePath": "withheld; local path kept only in local raw evidence",
+    "argv": "withheld; full argv kept only in local raw evidence"
+  }
+}

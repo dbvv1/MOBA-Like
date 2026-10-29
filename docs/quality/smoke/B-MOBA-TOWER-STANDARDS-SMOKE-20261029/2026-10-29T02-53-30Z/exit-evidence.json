@@ -1,0 +1,208 @@
+{
+  "task": "B-MOBA-TOWER-STANDARDS-SMOKE-20261029",
+  "unit": 1,
+  "unitRun": "u1-a0-2026-10-29T023454103Z",
+  "publicRunDir": "2026-10-29T02-53-30Z",
+  "status": "passed",
+  "source": {
+    "commit": "b7687337231df4d275800643472c7f878a885211",
+    "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+    "worktreeCleanDuringRun": true,
+    "sourceCheck": "capture built in a detached worktree at the exact fixed commit/tree; git status --porcelain empty; build identity and bundle hash verified before launch"
+  },
+  "serialPreflight": {
+    "checkedUtc": "2026-10-29T02:53:18Z",
+    "previousOwnedBrowser": "no Chrome, Chromium or headless-shell browser process was present",
+    "previousPreview": "no listener on 4173, 4174, 5173, 5174, 3000, 7702, 8000, 8080, 8757, 9222 or 12765; no node process matched browser-smoke, vite, preview or capture",
+    "previousEvidencePids": "all browser, runner and parent PIDs recorded by the prior MOBA full smoke and the FPS standards round were absent",
+    "sharedGpuLock": "no capture or GPU lock file existed; this unit created, held and released none",
+    "serialCondition": "known-clear; exactly one headless browser and one GPU task"
+  },
+  "preparation": {
+    "npmCiOffline": {
+      "exitCode": 0,
+      "network": "offline",
+      "note": "existing lockfile only"
+    },
+    "webBuild": "not rerun; the accepted first-round web build identity is reused",
+    "captureBuild": {
+      "exitCode": 0,
+      "tsc": 0,
+      "vite": 0,
+      "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+      "bundleFiles": 45,
+      "viteReportedBuildSeconds": 20.75
+    }
+  },
+  "browser": {
+    "kind": "full Chromium (existing local Playwright executable)",
+    "version": "156.0.8078.4",
+    "executable": "withheld; local executable path is retained only in local raw evidence",
+    "headless": true,
+    "chromiumSandbox": true,
+    "rendererRequested": "gpu",
+    "rendererClassActual": "gpu",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "unmaskedExtension": true,
+    "unmaskedRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (NVIDIA)",
+    "note": "the capture page records the unmasked renderer when WEBGL_debug_renderer_info is available"
+  },
+  "captureRun": {
+    "command": "MOBA_SMOKE_RENDERER=gpu MOBA_SMOKE_CHROMIUM=<existing full Playwright Chromium> node tests/client/browser-smoke/standards.mjs",
+    "startedUtc": "2026-10-29T02:53:29.944Z",
+    "finishedUtc": "2026-10-29T02:55:40.766Z",
+    "wallTimeSeconds": 131,
+    "outerTimeoutSeconds": 1200,
+    "outerTimeoutHit": false,
+    "commandExitCode": 0,
+    "manifestPassed": true,
+    "reportErrors": [],
+    "reportCleanupErrors": [],
+    "framesProduced": 8,
+    "framesExpected": 8
+  },
+  "fixedState": {
+    "seed": 1,
+    "input": "march",
+    "requestedTime": 10,
+    "t": 10,
+    "simTime": 10,
+    "simTick": 300,
+    "virtualFrame": 600,
+    "frame": 0,
+    "framesPerShot": 1,
+    "fixedDt": 0.016666666666666666,
+    "contentVersion": 11,
+    "stateHash": "4e0d5f7902a525e0",
+    "standardsVariants": {
+      "baseline": {
+        "requested": "baseline",
+        "models": {},
+        "road": "baseline"
+      },
+      "tower-standards": {
+        "requested": "tower-standards",
+        "models": {
+          "tower-teal": "candidate",
+          "barracks-teal": "candidate"
+        },
+        "road": "candidate"
+      }
+    }
+  },
+  "shots": {
+    "first-tower": {
+      "baselinePngSha256": "e948b6cccfccf21ed40d91f44af9d42a2840fb1404426f7f116e2f5f941ecac1",
+      "standardsPngSha256": "e60193cb56fb3eea81e8b3e401fb93ebecc11aef5af92f2f5ab3f90f07ef615a",
+      "baselineRepeatMatches": true,
+      "standardsRepeatMatches": true,
+      "camera": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "standardsCameraMatchesBaseline": true,
+      "standardsViewportMatchesBaseline": true,
+      "standardsModels": {
+        "tower-teal": "candidate",
+        "barracks-teal": "candidate"
+      },
+      "standardsRoad": "candidate",
+      "nonBackgroundPixels": {
+        "baseline": true,
+        "standards": true
+      },
+      "imageSize": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "barracks-road": {
+      "baselinePngSha256": "847cddd154e8004d61b584b598ff1bf250114ffa30eedba75d4461964749318c",
+      "standardsPngSha256": "fbd2973cb9c0d8921b90940c83037454e6cede7bda6a7dd29de8b7fdd84a8477",
+      "baselineRepeatMatches": true,
+      "standardsRepeatMatches": true,
+      "camera": {
+        "position": {
+          "x": -82,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -82,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "standardsCameraMatchesBaseline": true,
+      "standardsViewportMatchesBaseline": true,
+      "standardsModels": {
+        "tower-teal": "candidate",
+        "barracks-teal": "candidate"
+      },
+      "standardsRoad": "candidate",
+      "nonBackgroundPixels": {
+        "baseline": true,
+        "standards": true
+      },
+      "imageSize": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  },
+  "postRun": {
+    "cleanupReceipt": "runner cleanup array was empty; browser.close() and preview server.close() both resolved",
+    "ownedBrowserPidAbsentAfterRun": true,
+    "chromiumProcessesRemaining": 0,
+    "browserSmokeNodeProcessesRemaining": 0,
+    "previewListenerPresent": false,
+    "commandExitCodeCaptured": true,
+    "ownedBrowserExitCode": "not separately recorded by standards.mjs",
+    "ownedBrowserExitVerifiedBy": "browser.close() resolved with an empty cleanup array; the recorded browser PID was absent after the run and zero Chrome/Chromium processes remained"
+  },
+  "acceptance": {
+    "standardsManifestPassed": true,
+    "rendererClassRequired": "gpu",
+    "rendererClassActual": "gpu",
+    "pngsProduced": 8,
+    "pngsExpected": 8,
+    "repeatPngHashesMatch": true,
+    "sourceBundleStateTimeCameraViewportConsistent": true,
+    "modelCandidates": {
+      "tower-teal": "candidate",
+      "barracks-teal": "candidate"
+    },
+    "roadCandidate": "candidate",
+    "fallbackAdopted": false
+  },
+  "boundary": "Load and fixed-camera comparison evidence only. This is not an art-final, human-review or quality-superiority verdict, and the default entry was not changed."
+}

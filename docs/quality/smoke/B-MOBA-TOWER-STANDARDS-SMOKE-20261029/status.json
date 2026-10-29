@@ -1,45 +1,69 @@
 {
   "task": "B-MOBA-TOWER-STANDARDS-SMOKE-20261029",
   "unit": 1,
-  "unitRun": "u1-a0-2026-10-29T015614381Z",
-  "status": "blocked",
-  "result": "full smoke passed functionally (exit 0, report.passed true) but the actual WebGL renderer class was software, not the required gpu; stopped before the standards capture per the task rule, with no retry or renderer/browser/security change",
+  "unitRun": "u1-a0-2026-10-29T023454103Z",
+  "status": "review_ready",
+  "result": "Standards capture completed on the exact fixed source with class=gpu: 8 PNGs, standards manifest passed, both candidate models and the candidate road adopted, and repeated fixed-camera PNGs byte-identical. The accepted first-round functional smoke is reused; this unit did not rerun it.",
   "source": {
     "commit": "b7687337231df4d275800643472c7f878a885211",
     "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
-    "headMatchesFixedSource": true,
-    "worktreeCleanDuringRun": true,
-    "buildIdentity": {
-      "commit": "b7687337231df4d275800643472c7f878a885211",
-      "tree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
-      "dirty": false
-    }
+    "captureBuiltAt": "detached worktree at the exact fixed commit; git status --porcelain empty",
+    "receiverBranchTip": "2f24dabee5279df798a079e3501b134f5311fd95",
+    "receiverBranchTipDelta": "adds only the prior accepted smoke evidence directory relative to the fixed commit; no source, config, lockfile or asset change"
   },
   "serialPreflight": {
-    "checkedUtc": "2026-10-29T02:01:46Z",
-    "sourceIdentity": "git rev-parse HEAD = b7687337231df4d275800643472c7f878a885211; tree = bc48db509ec097c4e3b918c199325eb8a1a744fd; git status --porcelain --untracked-files=no empty",
-    "previousOwnedBrowser": "no chrome-headless-shell.exe, chromium.exe or chrome.exe process was running at preflight (tasklist)",
-    "previousPreview": "no LISTENING socket on ports 7702, 8757, 4173, 5173, 3000 or 8080; no node process command line matched tests/client/browser-smoke or a vite preview/dev server",
-    "previousEvidencePids": "the browser, runner and parent PIDs recorded by the prior receiver smoke (66072, 71820, 112564) were absent",
-    "sharedGpuLock": "no capture lock or GPU lock file exists under the receiver work root; this unit created, held and released none",
-    "unrelatedProcesses": "unrelated node MCP/dev-tool and benchmark processes were present and were not touched",
-    "serialCondition": "known-clear; one GPU task only"
+    "checkedUtc": "2026-10-29T02:53:18Z",
+    "previousOwnedBrowser": "none",
+    "previousPreview": "no matching listener or node smoke/preview process",
+    "previousEvidencePids": "absent",
+    "sharedGpuLock": "none existed; none created or cleared",
+    "serialCondition": "known-clear; one GPU task"
+  },
+  "renderer": {
+    "kind": "full Chromium (existing local Playwright executable)",
+    "version": "156.0.8078.4",
+    "requested": "gpu",
+    "actualClass": "gpu",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmaskedRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 (0x00002F04) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "unmaskedVendor": "Google Inc. (NVIDIA)"
   },
   "acceptance": {
-    "fullSmoke": "passed",
-    "fullSmokeExitCode": 0,
+    "fullSmoke": "passed and reused from the first round 2026-10-29T02-02-05Z; that round's software renderer was not used as a GPU result",
+    "standardsManifest": "passed",
     "rendererClassRequired": "gpu",
-    "rendererClassActual": "software",
-    "standardsManifest": "not-run",
+    "rendererClassActual": "gpu",
     "standardsPngsExpected": 8,
-    "standardsPngsProduced": 0
+    "standardsPngsProduced": 8,
+    "repeatPngHashesMatch": true,
+    "sourceBundleStateTimeCameraViewportConsistent": true,
+    "modelCandidates": {
+      "tower-teal": "candidate",
+      "barracks-teal": "candidate"
+    },
+    "roadCandidate": "candidate",
+    "fallbackAdopted": false,
+    "cleanupErrors": 0,
+    "commandExitCode": 0
   },
   "evidence": {
-    "smokeDir": "docs/quality/smoke/B-MOBA-TOWER-STANDARDS-SMOKE-20261029/2026-10-29T02-02-05Z",
-    "smokeManifestSha256": "9952a5906e7a6aef6c6ed582f85616e39e8983701a99ee5ddcec9b25b9d5f7cb",
-    "standardsDir": null
+    "fullSmokeDir": "docs/quality/smoke/B-MOBA-TOWER-STANDARDS-SMOKE-20261029/2026-10-29T02-02-05Z",
+    "standardsDir": "docs/quality/smoke/B-MOBA-TOWER-STANDARDS-SMOKE-20261029/2026-10-29T02-53-30Z",
+    "standardsManifestSha256": "a6255be91a1d9ccb74c79e963cbfbb12ad2716ce32e2395feee239aedef9c9f8",
+    "standardsExitEvidenceSha256": "0a149bfa1487c3d7eb7eca2cd23ac4e316f18b1ac404af600f31c2717951ef75",
+    "standardsBuildIdentitySha256": "d06df757c9d02b5d8b85cffdbf76c8286c25a77821747e67a3b862abb43cc49b",
+    "standardsPngSha256": {
+      "barracks-road-baseline-0.png": "847cddd154e8004d61b584b598ff1bf250114ffa30eedba75d4461964749318c",
+      "barracks-road-baseline-1.png": "847cddd154e8004d61b584b598ff1bf250114ffa30eedba75d4461964749318c",
+      "barracks-road-tower-standards-0.png": "fbd2973cb9c0d8921b90940c83037454e6cede7bda6a7dd29de8b7fdd84a8477",
+      "barracks-road-tower-standards-1.png": "fbd2973cb9c0d8921b90940c83037454e6cede7bda6a7dd29de8b7fdd84a8477",
+      "first-tower-baseline-0.png": "e948b6cccfccf21ed40d91f44af9d42a2840fb1404426f7f116e2f5f941ecac1",
+      "first-tower-baseline-1.png": "e948b6cccfccf21ed40d91f44af9d42a2840fb1404426f7f116e2f5f941ecac1",
+      "first-tower-tower-standards-0.png": "e60193cb56fb3eea81e8b3e401fb93ebecc11aef5af92f2f5ab3f90f07ef615a",
+      "first-tower-tower-standards-1.png": "e60193cb56fb3eea81e8b3e401fb93ebecc11aef5af92f2f5ab3f90f07ef615a"
+    }
   },
-  "blockedReason": "The fixed command launches Playwright chrome-headless-shell in this environment, whose WebGL2 unmasked renderer is ANGLE/SwiftShader (software). The task requires class=gpu and forbids switching renderer, browser or security parameters or retrying.",
-  "recovery": "Run the same fixed-SHA smoke and standards capture on a headless GPU configuration whose raw WebGL renderer matches a hardware vendor family (class=gpu), then produce the two exclusive run directories, 8 PNGs and the standards manifest.",
-  "scope": "Only docs/quality/smoke/ is written by this unit. No source, default entry, model, main merge or deployment change."
+  "localOnly": "Full browser argv, executable path, PIDs, parent chain and raw process logs are retained locally only and are not part of the public evidence.",
+  "boundary": "Load and fixed-camera comparison evidence only. No art-final, human-review or quality-superiority verdict, no default-entry or source change, not merged or deployed.",
+  "scope": "Only docs/quality/smoke/B-MOBA-TOWER-STANDARDS-SMOKE-20261029/ is written by this unit."
 }

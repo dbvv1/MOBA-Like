@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "sourceCommit": "b7687337231df4d275800643472c7f878a885211",
+  "sourceTree": "bc48db509ec097c4e3b918c199325eb8a1a744fd",
+  "sourceDirty": false,
+  "sourceCheck": "capture built in a detached worktree at the exact fixed commit; git status --porcelain was empty",
+  "receiverBranchTip": "2f24dabee5279df798a079e3501b134f5311fd95",
+  "receiverBranchTipDelta": "adds only the prior accepted smoke evidence directory relative to the fixed commit; no source, config, lockfile or asset change",
+  "captureBuildCommand": "npx --no-install tsc -p tsconfig.capture.json && npx --no-install vite build --config vite.capture.config.ts",
+  "buildExitCodes": {
+    "tsc": 0,
+    "vite": 0
+  },
+  "bundleSha256": "c492c42b31419c428acb5f8cc3877a7293a11ba78f75b54afc136271a4fc982e",
+  "bundleFiles": 45,
+  "captureEntryPresent": true
+}
