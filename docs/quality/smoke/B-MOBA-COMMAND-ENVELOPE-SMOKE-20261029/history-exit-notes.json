@@ -3,12 +3,12 @@
   "task": "B-MOBA-COMMAND-ENVELOPE-SMOKE-20261029",
   "kind": "history-and-exit-addendum",
   "generatedAt": "2026-10-29T04:39:43Z",
-  "revisedAt": "2026-10-29T05:12:00Z",
+  "revisedAt": "2026-10-29T06:08:27Z",
   "fixedSource": {
     "commit": "9777b84044e19dd297be1675195cfe41d0152159",
     "tree": "8b3a2392d121ba28adde25ccf4d9d24ce156c026"
   },
-  "scope": "Documentation-only revision. This documentation revision ran no smoke, CPU suite, build, GPU capture, screenshot or functional assertion; the review-phase full-smoke rerun recorded below occurred before this revision (04:07:41Z-04:12:10Z) and is included only as prior exit evidence. The published run directory 2026-10-29T03-31-16Z keeps its original nine files and hashes; this addendum is a separate task-level file.",
+  "scope": "Documentation-only revision. This documentation revision ran no smoke, CPU suite, build, GPU capture, screenshot or functional assertion; the review-phase full-smoke rerun recorded below occurred before this revision (04:07:41Z-04:12:10Z) and is included only as prior exit evidence. The published run directory 2026-10-29T03-31-16Z keeps its original nine files and hashes; this addendum is a separate task-level file. The later 2026-10-29T06:03Z revision added only a read-only process, listener and identifier census; it started no browser or preview, injected nothing, killed nothing, cleared no lock, and changed no source, script, lockfile or security configuration.",
   "exitFactSeparation": {
     "originalSmoke": {
       "startedAt": "2026-10-29T03:31:48.556Z",
@@ -276,17 +276,45 @@
     "exit": "Both processes were present in the point-in-time census at 03:30Z and both are absent from the fresh head.exe census at 2026-10-29T04:39:43Z; neither census is an exit receipt. A read-only check found no OS process-termination audit records, and because both were already absent no exit code or time receipt could be produced; both exits remain unknown. 'Not a GPU task' is not offered as a substitute for the missing exit receipts.",
     "identifierPolicy": "Both process identifiers are retained only in local raw logs and are not published."
   },
+  "currentReadOnlyVerification": {
+    "capturedAtRangeUtc": "2026-10-29T06:02:49Z-06:08:27Z",
+    "kind": "One-time full read-only process, listener and recorded-identifier census. No CPU suite, smoke, build, GPU capture, screenshot, browser or preview start, page input, simulation-state injection, process kill, lock clear or modification, source/script/lockfile change, commit or push.",
+    "evidenceLocation": "Raw process and listener dumps, exact process identifiers, creation-time ticks, full command lines and absolute paths remain in the local run scratch only and are not published.",
+    "recordedIdentityChecks": {
+      "priorHeadExeFilters": "Both prior tower-unit head.exe -30 filters are absent: the one created at 2026-10-29T02:35:38.399Z whose recorded parent was registered, and the one created at 2026-10-29T02:35:38.938Z from the second pipeline whose parent chain was not registered. No live process exists in their creation-time window, so their absence is not explained by process-identifier reuse.",
+      "priorRecordedParent": "The recorded parent of the first head.exe filter is also absent.",
+      "originalSmokeBrowser": "The original smoke's recorded browser process is absent. Its own Playwright receipt already recorded browserExitCode 0 and previewClosed true, and its 03:33:57Z post-run check listed no browser process.",
+      "descendants": "No live process has any of the recorded prior process identifiers as its parent."
+    },
+    "resourceCensus": {
+      "browserProcesses": "Zero Chrome, Chromium or chrome-headless-shell processes.",
+      "smokeNodeProcesses": "Zero node processes running the browser-smoke runner, the preview server, the three observation inline scripts or the review reproduction script.",
+      "previewListeners": "Zero smoke preview listeners. The loopback listeners present belong to unrelated tooling (workflow scheduler, DSH/POPO bridges, VS Code, Unity, desktop apps) and none is owned by a browser-smoke node process.",
+      "gpuTasks": "The GPU compute application list contained only desktop applications; no gen3d, glbprep, Playwright or receiver capture process was running.",
+      "cardExecutionWindow": "No process owned by this card or the receiver that was created in the card's 03:25Z-04:20Z execution window remains; the 18 processes still alive from that window belong to unrelated user and tooling applications (UnityMcpBridge, user Edge renderer, Codex/VS Code tooling, Sogou input, console hosts, and similar).",
+      "gitWorktree": "The worktree is clean and still at the fixed candidate history, and the original nine-file published run directory was re-verified as 9/9 sha256 unchanged."
+    },
+    "invocationSettlement": {
+      "originalSmoke": "The original runner chain finished with its own npm exit 0, browser exit 0, browserExited true and previewClosed true.",
+      "reviewerFullSmoke": "The reviewer rerun returned its own npm exit 0 and browser exit 0 receipt, and its temporary output directory was removed.",
+      "threeObservationCalls": "Each of the three read-only observation calls has a tool_result with is_error=false, and the two owning subagents have journal started and result records. Their browser exit codes and signals were not captured and remain unknown; the third call's actual renderer class also remains unknown.",
+      "backgroundTools": "The prior tower unit's two grep|head local_bash tasks recorded task_notification status stopped; their head.exe children have no exit receipt.",
+      "priorUnits": "The original unit, the earlier revision unit and the prior tower unit all have execution receipts with error null, status success and recorded end times."
+    },
+    "conclusion": "At the census instant the card's known browser, preview, observation-script and background-tool resources were absent, and all its invocations had settled at call and subagent level. No other receiver browser, preview or GPU task was running. Exact recorded identifiers were absent with no creation-window reuse. A point-in-time census is not an exit receipt and is not a standing idle guarantee. Settlement here means the tool calls returned and the subagents ended; it does not assert a normal exit code for the three observation browsers or the two head.exe filters. Historical missing browser exit codes and head.exe exit times and codes remain unknown and are not back-inferred from current absence; the historical facts and the earlier out-of-scope review rerun are preserved without exemption."
+  },
   "serialScheduling": {
-    "asOf": "2026-10-29T05:12:00Z",
-    "state": "Blocked for further local serial scheduling. The published limited delivery stays receivable; this is not a whole-card compliance declaration.",
-    "unclosedExitFacts": "Only the three read-only bot snapshot calls lack a captured browser exit code/signal: call_00_2ZLw8rhWunL5tW0963DU1008, call_00_VAhmRP8dVDN8aQzNHWvt4908 and call_00_zLf93UTvT26hVBXosZRg4432. The original run.mjs smoke (browserExitCode 0) and the reviewer full-smoke rerun call_00_2ayn42Z1dHMOAWn31YeZ6782 (browserExitCode 0) both have their own exit receipts. The two prior tower unit head.exe -30 filters produced by the two 02:35:37Z pipelines also have no exit receipt: both were present in the 03:30Z census and both are absent from the 04:39:43Z census, and both exit times and codes are unknown.",
-    "releaseCondition": "Either (a) the receiver records written acceptance of the missing browser exit receipts for the three bot snapshot calls and of the two unknown head.exe exits, or (b) real exit receipts for those processes are obtained. A point-in-time process census (04:13:39Z or 04:39:43Z) is not an exit receipt and does not by itself release the block.",
-    "receiverFirstStep": "Accept the limited delivery by the published nine-file run directory plus the 37-file bundle digest; do not start the next local serial smoke until the release condition is met.",
-    "blockedScope": "Only subsequent local serial scheduling. The fixed-source functional smoke and the 37-file bundle hash match remain independently usable for code and website delivery."
+    "asOf": "2026-10-29T06:03Z",
+    "state": "Current read-only verification passed for the conditions observed at the census instant. The earlier block on subsequent local serial scheduling is cleared on that current-verification basis: not on any inferred historical exit code, and not as a standing idle declaration. The earlier written-acceptance alternative was not used as authorization.",
+    "unclosedExitFacts": "Unchanged historical unknowns: the three read-only bot snapshot calls have no captured browser exit code or signal, and the two prior tower-unit head.exe -30 filters have no exit receipt (present in the 03:30Z census, absent from 04:39:43Z and from this census). Current absence is not used to back-infer their exits, and the historical gaps are not waived.",
+    "currentCensus": "One full read-only census at 2026-10-29T06:02:49Z-06:08:27Z found zero receiver browser or headless-shell processes, zero browser-smoke, preview or reproduction Node processes, zero preview listeners and no receiver GPU capture task. The card's recorded process identifiers were absent with no creation-window reuse, and no card-owned or receiver-owned process created in the card's 03:25Z-04:20Z execution window remains; the 18 processes still alive from that window are unrelated user and tooling applications.",
+    "otherReceiverUnits": "At the same census the queued B-SR-RACE-REVIEW-SMOKE-20261029 and B-FPS-ART-OBSERVER-CAPTURE-20261029 receiver units were already active in preparation phases (both started at 2026-10-29T05:15Z) with no browser running. This card did not start, stop or modify them. The intended Star-then-FPS start order had already been overtaken by the receiver's parallel launch and is outside this card's write scope.",
+    "nextStartRule": "Any subsequent browser start, including Star or FPS, must perform its own fresh current check at that moment. Star must actually finish and exit before FPS may start. This revision starts no browser or GPU task and does not declare the lane free beyond the census instant.",
+    "blockedScope": "None added by this revision for this card's own resources. The published limited delivery remains receivable."
   },
   "deliveryImpact": {
     "usableForDelivery": "The fixed-source functional smoke from the original run.mjs and the 37-file bundle hash match remain independently usable for code and website delivery.",
-    "blocked": "The only unclosed exit facts are those of the three read-only bot snapshot calls (browser exit code/signal not captured) and the two prior head.exe filters (exit times/codes unknown). The review-phase full-smoke rerun has its own browserExitCode 0 receipt and is not part of this gap. These gaps block only subsequent local serial scheduling; see serialScheduling for the release condition and the receiver's first step.",
+    "blocked": "The only unclosed exit facts are those of the three read-only bot snapshot calls (browser exit code/signal not captured) and the two prior head.exe filters (exit times/codes unknown). The review-phase full-smoke rerun has its own browserExitCode 0 receipt and is not part of this gap. These historical gaps are preserved but no longer block scheduling on their own; the current schedule rests on the read-only census and fresh checks (see serialScheduling.nextStartRule), and the historical gaps are not waived. This is not a full-card compliance declaration.",
     "notDeclared": "This addendum does not declare the whole card fully compliant. Status remains review_ready for limited acceptance."
   },
   "sanitization": "No absolute paths, process identifiers, full argv, user-profile paths, session identifiers or private addresses are published here. Raw logs, argv and process identifiers remain in the local run scratch."
