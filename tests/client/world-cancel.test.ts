@@ -1,3 +1,4 @@
+import {lightingState} from '../../src/render/lighting-style.js';
 import {readFile} from 'node:fs/promises';
 import * as Three from 'three';
 import ts from 'typescript';
@@ -17,7 +18,7 @@ it('an abandoned async world releases its assets before it can replace the live 
     setPixelRatio(){}dispose(){events.push('renderer-release');}forceContextLoss(){events.push('context-release');}
   }
   class TextureLoader {loadAsync(){started();return new Promise(resolve=>{releaseTexture=resolve;});}}
-  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,
+  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,
     addEnvironmentLighting:()=>{},loadTerrainTextures:async()=>({dispose:()=>events.push('terrain-release')}),
     SOURCE_URL:new URL('../../src/render/world.ts',import.meta.url).href,
     loadBattleAssets:async()=>({dispose:()=>events.push('assets-release')}),

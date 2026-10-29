@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const LIGHTING_STYLES=['baseline','stylized-diffuse'] as const;
+export const LIGHTING_STYLES=['baseline','stylized-diffuse','forest-light-v1'] as const;
 export type LightingStyle=typeof LIGHTING_STYLES[number];
 export type RenderRole='world'|'cue';
 
@@ -23,7 +23,8 @@ export function renderRole(object:THREE.Object3D):RenderRole|undefined {
 }
 
 export function lightingState(style:LightingStyle,frameSubmitted=false){
-  return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:style==='baseline'?'source-materials':'three-native-toon',
+  if(style==='forest-light-v1')return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:'source-materials',environment:{kind:'ambient-and-hemisphere',sky:'#b9ddd8',ground:'#243e32',hemisphereIntensity:1.35,ambientIntensity:.08},directSun:{color:'#fff0cf',intensity:2.8,shadow:'PCFShadowMap'},toneMapping:'ACESFilmic',exposure:1.08,post:{ao:'world-only-SSAO',kernelRadius:1.4,samples:16,minDistance:.001,maxDistance:.015,grade:'linear-cool-shadows-warm-highlights',output:'OutputPass',buffer:'HalfFloatType',msaaSamples:4}};
+  return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:style!=='stylized-diffuse'?'source-materials':'three-native-toon',
     environment:{kind:'ambient-and-hemisphere',sky:'#d7e9e3',ground:'#3c4333',hemisphereIntensity:style==='baseline'?1.65:1,ambientIntensity:style==='baseline'?0:.9},
     directSun:{color:'#fff0cf',intensity:2.5,shadow:'original-pcf-soft'},toneMapping:'ACESFilmic',exposure:1.12};
 }
@@ -37,7 +38,7 @@ export function addEnvironmentLighting(scene:THREE.Scene,style:LightingStyle){
 /** Only the world owner's supported lit surfaces change response. Authored unlit
  * world surfaces stay world, not cues; cue materials always retain their shader. */
 export function diffuseMaterial(source:THREE.Material,role:RenderRole,style:LightingStyle):THREE.Material {
-  if(style==='baseline'||role==='cue'||source instanceof THREE.MeshBasicMaterial||source instanceof THREE.MeshToonMaterial)return source;
+  if(style!=='stylized-diffuse'||role==='cue'||source instanceof THREE.MeshBasicMaterial||source instanceof THREE.MeshToonMaterial)return source;
   if(!(source instanceof THREE.MeshStandardMaterial||source instanceof THREE.MeshLambertMaterial||source instanceof THREE.MeshPhongMaterial))throw new Error(`Unsupported world diffuse material: ${source.type}`);
   // No silent loss of authored physical extensions. This slice uses ordinary glTF PBR.
   if(source instanceof THREE.MeshPhysicalMaterial)throw new Error('Physical extensions require a separate lighting contract');
@@ -57,7 +58,7 @@ export function diffuseMaterial(source:THREE.Material,role:RenderRole,style:Ligh
  * source and replacement resources; the cache does not own textures or disposal. */
 export function applyWorldDiffuse(root:THREE.Object3D,style:LightingStyle,cache=new Map<THREE.Material,THREE.Material>()){
   root.userData['renderRole']='world';
-  if(style==='baseline')return;
+  if(style!=='stylized-diffuse')return;
   root.traverse(node=>{
     if(!(node as THREE.Mesh).isMesh||renderRole(node)!=='world')return;
     const mesh=node as THREE.Mesh;
@@ -72,5 +73,5 @@ export function applyWorldDiffuse(root:THREE.Object3D,style:LightingStyle,cache=
 
 /** Procedural surfaces are allocated once by their existing owner, not per frame. */
 export function surfaceMaterial(style:LightingStyle,parameters:Pick<THREE.MeshToonMaterialParameters,'color'|'vertexColors'|'map'>){
-  return style==='baseline'?new THREE.MeshStandardMaterial({...parameters,roughness:1}):new THREE.MeshToonMaterial(parameters);
+  return style!=='stylized-diffuse'?new THREE.MeshStandardMaterial({...parameters,roughness:1}):new THREE.MeshToonMaterial(parameters);
 }
