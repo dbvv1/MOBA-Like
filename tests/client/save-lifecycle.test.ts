@@ -1,3 +1,4 @@
+import {parseStandards} from '../../src/render/standards.js';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 import {describe,it,expect,vi} from 'vitest';
@@ -29,7 +30,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
   const code=await readFile(new URL('../../src/client.ts',import.meta.url),'utf8');
   const executable=ts.transpileModule(code.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.url','SOURCE_URL'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const nav=await readFile(new URL('../../src/sim/nav/lane.navmesh',import.meta.url));
-  const bindings={
+  const bindings={parseStandards,
     KeyboardBindings:class {label(value:string){return value;}},controlsHelp:()=>'',createKeyboardSettings:()=>({dispose:()=>{}}),parseLightingStyle:()=> 'baseline',location:{search:''},
     window,document,SOURCE_URL:new URL('../../src/client.ts',import.meta.url).href,
     getContent,LocalMatch,restoreMatch,createSaveSlot,createDetourNavigation,FixedClock,createLifetime,SAVE_COMPATIBILITY_ID:'test-rules',

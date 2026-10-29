@@ -22,10 +22,25 @@ describe('renderer identity',()=>{
   it('retains raw masked report and unknown when debug extension is unavailable',()=>{const gl={isContextLost:()=>false,getExtension:()=>null,getParameter:(key:number)=>key===1?'WebKit WebGL':'masked',RENDERER:1,VENDOR:2,VERSION:3};expect(rendererEvidence(gl as unknown as WebGL2RenderingContext)).toMatchObject({renderer:'WebKit WebGL',rendererClass:'unknown',unmasked:false});});
 });
 describe('capture camera adapter',()=>{
+  it('locks the existing friendly tower and new barracks-road cameras without changing the gameplay lens',()=>{
+    expect(CAMERAS['first-tower'].pose).toEqual({position:{x:-28,y:24,z:18},target:{x:-28,y:0,z:0},fov:45});
+    expect(CAMERAS['barracks-road'].pose).toEqual({position:{x:-82,y:24,z:18},target:{x:-82,y:0,z:0},fov:45});
+    expect(parseCaptureConfig('?shot=barracks-road&seed=7&t=2&input=march')).toMatchObject({shot:'barracks-road',seed:7,startFrame:120,input:'march'});
+  });
   it('copies explicit settings and leaves a camera untouched until opt-in',()=>{const camera=new THREE.PerspectiveCamera(45,16/9,.1,200),original=camera.position.clone();const view=copyCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS.spawn.pose});expect(camera.position).toEqual(original);expect(view.pose).not.toBe(CAMERAS.spawn.pose);applyCapturePose(camera,view.pose!);expect(camera.position.toArray()).toEqual([-94,24,19.2]);expect(camera.fov).toBe(45);});
   it('rejects invalid settings before camera application',()=>{expect(()=>copyCaptureView({...CAPTURE_SIZE,pixelRatio:NaN,pose:null})).toThrow();expect(()=>copyCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:{...CAMERAS.spawn.pose,fov:180}})).toThrow();});
 });
 describe('virtual capture consumer',()=>{
+  it('preserves the same real simulation state across tower and barracks cameras and standards requests',async()=>{
+    const nav=await testNavigation();
+    const requests=['?shot=first-tower','?shot=barracks-road','?shot=first-tower&standards=tower-standards','?shot=barracks-road&standards=tower-standards'];
+    const sessions=requests.map(query=>new CaptureSession(parseCaptureConfig(`${query}&seed=7&t=2&input=march&frames=3`)!,nav));
+    for(const session of sessions)await session.prepare(consumer());
+    expect(new Set(sessions.map(session=>session.metadata.stateHash)).size).toBe(1);
+    expect(sessions.map(session=>session.sim.snapshot())).toEqual(Array(4).fill(sessions[0]!.sim.snapshot()));
+    for(const session of sessions){session.next(consumer(),0);session.next(consumer(),1);}
+    expect(new Set(sessions.map(session=>session.metadata.stateHash)).size).toBe(1);
+  });
   it('matches the real simulation/bot and tape, syncs every tick and warms only the renderer',async()=>{
     const nav=await testNavigation(),session=new CaptureSession(config('&t=10&frames=3'),nav),view=consumer();
     await session.prepare(view);

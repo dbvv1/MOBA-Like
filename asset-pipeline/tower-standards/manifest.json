@@ -1,0 +1,85 @@
+{
+  "sourceCommit": "261034a790c7eec9e493db9745dfcb0dbd66e2c7",
+  "status": "default-off-sidecar-pending-browser-and-visual-review",
+  "axes": "glTF Y-up +Z forward metres; world actors rotated by existing consumer",
+  "tower": {
+    "id": "tower-teal",
+    "worldXZ": [
+      [
+        -56,
+        0
+      ],
+      [
+        -28,
+        0
+      ]
+    ],
+    "boundsMin": [
+      -2.18,
+      0,
+      -2.18
+    ],
+    "boundsMax": [
+      2.18,
+      5.3,
+      2.18
+    ]
+  },
+  "barracks": {
+    "id": "barracks-teal",
+    "worldXZ": [
+      [
+        -82,
+        0
+      ]
+    ],
+    "boundsMin": [
+      -1.31704,
+      0,
+      -1.31704
+    ],
+    "boundsMax": [
+      1.31704,
+      3,
+      1.54764
+    ]
+  },
+  "road": {
+    "actualConsumer": "src/render/terrain-composition.ts",
+    "actualTexture": "asset-pipeline/terrain-composition/exported/earth-albedo.webp",
+    "tileMeters": 10,
+    "newSample": "exported/road-albedo.png",
+    "status": "revised-sparse-stones-and-earth-needs-game-camera-review",
+    "meshNavigationCollisionChanged": false,
+    "edgePixelDeltaMax": {
+      "horizontal": 20,
+      "vertical": 2
+    }
+  },
+  "sourceHashes": {
+    "src/render/battle-assets.ts": "adb5da4ee616d4fc622c7965bda6f72e647fc89f556f5158aae2e5cd5df7841f",
+    "src/render/battlefield.ts": "3a4abc63182343890e5f7486ceb19dab1d88fbce1f2d603f0c3d19e244aad359",
+    "src/render/terrain-composition.ts": "1bdf511b808dea32e2184f7d952bcceb855050825b607f583c8a6fb28c250eb4",
+    "src/render/terrain-textures.ts": "8e0748a7c8659d99cbd04db7b063096a302bc0a4dd2b7efcf957bb2070aa6748",
+    "asset-pipeline/battle/manifest.json": "ef356ef229dcd0572b10f6754a6868494db3b567b1e905adf0704f7b429b71f5"
+  },
+  "sourceHashesBasis": "unchanged upstream261034a contracts before candidate edits",
+  "entry": "candidate.html?standards=tower-standards",
+  "files": [
+    {
+      "path": "exported/barracks-teal.glb",
+      "bytes": 22088,
+      "sha256": "33a08724ea9db8f7d532716afe1cf129c0bdef6b0ef6f2e90ee9abcfd8463a70"
+    },
+    {
+      "path": "exported/road-albedo.png",
+      "bytes": 238188,
+      "sha256": "8aaacc1467cfd03f77e5a4bd6ac88f5d3321a17ae1027c33c9fa80f4843b02f9"
+    },
+    {
+      "path": "exported/tower-teal.glb",
+      "bytes": 44016,
+      "sha256": "4d01882e0aed00f60b82ac5dbb3f6470aafd690c9b3bd64ac079e3dcc68df662"
+    }
+  ]
+}

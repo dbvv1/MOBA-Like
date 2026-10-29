@@ -1,3 +1,5 @@
+import {boundedCandidate} from './candidate-load.js';
+import type {Standards} from './standards.js';
 import * as THREE from 'three';
 import {applyWorldDiffuse,type LightingStyle} from './lighting-style.js';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
@@ -9,7 +11,8 @@ import siegeManifest from '../../asset-pipeline/content-set/siege/manifest.json'
 const urls=import.meta.glob('../../asset-pipeline/battle/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const heroUrls=import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const siegeUrls=import.meta.glob('../../asset-pipeline/content-set/siege/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
-export type BattleAssets={models:Record<string,GLTF>;dispose():void};
+const standardUrls:Record<string,string>={'tower-teal':new URL('../../asset-pipeline/tower-standards/exported/tower-teal.glb',import.meta.url).href,'barracks-teal':new URL('../../asset-pipeline/tower-standards/exported/barracks-teal.glb',import.meta.url).href};
+export type BattleAssets={standards?:Record<string,'candidate'|'fallback'>;models:Record<string,GLTF>;dispose():void};
 function modelResources(models:Iterable<GLTF>,resources=new Set<{dispose():void}>()){
   for(const model of models)model.scene.traverse(node=>{
     const mesh=node as THREE.Mesh; if(!mesh.isMesh)return;
@@ -48,11 +51,19 @@ function orderedModelLoader(){
   };
 }
 // Injected complete-model loaders retain their own construction/ordering contract.
-export async function loadBattleAssets(load=orderedModelLoader(),lighting:LightingStyle='baseline'):Promise<BattleAssets>{
+export async function loadBattleAssets(load:((url:string)=>Promise<GLTF>)|undefined=undefined,lighting:LightingStyle='baseline',standards:Standards='baseline'):Promise<BattleAssets>{
+  const normalLoad=load??orderedModelLoader();
+  // Optional loads have independent queues: a stalled candidate must not block base GLBs.
+  const candidateLoad=load??orderedModelLoader();
+  const standardResults:Record<string,'candidate'|'fallback'>={};
   const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroManifest.assets.map(asset=>({id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]})),...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))].map(async asset=>{
     const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);
-    return [asset.id,await load(url)] as const;
+    if(standards==='tower-standards'&&standardUrls[asset.id]){
+      try{const model=await boundedCandidate(()=>candidateLoad(standardUrls[asset.id]!),model=>releaseModels([model]));standardResults[asset.id]='candidate';return [asset.id,model] as const;}
+      catch{standardResults[asset.id]='fallback';}
+    }
+    return [asset.id,await normalLoad(url)] as const;
   }));
   const fulfilled=results.filter((r):r is PromiseFulfilledResult<readonly[string,GLTF]>=>r.status==='fulfilled');
   const failed=results.find(r=>r.status==='rejected');
@@ -64,7 +75,7 @@ export async function loadBattleAssets(load=orderedModelLoader(),lighting:Lighti
   try{for(const model of Object.values(models))applyWorldDiffuse(model.scene,lighting,cache);}
   catch(error){modelResources(Object.values(models),resources);for(const material of cache.values())resources.add(material);for(const resource of resources)resource.dispose();throw error;}
   modelResources(Object.values(models),resources);let disposed=false;
-  return {models,dispose(){if(!disposed){disposed=true;for(const resource of resources)resource.dispose();resources.clear();}}};
+  return {models,standards:standardResults,dispose(){if(!disposed){disposed=true;for(const resource of resources)resource.dispose();resources.clear();}}};
 }
 export const battleManifest=manifest;
 export const siegeAssetManifest=siegeManifest;

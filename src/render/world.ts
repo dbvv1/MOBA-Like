@@ -1,3 +1,4 @@
+import type {Standards} from './standards.js';
 import {loadTerrainTextures,type OwnedTerrainTextures} from './terrain-textures.js';
 import {addEnvironmentLighting,lightingState,type LightingStyle} from './lighting-style.js';
 import {loadCombatTextures,type CombatTextures} from './combat-textures.js';
@@ -18,7 +19,7 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal}:{lighting?:LightingStyle;signal?:AbortSignal}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal,standards='baseline'}:{lighting?:LightingStyle;signal?:AbortSignal;standards?:Standards}={}){
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true});}
@@ -32,7 +33,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const light=new THREE.DirectionalLight('#fff0cf',2.5);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
   let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
-  try{assets=await loadBattleAssets(undefined,lighting);combatTextures=await loadCombatTextures();terrainTextures=await loadTerrainTextures();statusTexture=await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href);statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true});}
+  try{assets=await loadBattleAssets(undefined,lighting,standards);combatTextures=await loadCombatTextures();terrainTextures=await loadTerrainTextures(standards);statusTexture=await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href);statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true});}
   catch(error){disposeOwnedRenderer(renderer,()=>{statusTexture?.dispose();combatTextures?.dispose();terrainTextures?.dispose();assets?.dispose();});throw error;}
   const loadedAssets=assets, presentation=view;
   const battlefield=createBattlefield(catalog,loadedAssets,lighting,terrainTextures);const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
@@ -53,6 +54,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     frameSubmitted=!renderer.getContext().isContextLost()&&renderer.info.render.frame>before;
   }
   const currentLightingState=()=>lightingState(lighting,frameSubmitted&&!renderer.getContext().isContextLost());
+  const standardState=()=>({requested:standards,models:{...loadedAssets.standards},road:terrainTextures?.standardRoad??'flat-fallback'});
   function positionCamera(){if(captureView?.pose){applyCapturePose(camera,captureView.pose);return;}camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
   function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();}
   fit();positionCamera();
@@ -94,7 +96,8 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     renderOnly(){renderScene();},
     captureContext(){return renderer.getContext();},
     lightingState(){return currentLightingState();},
-    captureState(){return {lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
+    standardsState(){return standardState();},
+    captureState(){return {standards:standardState(),lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},

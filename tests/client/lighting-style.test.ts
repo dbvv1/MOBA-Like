@@ -104,7 +104,7 @@ describe('fixed source and real prototype consumers',()=>{
       await session.prepare(consumer);for(let i=0;i<16;i++)session.next(consumer,i);
       expect(session.metadata).toMatchObject({stateHash:'4a4767ad53dba0d9',frame:16,virtualFrame:6076});
       expect([...mats(view.root),...mats(field.root)].every(m=>m instanceof THREE.MeshToonMaterial)).toBe(true);
-      expect(Object.keys(CAMERAS)).toEqual(['gameplay','spawn','first-tower','spawn-to-tower']);
+      expect(Object.keys(CAMERAS)).toEqual(['gameplay','spawn','barracks-road','first-tower','spawn-to-tower']);
     }finally{view.dispose();field.dispose();assets.dispose();}
   });
 });

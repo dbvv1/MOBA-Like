@@ -1,6 +1,6 @@
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
-const mocks=vi.hoisted(()=>({world:null as any,destroy:vi.fn(),prepareError:null as Error|null}));
-vi.mock('../../src/render/world.js',()=>({createWorld:async()=>mocks.world}));
+const mocks=vi.hoisted(()=>({world:null as any,destroy:vi.fn(),createWorld:vi.fn(),prepareError:null as Error|null}));
+vi.mock('../../src/render/world.js',()=>({createWorld:async(...args:unknown[])=>{mocks.createWorld(...args);return mocks.world;}}));
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:mocks.destroy})}));
 vi.mock('../../src/capture/bundle.js',async importOriginal=>({...await importOriginal<typeof import('../../src/capture/bundle.js')>(),verifyBrowserBundle:async()=>({sha256:'b'.repeat(64),files:[]})}));
 vi.mock('../../src/capture/session.js',()=>({CaptureSession:class {
@@ -17,7 +17,7 @@ class Element extends EventTarget {
 let nodes:Map<string,Element>,host:EventTarget&{__shot?:any;__shotNext?:(frame?:number)=>boolean},callback:BlobCallback;
 const node=(id:string)=>nodes.get(id)!;
 beforeEach(()=>{
-  vi.resetModules();mocks.prepareError=null;mocks.destroy.mockClear();
+  vi.resetModules();mocks.prepareError=null;mocks.destroy.mockClear();mocks.createWorld.mockClear();
   nodes=new Map(['stage','notice','error','progress','identity','metadata','next','next-15','save','downloads','download-label','png','json'].map(id=>[`capture-${id}`,new Element()]));
   node('capture-downloads').hidden=true;
   host=new EventTarget();
@@ -32,6 +32,13 @@ beforeEach(()=>{
 });
 afterEach(()=>{host.dispatchEvent(new Event('pagehide'));vi.unstubAllGlobals();vi.restoreAllMocks();});
 describe('capture page controls (CPU DOM and renderer doubles; not browser/GPU evidence)',()=>{
+  it.each([['','baseline'],['&standards=tower-standards','tower-standards']])('passes explicit standards selection to the real world boundary: %s',async(suffix,expected)=>{
+    vi.stubGlobal('location',{href:`https://example.test/capture.html?shot=barracks-road${suffix}`,search:`?shot=barracks-road${suffix}`,reload:vi.fn(),assign:vi.fn()});
+    await import('../../src/capture/client.js');
+    expect(host.__shot.ready).toBe(true);
+    expect(mocks.createWorld).toHaveBeenCalledWith(node('capture-stage'),{},expect.objectContaining({standards:expected}));
+    expect(mocks.world.setCaptureView).toHaveBeenCalledWith(expect.objectContaining({pose:{position:{x:-82,y:24,z:18},target:{x:-82,y:0,z:0},fov:45}}));
+  });
   it('handles 15/1 frame clicks, blocks a repeated busy click, and disables done',async()=>{
     await import('../../src/capture/client.js');expect(host.__shot.ready).toBe(true);
     node('capture-next-15').click();node('capture-next-15').click();
