@@ -32,16 +32,38 @@ function readSample(kind:BattleCue['kind'],url:string){
   if(!pending){pending=fetch(url).then(response=>{if(!response.ok)throw new Error('Battle audio unavailable');return response.arrayBuffer();}).catch(error=>{sampleBytes.delete(kind);throw error;});sampleBytes.set(kind,pending);}
   return pending;
 }
+export type AudioPolicy='baseline'|'critical-v1';
+export function audioPolicyFromSearch(search:string):AudioPolicy {
+  const values=new URLSearchParams(search).getAll('audio');
+  return values.length===1&&values[0]==='critical-v1'?'critical-v1':'baseline';
+}
+export const CRITICAL_AUDIO_LIMITS={gap:.025,maxAhead:.1,maxPending:4,maxVoices:8,maxEventAgeTicks:3} as const;
+export interface AudioDecision {key:string;kind:BattleCue['kind'];critical:boolean;receivedAt:number|null;plannedAt:number|null;reason:string;}
+const priority={hit:4,shield:3,cast:2,swing:1};
+function criticalEvent(event:PresentationEvent,playerId:number){
+  return event.type==='castResolved'?event.action!=='basicAttack'&&event.heroId===playerId:
+    (event.type==='basicAttackHit'||event.type==='heroDamaged')&&(event.sourceId===playerId||event.targetId===playerId);
+}
 /** Licensed sample palette. Audio unlock is gesture-only; it cannot stop the game. */
-export function createBattleAudio(initiallyEnabled=true){
+export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='baseline'){
   let context:AudioContext|null=null,master:GainNode|null=null;
   let enabled=initiallyEnabled,disposed=false,lastTick=-1,lastOrdinal=-1,lastSound=-Infinity;
+  let paused=false;
+  const decisions:AudioDecision[]=[],scheduled=new Map<AudioBufferSourceNode,{at:number;decision:AudioDecision}>();
+  function record(decision:AudioDecision){decisions.push(decision);if(decisions.length>64)decisions.shift();}
+  function cancel(reason:string){
+    for(const [voice,entry] of scheduled){
+      if(entry.at>(context?.currentTime??Infinity))record({...entry.decision,reason,plannedAt:entry.at});
+      try{voice.stop();}catch{/* already ended */}
+    }
+    scheduled.clear();lastSound=-Infinity;
+  }
   let loading:Promise<void>|null=null;
   const buffers=new Map<BattleCue['kind'],AudioBuffer>(),voices=new Set<AudioBufferSourceNode>();
   async function unlock(){
     if(disposed||!enabled)return;
     try{
-      context??=new AudioContext();const ctx=context;
+      if(!context){context=new AudioContext();if(policy==='critical-v1')context.addEventListener('statechange',()=>{if(context?.state!=='running')cancel('device-reset');});}const ctx=context;
       if(!master){master=ctx.createGain();master.gain.value=.32;master.connect(ctx.destination);}
       if(ctx.state==='suspended')await ctx.resume();
       if(disposed)return;
@@ -53,24 +75,46 @@ export function createBattleAudio(initiallyEnabled=true){
       await loading;
     }catch{/* A failed or unsupported audio device does not interrupt play. */}
   }
-  function play(cue:BattleCue){
-    if(!enabled||!context||!master||context.state!=='running'||voices.size>=8)return;
-    const buffer=buffers.get(cue.kind);if(!buffer)return;
-    const now=context.currentTime;if(now-lastSound<.025)return;lastSound=now;
+  function play(cue:BattleCue,decision?:AudioDecision){
+    const drop=(reason:string)=>{if(decision)record({...decision,reason});};
+    if(!enabled||disposed||paused){drop('inactive');return;}
+    if(!context||!master||context.state!=='running'){drop('device-unavailable');return;}
+    const buffer=buffers.get(cue.kind);if(!buffer){drop('sample-unavailable');return;}
+    if(voices.size>=8){drop('voice-limit');return;}
+    const now=context.currentTime;
+    let at=now;
+    if(decision?.critical){
+      at=Math.max(now,lastSound+.025);
+      if(at-now>CRITICAL_AUDIO_LIMITS.maxAhead+1e-9){drop('deadline');return;}
+      if(at>now&&[...scheduled.values()].filter(v=>v.at>now).length>=CRITICAL_AUDIO_LIMITS.maxPending){drop('pending-limit');return;}
+    }else if(now-lastSound<.025){drop('density');return;}
+    lastSound=at;
     const gain=context.createGain(),pan=context.createStereoPanner(),source=context.createBufferSource();
     source.buffer=buffer;pan.pan.value=cue.pan;
-    const duration=Math.min(buffer.duration,.6);gain.gain.setValueAtTime(cue.strength,now);
-    gain.gain.setValueAtTime(cue.strength,now+Math.max(0,duration-.04));gain.gain.linearRampToValueAtTime(0,now+duration);
+    const duration=Math.min(buffer.duration,.6);gain.gain.setValueAtTime(cue.strength,at);
+    gain.gain.setValueAtTime(cue.strength,at+Math.max(0,duration-.04));gain.gain.linearRampToValueAtTime(0,at+duration);
     source.connect(gain);gain.connect(pan);pan.connect(master);voices.add(source);
-    source.onended=()=>{voices.delete(source);source.disconnect();gain.disconnect();pan.disconnect();};
-    source.start(now);source.stop(now+duration);
+    source.onended=()=>{scheduled.delete(source);voices.delete(source);source.disconnect();gain.disconnect();pan.disconnect();};
+    if(decision){const accepted={...decision,plannedAt:at,reason:'scheduled'};scheduled.set(source,{at,decision:accepted});record(accepted);}
+    source.start(at);source.stop(at+duration);
   }
-  return {unlock,get enabled(){return enabled;},setEnabled(value:boolean){enabled=value;if(master)master.gain.value=value?.32:0;if(value)void unlock();},
-    sync(snapshot:Snapshot,playerId:number){let foreground:BattleCue|null=null;const priority={hit:4,shield:3,cast:2,swing:1};for(const event of snapshot.events){
-      if(event.tick<lastTick||(event.tick===lastTick&&event.ordinal<=lastOrdinal))continue;
-      lastTick=event.tick;lastOrdinal=event.ordinal;const cue=battleCue(event,snapshot,playerId);
-      if(cue&&(!foreground||priority[cue.kind]*cue.strength>priority[foreground.kind]*foreground.strength))foreground=cue;
-    }if(foreground)play(foreground);},
-    dispose(){if(disposed)return;disposed=true;enabled=false;if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
+  return {unlock,inspect:()=>({policy,paused,voices:voices.size,pending:[...scheduled.values()].filter(v=>v.at>(context?.currentTime??Infinity)).length,decisions:decisions.map(d=>({...d}))}),setPaused(value:boolean){if(policy==='critical-v1'){paused=value;if(value)cancel('pause-reset');}},get enabled(){return enabled;},setEnabled(value:boolean){enabled=value;if(!value&&policy==='critical-v1')cancel('mute-reset');if(master)master.gain.value=value?.32:0;if(value)void unlock();},
+    sync(snapshot:Snapshot,playerId:number){
+      const entries:Array<{cue:BattleCue;decision:AudioDecision}>=[];
+      for(const event of snapshot.events){
+        if(event.tick<lastTick||(event.tick===lastTick&&event.ordinal<=lastOrdinal))continue;
+        lastTick=event.tick;lastOrdinal=event.ordinal;const cue=battleCue(event,snapshot,playerId);if(!cue)continue;
+        const decision:AudioDecision={key:`${event.tick}:${event.ordinal}`,kind:cue.kind,critical:criticalEvent(event,playerId),receivedAt:context?.currentTime??null,plannedAt:null,reason:'candidate'};
+        if(policy==='critical-v1'&&(event.tick>snapshot.tick||snapshot.tick-event.tick>CRITICAL_AUDIO_LIMITS.maxEventAgeTicks)){record({...decision,reason:'event-age'});continue;}
+        entries.push({cue,decision});
+      }
+      // Stable weighted ranking preserves ties in event order. Baseline still picks one.
+      entries.sort((a,b)=>priority[b.cue.kind]*b.cue.strength-priority[a.cue.kind]*a.cue.strength);
+      if(policy==='baseline'){if(entries[0])play(entries[0].cue);return;}
+      const retained=entries.filter((e,index)=>e.decision.critical||index===0);
+      for(const entry of entries)if(!retained.includes(entry))record({...entry.decision,reason:'coalesced'});
+      for(const entry of retained)play(entry.cue,entry.decision);
+    },
+    dispose(){if(disposed)return;disposed=true;enabled=false;if(policy==='critical-v1')cancel('dispose-reset');if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
   };
 }

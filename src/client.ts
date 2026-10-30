@@ -1,6 +1,6 @@
 import {entryLightingSearch} from './ui/entry-lighting.js';
 import {parseLightingStyle} from './render/lighting-style.js';
-import {createBattleAudio} from './audio/battle.js';
+import {createBattleAudio,audioPolicyFromSearch} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
 import {LocalMatch,restoreMatch,type MatchSave} from './save/match.js';
@@ -60,7 +60,8 @@ async function boot(mode:'prompt'|'new'='prompt'){
       await new Promise<void>(resolve=>setTimeout(resolve,0));current();
     }):new LocalMatch({seed:1,contentVersion,heroIdsByTeam:[[heroIdsByTeam[0][0]!],[heroIdsByTeam[1][0]!]],maxMatchSeconds:getContent(contentVersion).rules.maxMatchSeconds,botSeed:1002,botDifficulty:'normal'},navigation,SAVE_COMPATIBILITY_ID);
     current();const sim=match.simulation;
-    const sound=createBattleAudio(soundEnabled);lifetime.defer(()=>sound.dispose());
+    const audioPolicy=audioPolicyFromSearch(location.search);
+    const sound=createBattleAudio(soundEnabled,audioPolicy);lifetime.defer(()=>sound.dispose());
     const soundButton=element<HTMLButtonElement>('sound-toggle');const soundEvents=new AbortController();lifetime.defer(()=>soundEvents.abort());
     soundButton.textContent=soundEnabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(soundEnabled));
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
@@ -89,7 +90,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
       R:`Ultimate · ${sim.catalog.abilities[definition.abilities.R]!.name}`,
       attackMove:'Attack-move',stop:'Stop',focusCamera:'Lock camera',
     },open=>{
-      settingsOpen=open;commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
+      settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
       world.leavePointer();clock.reset();previous=performance.now();
     },()=>{refreshHelp();hud.update(snapshot,playerId);});
     lifetime.defer(()=>settings.dispose());
@@ -113,7 +114,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     };
     saveBeforeLeave=save;lifetime.defer(()=>{saveBeforeLeave=()=>{};});
     panel.button.disabled=!saving;panel.button.addEventListener('click',save,{signal:lifecycle.signal});
-    document.addEventListener('visibilitychange',()=>{clock.reset();previous=performance.now();if(document.hidden){commands.length=0;controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
+    document.addEventListener('visibilitychange',()=>{if(audioPolicy==='critical-v1')sound.setPaused(document.hidden||settingsOpen);clock.reset();previous=performance.now();if(document.hidden){commands.length=0;controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
@@ -136,7 +137,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
           world.draw(Math.min(delta,.25),sim.isComplete()?1:alpha);
         }else clock.reset();
         animation=requestAnimationFrame(frame);
-      }catch(error){stopped=true;saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;}
+      }catch(error){if(audioPolicy==='critical-v1')sound.setPaused(true);stopped=true;saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;}
     };
     animation=requestAnimationFrame(frame);
 

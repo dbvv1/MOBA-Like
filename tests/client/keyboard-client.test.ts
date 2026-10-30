@@ -6,7 +6,7 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean}>}));
+const state=vi.hoisted(()=>({sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean}>}));
 vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement)=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
   const world={canvas,targeting:null as string|null,disposed:false,locked:true};state.worlds.push(world);
@@ -16,7 +16,7 @@ vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElem
     lightingState:()=>({}),cameraState:()=>({locked:world.locked}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
 })}));
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));
-vi.mock('../../src/audio/battle.js',()=>({createBattleAudio:(enabled:boolean)=>({enabled,setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn(),dispose:vi.fn()})}));
+vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn(),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
 type Client={snapshot:()=>Snapshot;state:()=>{ready:boolean;tick:number;pointer:{command:{type:string}|null}|null}};
 function client(){return (window as unknown as {mobaClient:Client}).mobaClient;}
 const html=readFileSync('candidate.html','utf8');
@@ -30,7 +30,7 @@ function open(){click('#keyboard-settings');}
 function capture(action:string,value:string){click(`[data-binding-action="${action}"]`);key(value);}
 async function boot(){await import('../../src/client.js');await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));}
 beforeEach(()=>{
-  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.worlds.length=0;localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
+  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.worlds.length=0;state.sounds.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
   document.body.innerHTML=html.match(/<body>([\s\S]*?)<\/body>/)![1]!;
   Object.defineProperty(document,'hidden',{configurable:true,value:false});
   Object.defineProperty(HTMLDialogElement.prototype,'showModal',{configurable:true,value:function(this:HTMLDialogElement){this.open=true;}});
@@ -102,3 +102,13 @@ describe('keyboard settings in the actual client lifecycle',()=>{
     Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));canvasClick();advance();expect(client().snapshot().heroes[0]!.mana).toBe(mana);
   });
 });
+
+it('opt-in audio pause wiring clears plans on settings/hidden and creates a fresh owner on restart',async()=>{
+ history.replaceState(null,'','/?audio=critical-v1&commands=buffer-v1');await boot();const first=state.sounds[0]!;expect(first.policy).toBe('critical-v1');
+ open();expect(first.setPaused).toHaveBeenLastCalledWith(true);click('[data-binding-cancel]');expect(first.setPaused).toHaveBeenLastCalledWith(false);
+ Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));expect(first.setPaused).toHaveBeenLastCalledWith(true);
+ open();click('[data-binding-cancel]');expect(first.setPaused).toHaveBeenLastCalledWith(true);
+ Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));expect(first.setPaused).toHaveBeenLastCalledWith(false);
+ click('#restart');await vi.waitFor(()=>expect(state.sounds).toHaveLength(2));expect(first.dispose).toHaveBeenCalledTimes(1);expect(state.sounds[1]!.policy).toBe('critical-v1');
+});
+it('default audio policy preserves the old client pause contract',async()=>{await boot();expect(state.sounds[0]!.policy).toBe('baseline');open();click('[data-binding-cancel]');expect(state.sounds[0]!.setPaused).not.toHaveBeenCalled();});

@@ -1,0 +1,40 @@
+import {it,expect,vi,afterAll} from 'vitest';
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {createBattleAudio,battleCue} from '../../src/audio/battle.js';
+import {LocalMatch} from '../../src/save/match.js';
+import {getContent} from '../../src/content/catalog.js';
+import {testNavigation,makeSim,hero,place} from '../helpers.js';
+import type {Snapshot,SimCommand} from '../../src/sim/types.js';
+import {FixedClock} from '../../src/render/clock.js';
+const report:any={source:'0a1d60b1ef076c6bdacd2bbf8102ca1a13b07229',scope:'CPU production consumer + fake audio device; no audible output, browser, or output latency measurement',cases:[]};
+let clock=0,active:any[]=[];
+class Context {
+ state='running';destination={};get currentTime(){return clock;}
+ async resume(){this.state='running';} async close(){this.state='closed';}
+ async decodeAudioData(bytes:ArrayBuffer){return {duration:.1,kind:['swing','cast','hit','shield'][new Uint8Array(bytes)[0]!]};}
+ createGain(){return {gain:{value:0,setValueAtTime(){},linearRampToValueAtTime(){}},connect(){},disconnect(){}};}
+ createStereoPanner(){return {pan:{value:0},connect(){},disconnect(){}};}
+ createBufferSource(){const s:any={buffer:null,onended:null,connect(){},disconnect(){},start(at:number){active.push({kind:s.buffer.kind,start:at});},stop(at?:number){if(at!==undefined)active[active.length-1].stop=at;s.onended?.();}};return s;}
+}
+// Immediate fake voice completion isolates selection/throttle; no voice-cap conclusions.
+vi.stubGlobal('AudioContext',Context);
+vi.stubGlobal('fetch',async(url:string)=>new Response(new Uint8Array([['swing','cast','hit','shield'].findIndex(k=>String(url).endsWith('/'+k+'.ogg'))])));
+afterAll(()=>{try{mkdirSync('outputs/audio-diagnostic',{recursive:true});writeFileSync('outputs/audio-diagnostic/report.json',JSON.stringify(report,null,2)+'\n');}finally{vi.unstubAllGlobals();}});
+async function consumer(){clock=0;active=[];const a=createBattleAudio();await a.unlock();return a;}
+function observe(a:ReturnType<typeof createBattleAudio>,s:Snapshot,id:number,at:number){clock=at;const before=active.length;const candidates=s.events.map(event=>({event,cue:battleCue(event,s,id)})).filter(x=>x.cue);a.sync(s,id);return {tick:s.tick,audioClock:at,events:s.events,candidates,scheduled:active.slice(before)};}
+async function tape(v:11|12){const m=new LocalMatch({seed:1,contentVersion:v,heroIdsByTeam:[['veyra'],['veyra']],maxMatchSeconds:getContent(v).rules.maxMatchSeconds,botSeed:1002,botDifficulty:'normal'},await testNavigation(),'audio-diagnostic');const out:any[]=[];for(let tick=1;tick<=22;tick++){const commands:SimCommand[]=tick<=2?[{type:'cast',heroId:m.playerId,slot:tick===1?'Q':'W',targetId:null,direction:{x:1,z:0},point:null}]:[];const results=m.step(commands);out.push({snapshot:structuredClone(m.simulation.snapshot()),stateHash:m.simulation.finalHash(),results});}return {id:m.playerId,out};}
+it.each([11,12] as const)('real LocalMatch v%i Q1/W2 consumption',async(v)=>{const {id,out}=await tape(v),a=await consumer();const rows=out.map(x=>({...observe(a,x.snapshot,id,x.snapshot.tick/30),stateHash:x.stateHash,results:x.results}));const five=rows[4]!;expect(five.candidates).toHaveLength(v===12?2:1);expect(five.scheduled).toEqual([{kind:'cast',start:5/30,stop:5/30+.1}]);expect(five.candidates.map(x=>(x.event as any).slot)).toEqual(v===12?['Q','W']:['Q']);report.cases.push({name:'real-q-w-v'+v,rows});a.dispose();});
+it('real isolated simulation hit and cast same tick selects weighted winner',async()=>{const sim=await makeSim(12),p=hero(sim,0),enemy=hero(sim,1);place(p,{x:0,z:0});place(enemy,{x:5,z:0});const a=await consumer(),rows=[];for(let tick=1;tick<=20;tick++){sim.step(tick===1?[{type:'attack',heroId:p.id,targetId:enemy.id}]:tick===16?[{type:'cast',heroId:p.id,slot:'W',targetId:null,direction:{x:0,z:1},point:null}]:[]);rows.push({...observe(a,sim.snapshot(),p.id,tick/30),stateHash:sim.finalHash()});}const row=rows.find(r=>r.candidates.some(c=>c.cue?.kind==='hit')&&r.candidates.some(c=>c.cue?.kind==='cast'));expect(row).toBeDefined();expect(row!.scheduled).toHaveLength(1);report.cases.push({name:'isolated-real-sim-hit-cast',fixture:'only initial positions set by existing test helper; original stats/rules/events',rows});a.dispose();});
+it('production FixedClock catch-up consumes later tick cues without deferred playback',async()=>{const {id,out}=await tape(12);const a=await consumer(),c=new FixedClock(1/30),rows:any[]=[];let i=0;c.advance(.25,()=>{rows.push(observe(a,out[i++]!.snapshot,id,1));});expect(i).toBe(7);expect(active).toHaveLength(1); // Q/W one candidate winner at tick5
+// Consumer boundary fixture: replay genuine release snapshots as consecutive distinct event ticks.
+const release=out[4]!.snapshot;const sequence=[8,9,10].map(t=>({...release,tick:t,events:release.events.map(e=>({...e,tick:t}))}));
+for(const s of sequence)rows.push(observe(a,s,id,1));expect(active).toHaveLength(1);
+rows.push(observe(a,sequence[2]!,id,1.1));expect(active).toHaveLength(1);
+rows.push(observe(a,{...release,tick:11,events:release.events.map(e=>({...e,tick:11}))},id,1.1));expect(active).toHaveLength(2);
+report.cases.push({name:'slow-batch',fixture:'ticks1–7 real FixedClock/LocalMatch; ticks8–11 explicitly synthetic event-clock remap isolates throttle, not legal Q/W recasts',rows});a.dispose();});
+it('25ms gate consumes rejected event; pause no-sync preserves next fresh cue; restart fresh owner resets dedup',async()=>{const {id,out}=await tape(12),release=out[4]!.snapshot,a=await consumer();const atTick=(tick:number)=>({...release,tick,events:release.events.map(e=>({...e,tick}))});const rows=[];rows.push(observe(a,release,id,0));rows.push(observe(a,atTick(6),id,.024));expect(active).toHaveLength(1);rows.push(observe(a,atTick(6),id,.0249));expect(active).toHaveLength(1);rows.push(observe(a,atTick(7),id,.025));expect(active).toHaveLength(2);
+// paused client does not call sync or advance sim; same already-consumed snapshot stays silent.
+rows.push(observe(a,atTick(7),id,10));expect(active).toHaveLength(2);rows.push(observe(a,atTick(8),id,10));expect(active).toHaveLength(3);
+rows.push(observe(a,release,id,11));expect(active).toHaveLength(3);a.dispose();const b=await consumer();rows.push(observe(b,release,id,0));expect(active).toHaveLength(1);rows.push(observe(b,release,id,.1));expect(active).toHaveLength(1);b.dispose();report.cases.push({name:'gate-pause-restart',fixture:'real release events remapped to isolate boundary; restart new production audio owner as client does',rows});});
+it('suspended audio context consumes event without replay after unlock',async()=>{const {id,out}=await tape(12),release=out[4]!.snapshot;let ctx:any;class Suspended extends Context{constructor(){super();ctx=this;}}vi.stubGlobal('AudioContext',Suspended);const a=await consumer();ctx.state='suspended';const rows=[observe(a,release,id,0)];expect(active).toHaveLength(0);await a.unlock();rows.push(observe(a,release,id,.1));expect(active).toHaveLength(0);a.dispose();vi.stubGlobal('AudioContext',Context);report.cases.push({name:'device-suspension-distinct-from-game-pause',rows});});
+it('real Q projectile hit after Q/W releases is suppressed inside one catch-up callback batch',async()=>{const sim=await makeSim(12),p=hero(sim,0),enemy=hero(sim,1);place(p,{x:0,z:0});place(enemy,{x:5,z:0});const a=await consumer(),rows:any[]=[];const advance=()=>{const tick=sim.state.tick+1;sim.step(tick<=2?[{type:'cast',heroId:p.id,slot:tick===1?'Q':'W',targetId:null,direction:{x:1,z:0},point:null}]:[]);rows.push({...observe(a,sim.snapshot(),p.id,sim.state.tick<=2?sim.state.tick/30:1),stateHash:sim.finalHash()});};advance();advance();const c=new FixedClock(1/30);c.advance(.25,advance);expect(sim.state.tick).toBe(9);expect(rows.some(r=>r.candidates.some((x:any)=>x.cue.kind==='hit'))).toBe(true);expect(active).toHaveLength(1);report.cases.push({name:'real-q-w-hit-one-slow-frame',fixture:'initial positions0/5 via existing helper; actual simulated Q1/W2, ticks3–9 real FixedClock .25s catch-up with same controlled AudioContext time',rows});a.dispose();});

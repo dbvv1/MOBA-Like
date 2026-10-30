@@ -1,3 +1,4 @@
+import {audioPolicyFromSearch} from '../../src/audio/battle.js';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 import {describe,it,expect,vi} from 'vitest';
@@ -44,7 +45,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
       return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true}));
     },
     createWorld:async()=>{let locked=true;return {setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:idle,effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}};},
-    createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
+    audioPolicyFromSearch,createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
     createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),
     createControls:()=>({setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),
     fetch:async()=>({ok:true,arrayBuffer:async()=>nav.buffer.slice(nav.byteOffset,nav.byteOffset+nav.byteLength)}),
