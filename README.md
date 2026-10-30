@@ -1,6 +1,6 @@
-## Play the integrated candidate
+## Play Ashen Furrow
 
-The normal home entry keeps the existing v10 game. Choose **Try the combat / terrain / keyboard / continue candidate**, or [play the online candidate](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/candidate.html), for the integrated v11 attack windup / projectile / contact cycle, independent siege models, continuous terrain, editable keyboard controls and local Continue saved match. Optional diffuse lighting is at [`candidate.html?lighting=stylized-diffuse`](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/candidate.html?lighting=stylized-diffuse). This is an offline side-by-side trial, not a replacement for the default game. In this source revision, candidate player and bot inputs share stable-seat, next-tick ordering; verified compatible local saves remain readable. This is not online multiplayer.
+The home entry uses the v11 game with forest lighting: clearer tower volume, shadows and grounding. The previous [v11 lighting](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/candidate.html?lighting=baseline) and [legacy v10 game](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/legacy-v10.html) remain in the **Game versions** links. The v11 game includes the attack windup / projectile / contact cycle, siege models, continuous terrain, editable keyboard controls and local Continue saved match. Player and bot inputs share stable-seat, next-tick ordering; compatible local saves remain readable. This is offline play, not online multiplayer. Command buffering remains an explicit trial, not the default.
 
 # MOBA-Like
 

@@ -53,10 +53,10 @@ try {
   page.on('response',response=>{if(response.ok()&&new URL(response.url()).pathname.endsWith('.glb'))report.characterAssets.push(new URL(response.url()).pathname);if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
   await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
   stage='identity';const identity=await (await fetch(origin+'/build-identity.json')).json();report.source=identity;assert.equal(identity.commit,expectedSha);assert.equal(identity.tree,execFileSync('git',['rev-parse',`${expectedSha}^{tree}`],{encoding:'utf8'}).trim());assert.equal(identity.dirty,false,'Smoke must target committed clean source');
-  stage='default-entry';await page.goto(origin,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.mobaClient?.state().ready);
+  stage='legacy-entry';await page.goto(origin+'/legacy-v10.html',{waitUntil:'networkidle'});await page.waitForFunction(()=>window.mobaClient?.state().ready);
   const beforeDefault=await page.evaluate(()=>window.mobaClient.snapshot());assert.equal(beforeDefault.contentVersion,10);await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,beforeDefault.tick);
-  report.defaultEntry={contentVersion:beforeDefault.contentVersion,initialTick:beforeDefault.tick,finalTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),pixels:pixelEvidence(PNG.sync.read(await page.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('default-canvas.png',output))})))};assert.ok(report.defaultEntry.pixels.nonBackground);
-  report.defaultCharacterAssets=[...report.characterAssets];report.characterAssets=[];
+  report.legacyEntry={contentVersion:beforeDefault.contentVersion,initialTick:beforeDefault.tick,finalTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),pixels:pixelEvidence(PNG.sync.read(await page.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('legacy-v10-canvas.png',output))})))};assert.ok(report.legacyEntry.pixels.nonBackground);
+  report.legacyCharacterAssets=[...report.characterAssets];report.characterAssets=[];
   stage='navigate';const response=await page.goto(origin+'/candidate.html',{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
   stage='initialize';
   await page.waitForFunction(()=>window.mobaClient?.state().ready || (!document.querySelector('#restart').disabled && !document.querySelector('#notice').hidden));
@@ -69,6 +69,7 @@ try {
   assert.ok(report.webgl2,'A live WebGL2 context is required');const raw=report.webgl2.unmaskedRenderer??'';report.rendererClass=/swiftshader|llvmpipe|softpipe|software/i.test(raw)?'software':/NVIDIA|AMD|Intel|Apple|Radeon|GeForce|Adreno|Mali/i.test(raw)?'gpu':'unknown';
   stage='hud-layout';report.hudLayout=await checkHudLayout(page);
   stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,11,'Candidate browser entry must use the versioned basic attack cycle');
+  assert.equal(await page.evaluate(()=>window.mobaClient.state().lighting.active),'baseline');
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
   const canvas=page.locator('#stage canvas');const box=await canvas.boundingBox();assert.ok(box,'Canvas visible');
@@ -194,6 +195,18 @@ try {
   await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await diffuse.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='stylized-diffuse');
   report.diffuseEntry={contentVersion:await diffuse.evaluate(()=>window.mobaClient.snapshot().contentVersion),lighting:await diffuse.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await diffuse.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('diffuse-canvas.png',output))})))};
   assert.equal(report.diffuseEntry.contentVersion,11);assert.ok(report.diffuseEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
+  // A fresh context avoids carrying candidate checkpoints into this independent entry check.
+  stage='default-entry';const main=await resources.browser.newPage({viewport:{width:1280,height:900}});page=main;main.setDefaultTimeout(15000);
+  main.on('pageerror',error=>report.pageErrors.push(String(error)));main.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
+  main.on('requestfailed',request=>report.requestFailures.push({url:request.url(),error:request.failure()?.errorText}));
+  main.on('response',response=>{if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
+  await main.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
+  await main.goto(origin,{waitUntil:'networkidle'});await main.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='forest-light-v1');
+  const initialMain=await main.evaluate(()=>window.mobaClient.snapshot());assert.equal(initialMain.contentVersion,11);
+  await main.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initialMain.tick);
+  report.defaultEntry={contentVersion:initialMain.contentVersion,initialTick:initialMain.tick,finalTick:await main.evaluate(()=>window.mobaClient.snapshot().tick),lighting:await main.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await main.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('default-canvas.png',output))})))};
+  assert.ok(report.defaultEntry.pixels.nonBackground);assert.equal(await main.locator('#notice').isVisible(),false);
+  await main.close();for(const key of ['consoleErrors','pageErrors','httpErrors','requestFailures'])assert.deepEqual(report[key],[],key);
   report.passed=true;
 }catch(error){
   if(page){try{const observed=await page.evaluate(()=>window.__mobaMovementProbe);if(observed)report.movement={...report.movement,...observed};}catch{}}

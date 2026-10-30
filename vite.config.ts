@@ -9,5 +9,5 @@ export default defineConfig({
   resolve: { dedupe: ['three'] },
   optimizeDeps: { exclude: ['recast-navigation', '@recast-navigation/core', '@recast-navigation/wasm'] },
   assetsInclude: ['**/*.navmesh'],
-  build: { outDir: 'web-dist', emptyOutDir: true, target: 'es2022', rollupOptions: {input: {main:'index.html',candidate:'candidate.html'}} },
+  build: { outDir: 'web-dist', emptyOutDir: true, target: 'es2022', rollupOptions: {input: {main:'index.html',candidate:'candidate.html',legacy:'legacy-v10.html'}} },
 });

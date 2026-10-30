@@ -88,9 +88,13 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 
 待补：gameplay、spawn、spawn-to-tower的同构图原创目标及独立校准，完整1–5档锚图包，然后按两位较低分逐机位正式复评。现有first-tower目标历史4/5是目标校准，不是当前画面分。阶段A内容验收覆盖0/89不因临时审图改变。
 
-## 灯光层旁置 forest-light-v1（小幅改善，保留旁置；不替换默认）
+## 灯光层 forest-light-v1（小幅改善；首页采用，旧版保留）
 
-显式 `?lighting=forest-light-v1`；默认 baseline 和旧 stylized-diffuse 都保留。依据首塔当前图与既有目标：当前暗部偏黄褐、塔与路肩接触关系弱，目标是冷绿外围与暖路面的明暗分工。本层不补目标里的石板、植物体量或塔基几何。
+2026-10-30 按用户新决定：两名非作者均选新图、可读性没有退步的灯光组合改为首页入口。此提交准备 `/` → **v11 + forest-light-v1**；`/candidate.html?lighting=baseline` 保留原 v11 画面，`/legacy-v10.html` 保留原首页 v10。下方双盲所比较的是 **v11 baseline 与 v11 forest-light-v1**，不是 v10/v11 玩法比较；灯光依赖现有 v11 客户端，故首页也采用既有 v11 内容、改键和续玩，不能把这次采用称为 v11 全部玩法品质验收。`commands=buffer-v1`（v12）仍只显式开启，不随灯光提升。模拟、内容与存档兼容映射未修改。
+
+新默认路由的云端浏览器 smoke 与网站发布需在此固定提交上独立核实；本段不声称网站已经更新。既有对比均为 **software**，不升级为 GPU 证据；完整目标与正式品质分仍缺。旧“保留旁置”是当时采用决定，以下原盲评观察保留；本次依据用户新决定改变发布入口，不改写审查者原意见。
+
+显式 `?lighting=forest-light-v1` 可继续使用；`?lighting=baseline` 和旧 stylized-diffuse 都保留。依据首塔当前图与既有目标：当前暗部偏黄褐、塔与路肩接触关系弱，目标是冷绿外围与暖路面的明暗分工。本层不补目标里的石板、植物体量或塔基几何。
 
 实际材质路径已核：baseline 的 glTF／地表为 Standard/PBR，旧 stylized-diffuse 才转换 Toon；新候选保持原材质身份，用天空／地面双色 HemisphereLight 加弱 AmbientLight 提供真正独立的间接光，暖主光建立直接明暗。没有设置 scene.environment 或宣称使用 HDRI。AO 使用固定采样的 Three SSAOPass，半浮点离屏世界画面经线性冷暗／暖亮调色后由 OutputPass 统一 ACES 与色彩转换。世界原材质额外深度绘制后再合成 cue，保持原 alpha/skinning、深度与 toneMapped 语义，不把世界AO乘到血条和技能提示。固定采样不随帧率调整，所有新增资源随世界释放。
 
@@ -112,7 +116,7 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 | spawn | 建筑层叠体积略强，但檐下和凹处细节被压暗；主要建筑轮廓和血条保持 |
 | spawn-to-tower | 路网和建筑仍清楚，拉远后接地收益弱；没有可确认的角色可读性提升 |
 
-两位均未见明显过曝、大面积压黑或主要路网／角色轮廓丢失，均支持**保留旁置，不切默认**。道路暖感减弱与树下黑块是明确代价，不描述为全屏显著提升。其他三机位没有目标、完整1–5锚图仍缺，不给正式品质分。此轮未上传PNG，不以文档链接声称远端已收到图片；原报告及两组PNG留在云工作区 `outputs/lighting-baseline/`、`outputs/lighting-forest-light-v1/`。功能截图不是完整手感／声音验收。
+两位均未见明显过曝、大面积压黑或主要路网／角色轮廓丢失，当时均支持**保留旁置，不切默认**（原意见保留；现按上述用户新决定提升入口）。道路暖感减弱与树下黑块是明确代价，不描述为全屏显著提升。其他三机位没有目标、完整1–5锚图仍缺，不给正式品质分。此轮未上传PNG，不以文档链接声称远端已收到图片；原报告及两组PNG留在云工作区 `outputs/lighting-baseline/`、`outputs/lighting-forest-light-v1/`。功能截图不是完整手感／声音验收。
 
 ## 阶段A内容清单与验收分母
 

@@ -5,6 +5,7 @@ import {getContent} from '../../src/content/catalog.js';
 import {LocalMatch,restoreMatch} from '../../src/save/match.js';
 import {createSaveSlot,MATCH_SAVE_KEY} from '../../src/save/storage.js';
 import {createDetourNavigation} from '../../src/sim/navigation.js';
+import {entryLightingSearch} from '../../src/ui/entry-lighting.js';
 import {FixedClock} from '../../src/render/clock.js';
 import {createLifetime} from '../../src/render/lifetime.js';
 import {createSaveOwnership} from '../../src/save/ownership.js';
@@ -22,7 +23,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
   const localStorage={getItem:(key:string)=>data.get(key)??null,setItem:(key:string,value:string)=>{data.set(key,value);},removeItem:(key:string)=>{data.delete(key);}};
   type Client={state:()=>{ready:boolean}};
   const window=Object.assign(new EventTarget(),{localStorage,mobaClient:undefined as Client|undefined});
-  const document=Object.assign(new EventTarget(),{hidden:false,getElementById:(id:string)=>ids.get(id)});
+  const document=Object.assign(new EventTarget(),{hidden:false,documentElement:{dataset:{}},getElementById:(id:string)=>ids.get(id)});
   const frames=new Map<number,FrameRequestCallback>();let next=0,holdChoice=false,choices=0,panelsDisposed=0,worldsDisposed=0,locksReleased=0;
   const panels:Array<{button:Element;status:string}>=[];let hero='veyra';
   const idle=()=>{};
@@ -30,6 +31,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
   const executable=ts.transpileModule(code.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.url','SOURCE_URL'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const nav=await readFile(new URL('../../src/sim/nav/lane.navmesh',import.meta.url));
   const bindings={
+    entryLightingSearch,
     KeyboardBindings:class {label(value:string){return value;}},controlsHelp:()=>'',createKeyboardSettings:()=>({dispose:()=>{}}),parseLightingStyle:()=> 'baseline',location:{search:''},
     window,document,SOURCE_URL:new URL('../../src/client.ts',import.meta.url).href,
     getContent,LocalMatch,restoreMatch,createSaveSlot,createDetourNavigation,FixedClock,createLifetime,SAVE_COMPATIBILITY_ID:'test-rules',
