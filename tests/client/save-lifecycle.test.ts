@@ -5,6 +5,7 @@ import {getContent} from '../../src/content/catalog.js';
 import {LocalMatch,restoreMatch} from '../../src/save/match.js';
 import {createSaveSlot,MATCH_SAVE_KEY} from '../../src/save/storage.js';
 import {createDetourNavigation} from '../../src/sim/navigation.js';
+import {parseStructureStyle} from '../../src/render/structure-style.js';
 import {entryLightingSearch} from '../../src/ui/entry-lighting.js';
 import {FixedClock} from '../../src/render/clock.js';
 import {createLifetime} from '../../src/render/lifetime.js';
@@ -31,7 +32,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
   const executable=ts.transpileModule(code.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.url','SOURCE_URL'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const nav=await readFile(new URL('../../src/sim/nav/lane.navmesh',import.meta.url));
   const bindings={
-    entryLightingSearch,
+    entryLightingSearch,parseStructureStyle,
     KeyboardBindings:class {label(value:string){return value;}},controlsHelp:()=>'',createKeyboardSettings:()=>({dispose:()=>{}}),parseLightingStyle:()=> 'baseline',location:{search:''},
     window,document,SOURCE_URL:new URL('../../src/client.ts',import.meta.url).href,
     getContent,LocalMatch,restoreMatch,createSaveSlot,createDetourNavigation,FixedClock,createLifetime,SAVE_COMPATIBILITY_ID:'test-rules',

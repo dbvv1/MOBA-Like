@@ -1,3 +1,4 @@
+import {parseStructureStyle} from './render/structure-style.js';
 import {entryLightingSearch} from './ui/entry-lighting.js';
 import {parseLightingStyle} from './render/lighting-style.js';
 import {createBattleAudio} from './audio/battle.js';
@@ -66,7 +67,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const world=await createWorld(stage,sim.catalog,{lighting:parseLightingStyle(entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'])),signal:abort.signal});lifetime.defer(()=>world.dispose());current();
+    const world=await createWorld(stage,sim.catalog,{lighting:parseLightingStyle(entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'])),structures:parseStructureStyle(location.search),signal:abort.signal});lifetime.defer(()=>world.dispose());current();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');

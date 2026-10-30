@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type {StructureStyle} from './structure-style.js';
 import {applyWorldDiffuse,type LightingStyle} from './lighting-style.js';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import manifest from '../../asset-pipeline/battle/manifest.json';
@@ -9,6 +10,14 @@ import siegeManifest from '../../asset-pipeline/content-set/siege/manifest.json'
 const urls=import.meta.glob('../../asset-pipeline/battle/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const heroUrls=import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const siegeUrls=import.meta.glob('../../asset-pipeline/content-set/siege/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
+const structureUrls=import.meta.glob('../../asset-pipeline/structure-refinement/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
+export function battleAssetUrl(id:string,structures:StructureStyle='baseline'){
+  if(structures==='stonework-v1'&&/^(tower|barracks|base)-(teal|rust)$/.test(id)){
+    const url=structureUrls[`../../asset-pipeline/structure-refinement/exported/${id}.glb`];
+    if(!url)throw new Error(`Missing stonework asset ${id}`);return url;
+  }
+  return urls[`../../asset-pipeline/battle/exported/${id}.glb`];
+}
 export type BattleAssets={models:Record<string,GLTF>;dispose():void};
 function modelResources(models:Iterable<GLTF>,resources=new Set<{dispose():void}>()){
   for(const model of models)model.scene.traverse(node=>{
@@ -48,8 +57,8 @@ function orderedModelLoader(){
   };
 }
 // Injected complete-model loaders retain their own construction/ordering contract.
-export async function loadBattleAssets(load=orderedModelLoader(),lighting:LightingStyle='baseline'):Promise<BattleAssets>{
-  const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroManifest.assets.map(asset=>({id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]})),...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))].map(async asset=>{
+export async function loadBattleAssets(load=orderedModelLoader(),lighting:LightingStyle='baseline',structures:StructureStyle='baseline'):Promise<BattleAssets>{
+  const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:battleAssetUrl(asset.id,structures)})),...heroManifest.assets.map(asset=>({id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]})),...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))].map(async asset=>{
     const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);
     return [asset.id,await load(url)] as const;

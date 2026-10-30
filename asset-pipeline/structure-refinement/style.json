@@ -1,0 +1,16 @@
+{
+  "id": "stonework-v1",
+  "bevelWidthMetres": 0.025,
+  "bevelSegments": 1,
+  "bevelAngleDegrees": 55,
+  "weldDistanceMetres": 1e-06,
+  "roughness": {
+    "stone": 0.9,
+    "wood": 0.74,
+    "other": 0.82
+  },
+  "maxTrianglesPerAsset": 12000,
+  "maxBytesPerAsset": 600000,
+  "sourceCommit": "0a1d60b1ef076c6bdacd2bbf8102ca1a13b07229",
+  "minimumStoneEdgeMetres": 0.18
+}

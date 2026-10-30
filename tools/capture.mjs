@@ -12,11 +12,13 @@ import {preview} from 'vite';
 import {PNG} from 'pngjs';
 import {CAMERAS,CAPTURE_SIZE} from '../src/capture/cameras.ts';
 import {parseCaptureConfig} from '../src/capture/config.ts';
+import {parseStructureStyle} from '../src/render/structure-style.ts';
 import {parseLightingStyle} from '../src/render/lighting-style.ts';
 import {createCaptureRun,writeCaptureFrame,writeCaptureReport,captureBundleIdentity,verifyCaptureSource,repeatCheckDescription,verifyServedCaptureBundle,captureLeaseOptions,acquireCaptureLease,createCaptureLifecycle,observeCaptureProcess,captureBrowserExitState,createCaptureBrowserCloser,captureSpawnEvidence,closeCapturePreview,publicCaptureError} from './capture-output.ts';
-const {values}=parseArgs({options:{'lease-root':{type:'string'},'task-id':{type:'string'},lighting:{type:'string',default:'baseline'},base:{type:'string'},out:{type:'string',default:'outputs/capture'},shot:{type:'string',default:'all'},seed:{type:'string',default:'1'},t:{type:'string',default:'10'},input:{type:'string',default:'march'},frames:{type:'string',default:'1'},repeat:{type:'string',default:'2'},software:{type:'boolean',default:false},headed:{type:'boolean',default:false},'require-gpu':{type:'boolean',default:false},'check-live':{type:'boolean',default:false}}});
+const {values}=parseArgs({options:{structures:{type:'string',default:'baseline'},'lease-root':{type:'string'},'task-id':{type:'string'},lighting:{type:'string',default:'baseline'},base:{type:'string'},out:{type:'string',default:'outputs/capture'},shot:{type:'string',default:'all'},seed:{type:'string',default:'1'},t:{type:'string',default:'10'},input:{type:'string',default:'march'},frames:{type:'string',default:'1'},repeat:{type:'string',default:'2'},software:{type:'boolean',default:false},headed:{type:'boolean',default:false},'require-gpu':{type:'boolean',default:false},'check-live':{type:'boolean',default:false}}});
 const leaseOptions=captureLeaseOptions(values['lease-root'],values['task-id'],!values.software||values['require-gpu']);
 assert.ok(!(values['require-gpu']&&(values.headed||values['check-live']||process.env.MOBA_CAPTURE_CHROMIUM)),'GPU capture is bundled headless only, without live-input checks');
+const structures=parseStructureStyle(new URLSearchParams({structures:values.structures}).toString());
 const lighting=parseLightingStyle(new URLSearchParams({lighting:values.lighting}).toString());
 const names=values.shot==='all'?Object.keys(CAMERAS):[values.shot],repeat=Number(values.repeat);
 assert.ok(Number.isInteger(repeat)&&repeat>=1&&repeat<=5,'--repeat must be 1–5');
@@ -28,7 +30,7 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const report={passed:false,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),sourceDirty:!!execFileSync('git',['status','--porcelain'],{cwd:root,encoding:'utf8'}).trim(),shots:[],errors:[],warnings:[],checks:[],qualityAcceptance:'not-performed; capture infrastructure is not lighting/material or player-control approval'};
 const output=await createCaptureRun(resolve(values.out),report.sourceCommit,values.input);
 report.runId=output.runId;
-report.parameters={lighting,shots:names,seed:values.seed,t:values.t,input:values.input,frames:values.frames,repeat};
+report.parameters={structures,lighting,shots:names,seed:values.seed,t:values.t,input:values.input,frames:values.frames,repeat};
 report.bundle={binding:'unverified',sha256:null};
 console.log(`MOBA_CAPTURE_RUN=${output.directory}`);
 const record=await createCaptureLifecycle(output);
@@ -88,7 +90,7 @@ try{
       page.on('console',message=>{if(message.type()==='error')errors.push(message.text());if(message.type()==='warning')report.warnings.push(message.text());});
       page.on('requestfailed',request=>errors.push(`${request.url()} ${request.failure()?.errorText}`));
       page.on('response',response=>{if(response.status()>=400)errors.push(`HTTP ${response.status()} ${response.url()}`);});
-      const url=new URL(captureURL);for(const [key,value] of Object.entries({lighting,shot,seed:values.seed,t:values.t,input:values.input,frames:values.frames}))url.searchParams.set(key,value);
+      const url=new URL(captureURL);for(const [key,value] of Object.entries({structures,lighting,shot,seed:values.seed,t:values.t,input:values.input,frames:values.frames}))url.searchParams.set(key,value);
       await page.goto(url.href,{waitUntil:'domcontentloaded'});
       await page.waitForFunction(()=>window.__shot?.ready||window.__shot?.error,null,{timeout:120000});
       assert.equal(await page.evaluate(()=>window.__shot.error),undefined);
@@ -97,6 +99,7 @@ try{
       for(let frame=0;frame<Number(values.frames);frame++){
         checkInterrupted();
         const meta=await page.evaluate(()=>window.__shot);
+        assert.equal(meta.structures?.requested,structures);assert.equal(meta.structures?.active,structures);
         assert.equal(meta.lighting?.requested,lighting);assert.equal(meta.lighting?.active,lighting);
         assert.equal(meta.ready,true);assert.equal(meta.frame,frame);assert.equal(meta.backend,'three-webgl2');
         assert.deepEqual(meta.viewport,{...CAPTURE_SIZE,pixelRatio:1,bufferWidth:CAPTURE_SIZE.width,bufferHeight:CAPTURE_SIZE.height});
@@ -110,7 +113,7 @@ try{
         const directory=`${shot}-${meta.rendererClass}-${rendererSlug}-${hash(Buffer.from(meta.renderer)).slice(0,10)}-seed${meta.seed}-frame${meta.virtualFrame-frame}-r${run}`;
         const entry=await writeCaptureFrame(output,directory,frame,png,{run,rgbaSha256:hash(pixels.data),pngSha256:hash(png),...meta,bundleSha256:report.bundle.sha256,bundleBinding:report.bundle.binding});
         report.shots.push(entry);
-        const comparable={lighting:meta.lighting,hash:entry.rgbaSha256,stateHash:meta.stateHash,camera:meta.camera,renderer:meta.renderer,t:meta.t};
+        const comparable={structures:meta.structures,lighting:meta.lighting,hash:entry.rgbaSha256,stateHash:meta.stateHash,camera:meta.camera,renderer:meta.renderer,t:meta.t};
         if(run===1)baseline.push(comparable);else assert.deepEqual(comparable,baseline[frame],`${shot} frame ${frame} must repeat pixel-identically on the same renderer`);
         assert.equal(await page.evaluate(frame=>window.__shotNext(frame),frame),frame<Number(values.frames)-1);
       }

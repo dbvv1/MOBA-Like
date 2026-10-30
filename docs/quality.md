@@ -193,3 +193,9 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 当前最大差距仍是拥挤战斗的出手身份与命中关联，以及简单角色造型与场景细节的协调；连续纹理没有解决这些问题。真实键鼠完整战斗序列、非作者与官方片段并排复评、手感、声音和平衡仍未评，本轮没有品质或真 GPU 通过结论。
 
 [本轮功能报告](quality/smoke/B-MOBA-BACKLOG-SMOKE-20261028/2026-10-28T16-59-50-659Z-192910/report.json)的固定源码串行断言通过，实际 renderer 为 SwiftShader，仅证明软件 WebGL 功能；[12:09 轮](quality/smoke/B-MOBA-BACKLOG-SMOKE-20261028/2026-10-28T12-09-36-086Z-68556/report.json)和 [14:59 轮](quality/smoke/B-MOBA-BACKLOG-SMOKE-20261028/2026-10-28T14-59-25-771Z-171715/report.json)失败记录仍完整保留。
+
+## 石材建筑收边小样（stonework-v1，尚未看图验收）
+
+现有塔／兵营／基地结构保留，显式 `structures=stonework-v1` 用 Blender 派生的长石边倒角与分材质粗糙度；原图集像素、投石器、旗形、塔脚、道路和玩法不改。旧圆柱塔／盒式兵营及 AI 碎石路方案仍不采用。默认资源未换，画面／内容记分卡分子不增加。
+
+当前风险是0.025m倒角在320px可能不可见，几何、draw与下载成本却增加；原 UV 在倒角面插值、颜色自动分类也须实际检查。因此先固定首塔两次重复的双非作者盲判，未优于旧版就停止，不以CPU测试或Blender导出称质量改善。详见[制作输入、合同与待验范围](../asset-pipeline/structure-refinement/README.md)。

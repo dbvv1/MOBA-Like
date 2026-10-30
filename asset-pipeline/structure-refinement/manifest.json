@@ -1,0 +1,321 @@
+{
+  "id": "stonework-v1",
+  "sourceCommit": "0a1d60b1ef076c6bdacd2bbf8102ca1a13b07229",
+  "recipe": "tools/build.py + style.json",
+  "assets": [
+    {
+      "id": "tower-teal",
+      "file": "exported/tower-teal.glb",
+      "sourceSha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425",
+      "sha256": "f7a68ab201fcfa760043b5df9254c5af50339aefc9b99c783fde15238efb1c6e",
+      "bytes": 197468,
+      "triangles": 3706,
+      "parts": [
+        "building_tower_catapult_green",
+        "catapult_arm_green",
+        "catapult_turret_green",
+        "standard-pole",
+        "team-standard",
+        "worn-foundation"
+      ],
+      "unchangedParts": [
+        "catapult_arm_green",
+        "catapult_turret_green",
+        "standard-pole",
+        "team-standard",
+        "worn-foundation"
+      ],
+      "classifiedFaces": {
+        "building_tower_catapult_green": {
+          "faces": {
+            "stone": 1358,
+            "wood": 120,
+            "other": 60
+          },
+          "bevelEdges": 44,
+          "uvSeamEdgesExcluded": 135
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -2.180000066757202,
+          -2.180000066757202,
+          0.0
+        ],
+        "max": [
+          2.180000066757202,
+          2.180000066757202,
+          5.300000190734863
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -2.180000066757202,
+          -2.180000066757202,
+          0.0
+        ],
+        "max": [
+          2.180000066757202,
+          2.180000066757202,
+          5.300000190734863
+        ]
+      }
+    },
+    {
+      "id": "tower-rust",
+      "file": "exported/tower-rust.glb",
+      "sourceSha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41",
+      "sha256": "f204d3c7028a77fc32aa590db61a3fbe3c739b60d1de7c20f2673f487cc79a55",
+      "bytes": 197428,
+      "triangles": 3705,
+      "parts": [
+        "building_tower_catapult_red",
+        "catapult_arm_red",
+        "catapult_turret_red",
+        "standard-pole",
+        "team-standard",
+        "worn-foundation"
+      ],
+      "unchangedParts": [
+        "catapult_arm_red",
+        "catapult_turret_red",
+        "standard-pole",
+        "team-standard",
+        "worn-foundation"
+      ],
+      "classifiedFaces": {
+        "building_tower_catapult_red": {
+          "faces": {
+            "stone": 1358,
+            "wood": 120,
+            "other": 60
+          },
+          "bevelEdges": 44,
+          "uvSeamEdgesExcluded": 135
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -2.180000066757202,
+          -2.180000066757202,
+          0.0
+        ],
+        "max": [
+          2.180000066757202,
+          2.180000066757202,
+          5.300000190734863
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -2.180000066757202,
+          -2.180000066757202,
+          0.0
+        ],
+        "max": [
+          2.180000066757202,
+          2.180000066757202,
+          5.300000190734863
+        ]
+      }
+    },
+    {
+      "id": "barracks-teal",
+      "file": "exported/barracks-teal.glb",
+      "sourceSha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647",
+      "sha256": "6bc6392557a0fb36666d2ace1fd8180aacc6be96821719317afe7fec66b8862d",
+      "bytes": 305112,
+      "triangles": 5511,
+      "parts": [
+        "building_barracks_green",
+        "standard-pole",
+        "team-standard"
+      ],
+      "unchangedParts": [
+        "standard-pole",
+        "team-standard"
+      ],
+      "classifiedFaces": {
+        "building_barracks_green": {
+          "faces": {
+            "stone": 3177,
+            "wood": 650,
+            "other": 180
+          },
+          "bevelEdges": 114,
+          "uvSeamEdgesExcluded": 162
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -1.317035436630249,
+          -1.5476449728012085,
+          0.0
+        ],
+        "max": [
+          1.3170359134674072,
+          1.31703519821167,
+          3.0
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -1.317035436630249,
+          -1.5476449728012085,
+          0.0
+        ],
+        "max": [
+          1.3170359134674072,
+          1.31703519821167,
+          3.0
+        ]
+      }
+    },
+    {
+      "id": "barracks-rust",
+      "file": "exported/barracks-rust.glb",
+      "sourceSha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6",
+      "sha256": "b49c9c86fc243c452d973503743ef1cfb0239b3e61dfae45fbd6192465fd5e9e",
+      "bytes": 305080,
+      "triangles": 5510,
+      "parts": [
+        "building_barracks_red",
+        "standard-pole",
+        "team-standard"
+      ],
+      "unchangedParts": [
+        "standard-pole",
+        "team-standard"
+      ],
+      "classifiedFaces": {
+        "building_barracks_red": {
+          "faces": {
+            "stone": 3177,
+            "wood": 650,
+            "other": 180
+          },
+          "bevelEdges": 114,
+          "uvSeamEdgesExcluded": 162
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -1.317035436630249,
+          -1.5476449728012085,
+          0.0
+        ],
+        "max": [
+          1.3170359134674072,
+          1.31703519821167,
+          3.0
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -1.317035436630249,
+          -1.5476449728012085,
+          0.0
+        ],
+        "max": [
+          1.3170359134674072,
+          1.31703519821167,
+          3.0
+        ]
+      }
+    },
+    {
+      "id": "base-teal",
+      "file": "exported/base-teal.glb",
+      "sourceSha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621",
+      "sha256": "0e9a4ef38dc8e468e423205feeb3c08727cafc244db3ac0ff8341ec90d06ee2f",
+      "bytes": 519708,
+      "triangles": 10067,
+      "parts": [
+        "building_castle_green"
+      ],
+      "unchangedParts": [],
+      "classifiedFaces": {
+        "building_castle_green": {
+          "faces": {
+            "stone": 4789,
+            "wood": 360,
+            "other": 510
+          },
+          "bevelEdges": 258,
+          "uvSeamEdgesExcluded": 715
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -2.4573488235473633,
+          -2.8067054748535156,
+          0.0
+        ],
+        "max": [
+          2.457348585128784,
+          2.8067054748535156,
+          6.0
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -2.4573488235473633,
+          -2.7968947887420654,
+          0.0
+        ],
+        "max": [
+          2.457348585128784,
+          2.7968947887420654,
+          6.0
+        ]
+      }
+    },
+    {
+      "id": "base-rust",
+      "file": "exported/base-rust.glb",
+      "sourceSha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84",
+      "sha256": "ae687579976df1087d9886bffb266fe120942921e40f7a7efc2bc9c3c23c6e9a",
+      "bytes": 519704,
+      "triangles": 10067,
+      "parts": [
+        "building_castle_red"
+      ],
+      "unchangedParts": [],
+      "classifiedFaces": {
+        "building_castle_red": {
+          "faces": {
+            "stone": 4789,
+            "wood": 360,
+            "other": 510
+          },
+          "bevelEdges": 258,
+          "uvSeamEdgesExcluded": 715
+        }
+      },
+      "sourceBoundsBlenderZUp": {
+        "min": [
+          -2.4573488235473633,
+          -2.8067054748535156,
+          0.0
+        ],
+        "max": [
+          2.457348585128784,
+          2.8067054748535156,
+          6.0
+        ]
+      },
+      "boundsBlenderZUp": {
+        "min": [
+          -2.4573488235473633,
+          -2.7968947887420654,
+          0.0
+        ],
+        "max": [
+          2.457348585128784,
+          2.7968947887420654,
+          6.0
+        ]
+      }
+    }
+  ]
+}
