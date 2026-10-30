@@ -1,3 +1,4 @@
+import {applyTowerMaterialSample,type AiMaterialPair} from './ai-material-pair.js';
 import {createTerrainComposition,type TerrainTextures} from './terrain-composition.js';
 import * as THREE from 'three';
 import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
@@ -13,9 +14,10 @@ export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
   return `${entity.kind==='minion'?(entity.minionKind==='siege'?'siege':entity.minionKind==='ranged'?'ranged':'melee'):entity.structureKind}-${team}`;
 }
-export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lighting:LightingStyle='baseline',terrainTextures?:TerrainTextures){
+export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lighting:LightingStyle='baseline',terrainTextures?:TerrainTextures,aiMaterials?:AiMaterialPair){
   const root=new THREE.Group();root.name='Battlefield';root.userData['renderRole']='world';
-  const owned:Array<{dispose():void}>=[];
+  const owned:Array<{dispose():void}>=[];let towerMaterialMeshes=0;
+  const sampleGround=!!(terrainTextures&&aiMaterials);
   const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;activeClip:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];siege:boolean;walkNominalSpeed:number;walkTimeScale:number;wheelTravel:number;wheelStep:number;wheelSamples:Array<{bone:THREE.Object3D;sample:THREE.Interpolant}>;death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
   function useClip(actor:NonNullable<ReturnType<typeof actors.get>>,name:string){
     if(actor.activeClip===name)return;
@@ -34,7 +36,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
     const object=model.scene.clone(true);object.position.set(x,0,z);object.scale.setScalar(scale);object.rotation.y=angle;
     object.traverse(node=>{if((node as THREE.Mesh).isMesh){node.castShadow=id!=='lane-ground';node.receiveShadow=true;}});root.add(object);return object;
   }
-  if(terrainTextures){const terrain=createTerrainComposition(terrainTextures,lighting);root.add(terrain.root);owned.push(terrain);}
+  if(terrainTextures){const terrain=createTerrainComposition(terrainTextures,lighting,aiMaterials?.ground);root.add(terrain.root);owned.push(terrain);}
   else for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
   const groundSurfaces=createGroundSurfaces(lighting,terrainTextures?.forest);root.add(groundSurfaces.root);owned.push(groundSurfaces);
   // Deterministic art layout only; no simulation random stream consumption.
@@ -69,6 +71,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
         const id=battleAssetId(entity),model=assets.models[id];if(!model)throw new Error(`Missing battle model ${id}`);
         const object=clone(model.scene) as THREE.Group,skeletons=new Set<THREE.Skeleton>();
         object.traverse(node=>{const mesh=node as THREE.SkinnedMesh;if(mesh.isMesh){mesh.castShadow=true;mesh.receiveShadow=true;}if(mesh.isSkinnedMesh){mesh.frustumCulled=false;const raycast=mesh.raycast;mesh.raycast=function(ray,hits){this.computeBoundingBox();this.boundingSphere??=new THREE.Sphere();this.boundingBox!.getBoundingSphere(this.boundingSphere);raycast.call(this,ray,hits);};const s=mesh.skeleton;const existing=[...skeletons].find(other=>other.bones.length===s.bones.length&&other.bones.every((b,i)=>b===s.bones[i])&&other.boneInverses.length===s.boneInverses.length&&other.boneInverses.every((b,i)=>b.equals(s.boneInverses[i]!)));if(existing&&existing!==s){mesh.skeleton=existing;s.dispose();}else skeletons.add(s);}});
+        if(aiMaterials&&entity.structureKind==='tower'&&entity.team===0&&entity.position.x===-28){const sample=applyTowerMaterialSample(object,aiMaterials.wall);owned.push(sample);towerMaterialMeshes+=sample.count;}
         const siege=entity.kind==='minion'&&entity.minionKind==='siege';
         const entry=battleManifest.assets.find(item=>item.id===id);
         const siegeEntry=siegeAssetManifest.assets.find(item=>item.id===id);
@@ -107,7 +110,7 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
     }
     for(const [id,actor] of actors)if(!seen.has(id)&&!actor.death)remove(id);
   }
-  return {root,sync,advance(seconds:number,alpha:number){for(const [id,actor] of actors){
+  return {root,sync,materialSampleState(){return {active:sampleGround&&towerMaterialMeshes>0?'ai-pair-v1':aiMaterials?null:'baseline',groundApplied:sampleGround,towerMeshesApplied:towerMaterialMeshes};},advance(seconds:number,alpha:number){for(const [id,actor] of actors){
     if(actor.death){
       // A bounded presentation-only tail; hidden tabs do not draw, and final
       // match state may finish the tail without advancing gameplay.

@@ -22,7 +22,7 @@ vi.mock('../../asset-pipeline/presentation/adapter.js',()=>({createPresentation:
   const root=new THREE.Group(),hero=new THREE.Group();hero.name='hero-9';root.add(hero);
   const view={root,sync:vi.fn((snapshot:any)=>{const h=snapshot.heroes[0];hero.name=`hero-${h.id}`;hero.position.set(h.position.x,0,h.position.z);}),advance:vi.fn(),dispose:vi.fn(),motionState:()=>[]};doubles.presentation=view;return view;
 }}));
-vi.mock('../../src/render/battlefield.js',()=>({createBattlefield:()=>{const view={root:new THREE.Group(),sync:vi.fn(),advance:vi.fn(),dispose:vi.fn()};doubles.battlefield=view;return view;}}));
+vi.mock('../../src/render/battlefield.js',()=>({createBattlefield:()=>{const view={root:new THREE.Group(),sync:vi.fn(),advance:vi.fn(),materialSampleState:()=>({active:'baseline',groundApplied:false,towerMeshesApplied:0}),dispose:vi.fn()};doubles.battlefield=view;return view;}}));
 vi.mock('../../src/render/health.js',()=>({createHealthBars:()=>({sync:vi.fn(),draw:vi.fn(),dispose:vi.fn()})}));
 vi.mock('../../src/render/effects.js',()=>({createEffects:()=>({sync:vi.fn(),draw:vi.fn(),inspect:()=>[],dispose:vi.fn()})}));
 vi.mock('../../src/render/impact.js',()=>({createImpacts:()=>({sync:vi.fn(),draw:vi.fn(),dispose:vi.fn()})}));

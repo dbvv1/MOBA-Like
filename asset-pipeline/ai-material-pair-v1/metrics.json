@@ -1,0 +1,74 @@
+{
+  "ground-stone-earth-v1.png": {
+    "sha256": "19ef95af00b9219ceeab30045397e637d453ecd84e9fb1db47fc5d54b5191ef0",
+    "bytes": 1652706,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "embeddedColorProfile": false,
+    "edgeMeanAbsRgb0to255": {
+      "leftRight": 2.6770334928229667,
+      "topBottom": 2.2413609782030837
+    },
+    "internalAdjacentMeanAbsRgb0to255": {
+      "horizontal": 0.8958402014856,
+      "vertical": 0.9706791950249757
+    }
+  },
+  "ground-stone-earth-v2.png": {
+    "sha256": "edd6aba6cc880636469750ad11ca49217bacee8f11aa8272afd1bd662a337bd0",
+    "bytes": 1507741,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "embeddedColorProfile": false,
+    "edgeMeanAbsRgb0to255": {
+      "leftRight": 2.1188197767145134,
+      "topBottom": 1.9992025518341308
+    },
+    "internalAdjacentMeanAbsRgb0to255": {
+      "horizontal": 0.7601153298007165,
+      "vertical": 0.86072108491985
+    }
+  },
+  "wall-stone-v1.png": {
+    "sha256": "f6dd6c2b872c23fd85a15d1b5c324ca9be948439c7ac3107cb23f4731a6f2d65",
+    "bytes": 1657819,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "embeddedColorProfile": false,
+    "edgeMeanAbsRgb0to255": {
+      "leftRight": 2.48989898989899,
+      "topBottom": 3.471557682083998
+    },
+    "internalAdjacentMeanAbsRgb0to255": {
+      "horizontal": 1.042078914910435,
+      "vertical": 1.2936242756883745
+    }
+  },
+  "wall-stone-v2.png": {
+    "sha256": "02b1440e362cf6613bb04b2e63ba87ec7e6c5ed5283d3692b8dbec9a46af9a56",
+    "bytes": 1504080,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "embeddedColorProfile": false,
+    "edgeMeanAbsRgb0to255": {
+      "leftRight": 2.8064859117490695,
+      "topBottom": 3.54066985645933
+    },
+    "internalAdjacentMeanAbsRgb0to255": {
+      "horizontal": 0.7130137006643916,
+      "vertical": 0.8383524411163341
+    }
+  }
+}

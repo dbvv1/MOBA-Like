@@ -1,3 +1,4 @@
+import {parseMaterialStyle} from '../render/ai-material-pair.js';
 import {parseLightingStyle} from '../render/lighting-style.js';
 import {createWorld} from '../render/world.js';
 import {createDetourNavigation} from '../sim/navigation.js';
@@ -67,7 +68,7 @@ try {
   const session=new CaptureSession(config,navigation,lifetime);
   phase('创建 WebGL 场景与加载模型/纹理');
   await yieldCaptureTask(abort.signal);
-  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting}),value=>value.dispose());
+  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,materials:parseMaterialStyle(location.search)}),value=>value.dispose());
   world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose});
   const gl=world.captureContext(),evidence=rendererEvidence(gl);
   const contextLost=(event:Event)=>{event.preventDefault();fail('WebGL context lost');};
