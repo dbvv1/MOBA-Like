@@ -1,6 +1,6 @@
 # Critical battle audio candidate
 
-Explicit opt-in: `candidate.html?commands=buffer-v1&audio=critical-v1` (v12), or `candidate.html?audio=critical-v1` (v11). No `audio` parameter, unknown values or duplicate parameters retain baseline. No new samples, mix gain, simulation rules, camera, input, saved state or replay formats change. This is a CPU-verified candidate, not an adopted sound-quality result.
+Explicit opt-in: `candidate.html?commands=buffer-v1&audio=critical-v1` (v12), or `candidate.html?audio=critical-v1` (v11). No `audio` parameter, unknown values or duplicate parameters retain baseline. No new samples, mix gain, simulation rules, camera, input, saved state or replay formats change. This is an opt-in candidate with CPU and browser machine checks, not an adopted sound-quality result.
 
 ## Bounded scheduling contract
 
@@ -29,4 +29,13 @@ Isolated cases use the existing test helper only to place heroes at0/5; events a
 
 Overload tradeoff: sustained critical bursts beyond the bounded budget can still lose cues, with recorded reason. The candidate intentionally adds up to100ms of **planned** delay and may overlap samples. These are explicit conservative experiment bounds, not benchmark-calibrated best rhythm. No higher-volume mix, unbounded backlog or new audio system was introduced.
 
-Actual listening, production browser audio-output capture and audio/video synchronization remain unverified. No browser run or publishing is part of this local candidate. Existing rejected/pending publication actions are unrelated and untouched.
+## Browser machine evidence (2026-10-30)
+
+The tested runtime tree is `bb541287f8a6f526916fba0f43589100f36b94bb` (remote candidate `e32c634416bec343fe93ad5a924ea9b709c1cb5f`; local tested commit `cab0b0f`). This section only adds documentation; it does not change the tested runtime. The clean build had 38 files with matching hashes. 496 tests, simulation/replay checks and the production Web Audio lifecycle passed.
+
+- Real browser Web Audio schedules the two Q/W sources 25ms apart; disabling the candidate retains one source. Ordinary start, pause/resume, sound-off and restart passed; the abandoned AudioContext closed without page errors.
+- A separate synchronous UI cancellation test observed native `stop()` returning 25ms before the planned start. Ordinary clicks in slow software rendering occurred later; this result is not an input-response latency claim.
+- Native OfflineAudioContext reconstruction at 48kHz produced separate energy onsets at samples 0 and 1200; mixed absolute peak was 0.23021, nonempty and unclipped. This is offline synthesis, not live speaker recording, subjective listening or device latency measurement. Chromium's default `--mute-audio` remained enabled.
+- Rendering was software WebGL2 (SwiftShader), not hardware GPU. The browser exited normally with code 0; the preview port was closed. No real-device performance claim is made.
+
+Actual listening, real-time audio-output recording and audio/video synchronization remain unverified. Q/W still use the same timbre, so two plans do not establish perceptually distinct confirmations. The candidate remains default-off and is not a completed sound-quality pass.
