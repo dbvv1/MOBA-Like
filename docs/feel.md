@@ -68,3 +68,18 @@ DOM `pointerdown/keydown` → 队列 → rAF 的 `FixedClock`（30 Hz）→ `Loc
 496 项测试、模拟回放与真实浏览器开始／暂停恢复／静音／重开通过，旧 AudioContext 关闭；关闭候选仍只计划一次。关键事件最多 4 个未来计划、最远 100ms，25ms 起播间隔和 8 声部上限保留，超限会有明确丢弃原因，不承诺所有过载声音都保留。
 
 原生 OfflineAudioContext 在 48kHz 下重建两个能量起始 0/1200 sample，混合峰值 0.23021、未裁剪。这不是实时录音、实际听感或输入到设备延迟；浏览器仍带默认 `--mute-audio`。单独同步 UI 实验的 native stop 在计划起播前 25ms 返回，普通慢软件点击较晚，不能外推成同样及时。真实主观试听、音画同步与标杆对照仍待验，不填达标分。
+
+## 临时跟随镜头候选（2026-11-02）
+
+在 `candidate.html?camera=hold-follow-v1`，解开 HUD 的永久 Lock camera 后，按住现有 focus 绑定（默认 Space）跟随自己的呈现位置，松开从当前镜头位置恢复自由滚屏，不跳回先前远处，也不改永久锁定／存档偏好。基线仍是 Space 永久锁定；未知／重复参数不启用。可与已有 commands 路由组合，未改变模拟、英雄运动或施法。
+
+采用前比较了两处成熟输入清理机制，只提炼机制，没有复制源码：
+
+| 固定实现 | 状态／调用顺序与取舍 | 本候选接入 |
+|---|---|---|
+| [Phaser KeyboardPlugin `02d8931b`](https://github.com/phaserjs/phaser/blob/02d8931b626d9764c133cbb3fbf99966c03c757c/src/input/keyboard/KeyboardPlugin.js#L224-L227)；[resetKeys](https://github.com/phaserjs/phaser/blob/02d8931b626d9764c133cbb3fbf99966c03c757c/src/input/keyboard/KeyboardPlugin.js#L853-L867) | BLUR、场景 PAUSE／SLEEP 清按键状态，而非等待可能丢失的 keyup；场景／插件拥有状态与解绑，主动清理会放弃仍物理按住的输入 | 沿原 Controls 生命周期清临时 held；恢复须新按下，不从 repeat 恢复 |
+| [Unity Input System `54b1581a` InputManager](https://github.com/Unity-Technologies/InputSystem/blob/54b1581acb600c1f00998505af19a644795ef9b8/Packages/com.unity.inputsystem/InputSystem/Runtime/InputManager.cs#L3952-L4027) | 按后台政策重置／暂时禁用设备，恢复请求同步，不能把 IgnoreFocus 当后台仍有事件；设备级状态成本比一个网页按键大 | 不复制设备管理器，只分离永久模式和临时输入所有权；失焦／隐藏／编辑接管清 held 与旧边缘滚屏指针 |
+
+本例一层临时状态足够：`camera-follow.ts` 保永久 locked 与瞬时 held，world 沿原插值角色跟随；Controls 记录实际按下键，keyup 即使目标变为编辑框或修饰键变化也能释放。HUD 显式切换永久模式终止临时跟随，原键 repeat 不夺回；设置暂停／重开／销毁结束旧所有权。固定 capture 拒绝 held，不改机位与 viewport。没有引入通用相机栈或回正动画。
+
+本轮是源码／CPU 候选：真实 client、Controls、模拟与 DOM 接线使用受控渲染／音频／导航；world 轨迹使用真实 Three 变换及受控 renderer／资产。已核自由滚屏→临时跟随移动呈现根→释放保当前位置→继续滚屏，保永久锁定与 capture；这不是浏览器图像、输入延迟或主观镜头验收。生产构建完成后仍须实际云浏览器操作／手感比较，尚未上线，不提升模块成熟度。两处来源核实 2026-11-02。

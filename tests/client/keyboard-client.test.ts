@@ -6,14 +6,15 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean}>}));
-vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement)=>{
+const state=vi.hoisted(()=>({sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
+vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
-  const world={canvas,targeting:null as string|null,disposed:false,locked:true};state.worlds.push(world);
+  const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false};state.worlds.push(world);
   return {canvas,setTargeting:(slot:string|null)=>{world.targeting=slot;},setPointer:vi.fn(),leavePointer:vi.fn(),
     aim:()=>{const hero=client().snapshot().heroes[0]!;return {point:{x:hero.position.x+2,z:hero.position.z},entityId:null};},
-    setLocked:(locked:boolean)=>{world.locked=locked;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
-    lightingState:()=>({}),cameraState:()=>({locked:world.locked}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
+    setFocusHeld:(held:boolean)=>{world.held=options.cameraFollow==='hold-follow-v1'&&held;},
+    setLocked:(locked:boolean)=>{world.locked=locked;world.held=false;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
+    lightingState:()=>({}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
 })}));
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));
 vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn(),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
@@ -112,3 +113,28 @@ it('opt-in audio pause wiring clears plans on settings/hidden and creates a fres
  click('#restart');await vi.waitFor(()=>expect(state.sounds).toHaveLength(2));expect(first.dispose).toHaveBeenCalledTimes(1);expect(state.sounds[1]!.policy).toBe('critical-v1');
 });
 it('default audio policy preserves the old client pause contract',async()=>{await boot();expect(state.sounds[0]!.policy).toBe('baseline');open();click('[data-binding-cancel]');expect(state.sounds[0]!.setPaused).not.toHaveBeenCalled();});
+
+function keyUp(value:string,extra:KeyboardEventInit={}){document.activeElement!.dispatchEvent(new KeyboardEvent('keyup',{key:value,bubbles:true,...extra}));}
+function permanentLock(value:boolean){const input=document.querySelector<HTMLInputElement>('[data-lock]')!;input.checked=value;input.dispatchEvent(new Event('change'));}
+it('hold-follow uses the live binding without changing persistent lock; keyup and HUD ownership release it',async()=>{
+ history.replaceState(null,'','/candidate.html?camera=hold-follow-v1');await boot();const world=state.worlds[0]!;
+ permanentLock(false);world.canvas.focus();key(' ',{code:'Space'});expect(world.held).toBe(true);expect(world.locked).toBe(false);
+ keyUp('x',{code:'KeyX'});expect(world.held).toBe(true);
+ const detachedFocusInput=document.createElement('input');document.body.append(detachedFocusInput);detachedFocusInput.dispatchEvent(new KeyboardEvent('keyup',{key:' ',code:'Space',bubbles:true}));expect(world.held).toBe(false);key(' ',{code:'Space'});expect(world.held).toBe(true);
+ // Keyup is matched by physical key even when modifiers change logical case.
+ keyUp(' ',{code:'Space',ctrlKey:true});expect(world.held).toBe(false);expect(world.locked).toBe(false);
+ key(' ',{code:'Space'});permanentLock(true);expect(world.held).toBe(false);key(' ',{code:'Space',repeat:true});expect(world.held).toBe(false);
+ keyUp(' ',{code:'Space'});expect(world.locked).toBe(true);
+ permanentLock(false);key(' ',{code:'Space'});expect(world.held).toBe(true);
+ const input=document.createElement('input');document.body.append(input);input.focus();expect(world.held).toBe(false);
+ keyUp(' ',{code:'Space'});expect(world.held).toBe(false);key(' ');expect(world.held).toBe(false);
+ expect(document.querySelector('#controls-help')!.textContent).toContain('hold to follow');
+});
+it('pause, blur, visibility, rebinding and restart discard temporary ownership in the real client',async()=>{
+ history.replaceState(null,'','/candidate.html?camera=hold-follow-v1');await boot();const world=state.worlds[0]!;permanentLock(false);world.canvas.focus();key(' ');expect(world.held).toBe(true);
+ window.dispatchEvent(new Event('blur'));expect(world.held).toBe(false);key(' ',{repeat:true});expect(world.held).toBe(false);keyUp(' ');
+ key(' ');Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));expect(world.held).toBe(false);
+ Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));key(' ',{repeat:true});expect(world.held).toBe(false);keyUp(' ');
+ key(' ');open();expect(world.held).toBe(false);capture('focusCamera','c');click('[data-binding-save]');world.canvas.focus();key(' ');expect(world.held).toBe(false);key('c',{code:'KeyC'});expect(world.held).toBe(true);keyUp('C',{code:'KeyC',shiftKey:true});expect(world.held).toBe(false);
+ key('c',{code:'KeyC'});click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));expect(world.held).toBe(false);expect(world.disposed).toBe(true);const next=state.worlds[1]!;expect(next.held).toBe(false);permanentLock(false);next.canvas.focus();key('c',{code:'KeyC',repeat:true});expect(next.held).toBe(false);keyUp('c',{code:'KeyC'});key('c',{code:'KeyC'});expect(next.held).toBe(true);expect(next.locked).toBe(false);
+});
