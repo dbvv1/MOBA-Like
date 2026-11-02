@@ -93,17 +93,18 @@ try{
       await page.waitForFunction(()=>window.__shot?.ready||window.__shot?.error,null,{timeout:120000});
       assert.equal(await page.evaluate(()=>window.__shot.error),undefined);
       assert.equal(await page.evaluate(()=>typeof window.mobaClient),'undefined','Capture must not create live controls/client');
-      const canvas=page.locator('#capture-stage canvas');
       for(let frame=0;frame<Number(values.frames);frame++){
         checkInterrupted();
         const meta=await page.evaluate(()=>window.__shot);
         assert.equal(meta.lighting?.requested,lighting);assert.equal(meta.lighting?.active,lighting);
-        assert.equal(meta.ready,true);assert.equal(meta.frame,frame);assert.equal(meta.backend,'three-webgl2');
+        assert.equal(meta.ready,true);assert.equal(meta.frame,frame);assert.equal(meta.backend,'webgl2');
         assert.deepEqual(meta.viewport,{...CAPTURE_SIZE,pixelRatio:1,bufferWidth:CAPTURE_SIZE.width,bufferHeight:CAPTURE_SIZE.height});
         verifyCaptureSource(meta,report);
         if(values['require-gpu']){assert.equal(meta.rendererClass,'gpu',`Hardware renderer required; raw report: ${meta.renderer}`);assert.equal(meta.unmasked,true);}
         if(frame===0){await page.waitForTimeout(150);assert.deepEqual(await page.evaluate(()=>window.__shot),meta,'Wall time must not advance capture');}
-        const png=await canvas.screenshot(),pixels=PNG.sync.read(png),colors=new Set();
+        assert.match(meta.pngDataUrl,/^data:image\/png;base64,/);
+        const png=Buffer.from(meta.pngDataUrl.split(',')[1],'base64'),pixels=PNG.sync.read(png),colors=new Set();
+        assert.equal(pixels.width,CAPTURE_SIZE.width);assert.equal(pixels.height,CAPTURE_SIZE.height);
         for(let i=0;i<pixels.data.length;i+=16)colors.add(`${pixels.data[i]>>3},${pixels.data[i+1]>>3},${pixels.data[i+2]>>3}`);
         assert.ok(colors.size>32,'Expected rendered environment, not blank/loading pixels');
         const rendererSlug=meta.renderer.replace(/[^a-z0-9]+/gi,'-').slice(0,64).replace(/-$/,'')||'unreported';

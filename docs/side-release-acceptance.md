@@ -25,3 +25,11 @@
 v12 Q在tick10开始、tick14释放，前摇内输入的W在tick14开始并释放，接续间隔 **0 tick／0 ms**；v11同输入不接受该前摇内W。该机制已在旧基线v12中，整合未改模拟。本轮全量79个测试文件／511项通过，生产Web构建通过。首轮6项测试失败为包装后的旧依赖注入名和jsdom文件URL适配问题，修正后全量重跑通过。300 tick Canvas2D CPU测试只证明接线，不能替代浏览器记录。
 
 实际云浏览器在准确运行构建 `e9ab955` 使用同一context的新标签，均从initialTick=0推进：默认v11达344，整合v12达2449，最后W操作后达3033；requiredTicks=300、ready/reached/running为true。两路均自然WebGL初始化失败后转Canvas2D，非空场景与恢复提示可见。默认Q显示扣蓝/冷却；整合W实际按键＋点击后Mana358→329、冷却7.9秒。选择不保存新局且保留既有存档；未重置存储。未见未捕获异常或运行失败，但控制台有被捕获的THREE WebGL创建错误，不记“错误日志为空”。提示与旧存档panel局部重叠、不阻断操作，后续布局可收紧。自有标签关闭、托管preview stopped、原启动会话exit0。Canvas不支持该临时跟随画面，声音未实际试听，故本结论仅接受旁置功能门槛，镜头、音色品质及换默认仍待完整验收。
+
+## 固定分辨率出图整合
+
+接收 `codex/fixed-capture-20261103` 的 `1b6c6fcd`，与已接受的镜头＋Q/W 旁置共同整合，普通路由回归所用准确构建为 `7deee23d7efa765f66ee5eba2778eafc230eac4b`。这是出图能力接入，不新增玩法旁置单元，也不切换默认。固定出图以 `npx vite build --config vite.capture.config.ts` 生成 `outputs/capture-build/`，入口 `/capture.html?shot=first-tower&seed=61&t=101&input=idle&frames=20`；等待 `window.__shot.ready || window.__shot.error`，成功后读取 `pngDataUrl`，目标为1280×720、dpr1、backend=webgl2，逐帧仍用 `__shotNext`。缺少WebGL2会明确报错，不能拿普通路由的Canvas回退冒充固定出图成功。
+
+整合源审、72项相关测试、5项capture测试、相关typecheck、capture构建与普通生产构建通过。准确普通构建在云浏览器默认路由推进397tick，camera/audio双开路由推进352tick，均initialTick=0、ready/reached/running=true，达到300tick共同门槛。两路自然进入Canvas2D回退；预期的已捕获THREE初始化错误保留，未见额外运行异常。预览进程正常退出，原启动会话exit0。
+
+本次尚未取得MOBA固定出图的WebGL2实际PNG，未对该入口实拍；同环境Star已实测无法创建WebGL，但不替代MOBA自身实测。1280×720非空像素、实际renderer、完整smoke、同机位图与非作者盲评仍待完成；镜头舒适度和Q/W实际试听仍未评，不据这些构建或Canvas证据换默认。仅合入源码，不宣称托管网站已更新。

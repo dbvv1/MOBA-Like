@@ -18,7 +18,7 @@ capture.html?shot=first-tower&seed=61&t=101&input=idle&frames=20
 4. JSON 包含完整构建文件清单及摘要、原始 renderer、当前状态/机位、虚拟时间、PNG SHA-256 和唯一 runId。文件名含 renderer 类别/安全短名/原串哈希、seed、input、虚拟帧、序列帧和源提交；同页再次保存会增加序号。页面下载链接保留到下一次保存或离开页面。旧链接旁标明旧帧，前进不会偷偷替换它。
 5. 点 **返回普通游戏** 或 Escape 退出；pagehide、context loss、准备失败会终止后续工作、释放导航/渲染器、关闭等待端口并回收下载 URL。普通游戏没有此控制台。
 
-PNG 直接来自实际 `world.canvas`，绘图缓冲必须为 **1280×720**。导出在同一任务内依次 `renderOnly()` → 读取并深拷贝该帧元数据 → `canvas.toBlob('image/png')` 发起位图复制，中间没有 await；没有调用 `draw/next`、推进模拟、复制窗口截图或用 2D 重绘。编码期间所有逐帧确认被锁住，null/安全异常/取消不输出假成功。画布 CSS 同样固定 1280×720，窄窗口可滚动查看，避免旧 canvas 截图消费者受页面滚动条挤压而缩图。
+PNG 直接来自实际 `world.canvas`，绘图缓冲必须为 **1280×720**。导出在同一任务内依次 `renderOnly()` → 读取并深拷贝该帧元数据 → `canvas.toBlob('image/png')` 发起位图复制，中间没有 await；没有调用 `draw/next`、推进模拟、复制窗口截图或用 2D 重绘。编码期间所有逐帧确认被锁住，null/安全异常/取消不输出假成功。渲染器画布不挂入页面；内部固定 1280×720、DPR 1，页面显示导出的 PNG 预览。窗口大小和设备 DPR 不改变输出。命令行消费者读取 `window.__shot.pngDataUrl`，不截取预览元素。
 
 独立构建额外生成 `capture-bundle.json`：它记录排除自身的全部静态文件 SHA-256（避免自引用），与 CLI 的 `captureBundleIdentity` 规则一致。页面核 source 标记、当前入口模块路径和清单的实际服务字节；缺失、重定向、不一致则失败。此校验不是信任根/数字签名，也不是 GPU 或像素重复认证；接收方仍须对照交付的固定提交与 bundle 摘要。未生成该清单的普通 Vite 开发入口不用于此取证路径。
 
@@ -116,3 +116,9 @@ capture.html?shot=first-tower&seed=61&t=101&input=idle&frames=20&lighting=styliz
 元数据增加 `lighting.requested/configured/active` 与光源配置；`active` 在 `renderer.render` 正常返回、实际 renderer frame 计数推进且 context 未丢失前为 null，满足后阶段为 `frame-submitted`，只表示该配置已提交绘制，不是像素／shader 成功认证。不修改原始 renderer/vendor/version 或 gpu/software/unknown 分类。对照选已有 `gameplay`（正常锁定角色）、`first-tower`（塔暗面／脚点）和 `spawn-to-tower`（环境大层次）三个机位，不新造镜头参数；双方同 seed 61、idle、t=101 起、frame 16（101.2666667 s）、1280×720。源码／CPU 合同和构建只能支持接线、生命周期及状态不变；真实 shader 编译、图片、移动读图、GPU／CPU 帧时与非作者盲判尚待同硬件实测，不称视觉提升或可换默认。
 
 机制依据：项目精确安装的 [Three 0.186.1 官方包](https://registry.npmjs.org/three/-/three-0.186.1.tgz)中 MeshToonMaterial、meshtoon、lights_toon、lights_fragment_begin 与 Hemisphere 实现；[Riot 2017 历史管线](https://www.riotgames.com/en/news/trip-down-lol-graphics-pipeline)的静态外观／动态接地职责分离；[Unity Toon 固定源码](https://github.com/Unity-Technologies/com.unity.toonshader/blob/d53762bd402a7883760c9a96d304e47012cf5975/com.unity.toonshader/Runtime/Shaders/URP/UniversalToonBodyDoubleShadeWithFeather.hlsl)的受控明暗区机制。仅借设计思路，未移植 Unity-dependent Companion License 代码；Three 使用 MIT。2026-10-27 核源码，未运行本候选图形样例。
+
+## 固定内部 PNG 输出
+
+沿原 `capture.html?shot=first-tower&seed=61&t=101&input=idle&frames=20` 入口。`window.__shot` 保留机位／虚拟帧信息，新增 `pngDataUrl`、`image:{width:1280,height:720,dpr:1}`，`backend` 报告实际 `webgl2`。没有 WebGL2 时 `ready:false`、`error`，未创建后端时 `backend:null`，不生成 PNG、不启用 Canvas2D。
+
+云端可直接使用原“保存当前 PNG 与元数据”按钮，也可等 `__shot.ready || __shot.error` 后读取 `__shot.pngDataUrl`；逐帧仍用 `__shotNext(frame)`。普通游戏的尺寸、DPR 与输入不变。CPU 合同测试和构建已覆盖接线，真实像素与同机位复拍由云端验收。

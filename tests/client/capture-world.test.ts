@@ -105,3 +105,16 @@ it('failed final fit releases acquired owners and context before retry',async()=
  const first=doubles.renderer;expect(first.dispose).toHaveBeenCalledTimes(1);expect(first.forceContextLoss).toHaveBeenCalledTimes(1);expect(first.domElement.remove).toHaveBeenCalledTimes(1);expect(doubles.presentation.dispose).toHaveBeenCalledTimes(1);expect(doubles.battlefield.dispose).toHaveBeenCalledTimes(1);
  doubles.failFit=false;const second=await createWorld(host,getContent(11));expect(doubles.renderer).not.toBe(first);second.dispose();expect(first.dispose).toHaveBeenCalledTimes(1);
 });
+
+it('capture starts offscreen at 1280x720 DPR 1 and ignores host/window resizing',async()=>{
+  const listeners:Record<string,()=>void>={};
+  vi.stubGlobal('window',{devicePixelRatio:3,addEventListener:(name:string,fn:()=>void)=>{listeners[name]=fn;},removeEventListener:vi.fn()});
+  const host={clientWidth:317,clientHeight:233,replaceChildren:vi.fn()};
+  const world=await createWorld(host as unknown as HTMLElement,getContent(11),{cameraFollow:'hold-follow-v1',capture:{width:1280,height:720,pixelRatio:1,pose:null}});
+  try{
+    world.setFocusHeld(true);expect(world.cameraState().temporaryFollow).toBe(false);
+    expect(host.replaceChildren).not.toHaveBeenCalled();expect(world.captureState().viewport).toEqual({width:1280,height:720,pixelRatio:1,bufferWidth:1280,bufferHeight:720});
+    host.clientWidth=900;host.clientHeight=500;listeners.resize!();
+    expect(world.captureState().viewport).toEqual({width:1280,height:720,pixelRatio:1,bufferWidth:1280,bufferHeight:720});
+  }finally{world.dispose();}
+});

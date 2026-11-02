@@ -10,6 +10,7 @@ vi.mock('../../src/capture/session.js',()=>({CaptureSession:class {
   next(_world:unknown,frame=this.frame){if(frame!==this.frame)throw new Error('Stale frame acknowledgment');if(this.frame===this.config.frames-1)return false;this.frame++;return true;}
 }}));
 class Element extends EventTarget {
+  src='';replaceChildren(..._children:unknown[]){}
   textContent='';hidden=false;disabled=false;value=0;max=1;href='';download='';clicks=0;
   removeAttribute(name:string){if(name==='href')this.href='';}
   click(){if(!this.disabled){this.clicks++;this.dispatchEvent(new Event('click'));}}
@@ -23,8 +24,9 @@ beforeEach(()=>{
   host=new EventTarget();
   const canvas=Object.assign(new EventTarget(),{width:1280,height:720,toBlob:(fn:BlobCallback)=>{callback=fn;}});
   const gl={isContextLost:()=>false,getExtension:()=>null,getParameter:(key:number)=>key===1?'llvmpipe':'test',RENDERER:1,VENDOR:2,VERSION:3,finish:vi.fn()};
+  Object.assign(canvas,{getContext:()=>gl,toDataURL:()=> 'data:image/png;base64,AA=='});
   mocks.world={canvas,setCaptureView:vi.fn(),captureContext:()=>gl,captureState:()=>({viewport:{bufferWidth:1280,bufferHeight:720}}),renderOnly:vi.fn(),dispose:vi.fn()};
-  vi.stubGlobal('window',host);vi.stubGlobal('document',{querySelector:(selector:string)=>nodes.get(selector.slice(1))});
+  vi.stubGlobal('window',host);vi.stubGlobal('document',{createElement:()=>new Element(),querySelector:(selector:string)=>nodes.get(selector.slice(1))});
   vi.stubGlobal('location',{href:'https://example.test/capture.html?shot=first-tower&seed=61&t=101&input=idle&frames=18',search:'?shot=first-tower&seed=61&t=101&input=idle&frames=18',reload:vi.fn(),assign:vi.fn()});
   vi.stubGlobal('__MOBA_CAPTURE_BUILD__',{sourceCommit:'a'.repeat(40),sourceDirty:false});
   vi.stubGlobal('fetch',async()=>new Response(new Uint8Array([1])));
@@ -33,7 +35,7 @@ beforeEach(()=>{
 afterEach(()=>{host.dispatchEvent(new Event('pagehide'));vi.unstubAllGlobals();vi.restoreAllMocks();});
 describe('capture page controls (CPU DOM and renderer doubles; not browser/GPU evidence)',()=>{
   it('handles 15/1 frame clicks, blocks a repeated busy click, and disables done',async()=>{
-    await import('../../src/capture/client.js');expect(host.__shot.ready).toBe(true);
+    await import('../../src/capture/client.js');expect(host.__shot.ready).toBe(true);expect(host.__shot.backend).toBe('webgl2');expect(host.__shot.image).toEqual({width:1280,height:720,dpr:1});expect(host.__shot.shot).toBe('first-tower');
     node('capture-next-15').click();node('capture-next-15').click();
     await vi.waitFor(()=>expect(host.__shot.frame).toBe(15));await vi.waitFor(()=>expect(node('capture-next').disabled).toBe(false));
     node('capture-next').click();await vi.waitFor(()=>expect(node('capture-next').disabled).toBe(false));
@@ -78,4 +80,11 @@ describe('capture page controls (CPU DOM and renderer doubles; not browser/GPU e
     await import('../../src/capture/client.js');mocks.world.canvas.dispatchEvent(new Event('webglcontextlost',{cancelable:true}));
     expect(host.__shotNext).toBeUndefined();expect(node('capture-error').textContent).toContain('WebGL context lost');expect(mocks.world.dispose).toHaveBeenCalledTimes(1);
   });
+});
+
+it('publishes an error and no image when the capture canvas has no WebGL2',async()=>{
+  mocks.world.canvas.getContext=()=>null;
+  await import('../../src/capture/client.js');
+  expect(host.__shot.ready).toBe(false);expect(host.__shot.error).toContain('WebGL2');expect(host.__shot.pngDataUrl).toBeUndefined();
+  expect(node('capture-save').disabled).toBe(true);
 });

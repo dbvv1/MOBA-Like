@@ -21,17 +21,17 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal,cameraFollow='baseline'}:{lighting?:LightingStyle;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
-  try{renderer=new THREE.WebGLRenderer({antialias:true});}
+  try{renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:!!capture});}
   catch{throw new Error('WebGL 2 initialization is unavailable.');}
   const lifetime=createLifetime();
   lifetime.defer(()=>disposeOwnedRenderer(renderer));
   const own=<T extends {dispose():void}|undefined>(value:T):T=>{if(value)lifetime.defer(()=>value.dispose());return value;};
   const dispose=()=>{const errors=lifetime.dispose();if(errors.length)console.warn('World cleanup failed',errors);};
   try{
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setPixelRatio(capture?.pixelRatio??Math.min(window.devicePixelRatio,2));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=lightingState(lighting).exposure;
   if(lighting==='forest-light-v1')renderer.shadowMap.type=THREE.PCFShadowMap;
   const scene=new THREE.Scene();scene.userData['renderRole']='cue';scene.background=new THREE.Color('#304c49');scene.fog=new THREE.Fog('#304c49',75,160);
@@ -45,12 +45,13 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const loadedAssets=assets, presentation=view;
   const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
-  scene.add(actors);const controls=own(createControlMarkers(scene,statusTexture!));const reach=own(createTowerReach(scene,catalog));const health=own(createHealthBars(scene));const effects=own(createEffects(scene));const impacts=own(createImpacts(scene,combatTextures));const targeting=own(createTargeting(scene));let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
+  scene.add(actors);const controls=own(createControlMarkers(scene,statusTexture!));const reach=own(createTowerReach(scene,catalog));const health=own(createHealthBars(scene));const effects=own(createEffects(scene));const impacts=own(createImpacts(scene,combatTextures));const targeting=own(createTargeting(scene));let targetingSlot:AbilitySlot|null=null;if(!capture)host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
   const cursor=new THREE.Vector2(0,0);let pointerInside=false;const cameraMode=createCameraFollow(cameraFollow);let snapshot:Snapshot|null=null;let playerId:number|null=null;
   const marker=new THREE.Mesh(own(new THREE.RingGeometry(.65,.8,32)),own(new THREE.MeshBasicMaterial({color:'#d8fbff',side:THREE.DoubleSide,depthWrite:false})));
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
-  let captureView:CaptureView|null=null,savedFocus:THREE.Vector3|null=null;
+  let captureView:CaptureView|null=capture?copyCaptureView(capture):null,savedFocus:THREE.Vector3|null=null;
+  cameraMode.setCapture(captureView!==null);
   const post=lighting==='forest-light-v1'?own(createLightingPost(renderer,scene,camera)):null;
   let frameSubmitted=false;
   function renderScene(){
