@@ -1,3 +1,4 @@
+import {cameraFollowPolicy} from './render/camera-follow.js';
 import {entryLightingSearch} from './ui/entry-lighting.js';
 import {parseLightingStyle} from './render/lighting-style.js';
 import {createBattleAudio,audioPolicyFromSearch} from './audio/battle.js';
@@ -19,10 +20,11 @@ import {controlsHelp,createKeyboardSettings} from './ui/keyboard-settings.js';
 function element<T extends HTMLElement>(id:string):T {const result=document.getElementById(id);if(!result)throw new Error(`Missing ${id}`);return result as T;}
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
 const contentVersion=new URLSearchParams(location.search).get('commands')==='buffer-v1'?12:11;
+const cameraPolicy=cameraFollowPolicy(location.search);
 const bindings=new KeyboardBindings(()=>window.localStorage);
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion),slot=>bindings.label(slot));
 const help=element<HTMLElement>('controls-help'),settingsTrigger=element<HTMLButtonElement>('keyboard-settings');
-const refreshHelp=()=>{help.textContent=controlsHelp(bindings);heroSelection.refresh();};refreshHelp();
+const refreshHelp=()=>{help.textContent=controlsHelp(bindings,cameraPolicy==='hold-follow-v1');heroSelection.refresh();};refreshHelp();
 let cleanup:()=>void=()=>{};let saveBeforeLeave:()=>void=()=>{};let booting=false;let bootGeneration=0;let soundEnabled=true;
 restart.textContent='New match';restart.title='Start a new match and replace the local checkpoint';
 async function boot(mode:'prompt'|'new'='prompt'){
@@ -67,7 +69,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const world=await createWorld(stage,sim.catalog,{lighting:parseLightingStyle(entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'])),signal:abort.signal});lifetime.defer(()=>world.dispose());current();
+    const world=await createWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,lighting:parseLightingStyle(entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'])),signal:abort.signal});lifetime.defer(()=>world.dispose());current();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
@@ -79,7 +81,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
-    controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings);
+    controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings,cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
     lifetime.defer(()=>controls.dispose());
     const clock=new FixedClock(1/sim.tickRateHz);let previous=performance.now(),animation=0,stopped=false;
     const definition=sim.catalog.heroes[player().hero.definitionId]!;
@@ -88,7 +90,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
       W:`Skill 2 · ${sim.catalog.abilities[definition.abilities.W]!.name}`,
       E:`Skill 3 · ${sim.catalog.abilities[definition.abilities.E]!.name}`,
       R:`Ultimate · ${sim.catalog.abilities[definition.abilities.R]!.name}`,
-      attackMove:'Attack-move',stop:'Stop',focusCamera:'Lock camera',
+      attackMove:'Attack-move',stop:'Stop',focusCamera:cameraPolicy==='hold-follow-v1'?'Hold to follow':'Lock camera',
     },open=>{
       settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
       world.leavePointer();clock.reset();previous=performance.now();

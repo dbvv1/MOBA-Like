@@ -1,3 +1,4 @@
+import {createCameraFollow,type CameraFollowPolicy} from './camera-follow.js';
 import {createLightingPost} from './lighting-post.js';
 import {loadTerrainTextures,type OwnedTerrainTextures} from './terrain-textures.js';
 import {addEnvironmentLighting,lightingState,type LightingStyle} from './lighting-style.js';
@@ -19,7 +20,7 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal}:{lighting?:LightingStyle;signal?:AbortSignal}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal,cameraFollow='baseline'}:{lighting?:LightingStyle;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy}={}){
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true});}
@@ -41,7 +42,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
   scene.add(actors);const controls=createControlMarkers(scene,statusTexture!);const reach=createTowerReach(scene,catalog);const health=createHealthBars(scene);const effects=createEffects(scene);const impacts=createImpacts(scene,combatTextures);const targeting=createTargeting(scene);let targetingSlot:AbilitySlot|null=null;host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
-  const cursor=new THREE.Vector2(0,0);let pointerInside=false;let locked=true;let snapshot:Snapshot|null=null;let playerId:number|null=null;
+  const cursor=new THREE.Vector2(0,0);let pointerInside=false;const cameraMode=createCameraFollow(cameraFollow);let snapshot:Snapshot|null=null;let playerId:number|null=null;
   const marker=new THREE.Mesh(new THREE.RingGeometry(.65,.8,32),new THREE.MeshBasicMaterial({color:'#d8fbff',side:THREE.DoubleSide,depthWrite:false}));
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
   let captureView:CaptureView|null=null,savedFocus:THREE.Vector3|null=null;
@@ -74,7 +75,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     presentation.advance(seconds,snapshot?.status==='running'?alpha:undefined);battlefield.advance(seconds,alpha);effects.draw(alpha);impacts.draw(seconds);reach.draw(seconds);
     const playerRoot=player?presentation.root.getObjectByName(`hero-${player.id}`):null;
     if(captureView?.pose)focus.set(captureView.pose.target.x,captureView.pose.target.y,captureView.pose.target.z);
-    else if(locked && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
+    else if(cameraMode.following && playerRoot)focus.set(playerRoot.position.x,0,playerRoot.position.z);
     else if(pointerInside){const speed=24*seconds;if(cursor.x>.88)focus.x+=speed;if(cursor.x<-.88)focus.x-=speed;if(cursor.y>.88)focus.z-=speed;if(cursor.y<-.88)focus.z+=speed;}
     focus.x=THREE.MathUtils.clamp(focus.x,catalog.map.world.minX,catalog.map.world.maxX);
     focus.z=THREE.MathUtils.clamp(focus.z,catalog.map.world.minZ,catalog.map.world.maxZ);
@@ -89,7 +90,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     setCaptureView(value:CaptureView|null){
       const next=value===null?null:copyCaptureView(value);
       if(next&&!captureView)savedFocus=focus.clone();
-      captureView=next;
+      captureView=next;cameraMode.setCapture(next!==null);
       if(!next){if(savedFocus)focus.copy(savedFocus);savedFocus=null;}
       if(!next?.pose)camera.fov=45;
       renderer.setPixelRatio(next?.pixelRatio??Math.min(window.devicePixelRatio,2));fit();positionCamera();
@@ -102,8 +103,8 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},
     setTargeting(slot:AbilitySlot|null){targetingSlot=slot;if(slot===null)targeting.update(null);},
-    cameraState(){return {locked,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
-    leavePointer(){pointerInside=false;},setLocked(value:boolean){locked=value;},
+    cameraState(){return {locked:cameraMode.locked,temporaryFollow:cameraMode.held,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z}};},
+    leavePointer(){pointerInside=false;},setLocked(value:boolean){cameraMode.setLocked(value);},setFocusHeld(value:boolean){cameraMode.setHeld(value);},
     groundPoint():Vec2|null{return aim().point;},
     dispose(){disposeOwnedRenderer(renderer,()=>{window.removeEventListener('resize',onResize);post?.dispose();controls.dispose();statusTexture!.dispose();reach.dispose();health.dispose();effects.dispose();impacts.dispose();combatTextures?.dispose();targeting.dispose();presentation.dispose();battlefield.dispose();terrainTextures?.dispose();loadedAssets.dispose();marker.geometry.dispose();marker.material.dispose();});}
   };

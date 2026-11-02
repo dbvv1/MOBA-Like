@@ -1,8 +1,8 @@
 import {BINDING_ACTIONS,bindingLabel,type BindingAction,type KeyboardBindings} from '../input/bindings.js';
 
 export type BindingNames=Readonly<Record<BindingAction,string>>;
-export function controlsHelp(bindings:Pick<KeyboardBindings,'label'>){
-  return `Right-click enemy: chase/attack · Right-click ground: move · ${(['Q','W','E','R'] as const).map(slot=>bindings.label(slot)).join('/')} then left-click: aim/cast · ${bindings.label('attackMove')} then left-click: attack-move · ${bindings.label('stop')}: stop · Esc: cancel aim · ${bindings.label('focusCamera')}: lock camera. Unlock camera to scroll at edges. Choose your next-match hero above, then Restart to begin a fresh match.`;
+export function controlsHelp(bindings:Pick<KeyboardBindings,'label'>,temporaryFollow=false){
+  return `Right-click enemy: chase/attack · Right-click ground: move · ${(['Q','W','E','R'] as const).map(slot=>bindings.label(slot)).join('/')} then left-click: aim/cast · ${bindings.label('attackMove')} then left-click: attack-move · ${bindings.label('stop')}: stop · Esc: cancel aim · ${bindings.label('focusCamera')}: ${temporaryFollow?'hold to follow; release for free camera':'lock camera'}. Unlock camera to scroll at edges. Choose your next-match hero above, then Restart to begin a fresh match.`;
 }
 
 /** One modal editor for the existing binding owner. Native dialog owns background inertness. */

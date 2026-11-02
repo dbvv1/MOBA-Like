@@ -1,3 +1,4 @@
+import {mkdirSync,writeFileSync} from 'node:fs';
 import {afterEach,describe,expect,it,vi} from 'vitest';
 import * as THREE from 'three';
 import {createWorld} from '../../src/render/world.js';
@@ -73,4 +74,25 @@ describe('real world capture wiring with a renderer double',()=>{
     doubles.renderer.contextLost=true;expect(world.lightingState().active).toBeNull();world.dispose();
   });
 
+});
+
+it('actual world follows only while held, releases at current focus, clamps free-scroll and ignores hold in capture',async()=>{
+ vi.stubGlobal('window',{devicePixelRatio:1,addEventListener:vi.fn(),removeEventListener:vi.fn()});
+ const host={clientWidth:800,clientHeight:600,replaceChildren:vi.fn()} as unknown as HTMLElement;
+ const world=await createWorld(host,getContent(11),{cameraFollow:'hold-follow-v1'}),sim=await makeSim(11),player=sim.getHero(0,0)!;
+ const trace:Array<{phase:string;state:ReturnType<typeof world.cameraState>}>=[];
+ const record=(phase:string)=>trace.push({phase,state:world.cameraState()});
+ world.sync(sim.snapshot(),player.id);world.draw(0,1,false);world.setLocked(false);record('free-start');
+ doubles.renderer.domElement.getBoundingClientRect=()=>({left:0,top:0,width:800,height:600});
+ world.setPointer(799,300);world.draw(.25,1,false);record('free-pan');const panned=world.cameraState().position.x;
+ world.setFocusHeld(true);world.draw(.25,1,false);record('held');expect(world.cameraState().position.x).toBe(player.position.x);expect(world.cameraState().locked).toBe(false);expect(panned).toBeCloseTo(player.position.x+6);
+ // This is the rendered/interpolated root the ordinary world already follows.
+ const root=doubles.presentation.root.getObjectByName(`hero-${player.id}`)!;root.position.x+=2;world.draw(.1,.5,false);record('follow-moving-root');expect(world.cameraState().position.x).toBe(player.position.x+2);
+ world.setFocusHeld(false);world.leavePointer();world.draw(.1,.5,false);record('release-holds-current-focus');expect(world.cameraState().position.x).toBe(player.position.x+2);
+ world.setPointer(799,300);world.draw(.25,.5,false);record('free-resumes-pan');expect(world.cameraState().position.x).toBe(player.position.x+8);
+ world.setFocusHeld(true);world.setLocked(true);world.setFocusHeld(false);world.draw(0,1,false);expect(world.cameraState().locked).toBe(true);expect(world.cameraState().temporaryFollow).toBe(false);
+ const pose={position:{x:-65,y:62,z:46.5},target:{x:-65,y:0,z:0},fov:60};
+ world.setCaptureView({width:1280,height:720,pixelRatio:1,pose});world.setFocusHeld(true);world.draw(.25,1,false);record('fixed-capture');expect(world.cameraState().position).toEqual(pose.position);expect(world.cameraState().temporaryFollow).toBe(false);
+ world.setCaptureView(null);expect(world.cameraState().temporaryFollow).toBe(false);
+ mkdirSync('outputs/camera-follow',{recursive:true});writeFileSync('outputs/camera-follow/trajectory.json',JSON.stringify({scope:'actual world and Three transforms with renderer/assets doubles; not pixels or playtest',trace},null,2)+'\n');world.dispose();
 });

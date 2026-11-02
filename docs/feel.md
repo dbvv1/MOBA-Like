@@ -68,3 +68,35 @@ DOM `pointerdown/keydown` → 队列 → rAF 的 `FixedClock`（30 Hz）→ `Loc
 496 项测试、模拟回放与真实浏览器开始／暂停恢复／静音／重开通过，旧 AudioContext 关闭；关闭候选仍只计划一次。关键事件最多 4 个未来计划、最远 100ms，25ms 起播间隔和 8 声部上限保留，超限会有明确丢弃原因，不承诺所有过载声音都保留。
 
 原生 OfflineAudioContext 在 48kHz 下重建两个能量起始 0/1200 sample，混合峰值 0.23021、未裁剪。这不是实时录音、实际听感或输入到设备延迟；浏览器仍带默认 `--mute-audio`。单独同步 UI 实验的 native stop 在计划起播前 25ms 返回，普通慢软件点击较晚，不能外推成同样及时。真实主观试听、音画同步与标杆对照仍待验，不填达标分。
+
+## 临时跟随镜头候选（2026-11-02）
+
+在 `candidate.html?camera=hold-follow-v1`，解开 HUD 的永久 Lock camera 后，按住现有 focus 绑定（默认 Space）跟随自己的呈现位置，松开从当前镜头位置恢复自由滚屏，不跳回先前远处，也不改永久锁定／存档偏好。基线仍是 Space 永久锁定；未知／重复参数不启用。可与已有 commands 路由组合，未改变模拟、英雄运动或施法。
+
+采用前比较了两处成熟输入清理机制，只提炼机制，没有复制源码：
+
+| 固定实现 | 状态／调用顺序与取舍 | 本候选接入 |
+|---|---|---|
+| [Phaser KeyboardPlugin `02d8931b`](https://github.com/phaserjs/phaser/blob/02d8931b626d9764c133cbb3fbf99966c03c757c/src/input/keyboard/KeyboardPlugin.js#L224-L227)；[resetKeys](https://github.com/phaserjs/phaser/blob/02d8931b626d9764c133cbb3fbf99966c03c757c/src/input/keyboard/KeyboardPlugin.js#L853-L867) | BLUR、场景 PAUSE／SLEEP 清按键状态，而非等待可能丢失的 keyup；场景／插件拥有状态与解绑，主动清理会放弃仍物理按住的输入 | 沿原 Controls 生命周期清临时 held；恢复须新按下，不从 repeat 恢复 |
+| [Unity Input System `54b1581a` InputManager](https://github.com/Unity-Technologies/InputSystem/blob/54b1581acb600c1f00998505af19a644795ef9b8/Packages/com.unity.inputsystem/InputSystem/Runtime/InputManager.cs#L3952-L4027) | 按后台政策重置／暂时禁用设备，恢复请求同步，不能把 IgnoreFocus 当后台仍有事件；设备级状态成本比一个网页按键大 | 不复制设备管理器，只分离永久模式和临时输入所有权；失焦／隐藏／编辑接管清 held 与旧边缘滚屏指针 |
+
+本例一层临时状态足够：`camera-follow.ts` 保永久 locked 与瞬时 held，world 沿原插值角色跟随；Controls 记录实际按下键，keyup 即使目标变为编辑框或修饰键变化也能释放。HUD 显式切换永久模式终止临时跟随，原键 repeat 不夺回；设置暂停／重开／销毁结束旧所有权。固定 capture 拒绝 held，不改机位与 viewport。没有引入通用相机栈或回正动画。
+
+本轮是源码／CPU 候选：真实 client、Controls、模拟与 DOM 接线使用受控渲染／音频／导航；world 轨迹使用真实 Three 变换及受控 renderer／资产。已核自由滚屏→临时跟随移动呈现根→释放保当前位置→继续滚屏，保永久锁定与 capture；这不是浏览器图像、输入延迟或主观镜头验收。生产构建完成后仍须实际云浏览器操作／手感比较，尚未上线，不提升模块成熟度。两处来源核实 2026-11-02。
+
+## 镜头与 Q/W 整合候选：正常操作验收
+
+基线为 `dea84c4fde58ec7ebb05dc0adae70f4ee2dce45c`；仅合入已分别源审的声音 `3b8275cdf46ec848dfa8a3b4cc8e5ae20595079e` 和镜头 `cb818773da66e6a8ee77a4576339f33457fba32d`。没有加入待验结构或材质。两单元的源审不等于分别游玩通过；下列整合行为、镜头手感、听感均待实际验收，CPU／DOM／PCM 不能替代。模拟与内容未改，v12 的前摇及单槽下一指令队列保留；网站默认与 legacy 不换。
+
+所有对照用同一构建的 `candidate.html`，保相同英雄、音量及其他参数：
+
+- v12 对照（camera/audio 都 baseline）：`candidate.html?commands=buffer-v1`
+- 只开声音（camera baseline）：`candidate.html?commands=buffer-v1&audio=critical-v1`
+- 只开镜头（audio baseline）：`candidate.html?commands=buffer-v1&camera=hold-follow-v1`
+- 双开拟发布候选：`candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1`
+
+以上“不带 audio”的对照也关闭关键声音调度。若要单独判断本次 Q/W 音色二改，用原基线 `dea84c4` 与整合构建各自的 `candidate.html?commands=buffer-v1&audio=critical-v1`：两者都保 25ms 调度间隔，前者 Q/W 同用原 cast，后者使用两片衍生音；不要把调度差异归因为音色改善。
+
+**镜头先走一段完整操作，而不是只按一次 Space。** 取消 HUD 永久锁定，鼠标移回画布边缘自由观察；按住现有 focus 绑定（默认 Space）回看自己；松开后画面留在当前位置，可继续边缘滚屏；随后右键移动、Q 确认目标，并在前摇中输入 W，观察 Q 释放后 W 正常接续。再比较只开声音与双开、v12 对照与只开镜头，分别核镜头与音频没有互相夺取输入。补试按住期间改永久锁定、进入改键设置、失焦／返回及重开；永久偏好不被临时跟随改写，不需要再次按键才能解卡。若松开仍跟随、恢复跳回旧观察点、焦点或改键后卡键、移动／施法中断，退回该镜头单元；能正常操作后再判断回看速度、构图与自由观察是否舒服。
+
+**声音在同段实际交战中比较。** 先以同英雄、同路线、同一组 Q→W 操作比较前后两版，再在小兵／敌方技能混入时重复；分别用 Veyra 与 Morrow，检查 Q/W 起音与音色能否分辨、是否盖住命中／受伤／危险提示、反复施放是否刺耳。声音只说明对应槽位已释放，不表达命中成功；Veyra W 冲刺与 Morrow W 护盾不可混作相同技能含义。若只能靠两声时间差猜槽位、听不清必要信号或产生错误命中预期，退回声音配方／混音同单元，不通过增加音量或继续堆音色掩盖问题。最终以双开路线重走自由观察→回看→释放→移动／连招，并核暂停、关声音、重开无旧声补播，再决定采用、返工或退回；不能从单开通过推断双开通过。
