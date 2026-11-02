@@ -1,3 +1,4 @@
+import {captureOutput} from './output.js';
 import {parseLightingStyle} from '../render/lighting-style.js';
 import {createWorld} from '../render/world.js';
 import {createDetourNavigation} from '../sim/navigation.js';
@@ -33,10 +34,10 @@ const phase=(name:string,completed?:number,total?:number)=>{
   progress.hidden=false;
   if(completed===undefined||total===undefined)progress.removeAttribute('value');
   else{progress.max=Math.max(total,1);progress.value=total===0?1:completed;}
-  host.__shot={ready:false,...__MOBA_CAPTURE_BUILD__,phase:name,progress:{completed,total}};
+  host.__shot={ready:false,backend:null,image:{...CAPTURE_SIZE,dpr:1},...__MOBA_CAPTURE_BUILD__,phase:name,progress:{completed,total}};
 };
 const fail=(error:unknown)=>{
-  delete host.__shotNext;host.__shot={...host.__shot,ready:false,error:String(error)};
+  delete host.__shotNext;host.__shot={...host.__shot,pngDataUrl:undefined,ready:false,error:String(error)};
   notice.textContent='拍摄已停止';errorNotice.hidden=false;errorNotice.textContent=String(error);progress.hidden=true;
   const errors=lifetime.dispose();updateButtons();if(errors.length)console.error('Capture cleanup failed',errors);
 };
@@ -67,19 +68,22 @@ try {
   const session=new CaptureSession(config,navigation,lifetime);
   phase('创建 WebGL 场景与加载模型/纹理');
   await yieldCaptureTask(abort.signal);
-  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting}),value=>value.dispose());
+  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,capture:{...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose}}),value=>value.dispose());
   world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose});
   const gl=world.captureContext(),evidence=rendererEvidence(gl);
+  const preview=document.createElement('img');preview.alt='当前拍摄帧';stage.replaceChildren(preview);
   const contextLost=(event:Event)=>{event.preventDefault();fail('WebGL context lost');};
   world.canvas.addEventListener('webglcontextlost',contextLost);
   lifetime.own(null,()=>world.canvas.removeEventListener('webglcontextlost',contextLost));
   const publish=()=>{
     lifetime.assertActive();if(gl.isContextLost())throw new Error('WebGL context lost');gl.finish();
-    host.__shot=Object.freeze({ready:true,...__MOBA_CAPTURE_BUILD__,bundleSha256:bundle.sha256,bundle,...session.metadata,...evidence,...world.captureState(),backend:'three-webgl2',audio:'not-captured',hud:'world-bars-only',expectedViewport:CAPTURE_SIZE});
+    host.__shot=Object.freeze({ready:true,...__MOBA_CAPTURE_BUILD__,bundleSha256:bundle.sha256,bundle,...session.metadata,...evidence,...world.captureState(),...captureOutput(world.canvas,gl),audio:'not-captured',hud:'world-bars-only',expectedViewport:CAPTURE_SIZE});
     const frame=session.metadata;
     notice.textContent=`${frame.complete?'已到末帧（done）':'准备就绪'} · 帧 ${frame.frame}/${frame.frames-1} · 虚拟时间 ${frame.t.toFixed(4)} s · tick ${frame.simTick}${frame.frames===1?' · frames=1，推进需在 URL 指定 frames>1':''}`;
     identity.textContent=`${evidence.rendererClass}: ${evidence.renderer} | source ${__MOBA_CAPTURE_BUILD__.sourceCommit}${__MOBA_CAPTURE_BUILD__.sourceDirty?' (dirty)':''} | bundle ${bundle.sha256}`;
-    metadataView.textContent=JSON.stringify(host.__shot,null,2);progress.hidden=true;updateButtons();
+    preview.src=String(host.__shot.pngDataUrl);
+    const {pngDataUrl,...metadata}=host.__shot;
+    metadataView.textContent=JSON.stringify(metadata,null,2);progress.hidden=true;updateButtons();
     return host.__shot;
   };
   await session.prepare(world,()=>yieldCaptureTask(abort.signal),value=>{

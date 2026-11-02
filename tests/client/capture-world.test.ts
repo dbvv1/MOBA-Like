@@ -74,3 +74,15 @@ describe('real world capture wiring with a renderer double',()=>{
   });
 
 });
+
+it('capture starts offscreen at 1280x720 DPR 1 and ignores host/window resizing',async()=>{
+  const listeners:Record<string,()=>void>={};
+  vi.stubGlobal('window',{devicePixelRatio:3,addEventListener:(name:string,fn:()=>void)=>{listeners[name]=fn;},removeEventListener:vi.fn()});
+  const host={clientWidth:317,clientHeight:233,replaceChildren:vi.fn()};
+  const world=await createWorld(host as unknown as HTMLElement,getContent(11),{capture:{width:1280,height:720,pixelRatio:1,pose:null}});
+  try{
+    expect(host.replaceChildren).not.toHaveBeenCalled();expect(world.captureState().viewport).toEqual({width:1280,height:720,pixelRatio:1,bufferWidth:1280,bufferHeight:720});
+    host.clientWidth=900;host.clientHeight=500;listeners.resize!();
+    expect(world.captureState().viewport).toEqual({width:1280,height:720,pixelRatio:1,bufferWidth:1280,bufferHeight:720});
+  }finally{world.dispose();}
+});

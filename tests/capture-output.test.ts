@@ -12,7 +12,7 @@ afterEach(async()=>{for(const path of temporary.splice(0))await rm(path,{recursi
 const commit='a'.repeat(40),bundle='c'.repeat(64),camera='spawn-software-seed1-frame600-r1';
 const bytes=(value:string)=>Buffer.from(value);
 describe('capture evidence isolation',()=>{
-  it('keeps CSS capture dimensions fixed for the existing canvas screenshot consumer',async()=>{const html=await readFile(new URL('../capture.html',import.meta.url),'utf8');expect(html).toContain('#capture-stage{width:1280px;height:720px}');expect(html).toContain('#capture-stage canvas{display:block;width:1280px;height:720px}');});
+  it('keeps the PNG preview at its fixed buffer dimensions',async()=>{const html=await readFile(new URL('../capture.html',import.meta.url),'utf8');expect(html).toContain('#capture-stage{width:1280px;height:720px}');expect(html).toContain('#capture-stage img{display:block;width:1280px;height:720px}');});
   it('requires the served source identity on local and external consumers',()=>{
     const expected={sourceCommit:commit,sourceDirty:false};expect(()=>verifyCaptureSource({...expected},expected)).not.toThrow();
     expect(()=>verifyCaptureSource({sourceCommit:'b'.repeat(40),sourceDirty:false},expected)).toThrow('source');
