@@ -1,3 +1,4 @@
+import {cameraFollowPolicy} from '../../src/render/camera-follow.js';
 import {audioPolicyFromSearch} from '../../src/audio/battle.js';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
@@ -32,7 +33,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
   const executable=ts.transpileModule(code.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.url','SOURCE_URL'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const nav=await readFile(new URL('../../src/sim/nav/lane.navmesh',import.meta.url));
   const bindings={
-    entryLightingSearch,
+    entryLightingSearch,cameraFollowPolicy,MINIMUM_ACCEPTANCE_TICKS:300,
     KeyboardBindings:class {label(value:string){return value;}},controlsHelp:()=>'',createKeyboardSettings:()=>({dispose:()=>{}}),parseLightingStyle:()=> 'baseline',location:{search:''},
     window,document,SOURCE_URL:new URL('../../src/client.ts',import.meta.url).href,
     getContent,LocalMatch,restoreMatch,createSaveSlot,createDetourNavigation,FixedClock,createLifetime,SAVE_COMPATIBILITY_ID:'test-rules',
@@ -44,7 +45,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
       if(!holdChoice)return 'resume';
       return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true}));
     },
-    createWorld:async()=>{let locked=true;return {setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:idle,effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}};},
+    createPlayableWorld:async()=>{let locked=true;return {backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline',world:{setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:idle,effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}}};},
     audioPolicyFromSearch,createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
     createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),
     createControls:()=>({setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),

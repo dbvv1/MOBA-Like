@@ -1,0 +1,154 @@
+{
+  "scope": "real client Controls and LocalMatch input frames/state hashes; renderer/audio/nav doubled",
+  "matrix": [
+    {
+      "camera": false,
+      "audio": false,
+      "fingerprint": "79094097679de8da",
+      "ticks": 18
+    },
+    {
+      "camera": true,
+      "audio": false,
+      "fingerprint": "79094097679de8da",
+      "ticks": 18
+    },
+    {
+      "camera": false,
+      "audio": true,
+      "fingerprint": "79094097679de8da",
+      "ticks": 18
+    },
+    {
+      "camera": true,
+      "audio": true,
+      "fingerprint": "79094097679de8da",
+      "ticks": 18
+    }
+  ],
+  "sharedTrace": [
+    {
+      "tick": 1,
+      "commands": [
+        {
+          "type": "move",
+          "heroId": 9,
+          "point": {
+            "x": -92,
+            "z": 1.2
+          }
+        }
+      ],
+      "hash": "bea4a09ec7352e7f"
+    },
+    {
+      "tick": 2,
+      "commands": [
+        {
+          "type": "cast",
+          "heroId": 9,
+          "slot": "Q",
+          "targetId": null,
+          "direction": {
+            "x": 1,
+            "z": 0
+          },
+          "point": null
+        }
+      ],
+      "hash": "8c63b821c46033a7"
+    },
+    {
+      "tick": 3,
+      "commands": [
+        {
+          "type": "cast",
+          "heroId": 9,
+          "slot": "W",
+          "targetId": null,
+          "direction": {
+            "x": 1,
+            "z": 0
+          },
+          "point": null
+        }
+      ],
+      "hash": "2714a1c0002605b6"
+    },
+    {
+      "tick": 4,
+      "commands": [],
+      "hash": "eb551caaa407bfc8"
+    },
+    {
+      "tick": 5,
+      "commands": [],
+      "hash": "f3dc93566d67132d"
+    },
+    {
+      "tick": 6,
+      "commands": [],
+      "hash": "50f83645e0331f25"
+    },
+    {
+      "tick": 7,
+      "commands": [],
+      "hash": "d69b3f7cc7d50c62"
+    },
+    {
+      "tick": 8,
+      "commands": [],
+      "hash": "ea34cf34a2080289"
+    },
+    {
+      "tick": 9,
+      "commands": [],
+      "hash": "fda099bba6093893"
+    },
+    {
+      "tick": 10,
+      "commands": [],
+      "hash": "d5195660bd986ce6"
+    },
+    {
+      "tick": 11,
+      "commands": [],
+      "hash": "32095d9093f5da6b"
+    },
+    {
+      "tick": 12,
+      "commands": [],
+      "hash": "f7a2f24c2bcc1285"
+    },
+    {
+      "tick": 13,
+      "commands": [],
+      "hash": "037a0bf05d7efbf7"
+    },
+    {
+      "tick": 14,
+      "commands": [],
+      "hash": "572e8a7dc4393783"
+    },
+    {
+      "tick": 15,
+      "commands": [],
+      "hash": "953f1d311e0a4cdc"
+    },
+    {
+      "tick": 16,
+      "commands": [],
+      "hash": "e6d342deafa7730f"
+    },
+    {
+      "tick": 17,
+      "commands": [],
+      "hash": "dea6e51ddadf4e51"
+    },
+    {
+      "tick": 18,
+      "commands": [],
+      "hash": "62c0f4496e4a15c6"
+    }
+  ]
+}

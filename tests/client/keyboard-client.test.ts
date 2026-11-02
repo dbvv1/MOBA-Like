@@ -1,22 +1,25 @@
 // @vitest-environment jsdom
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {hashValue} from '../../src/sim/hash.js';
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import type {Snapshot} from '../../src/sim/types.js';
 import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js';
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean}>}));
-vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement)=>{
+const state=vi.hoisted(()=>({inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
+vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
-  const world={canvas,targeting:null as string|null,disposed:false,locked:true};state.worlds.push(world);
+  const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false};state.worlds.push(world);
   return {canvas,setTargeting:(slot:string|null)=>{world.targeting=slot;},setPointer:vi.fn(),leavePointer:vi.fn(),
     aim:()=>{const hero=client().snapshot().heroes[0]!;return {point:{x:hero.position.x+2,z:hero.position.z},entityId:null};},
-    setLocked:(locked:boolean)=>{world.locked=locked;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
-    lightingState:()=>({}),cameraState:()=>({locked:world.locked}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
+    setFocusHeld:(held:boolean)=>{world.held=options.cameraFollow==='hold-follow-v1'&&held;},
+    setLocked:(locked:boolean)=>{world.locked=locked;world.held=false;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
+    lightingState:()=>({}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
 })}));
+vi.mock('../../src/save/match.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/save/match.js')>();return {...original,LocalMatch:class extends original.LocalMatch{override step(commands:any[]=[]){const result=super.step(commands);state.inputTrace.push({tick:this.simulation.state.tick,commands:structuredClone(commands),hash:this.simulation.finalHash()});return result;}}};});
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));
-vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn(),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
+vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn((snapshot:Snapshot,playerId:number)=>{for(const event of snapshot.events){if(event.type!=='castResolved'||event.heroId!==playerId||event.action==='basicAttack')continue;const cue=original.battleCue(event,snapshot,playerId);if(cue)state.releases.push({slot:event.slot,sample:original.sampleForCue(cue,policy as 'baseline'|'critical-v1')});}}),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
 type Client={snapshot:()=>Snapshot;state:()=>{ready:boolean;tick:number;pointer:{command:{type:string}|null}|null}};
 function client(){return (window as unknown as {mobaClient:Client}).mobaClient;}
 const html=readFileSync('candidate.html','utf8');
@@ -30,7 +33,7 @@ function open(){click('#keyboard-settings');}
 function capture(action:string,value:string){click(`[data-binding-action="${action}"]`);key(value);}
 async function boot(){await import('../../src/client.js');await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));}
 beforeEach(()=>{
-  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.worlds.length=0;state.sounds.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
+  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.worlds.length=0;state.sounds.length=0;state.releases.length=0;state.inputTrace.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
   document.body.innerHTML=html.match(/<body>([\s\S]*?)<\/body>/)![1]!;
   Object.defineProperty(document,'hidden',{configurable:true,value:false});
   Object.defineProperty(HTMLDialogElement.prototype,'showModal',{configurable:true,value:function(this:HTMLDialogElement){this.open=true;}});
@@ -112,3 +115,57 @@ it('opt-in audio pause wiring clears plans on settings/hidden and creates a fres
  click('#restart');await vi.waitFor(()=>expect(state.sounds).toHaveLength(2));expect(first.dispose).toHaveBeenCalledTimes(1);expect(state.sounds[1]!.policy).toBe('critical-v1');
 });
 it('default audio policy preserves the old client pause contract',async()=>{await boot();expect(state.sounds[0]!.policy).toBe('baseline');open();click('[data-binding-cancel]');expect(state.sounds[0]!.setPaused).not.toHaveBeenCalled();});
+
+function keyUp(value:string,extra:KeyboardEventInit={}){document.activeElement!.dispatchEvent(new KeyboardEvent('keyup',{key:value,bubbles:true,...extra}));}
+function permanentLock(value:boolean){const input=document.querySelector<HTMLInputElement>('[data-lock]')!;input.checked=value;input.dispatchEvent(new Event('change'));}
+it('hold-follow uses the live binding without changing persistent lock; keyup and HUD ownership release it',async()=>{
+ history.replaceState(null,'','/candidate.html?camera=hold-follow-v1');await boot();const world=state.worlds[0]!;
+ permanentLock(false);world.canvas.focus();key(' ',{code:'Space'});expect(world.held).toBe(true);expect(world.locked).toBe(false);
+ keyUp('x',{code:'KeyX'});expect(world.held).toBe(true);
+ const detachedFocusInput=document.createElement('input');document.body.append(detachedFocusInput);detachedFocusInput.dispatchEvent(new KeyboardEvent('keyup',{key:' ',code:'Space',bubbles:true}));expect(world.held).toBe(false);key(' ',{code:'Space'});expect(world.held).toBe(true);
+ // Keyup is matched by physical key even when modifiers change logical case.
+ keyUp(' ',{code:'Space',ctrlKey:true});expect(world.held).toBe(false);expect(world.locked).toBe(false);
+ key(' ',{code:'Space'});permanentLock(true);expect(world.held).toBe(false);key(' ',{code:'Space',repeat:true});expect(world.held).toBe(false);
+ keyUp(' ',{code:'Space'});expect(world.locked).toBe(true);
+ permanentLock(false);key(' ',{code:'Space'});expect(world.held).toBe(true);
+ const input=document.createElement('input');document.body.append(input);input.focus();expect(world.held).toBe(false);
+ keyUp(' ',{code:'Space'});expect(world.held).toBe(false);key(' ');expect(world.held).toBe(false);
+ expect(document.querySelector('#controls-help')!.textContent).toContain('hold to follow');
+});
+it('pause, blur, visibility, rebinding and restart discard temporary ownership in the real client',async()=>{
+ history.replaceState(null,'','/candidate.html?camera=hold-follow-v1');await boot();const world=state.worlds[0]!;permanentLock(false);world.canvas.focus();key(' ');expect(world.held).toBe(true);
+ window.dispatchEvent(new Event('blur'));expect(world.held).toBe(false);key(' ',{repeat:true});expect(world.held).toBe(false);keyUp(' ');
+ key(' ');Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));expect(world.held).toBe(false);
+ Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));key(' ',{repeat:true});expect(world.held).toBe(false);keyUp(' ');
+ key(' ');open();expect(world.held).toBe(false);capture('focusCamera','c');click('[data-binding-save]');world.canvas.focus();key(' ');expect(world.held).toBe(false);key('c',{code:'KeyC'});expect(world.held).toBe(true);keyUp('C',{code:'KeyC',shiftKey:true});expect(world.held).toBe(false);
+ key('c',{code:'KeyC'});click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));expect(world.held).toBe(false);expect(world.disposed).toBe(true);const next=state.worlds[1]!;expect(next.held).toBe(false);permanentLock(false);next.canvas.focus();key('c',{code:'KeyC',repeat:true});expect(next.held).toBe(false);keyUp('c',{code:'KeyC'});key('c',{code:'KeyC'});expect(next.held).toBe(true);expect(next.locked).toBe(false);
+});
+
+let matrixFingerprint:string|undefined;
+const matrixTraces:unknown[]=[];
+// Cross-feature acceptance at the real client boundary; device/render output remains doubled.
+it.each([[false,false],[true,false],[false,true],[true,true]])('integrated v12 camera=%s audio=%s preserves move/cast after focus release',async(camera,audio)=>{
+ history.replaceState(null,'','/candidate.html?commands=buffer-v1'+(camera?'&camera=hold-follow-v1':'')+(audio?'&audio=critical-v1':''));
+ await boot();const world=state.worlds[0]!;permanentLock(false);world.canvas.focus();
+ key(' ',{code:'Space'});expect(world.held).toBe(camera);expect(world.locked).toBe(!camera);
+ keyUp(' ',{code:'Space'});expect(world.held).toBe(false);expect(world.locked).toBe(!camera);
+ canvasClick(2);advance();expect(client().snapshot().heroes[0]!.moveGoal).not.toBeNull();
+ key('q');canvasClick();advance();expect(client().snapshot().heroes[0]!.castSlot).toBe('Q');
+ key('w');canvasClick();advance();expect(client().snapshot().heroes[0]!.castSlot).toBe('Q');
+ for(let i=0;i<12;i++)advance();
+ expect(state.releases.filter(e=>e.slot==='Q'||e.slot==='W')).toEqual([{slot:'Q',sample:audio?'skill-q':'cast'},{slot:'W',sample:audio?'skill-w':'cast'}]);
+ const fingerprint=hashValue(state.inputTrace);matrixFingerprint??=fingerprint;expect(fingerprint).toBe(matrixFingerprint);matrixTraces.push({camera,audio,fingerprint,trace:structuredClone(state.inputTrace)});mkdirSync('outputs/side-release',{recursive:true});writeFileSync('outputs/side-release/client-input-fingerprints.json',JSON.stringify({scope:'real client Controls and LocalMatch input frames/state hashes; renderer/audio/nav doubled',matrix:matrixTraces},null,2)+'\n');
+ expect(world.held).toBe(false);expect(world.locked).toBe(!camera);
+ open();expect(world.held).toBe(false);click('[data-binding-cancel]');
+ click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));expect(world.disposed).toBe(true);expect(state.worlds[1]!.held).toBe(false);
+});
+
+
+it('read-only DOM diagnostics mirror the live minimum gate and restart resets it',async()=>{
+ await boot();const read=()=>JSON.parse(document.querySelector('#debug-state')!.textContent!);
+ expect(read()).toMatchObject({ready:true,backend:'three-webgl2',acceptance:{requiredTicks:300,advancedTicks:0,reached:false}});
+ for(let i=0;i<260;i++)advance();
+ expect(read().acceptance.advancedTicks).toBe(client().snapshot().tick);expect(read().acceptance.reached).toBe(true);expect(read().ready).toBe(true);
+ click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));
+ expect(read()).toMatchObject({ready:true,acceptance:{advancedTicks:0,reached:false}});
+});

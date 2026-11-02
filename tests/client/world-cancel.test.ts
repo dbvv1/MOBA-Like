@@ -1,3 +1,4 @@
+import {createLifetime} from '../../src/render/lifetime.js';
 import {lightingState} from '../../src/render/lighting-style.js';
 import {readFile} from 'node:fs/promises';
 import * as Three from 'three';
@@ -18,7 +19,7 @@ it('an abandoned async world releases its assets before it can replace the live 
     setPixelRatio(){}dispose(){events.push('renderer-release');}forceContextLoss(){events.push('context-release');}
   }
   class TextureLoader {loadAsync(){started();return new Promise(resolve=>{releaseTexture=resolve;});}}
-  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,
+  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,createLifetime,
     addEnvironmentLighting:()=>{},loadTerrainTextures:async()=>({dispose:()=>events.push('terrain-release')}),
     SOURCE_URL:new URL('../../src/render/world.ts',import.meta.url).href,
     loadBattleAssets:async()=>({dispose:()=>events.push('assets-release')}),
@@ -30,5 +31,5 @@ it('an abandoned async world releases its assets before it can replace the live 
   await loading;abort.abort();releaseTexture({colorSpace:'',dispose:()=>events.push('status-release')});
   await expect(pending).rejects.toMatchObject({name:'AbortError'});
   expect(host.canvas).toBe('new');expect(events).not.toContain('mounted');
-  expect(events).toEqual(['status-release','textures-release','terrain-release','assets-release','renderer-release','context-release','canvas-release']);
+  expect(events).toEqual(['status-release','terrain-release','textures-release','assets-release','renderer-release','context-release','canvas-release']);
 });

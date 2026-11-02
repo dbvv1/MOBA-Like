@@ -60,3 +60,5 @@ npm run build
 
 
 指令缓冲试玩：打开 `candidate.html?commands=buffer-v1`，施法或普攻前摇中输入下一条技能／移动／攻击，释放当帧接续；最后一条合法输入覆盖，S 停止清除队列。无参数候选保持原操作。
+
+镜头＋Q/W 试玩：`candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1`。取消永久锁定后，按住 Space 回看自己，松开继续自由观察；Q/W 使用不同释放提示音。不能加载3D时自动切换带提示的Canvas2D恢复画面。

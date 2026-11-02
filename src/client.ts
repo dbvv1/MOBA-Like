@@ -1,5 +1,5 @@
+import {cameraFollowPolicy} from './render/camera-follow.js';
 import {entryLightingSearch} from './ui/entry-lighting.js';
-import {parseLightingStyle} from './render/lighting-style.js';
 import {createBattleAudio,audioPolicyFromSearch} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
@@ -8,7 +8,7 @@ import {createSaveSlot} from './save/storage.js';
 import {acquireSaveOwnership,chooseSavedMatch,createSavePanel,SAVE_COMPATIBILITY_ID} from './save/browser.js';
 import {createDetourNavigation} from './sim/navigation.js';
 import type {SimCommand} from './sim/types.js';
-import {createWorld} from './render/world.js';
+import {createPlayableWorld,MINIMUM_ACCEPTANCE_TICKS} from './render/playable-world.js';
 import {FixedClock} from './render/clock.js';
 import {createLifetime} from './render/lifetime.js';
 import {createControls} from './input/controls.js';
@@ -18,15 +18,19 @@ import {controlsHelp,createKeyboardSettings} from './ui/keyboard-settings.js';
 
 function element<T extends HTMLElement>(id:string):T {const result=document.getElementById(id);if(!result)throw new Error(`Missing ${id}`);return result as T;}
 const stage=element<HTMLElement>('stage'),notice=element<HTMLElement>('notice'),hudRoot=element<HTMLElement>('hud'),restart=element<HTMLButtonElement>('restart');
+const diagnostic=document.getElementById('debug-state');
+const showDiagnostic=(value:unknown)=>{if(diagnostic)diagnostic.textContent=JSON.stringify(value,null,2);};
 const contentVersion=new URLSearchParams(location.search).get('commands')==='buffer-v1'?12:11;
+const cameraPolicy=cameraFollowPolicy(location.search);
+let activeCameraPolicy=cameraPolicy;
 const bindings=new KeyboardBindings(()=>window.localStorage);
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion),slot=>bindings.label(slot));
 const help=element<HTMLElement>('controls-help'),settingsTrigger=element<HTMLButtonElement>('keyboard-settings');
-const refreshHelp=()=>{help.textContent=controlsHelp(bindings);heroSelection.refresh();};refreshHelp();
+const refreshHelp=()=>{help.textContent=controlsHelp(bindings,activeCameraPolicy==='hold-follow-v1');heroSelection.refresh();};refreshHelp();
 let cleanup:()=>void=()=>{};let saveBeforeLeave:()=>void=()=>{};let booting=false;let bootGeneration=0;let soundEnabled=true;
 restart.textContent='New match';restart.title='Start a new match and replace the local checkpoint';
 async function boot(mode:'prompt'|'new'='prompt'){
-  if(booting)return;booting=true;restart.disabled=true;settingsTrigger.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
+  if(booting)return;notice.setAttribute('data-recovery','false');booting=true;restart.disabled=true;settingsTrigger.disabled=true;heroSelection.setBusy(true);const release=cleanup;cleanup=()=>{};release();showDiagnostic({ready:false,phase:'loading'});Reflect.deleteProperty(window,'mobaClient');notice.hidden=false;notice.textContent='Loading simulation and Three.js assets…';
   const generation=++bootGeneration,abort=new AbortController();
   const current=()=>{if(abort.signal.aborted||generation!==bootGeneration)throw new DOMException('Match loading cancelled.','AbortError');};
   const lifetime=createLifetime();const dispose=()=>{abort.abort();const errors=lifetime.dispose();if(errors.length)console.warn('Client cleanup failed',errors);};cleanup=dispose;
@@ -67,7 +71,8 @@ async function boot(mode:'prompt'|'new'='prompt'){
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const world=await createWorld(stage,sim.catalog,{lighting:parseLightingStyle(entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'])),signal:abort.signal});lifetime.defer(()=>world.dispose());current();
+    const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
+    const initialTick=sim.snapshot().tick;activeCameraPolicy=rendered.cameraPolicy;refreshHelp();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
@@ -79,7 +84,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
-    controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings);
+    controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
     lifetime.defer(()=>controls.dispose());
     const clock=new FixedClock(1/sim.tickRateHz);let previous=performance.now(),animation=0,stopped=false;
     const definition=sim.catalog.heroes[player().hero.definitionId]!;
@@ -88,7 +93,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
       W:`Skill 2 · ${sim.catalog.abilities[definition.abilities.W]!.name}`,
       E:`Skill 3 · ${sim.catalog.abilities[definition.abilities.E]!.name}`,
       R:`Ultimate · ${sim.catalog.abilities[definition.abilities.R]!.name}`,
-      attackMove:'Attack-move',stop:'Stop',focusCamera:'Lock camera',
+      attackMove:'Attack-move',stop:'Stop',focusCamera:rendered.cameraPolicy==='hold-follow-v1'?'Hold to follow':'Lock camera',
     },open=>{
       settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
       world.leavePointer();clock.reset();previous=performance.now();
@@ -118,8 +123,10 @@ async function boot(mode:'prompt'|'new'='prompt'){
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
-    hud.update(snapshot,playerId);notice.hidden=true;restart.disabled=false;
+    hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D unavailable: Canvas2D recovery is active. Details in Runtime diagnostics.':'Trial renderer unavailable: default rendering restored. Details in Runtime diagnostics.';restart.disabled=false;
     window.addEventListener('blur',()=>{commands.length=0;},{signal:lifecycle.signal});
+    const readMinimumState=()=>({ready:!stopped,backend:rendered.backend,fallbackReason:rendered.fallbackReason,acceptance:{requiredTicks:MINIMUM_ACCEPTANCE_TICKS,initialTick,advancedTicks:snapshot.tick-initialTick,reached:snapshot.tick-initialTick>=MINIMUM_ACCEPTANCE_TICKS},contentVersion,tick:snapshot.tick,status:snapshot.status});
+    showDiagnostic(readMinimumState());lifetime.defer(()=>showDiagnostic({ready:false,phase:'disposed'}));
     const frame=(now:number)=>{
       if(stopped)return;
       try{
@@ -136,14 +143,14 @@ async function boot(mode:'prompt'|'new'='prompt'){
           });
           world.draw(Math.min(delta,.25),sim.isComplete()?1:alpha);
         }else clock.reset();
-        animation=requestAnimationFrame(frame);
-      }catch(error){if(audioPolicy==='critical-v1')sound.setPaused(true);stopped=true;saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;}
+        showDiagnostic(readMinimumState());animation=requestAnimationFrame(frame);
+      }catch(error){if(audioPolicy==='critical-v1')sound.setPaused(true);stopped=true;notice.setAttribute('data-recovery','false');saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;showDiagnostic(readMinimumState());}
     };
     animation=requestAnimationFrame(frame);
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
-    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({ready:!stopped,backend:'three-webgl2',lighting:world.lightingState(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
-  }catch(error){dispose();if(generation!==bootGeneration)return;stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
+    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({...readMinimumState(),lighting:world.lightingState(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
+  }catch(error){dispose();if(generation!==bootGeneration)return;showDiagnostic({ready:false,phase:'failed',error:error instanceof Error?error.message:String(error)});stage.replaceChildren();hudRoot.replaceChildren();notice.textContent=error instanceof Error?error.message:String(error);notice.hidden=false;restart.disabled=false;}
   finally{if(generation===bootGeneration){booting=false;heroSelection.setBusy(false);}}
 }
 restart.addEventListener('click',()=>void boot('new'));

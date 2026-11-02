@@ -1,0 +1,215 @@
+{
+  "scope": "same player input script + normal bot; camera/audio switches absent; no render dependency",
+  "ticks": 600,
+  "results": [
+    {
+      "contentVersion": 11,
+      "finalHash": "d1ccc04ecefae8e2",
+      "curve": [
+        {
+          "tick": 30,
+          "hash": "42644a0aa4cb4361"
+        },
+        {
+          "tick": 60,
+          "hash": "9655e96b92ddd2c9"
+        },
+        {
+          "tick": 90,
+          "hash": "ca0427f21afa473d"
+        },
+        {
+          "tick": 120,
+          "hash": "3418708c90a7ce10"
+        },
+        {
+          "tick": 150,
+          "hash": "a37fecd01f164c0a"
+        },
+        {
+          "tick": 180,
+          "hash": "83dae2fdc20a0433"
+        },
+        {
+          "tick": 210,
+          "hash": "82bcd37745315487"
+        },
+        {
+          "tick": 240,
+          "hash": "396346aea287adde"
+        },
+        {
+          "tick": 270,
+          "hash": "51a419d2bfeadea5"
+        },
+        {
+          "tick": 300,
+          "hash": "c7d91784f98a7179"
+        },
+        {
+          "tick": 330,
+          "hash": "75114a2908ffef91"
+        },
+        {
+          "tick": 360,
+          "hash": "27afa962896c84e1"
+        },
+        {
+          "tick": 390,
+          "hash": "6a705e22b64d87d6"
+        },
+        {
+          "tick": 420,
+          "hash": "168260e1964e5729"
+        },
+        {
+          "tick": 450,
+          "hash": "5c40760a17fb25d6"
+        },
+        {
+          "tick": 480,
+          "hash": "acd79041382e266f"
+        },
+        {
+          "tick": 510,
+          "hash": "80a07f2fec88e2e7"
+        },
+        {
+          "tick": 540,
+          "hash": "74de626858231dfe"
+        },
+        {
+          "tick": 570,
+          "hash": "a9c640bee1a6f5cd"
+        },
+        {
+          "tick": 600,
+          "hash": "d1ccc04ecefae8e2"
+        }
+      ],
+      "releases": [
+        {
+          "type": "castStarted",
+          "slot": "Q",
+          "tick": 10
+        },
+        {
+          "type": "castResolved",
+          "slot": "Q",
+          "tick": 14
+        }
+      ]
+    },
+    {
+      "contentVersion": 12,
+      "finalHash": "f5b9aaa4fe8cbb8d",
+      "curve": [
+        {
+          "tick": 30,
+          "hash": "232bae9d80a9a159"
+        },
+        {
+          "tick": 60,
+          "hash": "a943b4e45bf617d2"
+        },
+        {
+          "tick": 90,
+          "hash": "2d639bb7060c0227"
+        },
+        {
+          "tick": 120,
+          "hash": "f25475f1775437c9"
+        },
+        {
+          "tick": 150,
+          "hash": "817f99dca001273a"
+        },
+        {
+          "tick": 180,
+          "hash": "9c3444f29ad95de3"
+        },
+        {
+          "tick": 210,
+          "hash": "46dc3de841a41974"
+        },
+        {
+          "tick": 240,
+          "hash": "69624f10d6763c8c"
+        },
+        {
+          "tick": 270,
+          "hash": "ae0214bc84737bd0"
+        },
+        {
+          "tick": 300,
+          "hash": "81613738a1fa178d"
+        },
+        {
+          "tick": 330,
+          "hash": "cd6ec0bf94859f47"
+        },
+        {
+          "tick": 360,
+          "hash": "ba424eaa05302a55"
+        },
+        {
+          "tick": 390,
+          "hash": "971ddeb3143294b2"
+        },
+        {
+          "tick": 420,
+          "hash": "a19035a1d5a18e25"
+        },
+        {
+          "tick": 450,
+          "hash": "c73bbfaf627e4380"
+        },
+        {
+          "tick": 480,
+          "hash": "978ff8e81b455257"
+        },
+        {
+          "tick": 510,
+          "hash": "686c44bbf1d4dc2a"
+        },
+        {
+          "tick": 540,
+          "hash": "f908928149692fc4"
+        },
+        {
+          "tick": 570,
+          "hash": "058dbaf5d36c4455"
+        },
+        {
+          "tick": 600,
+          "hash": "f5b9aaa4fe8cbb8d"
+        }
+      ],
+      "releases": [
+        {
+          "type": "castStarted",
+          "slot": "Q",
+          "tick": 10
+        },
+        {
+          "type": "castResolved",
+          "slot": "Q",
+          "tick": 14
+        },
+        {
+          "type": "castStarted",
+          "slot": "W",
+          "tick": 14
+        },
+        {
+          "type": "castResolved",
+          "slot": "W",
+          "tick": 14
+        }
+      ]
+    }
+  ],
+  "baselineCommit": "dea84c4fde58ec7ebb05dc0adae70f4ee2dce45c",
+  "baselineMatchesAtEverySample": true,
+  "comparison": "Separate LocalMatch imports from baseline worktree and candidate source, identical scripted inputs; all 20 checkpoints/version match."
+}

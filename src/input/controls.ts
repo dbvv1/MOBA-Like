@@ -5,10 +5,13 @@ import {commandForCast,commandForRightClick,isInputElement,validPoint,type Aim} 
 import {actionForKey,DEFAULT_BINDINGS,type KeyboardBindings} from './bindings.js';
 
 type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
-export function createControls(world:GameWorld,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>){
+export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void){
   const abort=new AbortController();const options={signal:abort.signal};let mode:Mode=null;let enabled=true;let lastPointer:{button:number;aim:Aim;command:SimCommand|null}|null=null;
+  let heldFocus:{code:string;key:string}|null=null;
+  const keyIdentity=(key:string)=>key===' '||key==='Space'?'space':key.toLowerCase();
+  function releaseFocus(){if(heldFocus){heldFocus=null;focusHold?.(false);}}
   function setMode(next:Mode){mode=next;world.setTargeting(next?.kind==='cast'?next.slot:null);}
-  function release(){setMode(null);lastPointer=null;bindings?.cancelCapture();}
+  function release(){releaseFocus();setMode(null);lastPointer=null;bindings?.cancelCapture();}
   function skill(slot:AbilitySlot){
     if(!enabled)return;
     const {snapshot,hero}=current();const definition=catalog.heroes[hero.definitionId];const ability=definition&&catalog.abilities[definition.abilities[slot]];
@@ -39,8 +42,21 @@ export function createControls(world:GameWorld,catalog:ContentCatalog,current:()
     else if(action==='attackMove'){event.preventDefault();setMode({kind:'attackMove'});say('Attack-move: left-click a destination; Esc cancels.');}
     else if(action==='stop'){event.preventDefault();setMode(null);enqueue({type:'stop',heroId:current().hero.id});}
     else if(event.key==='Escape'){setMode(null);say('Aim cancelled.');}
-    else if(action==='focusCamera'){event.preventDefault();focusCamera();}
+    else if(action==='focusCamera'){
+      event.preventDefault();
+      if(focusHold){
+        if(!heldFocus&&current().snapshot.status==='running'){heldFocus={code:event.code,key:keyIdentity(event.key)};focusHold(true);}
+      }else focusCamera();
+    }
   },options);
-  window.addEventListener('blur',release,options);
+  window.addEventListener('keyup',event=>{
+    // Keyup must release even over an editor or after modifiers/bindings changed.
+    if(heldFocus&&(event.code&&heldFocus.code?event.code===heldFocus.code:keyIdentity(event.key)===heldFocus.key))releaseFocus();
+  },options);
+  if(focusHold){
+    document.addEventListener('visibilitychange',()=>{if(document.hidden){releaseFocus();world.leavePointer();}},options);
+    document.addEventListener('focusin',event=>{if(isInputElement(event.target)){releaseFocus();world.leavePointer();}},options);
+  }
+  window.addEventListener('blur',()=>{release();if(focusHold)world.leavePointer();},options);
   return {skill,setEnabled(value:boolean){if(abort.signal.aborted)return;enabled=value;if(!value)release();},inspectPointer:()=>lastPointer?structuredClone(lastPointer):null,dispose(){enabled=false;abort.abort();release();}};
 }
