@@ -9,6 +9,7 @@ export function parseLightingStyle(search:string):LightingStyle {
   const query=new URLSearchParams(search),values=query.getAll('lighting');
   if(values.length>1)throw new Error('Duplicate lighting parameter');
   const value=values[0]??'baseline';
+  if(value==='stylized-diffuse')throw new Error('The stylized-diffuse trial is retired; use the quiet material trial.');
   if(!LIGHTING_STYLES.includes(value as LightingStyle))throw new Error(`Unknown lighting '${value}'; choose ${LIGHTING_STYLES.join(', ')}`);
   return value as LightingStyle;
 }

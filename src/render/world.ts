@@ -1,5 +1,8 @@
 import {createLifetime} from './lifetime.js';
 import {createCameraFollow,type CameraFollowPolicy} from './camera-follow.js';
+import {createContentStandards} from '../capture/content-standards.js';
+import {applyQuietBuildings} from './quiet-buildings.js';
+import {loadQuietFamily,type QuietTextures,type MaterialFamily} from './quiet-family.js';
 import {createLightingPost} from './lighting-post.js';
 import {loadTerrainTextures,type OwnedTerrainTextures} from './terrain-textures.js';
 import {addEnvironmentLighting,lightingState,type LightingStyle} from './lighting-style.js';
@@ -21,7 +24,7 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',materials='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;materials?:MaterialFamily;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:!!capture});}
@@ -39,11 +42,11 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const focus=new THREE.Vector3(0,0,0);
   addEnvironmentLighting(scene,lighting);
   const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
-  let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined;
+  let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined,quiet:QuietTextures|undefined,quietBuildings:ReturnType<typeof applyQuietBuildings>|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
-  assets=own(await loadBattleAssets(undefined,lighting));combatTextures=own(await loadCombatTextures());terrainTextures=own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true}));
+  assets=own(await loadBattleAssets(undefined,lighting));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true}));
   const loadedAssets=assets, presentation=view;
-  const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
+  const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures,quiet));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
   scene.add(actors);const controls=own(createControlMarkers(scene,statusTexture!));const reach=own(createTowerReach(scene,catalog));const health=own(createHealthBars(scene));const effects=own(createEffects(scene));const impacts=own(createImpacts(scene,combatTextures));const targeting=own(createTargeting(scene));let targetingSlot:AbilitySlot|null=null;if(!capture)host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
@@ -53,6 +56,9 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   let captureView:CaptureView|null=capture?copyCaptureView(capture):null,savedFocus:THREE.Vector3|null=null;
   cameraMode.setCapture(captureView!==null);
   const post=lighting==='forest-light-v1'?own(createLightingPost(renderer,scene,camera)):null;
+  let standards:ReturnType<typeof createContentStandards>|null=null;
+  const hiddenForStandards=new Map<THREE.Object3D,boolean>();
+  lifetime.defer(()=>{standards?.dispose();hiddenForStandards.clear();});
   let frameSubmitted=false;
   function renderScene(){
     frameSubmitted=false;
@@ -73,8 +79,9 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     const entityId=pickLivingEntity(ray.intersectObjects(actors.children,true),snapshot);
     return {point:point?{x:point.x,z:point.z}:null,entityId};
   }
-  function sync(next:Snapshot,id:number){snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);reach.sync(next,id);controls.sync(next,actors);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
+  function sync(next:Snapshot,id:number){if(standards){snapshot=next;playerId=id;return;}snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);reach.sync(next,id);controls.sync(next,actors);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
   function draw(seconds:number,alpha:number,render=true){
+    if(standards){standards.advance(seconds);positionCamera();if(captureView?.pose)focus.set(captureView.pose.target.x,captureView.pose.target.y,captureView.pose.target.z);light.position.set(focus.x-12,26,focus.z+12);light.target.position.copy(focus);light.target.updateMatrixWorld();if(render)renderScene();return;}
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
     // While playing, actions share the snapshot interpolation clock. After the
     // terminal snapshot, cosmetic tails may finish without advancing simulation.
@@ -91,6 +98,15 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     if(render)renderScene();
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
+    setContentStandards(enabled:boolean){
+      if(enabled&&!standards){
+        if(!terrainTextures)throw Error('Standards require actual production terrain textures');
+        if(materials==='quiet-family-v1'&&!quiet)throw Error('Quiet standards refused material fallback');
+        const candidate=createContentStandards(loadedAssets,lighting,terrainTextures,quiet);
+        for(const object of scene.children)if(!(object instanceof THREE.Light)&&object!==light.target){hiddenForStandards.set(object,object.visible);object.visible=false;}
+        standards=candidate;scene.add(candidate.root);frameSubmitted=false;
+      }else if(!enabled&&standards){standards.dispose();standards=null;for(const [object,visible] of hiddenForStandards)object.visible=visible;hiddenForStandards.clear();frameSubmitted=false;if(snapshot&&playerId!==null)sync({...snapshot,events:[]},playerId);}
+    },
     // Explicit opt-in adapter. Ordinary clients never set it. Pre-roll still
     // advances every visual frame; renderer-only warmup never advances actors.
     setCaptureView(value:CaptureView|null){
@@ -104,7 +120,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     renderOnly(){renderScene();},
     captureContext(){return renderer.getContext();},
     lightingState(){return currentLightingState();},
-    captureState(){return {lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
+    captureState(){return {standards:standards?{...standards.inspect(),active:frameSubmitted&&!renderer.getContext().isContextLost()}:null,materials:{requested:materials,configured:quiet?'quiet-family-v1':'baseline',active:quiet&&frameSubmitted?'quiet-family-v1':null,buildingCoverage:quietBuildings?.coverage??[]},lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},

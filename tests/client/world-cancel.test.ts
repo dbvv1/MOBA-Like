@@ -1,4 +1,5 @@
 import {createLifetime} from '../../src/render/lifetime.js';
+import {loadQuietFamily} from '../../src/render/quiet-family.js';
 import {lightingState} from '../../src/render/lighting-style.js';
 import {readFile} from 'node:fs/promises';
 import * as Three from 'three';
@@ -19,7 +20,7 @@ it('an abandoned async world releases its assets before it can replace the live 
     setPixelRatio(){}dispose(){events.push('renderer-release');}forceContextLoss(){events.push('context-release');}
   }
   class TextureLoader {loadAsync(){started();return new Promise(resolve=>{releaseTexture=resolve;});}}
-  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,createLifetime,
+  const bindings={THREE:{...Three,WebGLRenderer:Renderer,TextureLoader},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,createLifetime,loadQuietFamily,
     addEnvironmentLighting:()=>{},loadTerrainTextures:async()=>({dispose:()=>events.push('terrain-release')}),
     SOURCE_URL:new URL('../../src/render/world.ts',import.meta.url).href,
     loadBattleAssets:async()=>({dispose:()=>events.push('assets-release')}),
@@ -32,4 +33,15 @@ it('an abandoned async world releases its assets before it can replace the live 
   await expect(pending).rejects.toMatchObject({name:'AbortError'});
   expect(host.canvas).toBe('new');expect(events).not.toContain('mounted');
   expect(events).toEqual(['status-release','terrain-release','textures-release','assets-release','renderer-release','context-release','canvas-release']);
+});
+
+it('does not start baseline fallback requests after a cancelled candidate returns late',async()=>{
+ const source=await readFile(new URL('../../src/render/world.ts',import.meta.url),'utf8');
+ const code=ts.transpileModule(source.replace(/^import .*;\r?\n/gm,'').replace('export async function createWorld','async function createWorld').replace(/^export type .*$/gm,'').replaceAll('import.meta.url','SOURCE_URL'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+ const events:string[]=[];let release!:(v:undefined)=>void,started!:()=>void;const loading=new Promise<void>(r=>started=r);
+ class Renderer {shadowMap={};domElement={remove(){}};setPixelRatio(){}dispose(){}forceContextLoss(){}}
+ const bindings={THREE:{...Three,WebGLRenderer:Renderer},window:{devicePixelRatio:1},disposeOwnedRenderer,lightingState,createLifetime,addEnvironmentLighting(){},
+  loadBattleAssets:async()=>({dispose(){events.push('assets-release');}}),loadCombatTextures:async()=>({dispose(){events.push('combat-release');}}),
+  loadQuietFamily:async()=>{started();return new Promise<undefined>(r=>release=r);},loadTerrainTextures:async()=>{events.push('unexpected-fallback');},SOURCE_URL:new URL('../../src/render/world.ts',import.meta.url).href};
+ const createWorld=new Function(...Object.keys(bindings),`${code};return createWorld;`)(...Object.values(bindings));const abort=new AbortController();const pending=createWorld({}, {}, {materials:'quiet-family-v1',signal:abort.signal});await loading;abort.abort();release(undefined);await expect(pending).rejects.toMatchObject({name:'AbortError'});expect(events).toEqual(['combat-release','assets-release']);
 });

@@ -6,7 +6,7 @@
 
 ## 旁置数量
 
-保守按三个待完整验收单元管理：旧 `lighting=stylized-diffuse`；`commands=buffer-v1`；本次镜头＋Q/W 整合。整合取代原独立 critical 音频候选；camera/audio 的四路参数只是同一单元隔离对照，不是另开候选。forest lighting 已是默认，baseline 与 legacy-v10 是历史对照，不新增候选。不得再叠加第四个未经完整验收的单元。
+保守按三个待完整验收单元管理：quiet 材质（替代已退役的 `lighting=stylized-diffuse`）；`commands=buffer-v1`；本次镜头＋Q/W 整合。整合取代原独立 critical 音频候选；camera/audio 的四路参数只是同一单元隔离对照，不是另开候选。forest lighting 已是默认，baseline 与 legacy-v10 是历史对照，不新增候选。不得再叠加第四个未经完整验收的单元。
 
 ## 可复验门槛
 
@@ -33,3 +33,15 @@ v12 Q在tick10开始、tick14释放，前摇内输入的W在tick14开始并释�
 整合源审、72项相关测试、5项capture测试、相关typecheck、capture构建与普通生产构建通过。准确普通构建在云浏览器默认路由推进397tick，camera/audio双开路由推进352tick，均initialTick=0、ready/reached/running=true，达到300tick共同门槛。两路自然进入Canvas2D回退；预期的已捕获THREE初始化错误保留，未见额外运行异常。预览进程正常退出，原启动会话exit0。
 
 本次尚未取得MOBA固定出图的WebGL2实际PNG，未对该入口实拍；同环境Star已实测无法创建WebGL，但不替代MOBA自身实测。1280×720非空像素、实际renderer、完整smoke、同机位图与非作者盲评仍待完成；镜头舒适度和Q/W实际试听仍未评，不据这些构建或Canvas证据换默认。仅合入源码，不宣称托管网站已更新。
+
+## quiet 材质已有候选重放（旁置门槛通过）
+
+在与远端 `7710c4a6` 同树的固定出图整合上接续保全的 `e91d555`／`1ca8bf4`。沿用已有三张WebP、六建筑受保护石材区及五标准件消费者，不再生成素材；仅 opt-in `materials=quiet-family-v1`。普通入口仍走既有恢复包装；纹理或建筑接线失败退回默认并提示，取消不启动下一轮默认资产请求。固定出图保持脱离DOM的1280×720 DPR1/WebGL2 PNG，标准件身份与四个游戏机位分开，临时镜头与Q/W源保留。
+
+本轮85文件／550项CPU测试、web及capture类型检查和构建通过；14个v12手感同输入场景的summary与逐tick traces和当前main同树逐项一致，不宣称手感改善或设备延迟。普通浏览器共同门槛已通过，真实shader、固定图、声音试听或盲评仍未完成。当前三待完整验收单元为 quiet 材质、v12 指令缓冲、镜头＋Q/W。旧 stylized-diffuse 公开参数已退役：统一解析器拒绝，普通页恢复默认并提示，capture直接报错；旧源码及资产保全用于历史研究。首页与旁置页加入quiet试验链接，不叠加第四单元，也不撤镜头Q/W及v12。仅接受旁置功能，不切换默认。素材已有不等于本作材质已达标。
+
+非作者差量审查发现并修复：quiet失败必须显式恢复提示；五标准件在缺少动作clip等后置构造异常时清理已分配路肩和克隆骨架。真实GLB缺clip故障断言覆盖自有geometry/material/skeleton释放与共享源不释放；未以CPU修复补填shader或画面通过。
+
+关闭材质、镜头、声音的600tick同脚本v11/v12回放，与main `7710c4a6` 同tree基线逐30tick哈希、最终hash及释放事件JSON逐字节相同。旧stylized参数退出及默认恢复提示由路由测试覆盖。
+
+准确构建 `d6f31ee684babb539c7ed64d3f7fd5228380edd3`（tree `99aa43bc858375a0b7f10a0f78a6adda94464bc3`）由非作者云浏览器复核：43个服务文件与干净构建逐hash一致；默认initial0→653tick，quiet旁置initial0→470tick，均ready/reached/running且超过300tick。自然WebGL失败后Canvas2D和可见恢复提示正常；未见额外未捕获应用异常，保留已捕获THREE初始化错误，浏览器扩展metadata错误另列。旧stylized入口实际显示retired并恢复默认Canvas，仅检退休行为不宣称该路已跑满300tick。选择不保存，旧存档保留；自有标签关闭、预览stopped、原启动进程exit0。此证据没有呈现quiet材质，不能作材质画面、固定PNG或盲评通过；托管站点部署另行核实。

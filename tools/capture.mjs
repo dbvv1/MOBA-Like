@@ -11,24 +11,29 @@ import {chromium} from 'playwright';
 import {preview} from 'vite';
 import {PNG} from 'pngjs';
 import {CAMERAS,CAPTURE_SIZE} from '../src/capture/cameras.ts';
-import {parseCaptureConfig} from '../src/capture/config.ts';
+import {parseCaptureConfig,STANDARD_NAME,STANDARD_SHOT} from '../src/capture/config.ts';
 import {parseLightingStyle} from '../src/render/lighting-style.ts';
 import {createCaptureRun,writeCaptureFrame,writeCaptureReport,captureBundleIdentity,verifyCaptureSource,repeatCheckDescription,verifyServedCaptureBundle,captureLeaseOptions,acquireCaptureLease,createCaptureLifecycle,observeCaptureProcess,captureBrowserExitState,createCaptureBrowserCloser,captureSpawnEvidence,closeCapturePreview,publicCaptureError} from './capture-output.ts';
-const {values}=parseArgs({options:{'lease-root':{type:'string'},'task-id':{type:'string'},lighting:{type:'string',default:'baseline'},base:{type:'string'},out:{type:'string',default:'outputs/capture'},shot:{type:'string',default:'all'},seed:{type:'string',default:'1'},t:{type:'string',default:'10'},input:{type:'string',default:'march'},frames:{type:'string',default:'1'},repeat:{type:'string',default:'2'},software:{type:'boolean',default:false},headed:{type:'boolean',default:false},'require-gpu':{type:'boolean',default:false},'check-live':{type:'boolean',default:false}}});
+const {values,tokens}=parseArgs({tokens:true,options:{'lease-root':{type:'string'},'task-id':{type:'string'},lighting:{type:'string',default:'baseline'},materials:{type:'string',default:'baseline'},standards:{type:'string'},base:{type:'string'},out:{type:'string',default:'outputs/capture'},shot:{type:'string',default:'all'},seed:{type:'string',default:'1'},t:{type:'string',default:'10'},input:{type:'string',default:'march'},frames:{type:'string',default:'1'},repeat:{type:'string',default:'2'},software:{type:'boolean',default:false},headed:{type:'boolean',default:false},'require-gpu':{type:'boolean',default:false},'check-live':{type:'boolean',default:false}}});
+assert.ok(tokens.filter(token=>token.kind==='option'&&token.name==='standards').length<=1,'Duplicate --standards');
+const standards=values.standards;
+if(standards!==undefined){assert.equal(standards,STANDARD_NAME,'Unknown standards set');assert.equal(values.shot,'spawn','--standards requires --shot spawn; no normal-game camera batch');assert.equal(values['check-live'],false,'Standards capture does not run live-control checks');}
+const artifactShot=shot=>standards?STANDARD_SHOT:shot;
 const leaseOptions=captureLeaseOptions(values['lease-root'],values['task-id'],!values.software||values['require-gpu']);
 assert.ok(!(values['require-gpu']&&(values.headed||values['check-live']||process.env.MOBA_CAPTURE_CHROMIUM)),'GPU capture is bundled headless only, without live-input checks');
 const lighting=parseLightingStyle(new URLSearchParams({lighting:values.lighting}).toString());
+const materials=values.materials;assert.ok(['baseline','quiet-family-v1'].includes(materials),'Unknown material family');
 const names=values.shot==='all'?Object.keys(CAMERAS):[values.shot],repeat=Number(values.repeat);
 assert.ok(Number.isInteger(repeat)&&repeat>=1&&repeat<=5,'--repeat must be 1–5');
 assert.ok(!(values.software&&values['require-gpu']),'--software conflicts with --require-gpu');
 if(process.env.MOBA_CAPTURE_CHROMIUM)assert.ok(isAbsolute(process.env.MOBA_CAPTURE_CHROMIUM),'MOBA_CAPTURE_CHROMIUM must be absolute');
-for(const shot of names)parseCaptureConfig(new URLSearchParams({shot,seed:values.seed,t:values.t,input:values.input,frames:values.frames}).toString());
+for(const shot of names)parseCaptureConfig(new URLSearchParams({shot,...(standards?{standards}:{}),seed:values.seed,t:values.t,input:values.input,frames:values.frames}).toString());
 const root=fileURLToPath(new URL('..',import.meta.url));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const report={passed:false,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),sourceDirty:!!execFileSync('git',['status','--porcelain'],{cwd:root,encoding:'utf8'}).trim(),shots:[],errors:[],warnings:[],checks:[],qualityAcceptance:'not-performed; capture infrastructure is not lighting/material or player-control approval'};
 const output=await createCaptureRun(resolve(values.out),report.sourceCommit,values.input);
 report.runId=output.runId;
-report.parameters={lighting,shots:names,seed:values.seed,t:values.t,input:values.input,frames:values.frames,repeat};
+report.parameters={lighting,materials,...(standards?{standards,captureRole:'content-standards'}:{}),shots:names.map(artifactShot),seed:values.seed,t:values.t,input:values.input,frames:values.frames,repeat};
 report.bundle={binding:'unverified',sha256:null};
 console.log(`MOBA_CAPTURE_RUN=${output.directory}`);
 const record=await createCaptureLifecycle(output);
@@ -88,7 +93,7 @@ try{
       page.on('console',message=>{if(message.type()==='error')errors.push(message.text());if(message.type()==='warning')report.warnings.push(message.text());});
       page.on('requestfailed',request=>errors.push(`${request.url()} ${request.failure()?.errorText}`));
       page.on('response',response=>{if(response.status()>=400)errors.push(`HTTP ${response.status()} ${response.url()}`);});
-      const url=new URL(captureURL);for(const [key,value] of Object.entries({lighting,shot,seed:values.seed,t:values.t,input:values.input,frames:values.frames}))url.searchParams.set(key,value);
+      const url=new URL(captureURL);url.searchParams.delete('standards');for(const [key,value] of Object.entries({lighting,materials,...(standards?{standards}:{}),shot,seed:values.seed,t:values.t,input:values.input,frames:values.frames}))url.searchParams.set(key,value);
       await page.goto(url.href,{waitUntil:'domcontentloaded'});
       await page.waitForFunction(()=>window.__shot?.ready||window.__shot?.error,null,{timeout:120000});
       assert.equal(await page.evaluate(()=>window.__shot.error),undefined);
@@ -96,6 +101,9 @@ try{
       for(let frame=0;frame<Number(values.frames);frame++){
         checkInterrupted();
         const meta=await page.evaluate(()=>window.__shot);
+        assert.equal(meta.shot,artifactShot(shot));assert.equal(meta.captureRole,standards?'content-standards':'gameplay');
+        if(standards){assert.equal(meta.captureRole,'content-standards');assert.equal(meta.standardsName,standards);assert.equal(meta.shot,STANDARD_SHOT);assert.equal(meta.hud,'none');assert.equal(meta.standards?.name,standards);assert.equal(meta.standards?.active,true);assert.equal(meta.standards?.slotCount,5);assert.deepEqual(meta.standards?.slots,['standard-shoulder-section','standard-tower','standard-barracks','standard-base','standard-hero']);assert.equal(meta.standards?.materials,materials);assert.equal(meta.standards?.geometryChanged,false);}
+        if(materials==='quiet-family-v1'){assert.equal(meta.materials?.requested,materials);assert.equal(meta.materials?.configured,materials);assert.equal(meta.materials?.active,materials);assert.equal(meta.materials?.buildingCoverage?.length,6);}
         assert.equal(meta.lighting?.requested,lighting);assert.equal(meta.lighting?.active,lighting);
         assert.equal(meta.ready,true);assert.equal(meta.frame,frame);assert.equal(meta.backend,'webgl2');
         assert.deepEqual(meta.viewport,{...CAPTURE_SIZE,pixelRatio:1,bufferWidth:CAPTURE_SIZE.width,bufferHeight:CAPTURE_SIZE.height});
@@ -108,16 +116,16 @@ try{
         for(let i=0;i<pixels.data.length;i+=16)colors.add(`${pixels.data[i]>>3},${pixels.data[i+1]>>3},${pixels.data[i+2]>>3}`);
         assert.ok(colors.size>32,'Expected rendered environment, not blank/loading pixels');
         const rendererSlug=meta.renderer.replace(/[^a-z0-9]+/gi,'-').slice(0,64).replace(/-$/,'')||'unreported';
-        const directory=`${shot}-${meta.rendererClass}-${rendererSlug}-${hash(Buffer.from(meta.renderer)).slice(0,10)}-seed${meta.seed}-frame${meta.virtualFrame-frame}-r${run}`;
+        const directory=`${artifactShot(shot)}-${meta.rendererClass}-${rendererSlug}-${hash(Buffer.from(meta.renderer)).slice(0,10)}-seed${meta.seed}-frame${meta.virtualFrame-frame}-r${run}`;
         const entry=await writeCaptureFrame(output,directory,frame,png,{run,rgbaSha256:hash(pixels.data),pngSha256:hash(png),...meta,bundleSha256:report.bundle.sha256,bundleBinding:report.bundle.binding});
         report.shots.push(entry);
-        const comparable={lighting:meta.lighting,hash:entry.rgbaSha256,stateHash:meta.stateHash,camera:meta.camera,renderer:meta.renderer,t:meta.t};
+        const comparable={captureRole:meta.captureRole,standardsName:meta.standardsName,shot:meta.shot,standards:meta.standards,materials:meta.materials,lighting:meta.lighting,hash:entry.rgbaSha256,stateHash:meta.stateHash,camera:meta.camera,renderer:meta.renderer,t:meta.t};
         if(run===1)baseline.push(comparable);else assert.deepEqual(comparable,baseline[frame],`${shot} frame ${frame} must repeat pixel-identically on the same renderer`);
         assert.equal(await page.evaluate(frame=>window.__shotNext(frame),frame),frame<Number(values.frames)-1);
       }
       assert.deepEqual(errors,[]);await page.close();
     }
-    report.checks.push(repeatCheckDescription(shot,repeat,values.frames));
+    report.checks.push(repeatCheckDescription(artifactShot(shot),repeat,values.frames));
   }
   if(values['check-live']){
     const page=await context.newPage(),url=new URL(captureURL);url.search='?shot=spawn&t=0';

@@ -1,9 +1,10 @@
 import {captureOutput} from './output.js';
+import {parseMaterialFamily} from '../render/quiet-family.js';
 import {parseLightingStyle} from '../render/lighting-style.js';
 import {createWorld} from '../render/world.js';
 import {createDetourNavigation} from '../sim/navigation.js';
 import {CAPTURE_SIZE,CAMERAS} from './cameras.js';
-import {parseCaptureConfig} from './config.js';
+import {parseCaptureConfig,captureArtifactIdentity,STANDARD_POSE} from './config.js';
 import {CaptureLifetime} from './lifetime.js';
 import {CaptureSession} from './session.js';
 import {rendererEvidence} from './renderer.js';
@@ -68,8 +69,10 @@ try {
   const session=new CaptureSession(config,navigation,lifetime);
   phase('创建 WebGL 场景与加载模型/纹理');
   await yieldCaptureTask(abort.signal);
-  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,capture:{...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose}}),value=>value.dispose());
-  world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose:CAMERAS[config.shot].pose});
+  const pose=config.standards?STANDARD_POSE:CAMERAS[config.shot].pose;
+  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,materials:parseMaterialFamily(location.search),signal:abort.signal,capture:{...CAPTURE_SIZE,pixelRatio:1,pose}}),value=>value.dispose());
+  if(config.standards)world.setContentStandards(true);
+  world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose});
   const gl=world.captureContext(),evidence=rendererEvidence(gl);
   const preview=document.createElement('img');preview.alt='当前拍摄帧';stage.replaceChildren(preview);
   const contextLost=(event:Event)=>{event.preventDefault();fail('WebGL context lost');};
@@ -77,7 +80,7 @@ try {
   lifetime.own(null,()=>world.canvas.removeEventListener('webglcontextlost',contextLost));
   const publish=()=>{
     lifetime.assertActive();if(gl.isContextLost())throw new Error('WebGL context lost');gl.finish();
-    host.__shot=Object.freeze({ready:true,...__MOBA_CAPTURE_BUILD__,bundleSha256:bundle.sha256,bundle,...session.metadata,...evidence,...world.captureState(),...captureOutput(world.canvas,gl),audio:'not-captured',hud:'world-bars-only',expectedViewport:CAPTURE_SIZE});
+    host.__shot=Object.freeze({ready:true,...__MOBA_CAPTURE_BUILD__,bundleSha256:bundle.sha256,bundle,...session.metadata,...evidence,...world.captureState(),...captureArtifactIdentity(config),...captureOutput(world.canvas,gl),audio:'not-captured',hud:config.standards?'none':'world-bars-only',expectedViewport:CAPTURE_SIZE});
     const frame=session.metadata;
     notice.textContent=`${frame.complete?'已到末帧（done）':'准备就绪'} · 帧 ${frame.frame}/${frame.frames-1} · 虚拟时间 ${frame.t.toFixed(4)} s · tick ${frame.simTick}${frame.frames===1?' · frames=1，推进需在 URL 指定 frames>1':''}`;
     identity.textContent=`${evidence.rendererClass}: ${evidence.renderer} | source ${__MOBA_CAPTURE_BUILD__.sourceCommit}${__MOBA_CAPTURE_BUILD__.sourceDirty?' (dirty)':''} | bundle ${bundle.sha256}`;

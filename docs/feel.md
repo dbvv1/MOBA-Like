@@ -104,3 +104,7 @@ DOM `pointerdown/keydown` → 队列 → rAF 的 `FixedClock`（30 Hz）→ `Loc
 ## 旁置门槛的同脚本实测（2026-11-02）
 
 600 tick CPU对照保留v11/v12各20个状态哈希，开关关闭与dea84c4逐项一致。脚本Q在tick10开始／14释放；v12前摇内W在tick14开始并释放，接续0 tick（0ms），v11拒绝该W。前摇和单槽队列本轮未改；不把CPU数值当屏幕或设备延迟。初始化失败恢复及浏览器300 tick最小验收统一记录在[单份结论](side-release-acceptance.md)，实际操作和试听仍按上节完整流程判断。
+
+### quiet 材质重放的手感不变检查（2026-11-03）
+
+与main `7710c4a6` 同tree基线使用现有 `tools/measure-feel.ts` 的v12、seed1同脚本，两个英雄合计14场景summary和逐tick traces完全一致；起停、转向、普攻前摇／发射边界及Q→W排队未改。这是CPU隔离场景回归，不是手感改善、实际试听或输入到屏幕延迟。

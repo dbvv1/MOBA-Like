@@ -10,8 +10,8 @@ describe('HTML entry lighting default',()=>{
   expect(parseLightingStyle(entryLightingSearch('',undefined))).toBe('baseline');
  });
  it('preserves explicit historical styles, buffer opt-in and parser rejection',()=>{
-  for(const style of ['baseline','stylized-diffuse','forest-light-v1'])expect(parseLightingStyle(entryLightingSearch('?commands=buffer-v1&lighting='+style,'forest-light-v1'))).toBe(style);
+  for(const style of ['baseline','forest-light-v1'])expect(parseLightingStyle(entryLightingSearch('?commands=buffer-v1&lighting='+style,'forest-light-v1'))).toBe(style);
   expect(new URLSearchParams(entryLightingSearch('?commands=buffer-v1','forest-light-v1')).get('commands')).toBe('buffer-v1');
-  for(const search of ['?lighting=','?lighting=invalid','?lighting=baseline&lighting=forest-light-v1'])expect(()=>parseLightingStyle(entryLightingSearch(search,'forest-light-v1'))).toThrow();
+  for(const search of ['?lighting=stylized-diffuse','?lighting=','?lighting=invalid','?lighting=baseline&lighting=forest-light-v1'])expect(()=>parseLightingStyle(entryLightingSearch(search,'forest-light-v1'))).toThrow();
  });
 });

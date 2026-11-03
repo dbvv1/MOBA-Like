@@ -1,3 +1,4 @@
+import {bindQuietGround,type QuietTextures} from './quiet-family.js';
 import * as THREE from 'three';
 import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
 import source from '../../asset-pipeline/ground-surfaces/exported/grass-geometries.json';
@@ -5,7 +6,7 @@ import layout from '../../asset-pipeline/ground-surfaces/source/edge-layout.json
 
 // Editable layout, not a world-covering texture. Nothing enters the central
 // combat strip; each patch is a low, discontinuous bank, never an obstacle.
-export function createGroundSurfaces(lighting:LightingStyle='baseline',forestTexture?:THREE.Texture){
+export function createGroundSurfaces(lighting:LightingStyle='baseline',forestTexture?:THREE.Texture,quiet?:QuietTextures){
   const root=new THREE.Group();root.name='GroundEdgeClusters';root.userData['renderRole']='world';
   const owned:Array<{dispose():void}>=[];
   const positions:number[]=[],colours:number[]=[];
@@ -49,6 +50,7 @@ export function createGroundSurfaces(lighting:LightingStyle='baseline',forestTex
   const uv:number[]=[];for(let i=0;i<positions.length;i+=3)uv.push(positions[i]!/12,positions[i+2]!/12);patchGeometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   patchGeometry.computeVertexNormals();patchGeometry.computeBoundingSphere();
   const patchMaterial=surfaceMaterial(lighting,{vertexColors:!forestTexture,map:forestTexture??null});
+  if(quiet)bindQuietGround(patchMaterial,quiet);
   const patches=new THREE.Mesh(patchGeometry,patchMaterial);patches.name='GroundShoulderPatches';patches.receiveShadow=true;
   // Battlefield is traversed for living-target picking. Pure decoration must
   // not pay triangle/instance intersections; ground commands use its own plane.

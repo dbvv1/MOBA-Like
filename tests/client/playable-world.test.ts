@@ -25,3 +25,15 @@ it('explicit Canvas2D avoids WebGL and keeps the normal simulation alive for 300
  expect(sim.state.tick).toBe(300);expect(context.arc).toHaveBeenCalled();world.setLocked(false);expect(world.cameraState().locked).toBe(false);world.dispose();expect(host.children.length).toBe(0);spy.mockRestore();host.remove();nav.destroy();
  const webgl=vi.fn(),canvas=vi.fn().mockReturnValue({});await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?renderer=canvas2d'},{webgl,canvas} as any);expect(webgl).not.toHaveBeenCalled();
 });
+
+it('quiet family is opt-in and a failed family retries baseline without candidate assets',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('Quiet material family unavailable')).mockResolvedValueOnce({dispose:vi.fn()});
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?materials=quiet-family-v1'},{webgl,canvas:vi.fn()} as any);
+ expect(webgl.mock.calls[0]![2].materials).toBe('quiet-family-v1');expect(webgl.mock.calls[1]![2].materials).toBeUndefined();expect(result.fallbackReason).toContain('Quiet material family unavailable');
+});
+
+it('retired stylized route restores default without constructing the retired renderer',async()=>{
+ const webgl=vi.fn().mockResolvedValue({dispose:vi.fn()});
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?lighting=stylized-diffuse'},{webgl,canvas:vi.fn()} as any);
+ expect(webgl).toHaveBeenCalledTimes(1);expect(webgl.mock.calls[0]![2].lighting).toBe('forest-light-v1');expect(result.fallbackReason).toContain('retired');
+});

@@ -23,7 +23,7 @@ const mats=(root:THREE.Object3D)=>{const result=new Set<THREE.Material>();root.t
 describe('independent lighting request and explicit semantics',()=>{
   it('defaults to untouched baseline and rejects invalid/duplicate choices',()=>{
     expect(parseLightingStyle('?shot=gameplay&seed=61')).toBe('baseline');
-    expect(parseLightingStyle('?lighting=stylized-diffuse')).toBe('stylized-diffuse');
+    expect(()=>parseLightingStyle('?lighting=stylized-diffuse')).toThrow('retired');
     for(const query of ['?lighting=','?lighting=toon','?lighting=baseline&lighting=stylized-diffuse'])expect(()=>parseLightingStyle(query)).toThrow();
     expect(lightingState('stylized-diffuse')).toMatchObject({requested:'stylized-diffuse',configured:'stylized-diffuse',active:null,stage:'configured',toneMapping:'ACESFilmic',exposure:1.12});
   });

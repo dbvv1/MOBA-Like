@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "method": "CPU real-GLB explicit stone UV region mask; no rendered image or Blender claim",
+  "records": [
+    {
+      "path": "asset-pipeline/battle/exported/tower-teal.glb",
+      "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425",
+      "coverage": [
+        {
+          "assetId": "tower-teal",
+          "nodeName": "building_tower_catapult_green",
+          "totalTriangles": 1538,
+          "stoneTriangles": 1268,
+          "stoneVertices": 1939,
+          "protectedTriangles": 270,
+          "projectionConflicts": 131
+        }
+      ]
+    },
+    {
+      "path": "asset-pipeline/battle/exported/tower-rust.glb",
+      "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41",
+      "coverage": [
+        {
+          "assetId": "tower-rust",
+          "nodeName": "building_tower_catapult_red",
+          "totalTriangles": 1538,
+          "stoneTriangles": 1268,
+          "stoneVertices": 1939,
+          "protectedTriangles": 270,
+          "projectionConflicts": 131
+        }
+      ]
+    },
+    {
+      "path": "asset-pipeline/battle/exported/barracks-teal.glb",
+      "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647",
+      "coverage": [
+        {
+          "assetId": "barracks-teal",
+          "nodeName": "building_barracks_green",
+          "totalTriangles": 4007,
+          "stoneTriangles": 3060,
+          "stoneVertices": 5114,
+          "protectedTriangles": 947,
+          "projectionConflicts": 230
+        }
+      ]
+    },
+    {
+      "path": "asset-pipeline/battle/exported/barracks-rust.glb",
+      "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6",
+      "coverage": [
+        {
+          "assetId": "barracks-rust",
+          "nodeName": "building_barracks_red",
+          "totalTriangles": 4007,
+          "stoneTriangles": 3060,
+          "stoneVertices": 5114,
+          "protectedTriangles": 947,
+          "projectionConflicts": 230
+        }
+      ]
+    },
+    {
+      "path": "asset-pipeline/battle/exported/base-teal.glb",
+      "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621",
+      "coverage": [
+        {
+          "assetId": "base-teal",
+          "nodeName": "building_castle_green",
+          "totalTriangles": 5659,
+          "stoneTriangles": 4582,
+          "stoneVertices": 7216,
+          "protectedTriangles": 1077,
+          "projectionConflicts": 288
+        }
+      ]
+    },
+    {
+      "path": "asset-pipeline/battle/exported/base-rust.glb",
+      "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84",
+      "coverage": [
+        {
+          "assetId": "base-rust",
+          "nodeName": "building_castle_red",
+          "totalTriangles": 5659,
+          "stoneTriangles": 4582,
+          "stoneVertices": 7216,
+          "protectedTriangles": 1077,
+          "projectionConflicts": 288
+        }
+      ]
+    }
+  ]
+}

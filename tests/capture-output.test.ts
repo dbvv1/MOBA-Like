@@ -194,6 +194,11 @@ describe('capture ownership and lifecycle receipts (CPU only)',()=>{
     const source=await readFile(new URL('../tools/capture.mjs',import.meta.url),'utf8');
     expect(source).toContain('chromium.launchServer(launch)');expect(source).toContain('browserServer.process()');expect(source).not.toContain('browser.process()');
     expect(source).toContain('await closeOwnedBrowser()');expect(source).toContain('chromium.connect(browserServer.wsEndpoint())');expect(source).toContain("host:'127.0.0.1'");
-    expect(source).toContain("!values.software||values['require-gpu']");expect(source).toContain('parseLightingStyle');expect(source).toContain('lighting,shot,seed:values.seed');expect(source).toContain('assert.deepEqual(comparable,baseline[frame]');
+    expect(source).toContain("!values.software||values['require-gpu']");expect(source).toContain('parseLightingStyle');expect(source).toContain('lighting,materials,...(standards?{standards}:{}),shot,seed:values.seed');
+    expect(source).toContain('const artifactShot=shot=>standards?STANDARD_SHOT:shot');
+    expect(source).toContain("url.searchParams.delete('standards')");
+    expect(source).toContain("assert.equal(meta.captureRole,standards?'content-standards':'gameplay')");
+    expect(source).toContain('assert.equal(meta.shot,artifactShot(shot))');
+    expect(source).toContain('captureRole:meta.captureRole,standardsName:meta.standardsName,shot:meta.shot,standards:meta.standards');expect(source).toContain('assert.deepEqual(comparable,baseline[frame]');
   });
 });

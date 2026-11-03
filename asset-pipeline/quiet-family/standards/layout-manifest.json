@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "status": "CPU-validated source lineup; pending rendered same-frame review",
+  "coordinateSystem": "glTF Y-up, metres",
+  "generator": "node tools/build-quiet-standards.mjs",
+  "scene": {
+    "file": "source-lineup.glb",
+    "bytes": 911272,
+    "sha256": "22481845ec10df0db75f95aca37d94732c2b656410e32d3e2961abdb093d03d5",
+    "bounds": {
+      "min": [
+        -12,
+        0,
+        -2.8067054748535156
+      ],
+      "max": [
+        11.740000009536743,
+        6,
+        2.8067054748535156
+      ],
+      "size": [
+        23.740000009536743,
+        6,
+        5.613410949707031
+      ],
+      "vertices": 21837
+    }
+  },
+  "camera": {
+    "position": [
+      0,
+      24,
+      18
+    ],
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "verticalFovDegrees": 45,
+    "viewport": [
+      1280,
+      720
+    ],
+    "note": "Game-camera reference; actual framing remains unverified."
+  },
+  "entries": [
+    {
+      "id": "shoulder-section",
+      "source": "asset-pipeline/terrain-composition/source/layout.json",
+      "sourceSha256": "9d77ccdf5285e6616ad26100c5725161fe41b11b57787e199add0507932b132b",
+      "position": [
+        -10,
+        0,
+        3.5
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "sourceBindPoseBounds": {
+        "min": [
+          -2,
+          0,
+          -4.005881309509277
+        ],
+        "max": [
+          2,
+          0,
+          -2.9941186904907227
+        ],
+        "size": [
+          4,
+          0,
+          1.0117626190185547
+        ],
+        "vertices": 24
+      },
+      "materials": [
+        "reference-only-neutral-mineral"
+      ],
+      "skins": 0,
+      "animations": []
+    },
+    {
+      "id": "tower",
+      "source": "asset-pipeline/battle/exported/tower-teal.glb",
+      "sourceSha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425",
+      "position": [
+        -5,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "sourceBindPoseBounds": {
+        "min": [
+          -2.180000066757202,
+          0,
+          -2.180000066757202
+        ],
+        "max": [
+          2.180000066757202,
+          5.300000190734863,
+          2.180000066757202
+        ],
+        "size": [
+          4.360000133514404,
+          5.300000190734863,
+          4.360000133514404
+        ],
+        "vertices": 4165
+      },
+      "materials": [
+        "hexagons_medieval",
+        "battle-wood",
+        "battle-teal",
+        "battle-foundation"
+      ],
+      "skins": 0,
+      "animations": []
+    },
+    {
+      "id": "barracks",
+      "source": "asset-pipeline/battle/exported/barracks-teal.glb",
+      "sourceSha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "sourceBindPoseBounds": {
+        "min": [
+          -1.317035436630249,
+          0,
+          -1.31703519821167
+        ],
+        "max": [
+          1.3170359134674072,
+          3,
+          1.5476449728012085
+        ],
+        "size": [
+          2.6340713500976562,
+          3,
+          2.8646801710128784
+        ],
+        "vertices": 6636
+      },
+      "materials": [
+        "hexagons_medieval",
+        "battle-wood",
+        "battle-teal"
+      ],
+      "skins": 0,
+      "animations": []
+    },
+    {
+      "id": "base",
+      "source": "asset-pipeline/battle/exported/base-teal.glb",
+      "sourceSha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621",
+      "position": [
+        6,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "sourceBindPoseBounds": {
+        "min": [
+          -2.4573488235473633,
+          0,
+          -2.8067054748535156
+        ],
+        "max": [
+          2.457348585128784,
+          6,
+          2.8067054748535156
+        ],
+        "size": [
+          4.9146974086761475,
+          6,
+          5.613410949707031
+        ],
+        "vertices": 8893
+      },
+      "materials": [
+        "hexagons_medieval"
+      ],
+      "skins": 0,
+      "animations": []
+    },
+    {
+      "id": "hero",
+      "source": "asset-pipeline/heroes/veyra-release/exported/veyra-teal.glb",
+      "sourceSha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
+      "position": [
+        11,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "sourceBindPoseBounds": {
+        "min": [
+          -0.9200000166893005,
+          0.004999999888241291,
+          -0.44999998807907104
+        ],
+        "max": [
+          0.7400000095367432,
+          2.2799999713897705,
+          0.9161101579666138
+        ],
+        "size": [
+          1.6600000262260437,
+          2.274999971501529,
+          1.3661101460456848
+        ],
+        "vertices": 2119
+      },
+      "materials": [
+        "battle-dark",
+        "battle-steel",
+        "battle-teal",
+        "battle-gold",
+        "battle-wood",
+        "battle-focus"
+      ],
+      "skins": 1,
+      "animations": [
+        "attack",
+        "death",
+        "hurt",
+        "idle",
+        "walk"
+      ]
+    }
+  ],
+  "validation": {
+    "nonEmpty": true,
+    "bufferRanges": true,
+    "accessorMaterialSkinAnimationReferences": true,
+    "heroRigPreserved": true,
+    "heroAnimationsPreserved": true,
+    "gameGeometryChanged": false,
+    "rendered": false,
+    "blindReviewed": false
+  },
+  "materialContract": {
+    "note": "Original building atlases and hero materials preserved. Shoulder neutral reference-only. Actual game consumer must apply quiet-family terrain blend and selective stone shader before material acceptance; this is not a new approved content set.",
+    "runtimeMaterials": [
+      "../exported/earth.webp",
+      "../exported/forest.webp",
+      "../exported/wall.webp"
+    ],
+    "scalesMetres": {
+      "earth": 10,
+      "forest": 12,
+      "wall": 4
+    }
+  },
+  "sourceGeometryContract": {
+    "shoulder": "Original cross-section formula/layout; x[-2,2], width0.8m, translated only for lineup. No bevels or gameplay mesh changes.",
+    "buildings": "Unscaled original exports; source geometry, textures, skin and animation buffers retained."
+  }
+}

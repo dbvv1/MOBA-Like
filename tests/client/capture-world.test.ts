@@ -5,7 +5,7 @@ import {createWorld} from '../../src/render/world.js';
 import {getContent} from '../../src/content/catalog.js';
 import {makeSim} from '../helpers.js';
 import {renderRole} from '../../src/render/lighting-style.js';
-const doubles=vi.hoisted(()=>({failFit:false,renderer:null as any,presentation:null as any,battlefield:null as any}));
+const doubles=vi.hoisted(()=>({failFit:false,standards:null as any,renderer:null as any,presentation:null as any,battlefield:null as any}));
 vi.mock('three',async importOriginal=>{
   const actual=await importOriginal<typeof import('three')>();
   return {...actual,TextureLoader:class {async loadAsync(){return new actual.Texture();}},WebGLRenderer:class {
@@ -17,6 +17,8 @@ vi.mock('three',async importOriginal=>{
     setSize(width:number,height:number){if(doubles.failFit)throw new Error('fixture fit failed');this.domElement.width=width*this.ratio;this.domElement.height=height*this.ratio;}
   }};
 });
+vi.mock('../../src/render/terrain-textures.js',()=>({loadTerrainTextures:async()=>({road:new THREE.Texture(),forest:new THREE.Texture(),dispose:vi.fn()})}));
+vi.mock('../../src/capture/content-standards.js',()=>({createContentStandards:()=>{const root=new THREE.Group();root.name='quiet-five-v1';const value={root,advance:vi.fn(),inspect:()=>({name:'quiet-five-v1',slotCount:5}),dispose:vi.fn(()=>root.removeFromParent())};doubles.standards=value;return value;}}));
 vi.mock('../../src/render/battle-assets.js',()=>({loadBattleAssets:async()=>({models:{},dispose:vi.fn()})}));
 vi.mock('../../src/render/combat-textures.js',()=>({loadCombatTextures:async()=>({dispose:vi.fn()})}));
 vi.mock('../../asset-pipeline/presentation/adapter.js',()=>({createPresentation:()=>{
@@ -117,4 +119,17 @@ it('capture starts offscreen at 1280x720 DPR 1 and ignores host/window resizing'
     host.clientWidth=900;host.clientHeight=500;listeners.resize!();
     expect(world.captureState().viewport).toEqual({width:1280,height:720,pixelRatio:1,bufferWidth:1280,bufferHeight:720});
   }finally{world.dispose();}
+});
+it('isolates standards from game consumers, waits for submission, restores visibility, and owns teardown once',async()=>{
+ vi.stubGlobal('window',{devicePixelRatio:1,addEventListener:vi.fn(),removeEventListener:vi.fn()});
+ const world=await createWorld({clientWidth:1280,clientHeight:720,replaceChildren:vi.fn()} as unknown as HTMLElement,getContent(11));
+ expect(world.captureState().standards).toBeNull();world.setContentStandards(true);world.setContentStandards(true);
+ expect(world.captureState().standards).toMatchObject({name:'quiet-five-v1',active:false});
+ const sim=await makeSim(11);world.sync(sim.snapshot(),sim.getHero(0)!.id);world.draw(1/60,1,false);
+ expect(doubles.presentation.sync).not.toHaveBeenCalled();expect(doubles.presentation.advance).not.toHaveBeenCalled();expect(doubles.standards.advance).toHaveBeenCalledTimes(1);
+ world.renderOnly();expect(world.captureState().standards).toMatchObject({active:true});const scene=doubles.renderer.render.mock.calls.at(-1)[0] as THREE.Scene;
+ expect(scene.getObjectByName('quiet-five-v1')!.visible).toBe(true);expect(doubles.presentation.root.parent!.visible).toBe(false);
+ doubles.renderer.contextLost=true;expect(world.captureState().standards).toMatchObject({active:false});doubles.renderer.contextLost=false;
+ sim.step([]);const latest=sim.snapshot();world.sync(latest,sim.getHero(0)!.id);world.setContentStandards(false);expect(doubles.presentation.sync).toHaveBeenCalledWith({...latest,events:[]});expect(doubles.standards.dispose).toHaveBeenCalledTimes(1);expect(world.captureState().standards).toBeNull();expect(doubles.presentation.root.parent!.visible).toBe(true);
+ world.sync(sim.snapshot(),sim.getHero(0)!.id);expect(doubles.presentation.sync).toHaveBeenCalledTimes(2);world.setContentStandards(true);const last=doubles.standards;world.dispose();world.dispose();expect(last.dispose).toHaveBeenCalledTimes(1);
 });

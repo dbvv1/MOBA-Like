@@ -1,0 +1,213 @@
+{
+  "schema": "moba-quiet-surface-assets-v1",
+  "created_utc": "2026-10-30T23:09:00Z",
+  "status": "local staging candidate; not published or adopted",
+  "provenance": {
+    "tool": "built-in image_gen",
+    "generation_calls": 5,
+    "prompt_file": "source/prompts.json",
+    "source_checkout": "dea84c4fde58ec7ebb05dc0adae70f4ee2dce45c",
+    "source_paths": [
+      "asset-pipeline/terrain-composition/source/earth-albedo-source.png",
+      "asset-pipeline/terrain-composition/source/forest-albedo-source.png"
+    ],
+    "original_source_provenance": "Existing project AI-generated textures; exact originals retained. No claim of CC0 or commercial reference license.",
+    "lineage": {
+      "earth": [
+        "source/earth-albedo-source.png",
+        "source/generated/earth-quiet-v1.png",
+        "source/generated/earth-quiet-v2.png"
+      ],
+      "forest": [
+        "source/forest-albedo-source.png",
+        "source/generated/forest-quiet-v1.png",
+        "source/generated/forest-quiet-v2.png"
+      ],
+      "wall": [
+        "source/generated/wall-mineral-v1.png"
+      ]
+    },
+    "correction_budget": "earth and forest: one targeted correction used; wall: first candidate selected"
+  },
+  "consumers": {
+    "earth": {
+      "file": "exported/earth.webp",
+      "repeat_metres": 10
+    },
+    "forest": {
+      "file": "exported/forest.webp",
+      "repeat_metres": 12
+    },
+    "wall": {
+      "file": "exported/wall.webp",
+      "repeat_metres": 4,
+      "scope": "explicit stone surfaces only; preserve faction colors, wood, windows and roofs in existing atlas"
+    }
+  },
+  "conversion": {
+    "command": "bash asset-pipeline/quiet-family/convert-runtime.sh",
+    "resize": false,
+    "lossless": false,
+    "script": "convert-runtime.sh",
+    "source_png_preserved": true
+  },
+  "budget": {
+    "runtime_download_bytes": 428628,
+    "rgba8_base_bytes_per_texture": 6290064,
+    "rgba8_base_bytes_three_textures": 18870192,
+    "rgba8_full_mips_bytes_per_texture": 8384072,
+    "rgba8_full_mips_bytes_three_textures": 25152216,
+    "mip_dimensions": [
+      1254,
+      627,
+      313,
+      156,
+      78,
+      39,
+      19,
+      9,
+      4,
+      2,
+      1
+    ],
+    "note": "Arithmetic RGBA8 estimate, not measured engine or GPU allocation; actual internal format/mips/compression unverified."
+  },
+  "visual_inspection": {
+    "method": "Viewed source, generated output and three real 2x2 montages; not a browser or game capture.",
+    "earth": "Fewer isolated small pebbles and softer embedded mineral patches; residual fine painted facets remain. Requested 80 percent removal is a prompt goal, not a measured score.",
+    "forest": "Cooler and more muted, fewer bright dried-leaf accents; small painted facets remain and low-noise target is only partly satisfied.",
+    "wall": "Low-contrast warm-grey mineral with broad cloudy tonal variations; no obvious brick seams or crack grid.",
+    "tiling": "All 2x2 previews inspected. Recognizable repeated patch motifs and some boundary tonal discontinuity remain. Seamless not certified.",
+    "acceptance": "Basic material-family direction only; no in-game readability, full-scene scale, shader response, GPU, smoke or independent blind acceptance performed."
+  },
+  "files": [
+    {
+      "path": "convert-runtime.sh",
+      "bytes": 370,
+      "sha256": "d95a931080b8923f7700145a88e9386be052946a7f56492582bb0eb751594511"
+    },
+    {
+      "path": "source/generated/earth-quiet-v1.png",
+      "bytes": 2277861,
+      "sha256": "fdefa7b18843e1e74a3cf11d416ed860b78219e1788ec51fcfb71754ded521b0",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/generated/earth-quiet-v2.png",
+      "bytes": 2019397,
+      "sha256": "7a067d5c01e0777ab33f3893e9a18a0c6f2031343290501ccfcc425a0c870c62",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/generated/forest-quiet-v1.png",
+      "bytes": 2591481,
+      "sha256": "07050d3f793acc36ea86414e56836f6bd651233721bd1361c9852215fea4c611",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/generated/forest-quiet-v2.png",
+      "bytes": 2222016,
+      "sha256": "d0fea36d9edd6c389d4b8ab978f607f0bbdf1d13e9d789a2562adf4e74c7ee25",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/generated/wall-mineral-v1.png",
+      "bytes": 1945300,
+      "sha256": "d301a66e0dbe102191e2938d0e889acf46c2e5823e4bcfbe76088c955864377f",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/prompts.json",
+      "bytes": 4815,
+      "sha256": "5340433cd4850d58e26cad270284468bdf8fca2fe2ed3f4eea79839971619236"
+    },
+    {
+      "path": "qa/earth-quiet-v2-tile-2x2.png",
+      "bytes": 2663158,
+      "sha256": "9c56242b0898dc264b2692b1e1b59e70a72dd7daea634b92430f64232829fee0",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "qa/forest-quiet-v2-tile-2x2.png",
+      "bytes": 2712500,
+      "sha256": "0ed321d706dc2bd19965b622ceff12d714b851773c728cffbdea0e45a7bc233b",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "qa/wall-mineral-v1-tile-2x2.png",
+      "bytes": 2589143,
+      "sha256": "9bc67b67259dd7d57bc646dce31c2c0b7c71726a0c5d4c58807465864ee7e8b2",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "exported/earth.webp",
+      "bytes": 141108,
+      "sha256": "a6321613105a0d5b56739021550ea10d60e9e50369902324ee3c0648b717f053",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "WEBP"
+    },
+    {
+      "path": "exported/forest.webp",
+      "bytes": 196960,
+      "sha256": "0dcba5c78bd9336dd7f16af934481a253140959fea409b640ccc08620e0bb604",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "WEBP"
+    },
+    {
+      "path": "exported/wall.webp",
+      "bytes": 90560,
+      "sha256": "1d0bb1679ce4b11a21a7926cee21b56ad766006d19d61ccbc99a7bb08c9cf603",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "WEBP"
+    },
+    {
+      "path": "source/earth-albedo-source.png",
+      "bytes": 2821377,
+      "sha256": "48332be8c86a68a70af5ddfb66ffd8efa8718a10356fdaa1e9661058a4180443",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    },
+    {
+      "path": "source/forest-albedo-source.png",
+      "bytes": 2973083,
+      "sha256": "d880a2ecbf80e98e9e1eb365c3a5a2d8a9d4f385590b26f9cb69751febb7879d",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "format": "PNG"
+    }
+  ],
+  "path_root": "asset-pipeline/quiet-family"
+}

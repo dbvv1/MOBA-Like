@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "method": "Explicit UV swatch whitelist inspected against the original green/red KayKit atlas; no RGB classifier and no Blender execution claimed.",
+  "material": "hexagons_medieval",
+  "periodMeters": 4,
+  "stoneRect": {
+    "minU": 0.25,
+    "maxU": 0.375,
+    "minV": 0,
+    "maxV": 0.25
+  },
+  "bodies": {
+    "tower-teal": "building_tower_catapult_green",
+    "tower-rust": "building_tower_catapult_red",
+    "barracks-teal": "building_barracks_green",
+    "barracks-rust": "building_barracks_red",
+    "base-teal": "building_castle_green",
+    "base-rust": "building_castle_red"
+  },
+  "protected": [
+    "catapult_arm_*",
+    "catapult_turret_*",
+    "standard-pole",
+    "team-standard",
+    "worn-foundation",
+    "all non-stone atlas cells: wood, roofs, team, windows and gold"
+  ],
+  "selection": "All three triangle UVs must lie strictly inside the stone rectangle. Shared vertices with protected triangles are excluded to a fixed point. No topology changes.",
+  "projection": "quietStonePosition/Normal are asset-root physical meters and transformed normals for 4m triplanar shader projection. quietStoneUv is diagnostic dominant-plane UV divided by 4; shared-axis conflicts are recorded, not used for rendering."
+}
