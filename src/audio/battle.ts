@@ -3,7 +3,7 @@ export type BattleCue={kind:'swing'|'cast'|'hit'|'shield';strength:number;pan:nu
 type SampleKind=BattleCue['kind']|'skill-q'|'skill-w';
 /** Cosmetic routing only: no hit inferred from an attack or a disappearing projectile. */
 export function battleCue(event:PresentationEvent,snapshot:Snapshot,playerId:number):BattleCue|null{
-  if(event.type==='minionDied')return null; // no invented death sound
+  if(event.type==='minionDied'||event.type==='goldAwarded')return null; // no invented death or gold sound
   const player=snapshot.heroes.find(hero=>hero.id===playerId);if(!player)return null;
   if(event.type==='heroDamaged'&&event.abilityId===null&&snapshot.events.some(hit=>hit.type==='basicAttackHit'&&hit.sourceId===event.sourceId&&hit.targetId===event.targetId))return null;
   const id=event.type==='heroDamaged'||event.type==='basicAttackHit'?event.targetId:'heroId'in event?event.heroId:event.sourceId;

@@ -20,6 +20,13 @@ export function saveSourceFingerprint(root:string):string{
  * The command-envelope entry is populated only after old-source replay comparison.
  */
 const COMPATIBLE_SOURCE_REVISIONS:Readonly<Record<string,string>>=Object.freeze({
+  // goldAwarded is a derived per-step presentation event: loading the 0811894
+  // source as a separate baseline runtime and running
+  // tools/check-gold-event-compatibility.ts --ticks 3600 --seed 1 matched every
+  // per-tick state hash and serialized state on all supported versions, so old
+  // saves keep their rules identity.
+  'd17a4ff6d9bd482c7f6ea0cb947796737e3c5684d5c9c3301f42983681b62a51':
+    '344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f',
   // v12 is opt-in; v1–v11 source paths and historical save continuation stay exact.
   '0d72f0b19b4f50a21a93e8fa8f173f39f8578fdc2e7a8f943812308817d6276e':
     '344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f',
