@@ -307,6 +307,12 @@ export class Simulation {
     this.stepEvents.push({ ...event, tick: this.state.tick, ordinal: this.stepEvents.length } as PresentationEvent);
   }
 
+  /** One derived feedback event per actual gold increment; zero-value bookkeeping stays silent. */
+  private goldAwarded(recipient: HeroEntity, target: Entity, amount: number, reason: Extract<PresentationEvent, { type: 'goldAwarded' }>['reason']): void {
+    if (amount <= 0) return;
+    this.emit({ type: 'goldAwarded', recipientId: recipient.id, targetId: target.id, amount, position: copyVec(target.position), reason });
+  }
+
   private castEvent(hero: HeroEntity, cast: CastState, type: 'castStarted' | 'castResolved'): void {
     this.emit({ type, castId: cast.id, heroId: hero.id, abilityId: cast.abilityId, slot: cast.slot });
   }
@@ -373,7 +379,7 @@ export class Simulation {
     }
 
     return {
-      events: this.stepEvents.map(event => event.type === 'minionDied' || event.type === 'basicAttackHit' ? { ...event, position: copyVec(event.position) } : { ...event }),
+      events: this.stepEvents.map(event => event.type === 'minionDied' || event.type === 'basicAttackHit' || event.type === 'goldAwarded' ? { ...event, position: copyVec(event.position) } : { ...event }),
       tick: this.state.tick,
       timeSeconds: this.state.timeSeconds,
       status: this.state.status,
@@ -1399,11 +1405,14 @@ export class Simulation {
       this.state.stats.heroKills[otherTeam(target.team)] += 1;
       if (sourceHero) {
         sourceHero.kills += 1;
-        sourceHero.gold += 280 + target.level * 20;
+        const amount = 280 + target.level * 20;
+        sourceHero.gold += amount;
+        this.goldAwarded(sourceHero, target, amount, 'heroKill');
         this.grantXp(sourceHero, 160 + target.level * 12, keepDeadHpZero);
       } else {
         for (const hero of this.heroesOfTeam(otherTeam(target.team))) {
           hero.gold += 150;
+          this.goldAwarded(hero, target, 150, 'heroTeamReward');
           this.grantXp(hero, 100, keepDeadHpZero);
         }
       }
@@ -1414,6 +1423,7 @@ export class Simulation {
       const def = this.catalog.minions[target.minionKind];
       if (sourceHero) {
         sourceHero.gold += def.bountyGold;
+        this.goldAwarded(sourceHero, target, def.bountyGold, 'minionLastHit');
         this.grantXp(sourceHero, def.bountyXp, keepDeadHpZero);
         this.grantNearbyXp(target, sourceHero, def.bountyXp * 0.5);
       } else {
@@ -1426,11 +1436,13 @@ export class Simulation {
       const def = this.structureDefinition(target.definitionId);
       if (sourceHero) {
         sourceHero.gold += def.bountyGold;
+        this.goldAwarded(sourceHero, target, def.bountyGold, 'structureLastHit');
         this.grantXp(sourceHero, def.bountyXp, keepDeadHpZero);
       }
       for (const hero of this.heroesOfTeam(otherTeam(target.team))) {
         if (hero !== sourceHero) {
           hero.gold += 60;
+          this.goldAwarded(hero, target, 60, 'structureTeamReward');
           this.grantXp(hero, 60, keepDeadHpZero);
         }
       }

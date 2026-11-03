@@ -349,6 +349,8 @@ export type PresentationEvent = Readonly<{ tick: number; ordinal: number } & (
   | { type: 'basicAttack'; sourceId: number; targetId: number; attackId?: number; delivery?: 'melee' | 'projectile' }
   | { type: 'basicAttackHit'; sourceId: number; targetId: number; attackId: number; position: Readonly<Vec2>; targetTeam: TeamId; hpDamage: number; shieldAbsorbed: number }
   | { type: 'heroDamaged'; targetId: number; sourceId: number; hpDamage: number; shieldAbsorbed: number; abilityId: string | null }
+  | { type: 'goldAwarded'; recipientId: number; targetId: number; amount: number; position: Readonly<Vec2>;
+      reason: 'heroKill' | 'heroTeamReward' | 'minionLastHit' | 'structureLastHit' | 'structureTeamReward' }
 )>;
 
 export interface Snapshot {

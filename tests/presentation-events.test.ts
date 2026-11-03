@@ -38,7 +38,8 @@ describe('authoritative per-tick presentation events',()=>{
     const first=hero(sim,0,0),second=hero(sim,0,1),victim=hero(sim,1,0);
     place(first,{x:0,z:0});place(second,{x:0,z:1});place(victim,{x:1,z:0});victim.hp=1;
     sim.step([{type:'attack',heroId:first.id,targetId:victim.id},{type:'attack',heroId:second.id,targetId:victim.id}]);
-    expect(sim.snapshot().events.map(e=>e.type)).toEqual(['basicAttack','heroDamaged','basicAttack']);
+    expect(sim.snapshot().events.map(e=>e.type)).toEqual(['basicAttack','heroDamaged','basicAttack','goldAwarded']);
+    expect(sim.snapshot().events[3]).toMatchObject({recipientId:first.id,targetId:victim.id,amount:300,position:{x:1,z:0},reason:'heroKill'});
     expect(first.attackCooldown).toBeGreaterThan(0);expect(second.attackCooldown).toBeGreaterThan(0);
   });
   it('reports genuine targeted invalidation as cancellation, never resolve or damage',async()=>{
@@ -76,9 +77,10 @@ describe('authoritative per-tick presentation events',()=>{
     it(`v${version} caps lethal HP damage and cancels the victim's actual cast`,async()=>{
       const {sim,blue,red}=await arena(version);place(red,{x:1,z:0});red.hp=1;
       sim.step([{type:'cast',heroId:red.id,slot:'R',targetId:null,direction:null,point:{x:0,z:0}},{type:'attack',heroId:blue.id,targetId:red.id}]);
-      expect(sim.snapshot().events.map(e=>e.type)).toEqual(['castStarted','basicAttack','heroDamaged','castCancelled']);
+      expect(sim.snapshot().events.map(e=>e.type)).toEqual(['castStarted','basicAttack','heroDamaged','castCancelled','goldAwarded']);
       expect(sim.snapshot().events[2]).toMatchObject({hpDamage:1,shieldAbsorbed:0});
       expect(sim.snapshot().events[3]).toMatchObject({reason:'dead',heroId:red.id});expect(red.alive).toBe(false);
+      expect(sim.snapshot().events[4]).toMatchObject({recipientId:blue.id,targetId:red.id,amount:300,reason:'heroKill'});
     });
     it(`v${version} repeated identical inputs regenerate identical event batches and hashes`,async()=>{
       const a=await arena(version),b=await arena(version);for(let tick=0;tick<25;tick++){
@@ -90,7 +92,11 @@ describe('authoritative per-tick presentation events',()=>{
   it('v9 preserves both committed lethal swings and damage before deaths',async()=>{
     const {sim,blue,red}=await arena(9);place(red,{x:1,z:0});blue.hp=red.hp=1;
     sim.step([{type:'attack',heroId:blue.id,targetId:red.id},{type:'attack',heroId:red.id,targetId:blue.id}]);
-    expect(sim.snapshot().events.map(e=>e.type)).toEqual(['basicAttack','heroDamaged','basicAttack','heroDamaged']);
+    expect(sim.snapshot().events.map(e=>e.type)).toEqual(['basicAttack','heroDamaged','basicAttack','heroDamaged','goldAwarded','goldAwarded']);
     expect(blue.alive||red.alive).toBe(false);
+    expect(sim.snapshot().events.slice(4)).toEqual([
+      expect.objectContaining({recipientId:red.id,targetId:blue.id,amount:300,reason:'heroKill'}),
+      expect.objectContaining({recipientId:blue.id,targetId:red.id,amount:300,reason:'heroKill'}),
+    ]);
   });
 });

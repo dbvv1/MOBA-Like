@@ -3,7 +3,7 @@ export type BattleCue={kind:'swing'|'cast'|'hit'|'shield';strength:number;pan:nu
 type SampleKind=BattleCue['kind']|'skill-q'|'skill-w';
 /** Cosmetic routing only: no hit inferred from an attack or a disappearing projectile. */
 export function battleCue(event:PresentationEvent,snapshot:Snapshot,playerId:number):BattleCue|null{
-  if(event.type==='minionDied')return null; // no invented death sound
+  if(event.type==='minionDied'||event.type==='goldAwarded')return null; // no invented death or gold sound
   const player=snapshot.heroes.find(hero=>hero.id===playerId);if(!player)return null;
   if(event.type==='heroDamaged'&&event.abilityId===null&&snapshot.events.some(hit=>hit.type==='basicAttackHit'&&hit.sourceId===event.sourceId&&hit.targetId===event.targetId))return null;
   const id=event.type==='heroDamaged'||event.type==='basicAttackHit'?event.targetId:'heroId'in event?event.heroId:event.sourceId;
@@ -75,11 +75,24 @@ export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='base
       if(!master){master=ctx.createGain();master.gain.value=.32;master.connect(ctx.destination);}
       if(ctx.state==='suspended')await ctx.resume();
       if(disposed)return;
-      loading??=Promise.all(Object.entries(policy==='critical-v1'?{...soundUrls,...skillSoundUrls}:soundUrls).map(async([key,url])=>{
-        const bytes=await readSample(key as SampleKind,url);if(disposed)return;
-        const buffer=await ctx.decodeAudioData(bytes.slice(0));
-        if(!disposed)buffers.set(key as SampleKind,buffer);
-      })).then(()=>{}).catch(()=>{});
+      loading??=(async()=>{
+        // Start every palette entry together so one slow download cannot delay
+        // the others, then await them in palette order. Base cues come first:
+        // if an optional skill sample fails, the already-decoded base palette
+        // (including the cast fallback) stays usable and unlock does not block
+        // the gesture waiting for the rest of a failed batch.
+        const loads=Object.entries(policy==='critical-v1'?{...soundUrls,...skillSoundUrls}:soundUrls).map(async([key,url])=>{
+          const bytes=await readSample(key as SampleKind,url);if(disposed)return;
+          const buffer=await ctx.decodeAudioData(bytes.slice(0));
+          if(!disposed)buffers.set(key as SampleKind,buffer);
+        });
+        // Later entries keep loading in the background after a failure; their
+        // rejections are already observed by this batch.
+        for(const load of loads)load.catch(()=>{});
+        for(const load of loads){
+          try{await load;}catch{break;}
+        }
+      })();
       await loading;
     }catch{/* A failed or unsupported audio device does not interrupt play. */}
   }
