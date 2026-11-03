@@ -17,6 +17,12 @@ asset-pipeline/icons/.venv/bin/python asset-pipeline/icons/test_export.py
 
 导出时在本地生成、Git 忽略的 `exported/preview.png` 以实际 32／48 像素并排展示两套图标。导出需要 Python 3.11+、系统 Cairo 及 requirements 中的依赖；使用已交付 SVG／PNG 不需这些工具。无时间戳、网络取材或随机生成；同一渲染依赖环境内可逐字节重建。测试核尺寸、透明边缘、viewBox、重建一致、非法参数及缺失输入失败。
 
+## 整批重导出
+
+导出器先在同级临时目录生成六种图标的亮／暗 SVG、32／48px PNG 和预览，全部成功后再替换输出目录。改配方后缺源、SVG 解析、渲染或预览写入失败时，旧批保持原字节；首次失败不留下最终输出目录。目录内另放的普通文件会保留，作者源、配方及带符号链接的输出不能作为替换目标。`--output` 的父目录须已存在。
+
+这是离线单写者导出：替换期间不要同时构建或读取同一输出目录，两次目录重命名之间有短暂空窗。普通发布失败会尝试恢复旧目录；若回滚失败，保留同级 `.名称.export-backup`、`.名称.export-lock` 与临时批供恢复，并拒绝再次导出。若提示 `new batch committed`，新批已就位，只是旧备份清理失败。先确认原进程结束，再检查这些目录；不要盲删锁或把失败当成可直接重试。断电、SIGKILL 与跨平台文件占用的完整恢复未验证。
+
 ## 来源与接入边界
 
 原五图为 MOBA-Like 以代码编写的原创几何，原 source/export 字节保持不变。新增盾轮廓采用 [Tabler Icons shield](https://tabler.io/icons?icon=shield)，作者 Paweł Kuna，MIT；原件、完整许可与固定提交/字节身份在 `source/tabler/`。完整 MIT 通知随新的运行 SVG 保留，不将其称为 CC0。原 24 格路径按 2.4 倍、平移 (3.2,3.2) 进入原 64 格，沿现有 recipe 使用填充与描边；没有治疗十字、装饰叶片或另造英雄套图。二改仍改顶层 SVG 与同一 recipe，不在导出副本修改。
