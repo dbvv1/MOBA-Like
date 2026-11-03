@@ -1,0 +1,93 @@
+{
+  "options": {
+    "games": 200,
+    "seed": 1,
+    "contentVersion": 11,
+    "blueDifficulty": "normal",
+    "redDifficulty": "normal",
+    "blueHero": "veyra",
+    "redHero": "veyra",
+    "maxSeconds": null,
+    "replayCount": 3,
+    "dumpReplay": null,
+    "json": true,
+    "verifyTargets": null
+  },
+  "attempted": 200,
+  "completed": 200,
+  "errors": 0,
+  "timeouts": 0,
+  "blueWins": 98,
+  "redWins": 102,
+  "blueWinRate": 0.49,
+  "blueWinCi95": [
+    0.4215615528275274,
+    0.5588153672908391
+  ],
+  "highDifficultyWinRate": null,
+  "durations": {
+    "min": 348.3666666666667,
+    "median": 634.8666666666667,
+    "mean": 637.7431666666668,
+    "p95": 866.5666666666667,
+    "max": 961.1333333333333
+  },
+  "stuckEvents": 0,
+  "gamesWithStuck": 0,
+  "commandRejections": 0,
+  "rejectionReasons": {},
+  "replayChecked": 3,
+  "replayMismatches": 0,
+  "firstMatchHash": "a1afe49381f7dfa4",
+  "firstReplayExpectedHash": "a1afe49381f7dfa4",
+  "firstReplayActualHash": "a1afe49381f7dfa4",
+  "abilityRows": [
+    {
+      "id": "veyra.e",
+      "name": "Cinder Bloom",
+      "casts": 5687,
+      "hitCasts": 5597,
+      "hitRate": 0.9841744329171795,
+      "heroHits": 5601,
+      "damage": 3233232.2448960077,
+      "heroDamage": 89264.91620037076,
+      "damageShare": 0.6906588272409524
+    },
+    {
+      "id": "veyra.q",
+      "name": "Rift Lancet",
+      "casts": 9178,
+      "hitCasts": 8865,
+      "hitRate": 0.9658967095227718,
+      "heroHits": 1477,
+      "damage": 1010849.6283113649,
+      "heroDamage": 118722.68457545519,
+      "damageShare": 0.21593011758081576
+    },
+    {
+      "id": "veyra.r",
+      "name": "Skyfall Seal",
+      "casts": 1543,
+      "hitCasts": 1107,
+      "hitRate": 0.7174335709656513,
+      "heroHits": 812,
+      "damage": 437292.0807202724,
+      "heroDamage": 122209.25927099706,
+      "damageShare": 0.09341105517823178
+    },
+    {
+      "id": "veyra.w",
+      "name": "Slipstream",
+      "casts": 1600,
+      "hitCasts": 1600,
+      "hitRate": 1,
+      "heroHits": 0,
+      "damage": 0,
+      "heroDamage": 0,
+      "damageShare": 0
+    }
+  ],
+  "failureSamples": [],
+  "stuckSamples": [],
+  "commandRejectionSamples": []
+}
