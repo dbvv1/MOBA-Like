@@ -4,3 +4,10 @@
 .local-save-choice::backdrop{background:#081416d9}.local-save-choice h2{margin-top:0;font:700 24px Georgia,serif}.local-save-choice p{font-size:14px;line-height:1.6}
 .local-save-actions{display:flex;flex-direction:column;gap:10px}.local-save-actions button{min-height:44px;text-align:left;white-space:normal}
 @media(max-width:750px){.local-save{left:10px;top:120px;max-width:200px;font-size:10px;padding:6px}}
+
+/* Recovery and save messages share flow; long status text cannot cover its sibling. */
+.runtime-status{position:absolute;z-index:12;left:18px;top:105px;width:min(260px,calc(100vw - 36px));display:flex;flex-direction:column;gap:8px;max-height:min(240px,35dvh);overflow:auto;pointer-events:auto}
+.runtime-status .local-save{flex-shrink:0;position:static;max-width:100%;width:100%;overflow-wrap:anywhere;pointer-events:auto}
+.runtime-status #notice{position:fixed}
+.runtime-status #notice[data-recovery=true]{flex-shrink:0;position:static;transform:none;width:100%;max-width:100%;margin:0;overflow-wrap:anywhere}
+@media(max-width:750px){.runtime-status{left:10px;top:120px;width:min(200px,calc(100vw - 20px))}}

@@ -14,8 +14,11 @@ export function createSavePanel(){
   const status=document.createElement('p');status.setAttribute('role','status');status.textContent='Preparing local save…';
   // Native Space/Enter on the save button must not trigger gameplay shortcuts.
   root.addEventListener('keydown',event=>event.stopPropagation());
-  root.append(button,status);document.body.append(root);
-  return {button,say(text:string){status.textContent=text;},dispose(){root.remove();}};
+  const dock=document.querySelector('.runtime-status');
+  const isolateKeys=(event:Event)=>event.stopPropagation();
+  dock?.addEventListener('keydown',isolateKeys);
+  root.append(button,status);(dock??document.body).append(root);
+  return {button,say(text:string){status.textContent=text;},dispose(){dock?.removeEventListener('keydown',isolateKeys);root.remove();}};
 }
 
 export async function chooseSavedMatch(read:Exclude<ReadSave,{status:'empty'}>,signal?:AbortSignal):Promise<'resume'|'new'|'preserve'>{
