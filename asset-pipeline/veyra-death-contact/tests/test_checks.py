@@ -404,8 +404,8 @@ class AdoptionDocTests(unittest.TestCase):
 
     Adoption itself is out of scope for this card, so these tests cannot run the
     adoption.  They do catch the two ways the instructions went stale: wrong
-    manifest hashes for the candidates and a heroes-recipe script that the
-    instructions edit without refreshing its pinned ``sharedAssets`` hash.
+    manifest hashes for the candidates and a missing or out-of-date heroes-recipe
+    ``sharedAssets`` pin in step 3.
     """
 
     @classmethod
@@ -430,14 +430,31 @@ class AdoptionDocTests(unittest.TestCase):
             self.assertEqual(sha, asset["sha256"], team)
             self.assertEqual(int(size), asset["bytes"], team)
 
-    def test_heroes_recipe_scripts_are_pinned_whenever_adoption_mentions_editing_them(self):
-        # The recipe scripts are themselves sharedAssets, so any adoption step
-        # that edits them must also tell the reader to refresh their pin.
-        step3 = self.adoption.split("### 3.", 1)[1].split("### 4.", 1)[0]
+    def test_heroes_recipe_scripts_are_pinned_whenever_adoption_mentions_them(self):
+        # The recipe scripts are themselves sharedAssets.  Whenever the
+        # adoption instruction text points at one of them before step 3 (step 2
+        # does, both to warn against rerunning them and for the optional port),
+        # step 3 must carry that script's current pin, or a reader who edits it
+        # copies a stale value.  Compare with default-source-manifest.json so a
+        # pin that is missing, malformed or out of date fails here.
+        before, after = self.adoption.split("### 3.", 1)
+        step3 = after.split("### 4.", 1)[0]
+        shared = {
+            entry["path"]: entry["sha256"]
+            for entry in json.loads(
+                (REPO / "default-source-manifest.json").read_text(encoding="utf-8")
+            )["sharedAssets"]
+        }
         for script in ("build.py", "retarget.py"):
             path = f"asset-pipeline/heroes/veyra-release/tools/{script}"
-            if path in self.adoption.split("### 3.", 1)[0]:
-                self.assertIn(path, step3)
+            if path not in before:
+                continue
+            match = re.search(
+                re.escape(path) + r".{0,200}?`([0-9a-f]{64})`", step3, re.DOTALL
+            )
+            self.assertIsNotNone(match, f"step 3 does not list a pin after {path}")
+            self.assertIn(path, shared, f"{path} is not a pinned sharedAsset")
+            self.assertEqual(match.group(1), shared[path], path)
 
 
 if __name__ == "__main__":
