@@ -270,6 +270,12 @@ class CommittedCueTests(unittest.TestCase):
             lambda r: r["format"].update(fadeSeconds=0.001),
         )
         mutation("peak above ceiling", lambda r: r["format"].update(peakTargetDbfs=-8.0))
+        mutation(
+            "relaxed peak budget",
+            lambda r: r["format"].update(
+                peakCeilingDbfs=-1.0, peakTargetDbfs=-1.1
+            ),
+        )
         mutation("duration over budget", lambda r: r["cues"][0].update(durationSeconds=0.26))
         mutation("unknown event id", lambda r: r["cues"][0].update(id="menu-click"))
         mutation("missing event", lambda r: r["cues"][0].pop("event"))
@@ -322,6 +328,89 @@ class CommittedCueTests(unittest.TestCase):
             with self.subTest(revision_ratio=ratio):
                 with self.assertRaises(ValueError):
                     generate.validate_recipe(recipe)
+
+    def test_rejects_glide_harmonics_past_nyquist_at_every_ratio(self):
+        # Regression: validation used to check only the glide start, so a
+        # 15000 Hz glide end with a 2x partial passed at both revision ratios
+        # even though the partial sweeps to 30000/27000 Hz, past 24000 Hz.
+        format_spec = generate.validate_format(self.recipe["format"])
+        nyquist = format_spec["sampleRate"] / 2
+        ratios = [revision["fundamentalRatio"] for revision in self.recipe["revisions"]]
+        self.assertEqual(ratios, [1.0, 0.9])
+
+        past = copy.deepcopy(self.cues["respawn-ready"])
+        past["segments"][0]["glideToHz"] = 15000.0
+        for ratio in ratios:
+            with self.subTest(case="2x glide partial past Nyquist", ratio=ratio):
+                with self.assertRaises(ValueError):
+                    generate.validate_cue(past, format_spec, ratio)
+
+        # Legal neighbour: the 2x partial stays just below Nyquist.
+        adjacent = copy.deepcopy(self.cues["respawn-ready"])
+        adjacent["segments"][0]["glideToHz"] = nyquist / 2 - 0.5
+        for ratio in ratios:
+            with self.subTest(case="adjacent legal", ratio=ratio):
+                generate.validate_cue(adjacent, format_spec, ratio)
+
+        # Exact boundary: 12000 Hz * 2x is exactly Nyquist and is rejected.
+        boundary = copy.deepcopy(self.cues["respawn-ready"])
+        boundary["segments"][0]["glideToHz"] = nyquist / 2
+        with self.assertRaises(ValueError):
+            generate.validate_cue(boundary, format_spec, 1.0)
+
+        # A revision ratio can itself push the glide harmonic past Nyquist:
+        # 11000 * 2x is legal at ratio 1.0 but 11000 * 1.1 * 2x is not.
+        ratio_cue = copy.deepcopy(self.cues["respawn-ready"])
+        ratio_cue["segments"][0]["glideToHz"] = 11000.0
+        generate.validate_cue(ratio_cue, format_spec, 1.0)
+        with self.assertRaises(ValueError):
+            generate.validate_cue(ratio_cue, format_spec, 1.1)
+
+        # Fixed tones keep the same highest-frequency partial check. The
+        # second segment stays above the first, preserving ascending identity.
+        fixed = copy.deepcopy(self.cues["purchase-ok"])
+        fixed["segments"][1]["frequencyHz"] = nyquist / 2
+        with self.assertRaises(ValueError):
+            generate.validate_cue(fixed, format_spec, 1.0)
+
+    def test_peak_budget_rejects_relaxation_and_allows_conservative(self):
+        def format_with(ceiling, target):
+            return {
+                "sampleRate": 48000,
+                "channels": 1,
+                "encoding": "PCM16",
+                "fadeSeconds": 0.005,
+                "peakCeilingDbfs": ceiling,
+                "peakTargetDbfs": target,
+            }
+
+        # Default batch values pass.
+        generate.validate_format(format_with(-9.0, -9.1))
+
+        # Boundary: exactly -9 dBFS is the least conservative allowed pair.
+        generate.validate_format(format_with(-9.0, -9.0))
+
+        # More conservative values pass.
+        generate.validate_format(format_with(-12.0, -14.0))
+        generate.validate_format(format_with(-30.0, -40.0))
+
+        # Relaxing either bound above -9 dBFS is rejected. The first pair is
+        # the reproduced defect: the old validator accepted it and rendered
+        # a -1.1004 dBFS peak.
+        for ceiling, target in [
+            (-1.0, -1.1),
+            (-8.0, -9.0),
+            (-9.0, -8.0),
+            (-8.9999, -9.1),
+            (-9.1, -8.9999),
+        ]:
+            with self.subTest(ceiling=ceiling, target=target):
+                with self.assertRaises(ValueError):
+                    generate.validate_format(format_with(ceiling, target))
+
+        # Target must still not exceed a conservative ceiling.
+        with self.assertRaises(ValueError):
+            generate.validate_format(format_with(-12.0, -10.0))
 
     def test_cli_check_passes(self):
         self.assertEqual(generate.main(["--check"]), 0)

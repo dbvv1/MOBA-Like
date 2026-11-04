@@ -35,6 +35,9 @@ REQUIRED_MAX_SECONDS = {
     "level-up": 0.6,
     "respawn-ready": 0.6,
 }
+# Hard batch peak budget. A recipe may pick a more conservative peak, but
+# neither the ceiling nor the target may relax above this value.
+MAX_PEAK_DBFS = -9.0
 ALLOWED_CONTOURS = {
     "ascending-two-tone",
     "descending-two-tone",
@@ -148,8 +151,14 @@ def validate_format(format_spec, rate_override=None):
     target = _number(
         _require(format_spec, "peakTargetDbfs", "format"), "format.peakTargetDbfs"
     )
-    if ceiling >= 0 or target >= 0:
-        raise ValueError("peak dBFS values must be negative")
+    if ceiling > MAX_PEAK_DBFS + 1e-9:
+        raise ValueError(
+            f"format.peakCeilingDbfs must not be higher than {MAX_PEAK_DBFS} dBFS"
+        )
+    if target > MAX_PEAK_DBFS + 1e-9:
+        raise ValueError(
+            f"format.peakTargetDbfs must not be higher than {MAX_PEAK_DBFS} dBFS"
+        )
     if target > ceiling:
         raise ValueError("format.peakTargetDbfs must not exceed the ceiling")
     return {
@@ -222,6 +231,9 @@ def validate_cue(cue, format_spec, ratio=1.0):
             glide_to = _positive(glide_to, f"{path}.glideToHz") * ratio
             if glide_to >= nyquist:
                 raise ValueError(f"{path}.glideToHz must stay below Nyquist")
+        # A glide renders its harmonic sweep across both endpoints. The
+        # highest fundamental in the segment therefore governs every partial.
+        highest_frequency = frequency if glide_to is None else max(frequency, glide_to)
         _positive(_require(segment, "gain", path), f"{path}.gain")
         partials = _list(_require(segment, "partials", path), f"{path}.partials")
         if not partials:
@@ -236,7 +248,7 @@ def validate_cue(cue, format_spec, ratio=1.0):
                 _require(partial, "amplitude", partial_path),
                 f"{partial_path}.amplitude",
             )
-            if frequency * multiple >= nyquist:
+            if highest_frequency * multiple >= nyquist:
                 raise ValueError(f"{partial_path} harmonic reaches Nyquist")
     computed = cue_contour(cue)
     if computed != contour:
