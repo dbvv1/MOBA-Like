@@ -6,8 +6,10 @@ Run from the repository root:
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -395,6 +397,47 @@ class ManifestTests(unittest.TestCase):
                 self.assertAlmostEqual(
                     built[1], base[1] + key_row["offsetY"], delta=1e-6
                 )
+
+
+class AdoptionDocTests(unittest.TestCase):
+    """The adoption instructions are a deliverable; keep them consistent with the files.
+
+    Adoption itself is out of scope for this card, so these tests cannot run the
+    adoption.  They do catch the two ways the instructions went stale: wrong
+    manifest hashes for the candidates and a heroes-recipe script that the
+    instructions edit without refreshing its pinned ``sharedAssets`` hash.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.readme = (PACKAGE / "README.md").read_text(encoding="utf-8")
+        cls.adoption = cls.readme.split("## Adoption", 1)[1]
+
+    def test_adoption_table_matches_delivered_glbs(self):
+        manifest = json.loads((PACKAGE / "manifest.json").read_text(encoding="utf-8"))
+        expected = {row["id"]: row for row in manifest["assets"]}
+        rows = re.findall(
+            r"^\|\s*`(veyra-(?:teal|rust))`\s*\|\s*`([0-9a-f]{64})`\s*\|\s*(\d+)\s*\|$",
+            self.adoption,
+            flags=re.MULTILINE,
+        )
+        self.assertEqual({team for team, _sha, _size in rows}, set(expected))
+        for team, sha, size in rows:
+            asset = expected[team]
+            path = REPO / asset["file"]
+            self.assertEqual(sha, hashlib.sha256(path.read_bytes()).hexdigest(), team)
+            self.assertEqual(int(size), path.stat().st_size, team)
+            self.assertEqual(sha, asset["sha256"], team)
+            self.assertEqual(int(size), asset["bytes"], team)
+
+    def test_heroes_recipe_scripts_are_pinned_whenever_adoption_mentions_editing_them(self):
+        # The recipe scripts are themselves sharedAssets, so any adoption step
+        # that edits them must also tell the reader to refresh their pin.
+        step3 = self.adoption.split("### 3.", 1)[1].split("### 4.", 1)[0]
+        for script in ("build.py", "retarget.py"):
+            path = f"asset-pipeline/heroes/veyra-release/tools/{script}"
+            if path in self.adoption.split("### 3.", 1)[0]:
+                self.assertIn(path, step3)
 
 
 if __name__ == "__main__":

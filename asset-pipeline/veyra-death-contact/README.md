@@ -39,9 +39,11 @@ Update `asset-pipeline/heroes/veyra-release/manifest.json` for both assets:
 | `veyra-teal` | `32102965a65ea13248cbb88d28f522e3e3f8b9bd5ccf99dc9b3dedcf5ab60e12` | 164164 |
 | `veyra-rust` | `80e0512ca0f57aed589c8a0aca9f5c1de4d0aa789f6dd43a0ab0a2beb1a2e921` | 165016 |
 
-### 2. Do not rerun the heroes build recipe
+### 2. Do not rerun the heroes build recipe as-is
 
-`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Neither applies this card's death `Root` Y offsets, so running either after step 1 silently resets the fix. Either port that offset step into the heroes recipe, or treat the recipe as superseded for this hero and rebuild through this package against the pinned baseline:
+`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Neither applies this card's death `Root` Y offsets, so running either after step 1 silently resets the fix.
+
+The supported rebuild path for this card is this package's builder, run against the pinned baseline:
 
 ```sh
 < bpy python > asset-pipeline/veyra-death-contact/tools/build_source_candidates.py
@@ -49,11 +51,23 @@ Update `asset-pipeline/heroes/veyra-release/manifest.json` for both assets:
 
 Then copy the rebuilt `source/` and `exported/` into the heroes release again and rerun the acceptance commands from step 5. The rebuild also refreshes this package's `manifest.json` and `reports/death-root-offsets.json` against the pinned baseline: `manifest.json`'s `basis.source`, `basis.manifestSha256`, each asset's `upstreamSource`, `upstreamSourceSha256` and `baseline`. Without it, `tests/test_checks.py::test_source_and_candidate_hashes_match_the_manifest` compares the adopted heroes source with the old recorded hash and fails. If Blender is unavailable, update those fields to the pinned baseline by hand instead: `basis.source` becomes the pinned directory, `basis.manifestSha256` the pinned manifest hash, and each `assets[].upstreamSource` / `assets[].baseline` the pinned `source/veyra-{teal,rust}.blend` / `exported/veyra-{teal,rust}.glb`; the matching `upstreamSourceSha256` and `baselineSha256` keep the `b489ed3` hashes. Leaving `assets[].baseline` pointing at the now-overwritten heroes export while `baselineSha256` still holds the old hash makes the record self-contradictory. Overwriting only the GLB and then running the heroes recipe is not a supported path.
 
+#### Optional: keep the heroes recipe canonical
+
+If Veyra's heroes recipe must remain the canonical build (for example a later full-repo re-export), the offset step can be ported into it, but that is a separate pipeline change and not part of the copy-only adoption above. It must do all of the following, or it will produce a file set that looks correct while `npm test` still fails:
+
+- Apply the death `Root` location Y offsets from `reports/death-root-offsets.json` after the recipe has finished writing the rig/action data and before `retarget.py` exports the GLB. The heroes scripts still use the pre-5.0 `Action.fcurves` API; this package's builder uses the 5.x layered-action channelbag API, so the offset code cannot be copied verbatim.
+- Update the pinned `sharedAssets` sha256 for `asset-pipeline/heroes/veyra-release/tools/build.py` and `asset-pipeline/heroes/veyra-release/tools/retarget.py` in `default-source-manifest.json` in the same change (step 3). `tests/client/default-entry.test.ts:7` hashes every listed path, including these two scripts, so editing them without refreshing their pins fails `npm test` even when the GLB, source and manifest hashes are all correct.
+- Rerun step 5 and the package acceptance tests; confirm the ported recipe still reproduces the delivered death `Root` Y keys (baseline + offsets) and leaves the other four actions unchanged.
+
+Until that port lands, treat the heroes recipe as superseded for this hero: a bare rerun rewrites the death action without the offsets and returns the old penetration.
+
 ### 3. Update every lock that pins the shipped GLB/source
 
 Adoption is not complete while any of these still point at `b489ed3`:
 
 - `default-source-manifest.json` — `sharedAssets` entries for `asset-pipeline/heroes/veyra-release/manifest.json`, both `exported/veyra-*.glb` and both `source/veyra-*.blend`; `tests/client/default-entry.test.ts:7` hashes every listed `path`.
+- `default-source-manifest.json` — **only if the optional heroes-recipe port in step 2 was performed**, the `sharedAssets` entries for `asset-pipeline/heroes/veyra-release/tools/build.py` and `asset-pipeline/heroes/veyra-release/tools/retarget.py` (currently pinned at `ae6ee8f1e8c7946bf5fef8fb8147bebd4c60a4387fcf358771f416f840c1a45f` and `617f6ac209e05dcb3ab5906c758eadb5a196f84d9df54617e103139e79105f5c`). Recompute both with `sha256sum` after the port and update them in the same change; leaving them stale fails the same `tests/client/default-entry.test.ts:7` hash check. A copy-only adoption leaves both scripts untouched and must not change their pins.
+- `default-source-manifest.json` — `asset-pipeline/heroes/veyra-release/README.md` is also a pinned `sharedAssets` entry; refresh it only if adoption rewrites that file's known-defect paragraph.
 - `asset-pipeline/quiet-family/standards/layout-manifest.json` — `entries[id=hero].sourceSha256` must be the new teal SHA; regenerate with `node tools/build-quiet-standards.mjs` (`tests/client/content-standards.test.ts:11`).
 - `asset-pipeline/content-set/standard-set.json` — `files[id=veyra-teal].sha256`; then run `PYTHONUTF8=1 python asset-pipeline/content-set/normalize.py` to regenerate `reports/normalized-set.json` (`normalize.py::build` raises `Source changed` on a mismatch; the `PYTHONUTF8=1` prefix is needed where the locale is not UTF-8). The smaller GLB also changes `asset-pipeline/content-set/test_normalize.py`'s pinned `totalReferencedBytes` from 680900 to **663412** (680900 − (181652 − 164164) = 663412, a 17488-byte drop); `standard-set.json` references only `veyra-teal`, not `veyra-rust`, so don't count the rust delta. After the lock update, `PYTHONUTF8=1 python asset-pipeline/content-set/normalize.py` must print `Validated 14 locked files; 663412 bytes.` The teal triangle count stays 1189.
 
@@ -188,6 +202,7 @@ The checks themselves use only the Python standard library: no Blender, browser,
 - **Old weapon contact defects:** intentionally out of scope; only the "not below baseline - 0.01 m" rule was checked.
 - **Blender 4.3 compatibility of the delivered source:** not tested. The source files were saved by 5.2.3 LTS; reopen/export was verified only with that version. The GLB deliverables are version-independent.
 - **Adoption:** not performed; no file under `../heroes/`, the battle export, the runtime renderer or `quality.md` was modified.
+- **Heroes-recipe port:** the optional path in Adoption step 2 is documented but not implemented or tested. No recipe script was edited, so only the copy-only adoption path has been exercised by the package checks.
 
 ## Provenance and licence
 
