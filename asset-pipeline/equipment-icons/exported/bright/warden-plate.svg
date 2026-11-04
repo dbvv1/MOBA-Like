@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img">
+<title>Warden Plate</title>
+<g fill="none" stroke="#15304B" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 20 Q12 14 18 14 H24 Q32 20 40 14 H46 Q52 14 52 20 V30 Q52 34 48 34 L46 44 Q45 52 38 52 H26 Q19 52 18 44 L16 34 Q12 34 12 30 Z" fill="#086E85"/>
+<path d="M32 23 V44"/>
+<path d="M21 41 H43"/>
+</g>
+</svg>

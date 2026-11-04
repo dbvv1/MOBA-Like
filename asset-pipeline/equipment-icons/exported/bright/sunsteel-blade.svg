@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img">
+<title>Sunsteel Blade</title>
+<g fill="none" stroke="#15304B" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M32 10.5 L38 22 L36 38 L28 38 L26 22 Z" fill="#086E85"/>
+<path d="M20 41 H44"/>
+<path d="M32 41 V49"/>
+<circle cx="32" cy="51" r="2.5" fill="#086E85"/>
+</g>
+</svg>
