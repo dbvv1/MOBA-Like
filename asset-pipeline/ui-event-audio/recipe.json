@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "batch": "ui-event-cues",
+  "currentRevision": "r2",
+  "revisions": [
+    {
+      "label": "r1",
+      "fundamentalRatio": 1.0,
+      "change": "Initial candidate batch: four event cues at their written fundamental frequencies."
+    },
+    {
+      "label": "r2",
+      "fundamentalRatio": 0.9,
+      "change": "Second revision: one uniform batch fundamental ratio of 0.9 applied to every cue; durations and event contours held."
+    }
+  ],
+  "format": {
+    "sampleRate": 48000,
+    "channels": 1,
+    "encoding": "PCM16",
+    "fadeSeconds": 0.005,
+    "peakCeilingDbfs": -9.0,
+    "peakTargetDbfs": -9.1
+  },
+  "triggerPolicy": "Only an actually committed simulation outcome may start a cue. HUD text, bar fill, countdown text, button enabled state and balance deltas are display projections and must never be diffed to invent an event.",
+  "unverified": [
+    "No cue is wired to runtime, simulation, UI or audio output in this batch.",
+    "No listening, device playback, overlap/masking or adoption decision was performed.",
+    "The four sounds are candidate budget values, not a claim of best perceived quality."
+  ],
+  "cues": [
+    {
+      "id": "purchase-ok",
+      "file": "purchase-ok.wav",
+      "durationSeconds": 0.22,
+      "maxDurationSeconds": 0.25,
+      "contour": "ascending-two-tone",
+      "audibleIntent": "Two short tones rising a fourth; a compact confirmation that the shop accepted the purchase.",
+      "segments": [
+        {
+          "startSeconds": 0.0,
+          "durationSeconds": 0.11,
+          "frequencyHz": 660.0,
+          "gain": 0.9,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.16 }
+          ]
+        },
+        {
+          "startSeconds": 0.11,
+          "durationSeconds": 0.11,
+          "frequencyHz": 880.0,
+          "gain": 1.0,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.2 },
+            { "multiple": 3, "amplitude": 0.05 }
+          ]
+        }
+      ],
+      "event": {
+        "label": "purchase success",
+        "committed": true,
+        "presentationEvent": false,
+        "consumerAccess": "Match.step() results: the submitted buyItem CommandResult with accepted=true.",
+        "trigger": "A buyItem command for the locally controlled hero resolves accepted=true.",
+        "committedSource": "SimCommand 'buyItem' -> CommandResult { accepted: true, reason: null }",
+        "notFrom": "Do not infer from gold text, an owned item button becoming disabled, or a predicted balance.",
+        "boundaries": "One cue per accepted committed buy result for the local player; never on click/submission alone and never for AI shop commands."
+      }
+    },
+    {
+      "id": "purchase-denied",
+      "file": "purchase-denied.wav",
+      "durationSeconds": 0.22,
+      "maxDurationSeconds": 0.25,
+      "contour": "descending-two-tone",
+      "audibleIntent": "Two short tones falling a fourth; the opposite contour of purchase-ok so rejection is distinguishable by shape, not only by loudness or a different pitch register.",
+      "segments": [
+        {
+          "startSeconds": 0.0,
+          "durationSeconds": 0.11,
+          "frequencyHz": 520.0,
+          "gain": 0.95,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.12 }
+          ]
+        },
+        {
+          "startSeconds": 0.11,
+          "durationSeconds": 0.11,
+          "frequencyHz": 390.0,
+          "gain": 0.9,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.15 },
+            { "multiple": 3, "amplitude": 0.04 }
+          ]
+        }
+      ],
+      "event": {
+        "label": "purchase denied",
+        "committed": true,
+        "presentationEvent": false,
+        "consumerAccess": "Match.step() results: the submitted buyItem CommandResult with accepted=false and its reason.",
+        "trigger": "A shop-originated buyItem command for the locally controlled hero resolves accepted=false with a committed rejection reason.",
+        "committedSource": "SimCommand 'buyItem' -> CommandResult { accepted: false, reason: 'notEnoughGold' | 'alreadyOwned' | 'unknownItem' }; the reason must travel with the event for diagnostics.",
+        "notFrom": "Do not infer from a disabled button, gold below the item cost, a repeated click, or a HUD message timer.",
+        "boundaries": "Only rejections of the local player's shop buy attempts; generic command guards (invalidHero, heroDead, matchEnded) are not presupposed to be this cue and must be mapped explicitly by the wiring owner."
+      }
+    },
+    {
+      "id": "level-up",
+      "file": "level-up.wav",
+      "durationSeconds": 0.55,
+      "maxDurationSeconds": 0.6,
+      "contour": "ascending-three-tone",
+      "audibleIntent": "Three rising tones, each articulated by the 5 ms edge guard; a single positive growth phrase, not a fanfare loop.",
+      "segments": [
+        {
+          "startSeconds": 0.0,
+          "durationSeconds": 0.19,
+          "frequencyHz": 523.25,
+          "gain": 0.9,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.22 },
+            { "multiple": 3, "amplitude": 0.06 }
+          ]
+        },
+        {
+          "startSeconds": 0.19,
+          "durationSeconds": 0.18,
+          "frequencyHz": 659.25,
+          "gain": 0.95,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.22 },
+            { "multiple": 3, "amplitude": 0.06 }
+          ]
+        },
+        {
+          "startSeconds": 0.37,
+          "durationSeconds": 0.18,
+          "frequencyHz": 783.99,
+          "gain": 1.0,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.24 },
+            { "multiple": 3, "amplitude": 0.08 }
+          ]
+        }
+      ],
+      "event": {
+        "label": "hero level up",
+        "committed": true,
+        "presentationEvent": false,
+        "consumerAccess": "Not exposed yet; add a formal committed level-change event in the simulation before wiring.",
+        "trigger": "A committed experience award raises the locally controlled hero's level; use the committed fromLevel/toLevel transition.",
+        "committedSource": "Simulation grantXp() level advance (hero.level increases after xp crosses xpLevels[hero.level]).",
+        "notFrom": "Do not infer from the HUD level text, the health or mana bar filling, or any countdown/number redraw.",
+        "boundaries": "One cue per committed grant for the local player even if a single award crosses multiple levels; report the final level. The committed transition exists in simulation but is not yet emitted as a PresentationEvent; wiring needs a formal committed event first."
+      }
+    },
+    {
+      "id": "respawn-ready",
+      "file": "respawn-ready.wav",
+      "durationSeconds": 0.5,
+      "maxDurationSeconds": 0.6,
+      "contour": "rising-sweep",
+      "audibleIntent": "One soft rising glide, single gesture; an availability cue rather than a second death or damage sound.",
+      "segments": [
+        {
+          "startSeconds": 0.0,
+          "durationSeconds": 0.5,
+          "frequencyHz": 300.0,
+          "glideToHz": 600.0,
+          "gain": 0.85,
+          "partials": [
+            { "multiple": 1, "amplitude": 1.0 },
+            { "multiple": 2, "amplitude": 0.1 }
+          ]
+        }
+      ],
+      "event": {
+        "label": "hero respawn ready",
+        "committed": true,
+        "presentationEvent": false,
+        "consumerAccess": "Not exposed yet; add a formal committed respawn event in the simulation before wiring.",
+        "trigger": "The simulation commits the locally controlled hero's respawn transition, alive false -> true, when respawnAtTick is reached.",
+        "committedSource": "Simulation updateRespawns() sets entity.alive=true at the committed respawn tick.",
+        "notFrom": "Do not infer from the HUD 'Respawn in 0s' text, a UI-side max(0, ceil(...)) countdown, or a client timer that reaches zero.",
+        "boundaries": "Only the player's own committed respawn transition; one cue per transition, not per frame or per countdown redraw. The transition exists in simulation but is not yet emitted as a PresentationEvent; wiring needs a formal committed event first."
+      }
+    }
+  ]
+}
