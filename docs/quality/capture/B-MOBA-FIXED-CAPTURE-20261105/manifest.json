@@ -1,0 +1,4481 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "commit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+  "tree": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+  "generatedAt": "2026-11-05T11:11:12.779Z",
+  "passed": false,
+  "capturePassed": true,
+  "cleanExitBaseline": false,
+  "complete": false,
+  "status": "capture-complete, exit-baseline-incomplete",
+  "passedScope": "capture evidence plus observed build/harness/Chromium exits and owned-resource cleanup",
+  "captureInvocation": "Gameplay takes come unchanged from attempt-04. The other six shots and all four comparisons come from attempt-05. One tsc/vite build was run (attempt-04) and reused. No capture was retaken. The finalize step started no browser, preview, or build.",
+  "source": {
+    "headObserved": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+    "treeObserved": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+    "headMatchesFixed": true,
+    "treeMatchesFixed": true,
+    "trackedCleanBeforeBuild": true,
+    "trackedCleanAfterBuild": true,
+    "trackedCleanAfterCapture": true,
+    "lfPreservedForKeyFiles": true
+  },
+  "captureWindow": {
+    "firstShotCapturedAt": "2026-11-05T11:02:41.156Z",
+    "lastShotCompletedAt": "2026-11-05T11:06:07.050Z",
+    "chromiumStartedAt": "2026-11-05T11:05:07.630Z",
+    "chromiumEndedAt": "2026-11-05T11:06:08.602Z"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "nodePathVersion": "v24.22.1",
+    "chromium": {
+      "precheckedFileVersion": "156.0.8078.4",
+      "precheckedProductVersion": "156.0.8078.4",
+      "precheckedSha256": "7F08161BBEB2853FFE1780A9DED4985087F52EFB9725D7D8207AABDD42F7CFB9",
+      "versionSource": "VersionInfo and SHA-256 of the existing binary; chrome.exe --version was not run",
+      "launchedVersion": "156.0.8078.4",
+      "launchedVersionMatchesPrecheck": true
+    },
+    "dependencies": {
+      "@types/node": "22.20.5",
+      "@types/three": "0.186.0",
+      "jsdom": "27.4.0",
+      "playwright": "1.64.1",
+      "pngjs": "7.0.0",
+      "recast-navigation": "0.43.1",
+      "three": "0.186.1",
+      "tsx": "4.23.15",
+      "typescript": "5.9.3",
+      "vite": "8.3.5",
+      "vitest": "3.2.4"
+    },
+    "dependenciesSource": "installed node_modules versions, each checked against package-lock.json before the build; no install or upgrade performed",
+    "packageLockSha256": "edefefba9571006039cd9ff4035b180fbb1a11c7bdfa6fa558ed5a98a4556b3a"
+  },
+  "preload": {
+    "file": "windows-hide-preload.mjs",
+    "stubTest": {
+      "exitCode": 0,
+      "passed": true,
+      "processesStarted": 0,
+      "checks": [
+        {
+          "name": "apply reports wrappers and prototype patch",
+          "ok": true
+        },
+        {
+          "name": "fixed Vite config shape execFileSync(git,args,{cwd,encoding}) forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawn overloads keep command, args, options and add windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawnSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "exec overloads handle options and callback forms",
+          "ok": true
+        },
+        {
+          "name": "execSync preserves stdio and forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "execFile overloads preserve callback positions",
+          "ok": true
+        },
+        {
+          "name": "execFileSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "fork overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "internal ChildProcess.prototype.spawn path is covered",
+          "ok": true
+        },
+        {
+          "name": "application is idempotent",
+          "ok": true
+        },
+        {
+          "name": "ESM named exports were synchronized with syncBuiltinESMExports",
+          "ok": true
+        }
+      ],
+      "log": "preload-stub-test.log",
+      "pid": 81636,
+      "startedAt": "2026-11-05T11:02:25.798Z",
+      "endedAt": "2026-11-05T11:02:27.525Z"
+    },
+    "injection": "node --import windows-hide-preload.mjs for tsc, vite build, and this harness process",
+    "coverage": "public spawn/spawnSync/exec/execSync/execFile/execFileSync/fork overloads plus ChildProcess.prototype.spawn; syncBuiltinESMExports refreshes ESM named exports"
+  },
+  "build": {
+    "tsc": {
+      "command": "node.exe --import <local-file> <local-path> -p tsconfig.capture.json",
+      "pid": 79080,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:27.5323890+08:00",
+      "startedAt": "2026-11-05T11:02:27.527Z",
+      "endedAt": "2026-11-05T11:02:30.892Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-tsc.log"
+    },
+    "vite": {
+      "command": "node.exe --import <local-file> <local-path> build --config vite.capture.config.ts",
+      "pid": 556,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:30.8978390+08:00",
+      "startedAt": "2026-11-05T11:02:30.893Z",
+      "endedAt": "2026-11-05T11:02:33.285Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-vite.log"
+    },
+    "output": "outputs/capture-build",
+    "fileCount": 50,
+    "bundle": {
+      "format": 1,
+      "sourceCommit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+      "sourceDirty": false,
+      "sha256": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+      "fileCount": 49,
+      "manifestSha256": "4fe569e4a923cede808e5318a24b6dda0242bbd68ba23d541cf7035ced75e83b"
+    },
+    "filesEvidence": "build-files.json",
+    "bundleEvidence": "capture-bundle.build.json",
+    "buildExecutedIn": "attempt-04 (the only tsc/vite build execution)"
+  },
+  "bundleChecks": {
+    "start": {
+      "checkedAt": "2026-11-05T11:05:07.630Z",
+      "fileCount": 50,
+      "mismatchCount": 0
+    },
+    "end": {
+      "checkedAt": "2026-11-05T11:06:07.506Z",
+      "fileCount": 50,
+      "mismatchCount": 0
+    }
+  },
+  "server": {
+    "sameProcess": true,
+    "pid": 99784,
+    "base": "BASE",
+    "startedAt": "2026-11-05T11:05:07.309Z",
+    "closeCallbackAt": "2026-11-05T11:06:08.732Z",
+    "httpServerListeningAfterClose": false,
+    "portClosed": true
+  },
+  "chromium": {
+    "version": "156.0.8078.4",
+    "versionMatchesPrecheck": true,
+    "executableSha256": "7F08161BBEB2853FFE1780A9DED4985087F52EFB9725D7D8207AABDD42F7CFB9",
+    "executableVersionInfo": "156.0.8078.4",
+    "versionSource": "VersionInfo and SHA-256 of the existing binary; chrome.exe --version was not run",
+    "pid": 44028,
+    "parentPid": 99784,
+    "parentChain": [
+      {
+        "pid": 99784,
+        "role": "harness"
+      },
+      {
+        "pid": 84556,
+        "role": "supervising-parent"
+      }
+    ],
+    "startedAt": "2026-11-05T11:05:07.630Z",
+    "creationDateFromOs": "2026-11-05T19:05:07.6387320+08:00",
+    "launch": {
+      "headless": true,
+      "chromiumSandbox": false,
+      "args": [
+        "--no-sandbox",
+        "--enable-unsafe-swiftshader",
+        "--use-angle=swiftshader",
+        "--enable-automation",
+        "--disable-background-timer-throttling",
+        "--disable-renderer-backgrounding",
+        "--disable-backgrounding-occluded-windows"
+      ],
+      "ignoreDefaultArgs": false
+    },
+    "childrenAtLaunch": [
+      {
+        "pid": 88404,
+        "parentPid": 44028,
+        "createdAt": "2026-11-05T19:05:07.8189550+08:00",
+        "name": "chrome.exe",
+        "type": "crashpad-handler"
+      },
+      {
+        "pid": 106568,
+        "parentPid": 44028,
+        "createdAt": "2026-11-05T19:05:09.5247480+08:00",
+        "name": "chrome.exe",
+        "type": "gpu-process"
+      },
+      {
+        "pid": 93428,
+        "parentPid": 44028,
+        "createdAt": "2026-11-05T19:05:09.6871470+08:00",
+        "name": "chrome.exe",
+        "type": "utility"
+      },
+      {
+        "pid": 59400,
+        "parentPid": 44028,
+        "createdAt": "2026-11-05T19:05:10.0434140+08:00",
+        "name": "chrome.exe",
+        "type": "utility"
+      }
+    ],
+    "exitCode": 0,
+    "exitSignal": null,
+    "endedAt": "2026-11-05T11:06:08.602Z",
+    "serverClosedAt": "2026-11-05T11:06:08.653Z",
+    "debugLog": {
+      "available": true,
+      "hasLaunchingEvent": false,
+      "hasLaunchedEvent": false,
+      "pidFromLog": null,
+      "pidMatches": false,
+      "exitEventCount": 0,
+      "localOnly": true,
+      "redacted": "raw DEBUG=pw:browser events are kept local and are not part of the public copy"
+    },
+    "actualCommandLine": {
+      "argumentCount": 57,
+      "headless": true,
+      "noSandbox": true,
+      "unsafeSwiftshader": true,
+      "angleSwiftshader": true,
+      "automation": true,
+      "backgroundTimerThrottlingDisabled": true,
+      "rendererBackgroundingDisabled": true,
+      "occludedBackgroundingDisabled": true,
+      "gpuDisabled": false,
+      "angleD3d11": false,
+      "source": "Browser.getBrowserCommandLine over CDP; full argv kept local only"
+    },
+    "exitObserved": true,
+    "exitSource": "owned ChildProcess exit event from BrowserServer.process()"
+  },
+  "shots": [
+    {
+      "camera": "gameplay",
+      "take": 1,
+      "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:02:41.156Z",
+      "completedAt": "2026-11-05T11:02:49.459Z",
+      "pngFile": "capture-gameplay-1.png",
+      "jsonFile": "capture-gameplay-1.json",
+      "pngSha256": "05208e165a7e308e8d70285703cbf0e98176b3c3c5ae2595ed10e2c269d0c4fc",
+      "rgbaSha256": "489481c6e9170edba3d76b46ccb598659c5f30c3b15aed0c67ce15ad0a4a9639",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "5319611095a1ba65ea5f37e0ab2564c0a63d24730879a03768582c3b278b93e9",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -24.23333333333305,
+          "y": 24,
+          "z": 19.200000047683716
+        },
+        "target": {
+          "x": -24.23333333333305,
+          "y": 0,
+          "z": 1.2000000476837158
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 5,
+        "triangles": 72,
+        "geometries": 48,
+        "textures": 27
+      },
+      "sampledColors5bit": 917,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 5,
+              "triangles": 72,
+              "geometries": 48,
+              "textures": 27
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraFollowForm",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetFinite",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 917,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-04 (unchanged; no gameplay retake)"
+    },
+    {
+      "camera": "gameplay",
+      "take": 2,
+      "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:02:50.898Z",
+      "completedAt": "2026-11-05T11:02:59.250Z",
+      "pngFile": "capture-gameplay-2.png",
+      "jsonFile": "capture-gameplay-2.json",
+      "pngSha256": "05208e165a7e308e8d70285703cbf0e98176b3c3c5ae2595ed10e2c269d0c4fc",
+      "rgbaSha256": "489481c6e9170edba3d76b46ccb598659c5f30c3b15aed0c67ce15ad0a4a9639",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "5319611095a1ba65ea5f37e0ab2564c0a63d24730879a03768582c3b278b93e9",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -24.23333333333305,
+          "y": 24,
+          "z": 19.200000047683716
+        },
+        "target": {
+          "x": -24.23333333333305,
+          "y": 0,
+          "z": 1.2000000476837158
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 5,
+        "triangles": 72,
+        "geometries": 48,
+        "textures": 27
+      },
+      "sampledColors5bit": 917,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 5,
+              "triangles": 72,
+              "geometries": 48,
+              "textures": 27
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraFollowForm",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetFinite",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -24.23333333333305,
+                "y": 24,
+                "z": 19.200000047683716
+              },
+              "target": {
+                "x": -24.23333333333305,
+                "y": 0,
+                "z": 1.2000000476837158
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 917,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-04 (unchanged; no gameplay retake)"
+    },
+    {
+      "camera": "spawn",
+      "take": 1,
+      "url": "BASE/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:12.318Z",
+      "completedAt": "2026-11-05T11:05:20.787Z",
+      "pngFile": "capture-spawn-1.png",
+      "jsonFile": "capture-spawn-1.json",
+      "pngSha256": "341c29337f6d63ffba8179fcaf8720b6b3220f144c9669ef83565adbb0c09a54",
+      "rgbaSha256": "72f22907b3433ebae77fdc13b14da6a8dc0d4c8e59cbd8756a3f32992d6d0948",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "32812e2e86f05c1180166fb2c6193969a18d0c5e503d33ddcb7ae1fa74cc11b5",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -94,
+          "y": 24,
+          "z": 19.2
+        },
+        "target": {
+          "x": -94,
+          "y": 0,
+          "z": 1.2
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 4,
+        "triangles": 8,
+        "geometries": 45,
+        "textures": 28
+      },
+      "sampledColors5bit": 889,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "spawn"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 4,
+              "triangles": 8,
+              "geometries": 45,
+              "textures": 28
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 889,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    },
+    {
+      "camera": "spawn",
+      "take": 2,
+      "url": "BASE/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:22.563Z",
+      "completedAt": "2026-11-05T11:05:31.624Z",
+      "pngFile": "capture-spawn-2.png",
+      "jsonFile": "capture-spawn-2.json",
+      "pngSha256": "341c29337f6d63ffba8179fcaf8720b6b3220f144c9669ef83565adbb0c09a54",
+      "rgbaSha256": "72f22907b3433ebae77fdc13b14da6a8dc0d4c8e59cbd8756a3f32992d6d0948",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "32812e2e86f05c1180166fb2c6193969a18d0c5e503d33ddcb7ae1fa74cc11b5",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -94,
+          "y": 24,
+          "z": 19.2
+        },
+        "target": {
+          "x": -94,
+          "y": 0,
+          "z": 1.2
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 4,
+        "triangles": 8,
+        "geometries": 45,
+        "textures": 28
+      },
+      "sampledColors5bit": 889,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "spawn"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 4,
+              "triangles": 8,
+              "geometries": 45,
+              "textures": 28
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -94,
+                "y": 24,
+                "z": 19.2
+              },
+              "target": {
+                "x": -94,
+                "y": 0,
+                "z": 1.2
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 889,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=spawn&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    },
+    {
+      "camera": "first-tower",
+      "take": 1,
+      "url": "BASE/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:31.671Z",
+      "completedAt": "2026-11-05T11:05:40.255Z",
+      "pngFile": "capture-first-tower-1.png",
+      "jsonFile": "capture-first-tower-1.json",
+      "pngSha256": "8afad42695a104e3477563c6e1361352b180c60595d1697479554dbd0cb61216",
+      "rgbaSha256": "1dcadb75aedfaac9fc252199a4ace6421c83033e1399e4d8b35654dcabbd9312",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "5b90c444bb1475a1413b0f238582b1c67894e8ca92fdfa65c7fad843d7ace79e",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 5,
+        "triangles": 72,
+        "geometries": 48,
+        "textures": 27
+      },
+      "sampledColors5bit": 949,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "first-tower"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 5,
+              "triangles": 72,
+              "geometries": 48,
+              "textures": 27
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 949,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    },
+    {
+      "camera": "first-tower",
+      "take": 2,
+      "url": "BASE/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:40.308Z",
+      "completedAt": "2026-11-05T11:05:49.358Z",
+      "pngFile": "capture-first-tower-2.png",
+      "jsonFile": "capture-first-tower-2.json",
+      "pngSha256": "8afad42695a104e3477563c6e1361352b180c60595d1697479554dbd0cb61216",
+      "rgbaSha256": "1dcadb75aedfaac9fc252199a4ace6421c83033e1399e4d8b35654dcabbd9312",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "5b90c444bb1475a1413b0f238582b1c67894e8ca92fdfa65c7fad843d7ace79e",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -28,
+          "y": 24,
+          "z": 18
+        },
+        "target": {
+          "x": -28,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 5,
+        "triangles": 72,
+        "geometries": 48,
+        "textures": 27
+      },
+      "sampledColors5bit": 949,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "first-tower"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 5,
+              "triangles": 72,
+              "geometries": 48,
+              "textures": 27
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -28,
+                "y": 24,
+                "z": 18
+              },
+              "target": {
+                "x": -28,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 949,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=first-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    },
+    {
+      "camera": "spawn-to-tower",
+      "take": 1,
+      "url": "BASE/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:49.407Z",
+      "completedAt": "2026-11-05T11:05:58.077Z",
+      "pngFile": "capture-spawn-to-tower-1.png",
+      "jsonFile": "capture-spawn-to-tower-1.json",
+      "pngSha256": "2be1f12d3bd8c1592c7a2e3647060e32d530159627a733bc64be73f5788a63fd",
+      "rgbaSha256": "92f568da4de2fefde431b53344f51a58947df6fa65eef708547a7580e848bbf4",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "adb2613a62bc9032b5a79a5978bac6c452e27763a663e1cfbd9aca12a71f1cf8",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -65,
+          "y": 62,
+          "z": 46.5
+        },
+        "target": {
+          "x": -65,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 21,
+        "triangles": 104,
+        "geometries": 52,
+        "textures": 29
+      },
+      "sampledColors5bit": 868,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "spawn-to-tower"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 21,
+              "triangles": 104,
+              "geometries": 52,
+              "textures": 29
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 868,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/clock-CNC-2U7w.js",
+              "assets/capture-CqxIQMVz.js",
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    },
+    {
+      "camera": "spawn-to-tower",
+      "take": 2,
+      "url": "BASE/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "urlPath": "/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "capturedAt": "2026-11-05T11:05:58.166Z",
+      "completedAt": "2026-11-05T11:06:07.050Z",
+      "pngFile": "capture-spawn-to-tower-2.png",
+      "jsonFile": "capture-spawn-to-tower-2.json",
+      "pngSha256": "2be1f12d3bd8c1592c7a2e3647060e32d530159627a733bc64be73f5788a63fd",
+      "rgbaSha256": "92f568da4de2fefde431b53344f51a58947df6fa65eef708547a7580e848bbf4",
+      "stateHash": "4e0d5f7902a525e0",
+      "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+      "cameraStableSha256": "adb2613a62bc9032b5a79a5978bac6c452e27763a663e1cfbd9aca12a71f1cf8",
+      "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+      "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+      "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+      "t": 10,
+      "frame": 0,
+      "virtualFrame": 600,
+      "simTick": 300,
+      "seed": 1,
+      "input": "march",
+      "cameraInfo": {
+        "position": {
+          "x": -65,
+          "y": 62,
+          "z": 46.5
+        },
+        "target": {
+          "x": -65,
+          "y": 0,
+          "z": 0
+        },
+        "fov": 45,
+        "aspect": 1.7777777777777777
+      },
+      "rendererEvidence": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "unmasked": true,
+        "rendererClass": "software"
+      },
+      "lighting": {
+        "requested": "forest-light-v1",
+        "configured": "forest-light-v1",
+        "active": "forest-light-v1",
+        "stage": "frame-submitted",
+        "diffuse": "source-materials",
+        "environment": {
+          "kind": "ambient-and-hemisphere",
+          "sky": "#b9ddd8",
+          "ground": "#243e32",
+          "hemisphereIntensity": 1.35,
+          "ambientIntensity": 0.08
+        },
+        "directSun": {
+          "color": "#fff0cf",
+          "intensity": 2.8,
+          "shadow": "PCFShadowMap"
+        },
+        "toneMapping": "ACESFilmic",
+        "exposure": 1.08,
+        "post": {
+          "ao": "world-only-SSAO",
+          "kernelRadius": 1.4,
+          "samples": 16,
+          "minDistance": 0.001,
+          "maxDistance": 0.015,
+          "grade": "linear-cool-shadows-warm-highlights",
+          "output": "OutputPass",
+          "buffer": "HalfFloatType",
+          "msaaSamples": 4
+        }
+      },
+      "materials": {
+        "requested": "baseline",
+        "configured": "baseline",
+        "active": null,
+        "buildingCoverage": []
+      },
+      "standards": null,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "pixelRatio": 1,
+        "bufferWidth": 1280,
+        "bufferHeight": 720
+      },
+      "image": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "backend": "webgl2",
+      "render": {
+        "calls": 21,
+        "triangles": 104,
+        "geometries": 52,
+        "textures": 29
+      },
+      "sampledColors5bit": 868,
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "ready",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "errorEmpty",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "sourceCommitFixed",
+            "ok": true,
+            "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+          },
+          {
+            "name": "sourceDirtyFalse",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "bundleSha256MatchesBuild",
+            "ok": true,
+            "actual": {
+              "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+              "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+            }
+          },
+          {
+            "name": "bundleFilesMatchBuild",
+            "ok": true,
+            "actual": {
+              "files": 49
+            }
+          },
+          {
+            "name": "captureRoleGameplay",
+            "ok": true,
+            "actual": "gameplay"
+          },
+          {
+            "name": "shotCorrect",
+            "ok": true,
+            "actual": "spawn-to-tower"
+          },
+          {
+            "name": "seed1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "inputMarch",
+            "ok": true,
+            "actual": "march"
+          },
+          {
+            "name": "contentVersion11",
+            "ok": true,
+            "actual": 11
+          },
+          {
+            "name": "frame0",
+            "ok": true,
+            "actual": 0
+          },
+          {
+            "name": "frames1",
+            "ok": true,
+            "actual": 1
+          },
+          {
+            "name": "completeTrue",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "virtualFrame600",
+            "ok": true,
+            "actual": 600
+          },
+          {
+            "name": "simTick300",
+            "ok": true,
+            "actual": 300
+          },
+          {
+            "name": "t10",
+            "ok": true,
+            "actual": 10
+          },
+          {
+            "name": "warmupFrames12",
+            "ok": true,
+            "actual": 12
+          },
+          {
+            "name": "stateHashPresent",
+            "ok": true,
+            "actual": "4e0d5f7902a525e0"
+          },
+          {
+            "name": "backendWebgl2",
+            "ok": true,
+            "actual": "webgl2"
+          },
+          {
+            "name": "imageSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "dpr": 1
+            }
+          },
+          {
+            "name": "viewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720,
+              "pixelRatio": 1,
+              "bufferWidth": 1280,
+              "bufferHeight": 720
+            }
+          },
+          {
+            "name": "expectedViewportSize",
+            "ok": true,
+            "actual": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          {
+            "name": "rendererClassSoftware",
+            "ok": true,
+            "actual": "software"
+          },
+          {
+            "name": "rendererPresent",
+            "ok": true,
+            "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+          },
+          {
+            "name": "vendorPresent",
+            "ok": true,
+            "actual": "Google Inc. (Google)"
+          },
+          {
+            "name": "webglVersionPresent",
+            "ok": true,
+            "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+          },
+          {
+            "name": "unmaskedFlagBoolean",
+            "ok": true,
+            "actual": true
+          },
+          {
+            "name": "lightingRequested",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingConfigured",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingActive",
+            "ok": true,
+            "actual": "forest-light-v1"
+          },
+          {
+            "name": "lightingStage",
+            "ok": true,
+            "actual": "frame-submitted"
+          },
+          {
+            "name": "materialsRequested",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsConfigured",
+            "ok": true,
+            "actual": "baseline"
+          },
+          {
+            "name": "materialsActiveNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "standardsNull",
+            "ok": true,
+            "actual": null
+          },
+          {
+            "name": "mobaClientAbsent",
+            "ok": true,
+            "actual": "undefined"
+          },
+          {
+            "name": "hudWorldBarsOnly",
+            "ok": true,
+            "actual": "world-bars-only"
+          },
+          {
+            "name": "audioNotCaptured",
+            "ok": true,
+            "actual": "not-captured"
+          },
+          {
+            "name": "renderSubmitted",
+            "ok": true,
+            "actual": {
+              "calls": 21,
+              "triangles": 104,
+              "geometries": 52,
+              "textures": 29
+            }
+          },
+          {
+            "name": "cameraFov45",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraAspect",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraPositionExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "cameraTargetExact",
+            "ok": true,
+            "actual": {
+              "position": {
+                "x": -65,
+                "y": 62,
+                "z": 46.5
+              },
+              "target": {
+                "x": -65,
+                "y": 0,
+                "z": 0
+              },
+              "fov": 45,
+              "aspect": 1.7777777777777777
+            }
+          },
+          {
+            "name": "pngSignal",
+            "ok": true,
+            "actual": {
+              "colors": 868,
+              "sampledEvery": 4
+            }
+          },
+          {
+            "name": "contextNotLost",
+            "ok": true,
+            "actual": false
+          },
+          {
+            "name": "pageErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "consoleErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "requestFailedEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "httpErrorsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "externalRequestsEmpty",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "servedResponsesMatch",
+            "ok": true,
+            "actual": []
+          },
+          {
+            "name": "entryServed",
+            "ok": true,
+            "actual": [
+              {
+                "url": "BASE/capture.html?shot=spawn-to-tower&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+                "status": 200,
+                "resourceType": "document",
+                "file": "capture.html",
+                "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "localFileExists": true,
+                "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+                "match": true
+              }
+            ]
+          },
+          {
+            "name": "captureModuleServed",
+            "ok": true,
+            "actual": [
+              "assets/edge-layout-M4KeNYFf.js",
+              "assets/capture-CqxIQMVz.js",
+              "assets/clock-CNC-2U7w.js",
+              "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+            ]
+          },
+          {
+            "name": "frame0Waited150msStable",
+            "ok": true,
+            "actual": {
+              "stateHashSame": true,
+              "pngSame": true
+            }
+          }
+        ]
+      },
+      "sourceInvocation": "attempt-05"
+    }
+  ],
+  "comparisons": [
+    {
+      "camera": "gameplay",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "spawn",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "first-tower",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "spawn-to-tower",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    }
+  ],
+  "cleanup": {
+    "startedAt": "2026-11-05T11:06:07.507Z",
+    "browser": null,
+    "preview": {
+      "sameProcess": true,
+      "pid": 99784,
+      "closeCallbackAt": "2026-11-05T11:06:08.732Z",
+      "httpServerListeningAfterClose": false,
+      "closeInvoked": true
+    },
+    "childrenRemaining": [],
+    "portClosed": true,
+    "knownUnclosedResources": 0,
+    "connectionClosedAt": "2026-11-05T11:06:07.507Z",
+    "browserServerCloseRequestedAt": "2026-11-05T11:06:07.545Z",
+    "endedAt": "2026-11-05T11:06:11.021Z"
+  },
+  "processRecords": {
+    "finalize": {
+      "role": "evidence-composer",
+      "pid": 49396,
+      "nodeVersion": "v24.22.1",
+      "runtimeStartedAt": "2026-11-05T11:11:11.939Z",
+      "startedAt": "2026-11-05T11:11:12.014Z",
+      "endedAt": "2026-11-05T11:11:12.779Z",
+      "exitCodeObservation": "observed by the invoking shell; this process does not write its own post-exit code"
+    },
+    "supervisor": {
+      "role": "supervising-parent",
+      "pid": 84556,
+      "nodeVersion": "v24.22.1",
+      "runtimeStartedAt": "2026-11-05T11:05:03.558Z",
+      "startedAt": "2026-11-05T11:05:03.593Z",
+      "windowsHidePolicy": "harness child and all harness descendants receive windowsHide=true through harness.mjs and windows-hide-preload.mjs",
+      "exitCodeObservation": "this process exit code is observed by the invoking shell; it cannot record its own post-exit code",
+      "endedAt": "2026-11-05T11:06:23.775Z"
+    },
+    "captureHarness": {
+      "pid": 99784,
+      "parentPid": 84556,
+      "parentChain": [
+        {
+          "pid": 84556,
+          "role": "supervising-parent"
+        }
+      ],
+      "startedAt": "2026-11-05T11:05:03.634Z",
+      "endedAt": "2026-11-05T11:06:23.773Z",
+      "exitCode": 1,
+      "signal": null,
+      "spawnError": null,
+      "exitSource": "ChildProcess close event observed by the supervising parent",
+      "windowsHide": true,
+      "log": "harness.log"
+    },
+    "preloadStubTest": {
+      "exitCode": 0,
+      "passed": true,
+      "processesStarted": 0,
+      "checks": [
+        {
+          "name": "apply reports wrappers and prototype patch",
+          "ok": true
+        },
+        {
+          "name": "fixed Vite config shape execFileSync(git,args,{cwd,encoding}) forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawn overloads keep command, args, options and add windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawnSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "exec overloads handle options and callback forms",
+          "ok": true
+        },
+        {
+          "name": "execSync preserves stdio and forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "execFile overloads preserve callback positions",
+          "ok": true
+        },
+        {
+          "name": "execFileSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "fork overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "internal ChildProcess.prototype.spawn path is covered",
+          "ok": true
+        },
+        {
+          "name": "application is idempotent",
+          "ok": true
+        },
+        {
+          "name": "ESM named exports were synchronized with syncBuiltinESMExports",
+          "ok": true
+        }
+      ],
+      "log": "preload-stub-test.log",
+      "pid": 81636,
+      "startedAt": "2026-11-05T11:02:25.798Z",
+      "endedAt": "2026-11-05T11:02:27.525Z"
+    },
+    "tsc": {
+      "command": "node.exe --import <local-file> <local-path> -p tsconfig.capture.json",
+      "pid": 79080,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:27.5323890+08:00",
+      "startedAt": "2026-11-05T11:02:27.527Z",
+      "endedAt": "2026-11-05T11:02:30.892Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-tsc.log"
+    },
+    "build": {
+      "command": "node.exe --import <local-file> <local-path> build --config vite.capture.config.ts",
+      "pid": 556,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:30.8978390+08:00",
+      "startedAt": "2026-11-05T11:02:30.893Z",
+      "endedAt": "2026-11-05T11:02:33.285Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-vite.log"
+    },
+    "preview": {
+      "sameProcess": true,
+      "pid": 99784,
+      "base": "BASE",
+      "startedAt": "2026-11-05T11:05:07.309Z",
+      "closeCallbackAt": "2026-11-05T11:06:08.732Z",
+      "httpServerListeningAfterClose": false,
+      "portClosed": true
+    },
+    "chromium": {
+      "pid": 44028,
+      "parentPid": 99784,
+      "startedAt": "2026-11-05T11:05:07.630Z",
+      "endedAt": "2026-11-05T11:06:08.602Z",
+      "creationDateFromOs": "2026-11-05T19:05:07.6387320+08:00",
+      "exitCode": 0,
+      "exitSignal": null,
+      "exitObserved": true,
+      "exitSource": "owned ChildProcess exit event from BrowserServer.process()",
+      "childrenAtLaunch": [
+        {
+          "pid": 88404,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:07.8189550+08:00",
+          "name": "chrome.exe",
+          "type": "crashpad-handler"
+        },
+        {
+          "pid": 106568,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:09.5247480+08:00",
+          "name": "chrome.exe",
+          "type": "gpu-process"
+        },
+        {
+          "pid": 93428,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:09.6871470+08:00",
+          "name": "chrome.exe",
+          "type": "utility"
+        },
+        {
+          "pid": 59400,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:10.0434140+08:00",
+          "name": "chrome.exe",
+          "type": "utility"
+        }
+      ],
+      "childrenRemaining": []
+    }
+  },
+  "attempts": [
+    {
+      "attempt": "01",
+      "state": "preserved-failure",
+      "stage": "pre-capture launch",
+      "cause": "absolute Windows path passed to Node --import; loader requires file:// URL",
+      "evidence": "attempt-01-launch-failed"
+    },
+    {
+      "attempt": "02",
+      "state": "preserved-failure",
+      "stage": "pre-capture freshness check",
+      "cause": "supervisor-created harness.log not yet in the freshness allowlist",
+      "evidence": "attempt-02-fresh-root-check"
+    },
+    {
+      "attempt": "03",
+      "state": "preserved-failure",
+      "stage": "pre-capture stub-log parse",
+      "cause": "stub log parser read past JSON into the log trailer",
+      "evidence": "attempt-03-stub-log-parse"
+    },
+    {
+      "attempt": "04",
+      "state": "preserved-failure; gameplay takes reused",
+      "stage": "two gameplay takes complete, comparison bookkeeping",
+      "cause": "comparison record omitted the input field (undefined === \"march\") while all hashes/state matched",
+      "evidence": "attempt-04-gameplay-comparison-bug"
+    },
+    {
+      "attempt": "05",
+      "state": "preserved-failure; all eight shots complete",
+      "stage": "after all captures and cleanup, final build-hash assertion",
+      "cause": "ReferenceError: buildFiles is not defined (block-scoped variable)",
+      "evidence": "attempt-05-resume-postcapture-ref"
+    },
+    {
+      "attempt": "finalize",
+      "state": "evidence composition only",
+      "stage": "no browser/build/preview",
+      "cause": "reads and re-verifies existing on-disk evidence",
+      "evidence": "finalize.mjs"
+    }
+  ],
+  "failure": {
+    "kind": "post-capture-harness-exit",
+    "stage": "final build-hash assertion after all eight shots and owned-resource cleanup",
+    "message": "ReferenceError: buildFiles is not defined",
+    "effect": "The capture harness process really exited 1. All eight PNG/JSON files and all four two-take comparisons had already passed; Chromium exited 0, the preview port closed and no owned Chromium children remained. cleanExitBaseline is therefore false.",
+    "publicEvidence": "capture-harness-exit.json",
+    "preservedAt": "attempt-05-resume-postcapture-ref (local only)"
+  },
+  "openIssues": [
+    "SwiftShader software rendering only; this is not a hardware-GPU baseline.",
+    "One fixed seed=1 march state at t=10 per camera, not a full match or live player control.",
+    "Audio, feel, reference registration, and picture ranking are not verified by this capture.",
+    "MAX_SAMPLES, anisotropy limits, and texture formats are unknown because the page does not expose them and no probe context was created.",
+    "The capture harness process really exited 1 after all eight shots and cleanup because of a post-capture bookkeeping ReferenceError; Chromium exited 0, the preview port closed, and no owned children remained. cleanExitBaseline is therefore false and passed is false."
+  ],
+  "qualityCapabilities": {
+    "rendererClass": "software",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "maxSamples": "unknown",
+    "maxAnisotropy": "unknown",
+    "textureFormats": "unknown",
+    "note": "The capture page does not expose these quality limits and no extra WebGL context was created to probe them."
+  },
+  "redaction": "renderer/vendor/version, Chromium full version, prescribed flags, relative filenames and hashes are retained; usernames, absolute paths, full argv, debug endpoints and raw logs are removed.",
+  "publicCopy": {
+    "sanitized": true,
+    "note": "Public copy replaces the actual loopback origin with BASE, removes machine username and absolute paths, full browser argv and raw debug logs. Local-only originals remain under the gitignored local output root."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "commit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+  "tree": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+  "finalize": {
+    "role": "evidence-composer",
+    "pid": 49396,
+    "nodeVersion": "v24.22.1",
+    "runtimeStartedAt": "2026-11-05T11:11:11.939Z",
+    "startedAt": "2026-11-05T11:11:12.014Z",
+    "endedAt": "2026-11-05T11:11:12.779Z",
+    "exitCodeObservation": "observed by the invoking shell; this process does not write its own post-exit code"
+  },
+  "inputs": [
+    "attempt-04-gameplay-comparison-bug/capture-result.json",
+    "attempt-05-resume-postcapture-ref/capture-result.json",
+    "attempt-05-resume-postcapture-ref/supervised-exit.json",
+    "build-files.json",
+    "capture-bundle.build.json",
+    "capture-*.png/json"
+  ],
+  "noBrowserOrPreviewStarted": true,
+  "outcome": {
+    "capturePassed": true,
+    "cleanExitBaseline": false,
+    "passed": false,
+    "status": "capture-complete, exit-baseline-incomplete"
+  }
+}

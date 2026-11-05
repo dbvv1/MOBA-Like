@@ -1,0 +1,68 @@
+# command: node.exe --import <local-file> <local-path> build --config vite.capture.config.ts
+# node: v24.22.1
+# startedAt: 2026-11-05T11:02:30.893Z
+# stdout
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 174 modules transformed.
+rendering chunks...
+computing gzip size...
+outputs/capture-build/build-identity.json                                 0.11 kB │ gzip:   0.11 kB
+outputs/capture-build/capture.html                                        2.47 kB │ gzip:   1.37 kB
+outputs/capture-build/assets/hit-ClSpEb3w.ogg                             5.35 kB
+outputs/capture-build/assets/lane-ground-BkV_wW4P.glb                     5.47 kB
+outputs/capture-build/assets/skill-w-Bw6MZLIv.ogg                         5.96 kB
+outputs/capture-build/assets/skill-q-DUKtO6-G.ogg                         5.97 kB
+outputs/capture-build/legacy-v10.html                                     6.60 kB │ gzip:   2.59 kB
+outputs/capture-build/assets/shield-CiyT-Gb-.ogg                          7.65 kB
+outputs/capture-build/assets/rock-DnYfbnCK.glb                            8.26 kB
+outputs/capture-build/candidate.html                                      9.14 kB │ gzip:   3.32 kB
+outputs/capture-build/index.html                                          9.27 kB │ gzip:   3.35 kB
+outputs/capture-build/assets/tree-CawC7zP0.glb                            9.64 kB
+outputs/capture-build/assets/lane-rEqk0SD2.navmesh                       11.18 kB
+outputs/capture-build/assets/swing-B45xdEEZ.ogg                          15.53 kB
+outputs/capture-build/assets/cast-Ca76kIp9.ogg                           16.50 kB
+outputs/capture-build/assets/trace_02-KaZGZY6K.png                       39.39 kB
+outputs/capture-build/assets/wall-OZ-rAfB1.webp                          90.56 kB
+outputs/capture-build/assets/earth-BguK5Wlt.webp                        141.10 kB
+outputs/capture-build/assets/ranged-teal-B_rlZWgD.glb                   157.55 kB
+outputs/capture-build/assets/ranged-rust-rsnFKRRJ.glb                   157.56 kB
+outputs/capture-build/assets/tower-rust-B3YjHLZt.glb                    160.32 kB
+outputs/capture-build/assets/tower-teal-BQ2jCRMr.glb                    160.36 kB
+outputs/capture-build/assets/melee-teal-fyp_u-7O.glb                    164.59 kB
+outputs/capture-build/assets/melee-rust-DlZVcWSl.glb                    164.60 kB
+outputs/capture-build/assets/hero-teal-sUFSV1Mz.glb                     169.03 kB
+outputs/capture-build/assets/hero-rust-6hnVVH5H.glb                     169.89 kB
+outputs/capture-build/assets/veyra-teal-CpkKDg1w.glb                    181.65 kB
+outputs/capture-build/assets/veyra-rust-BSIRU2oZ.glb                    182.50 kB
+outputs/capture-build/assets/forest-CXN_0qP-.webp                       196.96 kB
+outputs/capture-build/assets/amber-B-DIcLhT.glb                         199.71 kB
+outputs/capture-build/assets/blue-reactions-CcPaxMLZ.glb                221.62 kB
+outputs/capture-build/assets/siege-teal-CsgCrOmN.glb                    226.24 kB
+outputs/capture-build/assets/siege-rust-1xQRoxFB.glb                    226.26 kB
+outputs/capture-build/assets/barracks-rust-ELYrhKWW.glb                 243.90 kB
+outputs/capture-build/assets/barracks-teal-DplTNS_l.glb                 243.93 kB
+outputs/capture-build/assets/earth-albedo-gB4RPNB7.webp                 244.15 kB
+outputs/capture-build/assets/base-rust-CiTXTXEl.glb                     324.62 kB
+outputs/capture-build/assets/base-teal-L4GVNWxZ.glb                     324.63 kB
+outputs/capture-build/assets/forest-albedo-CcYmo4k8.webp                330.63 kB
+outputs/capture-build/assets/client-Bk4W7ek4.css                          1.50 kB │ gzip:   0.63 kB
+outputs/capture-build/assets/main-C5aS2cl2.js                             0.05 kB │ gzip:   0.07 kB
+outputs/capture-build/assets/B-MOBA-FIXED-CAPTURE-20261105-DVCASk_J.js    0.06 kB │ gzip:   0.07 kB
+outputs/capture-build/assets/targeted-CuESyGQG.js                         9.43 kB │ gzip:   1.68 kB
+outputs/capture-build/assets/capture-CqxIQMVz.js                         14.55 kB │ gzip:   6.13 kB
+outputs/capture-build/assets/client-CxUoB4VD.js                          45.55 kB │ gzip:  16.33 kB
+outputs/capture-build/assets/legacy-DjkSpj_2.js                         116.97 kB │ gzip:  37.04 kB
+outputs/capture-build/assets/clock-CNC-2U7w.js                          171.31 kB │ gzip:  53.44 kB
+outputs/capture-build/assets/recast-navigation.wasm-compat-Qa-X0_Ub.js  726.22 kB │ gzip: 219.84 kB
+outputs/capture-build/assets/edge-layout-M4KeNYFf.js                    736.61 kB │ gzip: 176.40 kB
+
+✓ built in 535ms
+
+# stderr
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+

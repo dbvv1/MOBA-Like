@@ -1,0 +1,41 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "commit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+  "tree": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+  "generatedAt": "2026-11-05T11:06:23.775Z",
+  "supervisor": {
+    "role": "supervising-parent",
+    "pid": 84556,
+    "nodeVersion": "v24.22.1",
+    "runtimeStartedAt": "2026-11-05T11:05:03.558Z",
+    "startedAt": "2026-11-05T11:05:03.593Z",
+    "windowsHidePolicy": "harness child and all harness descendants receive windowsHide=true through harness.mjs and windows-hide-preload.mjs",
+    "exitCodeObservation": "this process exit code is observed by the invoking shell; it cannot record its own post-exit code",
+    "endedAt": "2026-11-05T11:06:23.775Z"
+  },
+  "harness": {
+    "pid": 99784,
+    "parentPid": 84556,
+    "parentChain": [
+      {
+        "pid": 84556,
+        "role": "supervising-parent"
+      }
+    ],
+    "startedAt": "2026-11-05T11:05:03.634Z",
+    "endedAt": "2026-11-05T11:06:23.773Z",
+    "exitCode": 1,
+    "signal": null,
+    "spawnError": null,
+    "exitSource": "ChildProcess close event observed by the supervising parent",
+    "windowsHide": true,
+    "log": "harness.log"
+  },
+  "outcome": {
+    "capturePassed": false,
+    "cleanExitBaseline": false,
+    "passed": false,
+    "status": "capture-failed"
+  },
+  "note": "Raw supervised exit record of the capture invocation. Its outcome was computed before the final evidence composition; report.json carries the final capturePassed/cleanExitBaseline result, which keeps this real harness exit 1 visible."
+}

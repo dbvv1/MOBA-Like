@@ -1,0 +1,61 @@
+# command: node.exe <local-file>
+# node: v24.22.1
+# startedAt: 2026-11-05T11:02:25.798Z
+# stdout
+{
+  "applied": true,
+  "checks": [
+    {
+      "name": "apply reports wrappers and prototype patch",
+      "ok": true
+    },
+    {
+      "name": "fixed Vite config shape execFileSync(git,args,{cwd,encoding}) forces windowsHide",
+      "ok": true
+    },
+    {
+      "name": "spawn overloads keep command, args, options and add windowsHide",
+      "ok": true
+    },
+    {
+      "name": "spawnSync overloads force windowsHide",
+      "ok": true
+    },
+    {
+      "name": "exec overloads handle options and callback forms",
+      "ok": true
+    },
+    {
+      "name": "execSync preserves stdio and forces windowsHide",
+      "ok": true
+    },
+    {
+      "name": "execFile overloads preserve callback positions",
+      "ok": true
+    },
+    {
+      "name": "execFileSync overloads force windowsHide",
+      "ok": true
+    },
+    {
+      "name": "fork overloads force windowsHide",
+      "ok": true
+    },
+    {
+      "name": "internal ChildProcess.prototype.spawn path is covered",
+      "ok": true
+    },
+    {
+      "name": "application is idempotent",
+      "ok": true
+    },
+    {
+      "name": "ESM named exports were synchronized with syncBuiltinESMExports",
+      "ok": true
+    }
+  ],
+  "processesStarted": 0
+}
+
+# stderr
+

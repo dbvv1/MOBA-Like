@@ -1,0 +1,795 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "camera": "gameplay",
+  "take": 2,
+  "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+  "urlPath": "/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+  "capturedAt": "2026-11-05T11:02:50.898Z",
+  "completedAt": "2026-11-05T11:02:59.250Z",
+  "commit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+  "tree": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+  "replay": {
+    "seed": 1,
+    "input": "march",
+    "contentVersion": 11,
+    "heroesPerTeam": 1,
+    "heroIds": [
+      "veyra",
+      "veyra"
+    ],
+    "opponent": {
+      "difficulty": "normal",
+      "seed": 1002
+    },
+    "moveTarget": {
+      "x": -18,
+      "z": 1.2
+    },
+    "requestedTime": 10,
+    "virtualFrame": 600,
+    "simTick": 300,
+    "warmupFrames": 12,
+    "frame": 0,
+    "frames": 1,
+    "visualHz": 60,
+    "simHz": 30
+  },
+  "expectedCamera": null,
+  "followPlayer": true,
+  "validation": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "ready",
+        "ok": true,
+        "actual": true
+      },
+      {
+        "name": "errorEmpty",
+        "ok": true,
+        "actual": null
+      },
+      {
+        "name": "sourceCommitFixed",
+        "ok": true,
+        "actual": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64"
+      },
+      {
+        "name": "sourceDirtyFalse",
+        "ok": true,
+        "actual": false
+      },
+      {
+        "name": "bundleSha256MatchesBuild",
+        "ok": true,
+        "actual": {
+          "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+          "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+        }
+      },
+      {
+        "name": "bundleFilesMatchBuild",
+        "ok": true,
+        "actual": {
+          "files": 49
+        }
+      },
+      {
+        "name": "captureRoleGameplay",
+        "ok": true,
+        "actual": "gameplay"
+      },
+      {
+        "name": "shotCorrect",
+        "ok": true,
+        "actual": "gameplay"
+      },
+      {
+        "name": "seed1",
+        "ok": true,
+        "actual": 1
+      },
+      {
+        "name": "inputMarch",
+        "ok": true,
+        "actual": "march"
+      },
+      {
+        "name": "contentVersion11",
+        "ok": true,
+        "actual": 11
+      },
+      {
+        "name": "frame0",
+        "ok": true,
+        "actual": 0
+      },
+      {
+        "name": "frames1",
+        "ok": true,
+        "actual": 1
+      },
+      {
+        "name": "completeTrue",
+        "ok": true,
+        "actual": true
+      },
+      {
+        "name": "virtualFrame600",
+        "ok": true,
+        "actual": 600
+      },
+      {
+        "name": "simTick300",
+        "ok": true,
+        "actual": 300
+      },
+      {
+        "name": "t10",
+        "ok": true,
+        "actual": 10
+      },
+      {
+        "name": "warmupFrames12",
+        "ok": true,
+        "actual": 12
+      },
+      {
+        "name": "stateHashPresent",
+        "ok": true,
+        "actual": "4e0d5f7902a525e0"
+      },
+      {
+        "name": "backendWebgl2",
+        "ok": true,
+        "actual": "webgl2"
+      },
+      {
+        "name": "imageSize",
+        "ok": true,
+        "actual": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      {
+        "name": "viewportSize",
+        "ok": true,
+        "actual": {
+          "width": 1280,
+          "height": 720,
+          "pixelRatio": 1,
+          "bufferWidth": 1280,
+          "bufferHeight": 720
+        }
+      },
+      {
+        "name": "expectedViewportSize",
+        "ok": true,
+        "actual": {
+          "width": 1280,
+          "height": 720
+        }
+      },
+      {
+        "name": "rendererClassSoftware",
+        "ok": true,
+        "actual": "software"
+      },
+      {
+        "name": "rendererPresent",
+        "ok": true,
+        "actual": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      {
+        "name": "vendorPresent",
+        "ok": true,
+        "actual": "Google Inc. (Google)"
+      },
+      {
+        "name": "webglVersionPresent",
+        "ok": true,
+        "actual": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      {
+        "name": "unmaskedFlagBoolean",
+        "ok": true,
+        "actual": true
+      },
+      {
+        "name": "lightingRequested",
+        "ok": true,
+        "actual": "forest-light-v1"
+      },
+      {
+        "name": "lightingConfigured",
+        "ok": true,
+        "actual": "forest-light-v1"
+      },
+      {
+        "name": "lightingActive",
+        "ok": true,
+        "actual": "forest-light-v1"
+      },
+      {
+        "name": "lightingStage",
+        "ok": true,
+        "actual": "frame-submitted"
+      },
+      {
+        "name": "materialsRequested",
+        "ok": true,
+        "actual": "baseline"
+      },
+      {
+        "name": "materialsConfigured",
+        "ok": true,
+        "actual": "baseline"
+      },
+      {
+        "name": "materialsActiveNull",
+        "ok": true,
+        "actual": null
+      },
+      {
+        "name": "standardsNull",
+        "ok": true,
+        "actual": null
+      },
+      {
+        "name": "mobaClientAbsent",
+        "ok": true,
+        "actual": "undefined"
+      },
+      {
+        "name": "hudWorldBarsOnly",
+        "ok": true,
+        "actual": "world-bars-only"
+      },
+      {
+        "name": "audioNotCaptured",
+        "ok": true,
+        "actual": "not-captured"
+      },
+      {
+        "name": "renderSubmitted",
+        "ok": true,
+        "actual": {
+          "calls": 5,
+          "triangles": 72,
+          "geometries": 48,
+          "textures": 27
+        }
+      },
+      {
+        "name": "cameraFov45",
+        "ok": true,
+        "actual": {
+          "position": {
+            "x": -24.23333333333305,
+            "y": 24,
+            "z": 19.200000047683716
+          },
+          "target": {
+            "x": -24.23333333333305,
+            "y": 0,
+            "z": 1.2000000476837158
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        }
+      },
+      {
+        "name": "cameraAspect",
+        "ok": true,
+        "actual": {
+          "position": {
+            "x": -24.23333333333305,
+            "y": 24,
+            "z": 19.200000047683716
+          },
+          "target": {
+            "x": -24.23333333333305,
+            "y": 0,
+            "z": 1.2000000476837158
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        }
+      },
+      {
+        "name": "cameraFollowForm",
+        "ok": true,
+        "actual": {
+          "position": {
+            "x": -24.23333333333305,
+            "y": 24,
+            "z": 19.200000047683716
+          },
+          "target": {
+            "x": -24.23333333333305,
+            "y": 0,
+            "z": 1.2000000476837158
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        }
+      },
+      {
+        "name": "cameraTargetFinite",
+        "ok": true,
+        "actual": {
+          "position": {
+            "x": -24.23333333333305,
+            "y": 24,
+            "z": 19.200000047683716
+          },
+          "target": {
+            "x": -24.23333333333305,
+            "y": 0,
+            "z": 1.2000000476837158
+          },
+          "fov": 45,
+          "aspect": 1.7777777777777777
+        }
+      },
+      {
+        "name": "pngSignal",
+        "ok": true,
+        "actual": {
+          "colors": 917,
+          "sampledEvery": 4
+        }
+      },
+      {
+        "name": "contextNotLost",
+        "ok": true,
+        "actual": false
+      },
+      {
+        "name": "pageErrorsEmpty",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "consoleErrorsEmpty",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "requestFailedEmpty",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "httpErrorsEmpty",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "externalRequestsEmpty",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "servedResponsesMatch",
+        "ok": true,
+        "actual": []
+      },
+      {
+        "name": "entryServed",
+        "ok": true,
+        "actual": [
+          {
+            "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+            "status": 200,
+            "resourceType": "document",
+            "file": "capture.html",
+            "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+            "localFileExists": true,
+            "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+            "match": true
+          }
+        ]
+      },
+      {
+        "name": "captureModuleServed",
+        "ok": true,
+        "actual": [
+          "assets/edge-layout-M4KeNYFf.js",
+          "assets/capture-CqxIQMVz.js",
+          "assets/clock-CNC-2U7w.js",
+          "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js"
+        ]
+      },
+      {
+        "name": "frame0Waited150msStable",
+        "ok": true,
+        "actual": {
+          "stateHashSame": true,
+          "pngSame": true
+        }
+      }
+    ]
+  },
+  "responses": [
+    {
+      "url": "BASE/capture.html?shot=gameplay&seed=1&t=10&input=march&frames=1&lighting=forest-light-v1&materials=baseline",
+      "status": 200,
+      "resourceType": "document",
+      "file": "capture.html",
+      "servedSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+      "localFileExists": true,
+      "localSha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f",
+      "match": true
+    },
+    {
+      "url": "BASE/assets/edge-layout-M4KeNYFf.js",
+      "status": 200,
+      "resourceType": "script",
+      "file": "assets/edge-layout-M4KeNYFf.js",
+      "servedSha256": "ac63ad2bfe765188915337e976999ab2afa4d2e2802a7ff1f199877767107bee",
+      "localFileExists": true,
+      "localSha256": "ac63ad2bfe765188915337e976999ab2afa4d2e2802a7ff1f199877767107bee",
+      "match": true
+    },
+    {
+      "url": "BASE/assets/capture-CqxIQMVz.js",
+      "status": 200,
+      "resourceType": "script",
+      "file": "assets/capture-CqxIQMVz.js",
+      "servedSha256": "09410155068be1e3cd6392826d34d0a1107280269eb232cd9b94f369fbe05584",
+      "localFileExists": true,
+      "localSha256": "09410155068be1e3cd6392826d34d0a1107280269eb232cd9b94f369fbe05584",
+      "match": true
+    },
+    {
+      "url": "BASE/assets/clock-CNC-2U7w.js",
+      "status": 200,
+      "resourceType": "script",
+      "file": "assets/clock-CNC-2U7w.js",
+      "servedSha256": "225173c37d6c3e8de1c36ef036c5c580b33676b5edd23a6ea7dff1b657b0de6f",
+      "localFileExists": true,
+      "localSha256": "225173c37d6c3e8de1c36ef036c5c580b33676b5edd23a6ea7dff1b657b0de6f",
+      "match": true
+    },
+    {
+      "url": "BASE/assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+      "status": 200,
+      "resourceType": "script",
+      "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+      "servedSha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896",
+      "localFileExists": true,
+      "localSha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896",
+      "match": true
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requestFailed": [],
+  "httpErrors": [],
+  "externalRequests": [],
+  "contextLost": false,
+  "png": {
+    "file": "capture-gameplay-2.png",
+    "width": 1280,
+    "height": 720,
+    "bytes": 2182115,
+    "sha256": "05208e165a7e308e8d70285703cbf0e98176b3c3c5ae2595ed10e2c269d0c4fc",
+    "rgbaSha256": "489481c6e9170edba3d76b46ccb598659c5f30c3b15aed0c67ce15ad0a4a9639",
+    "sampledColors5bit": 917
+  },
+  "stateStableSha256": "1195d164a4a29ebad09dca1bbf4a660d1e63e4e64daf4539de24a3ffab578658",
+  "cameraStableSha256": "5319611095a1ba65ea5f37e0ab2564c0a63d24730879a03768582c3b278b93e9",
+  "rendererStableSha256": "be36ea9271c0861fc8810efb8b0e7edbaf075912e23eb267e2a58b2c0321b736",
+  "lightingStableSha256": "f9ef75f9ad50c12976b232335af145d0f2d426376eac303340c52dcbfe193914",
+  "materialsStableSha256": "6bed39b0c7c2844d3da1a897aa28debe2d09d2b385accb54341e25357b71d21b",
+  "shot": {
+    "ready": true,
+    "sourceCommit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+    "sourceDirty": false,
+    "bundleSha256": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+    "bundle": {
+      "sha256": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+      "files": [
+        {
+          "file": "assets/B-MOBA-FIXED-CAPTURE-20261105-DVCASk_J.js",
+          "sha256": "ec09d1f1151c4284d3a7fce459a977d0d1ab09ec692d408c3eeb347158430bc6"
+        },
+        {
+          "file": "assets/amber-B-DIcLhT.glb",
+          "sha256": "b52c8593ad3a7866e9f924837c357625d6f70882ddfe78355f4857301823e032"
+        },
+        {
+          "file": "assets/barracks-rust-ELYrhKWW.glb",
+          "sha256": "7f44da1b2d10446e9fdaa0f0d36b85e6fa76a32f9942c9437edf248f8cfb13b6"
+        },
+        {
+          "file": "assets/barracks-teal-DplTNS_l.glb",
+          "sha256": "4f481360c29e8a634dc5026600a3a1b0353bea85e8d7e7a67dc06d3f687ff647"
+        },
+        {
+          "file": "assets/base-rust-CiTXTXEl.glb",
+          "sha256": "e46c06e697865a707245c0184b994983c6ab74ed1b1ec371ce6c980db1ab6d84"
+        },
+        {
+          "file": "assets/base-teal-L4GVNWxZ.glb",
+          "sha256": "a32baae7f885f6ee7214bbfd5f6d0196c1e9251811b72197587698adb58c3621"
+        },
+        {
+          "file": "assets/blue-reactions-CcPaxMLZ.glb",
+          "sha256": "16bcf40a65e1cc81b1c48c9cf39f0af65e25c58eca7060cca0660a1fbc4943d6"
+        },
+        {
+          "file": "assets/capture-CqxIQMVz.js",
+          "sha256": "09410155068be1e3cd6392826d34d0a1107280269eb232cd9b94f369fbe05584"
+        },
+        {
+          "file": "assets/cast-Ca76kIp9.ogg",
+          "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+        },
+        {
+          "file": "assets/client-Bk4W7ek4.css",
+          "sha256": "5edea3c578e1b7dc489c7049222cc2747ba5c079a1130a06270fdc89a9393ae2"
+        },
+        {
+          "file": "assets/client-CxUoB4VD.js",
+          "sha256": "87a48ac3b5c04fa749545d18e71a2110193adf1b9ae9656a7ee0a4780dbcd5a5"
+        },
+        {
+          "file": "assets/clock-CNC-2U7w.js",
+          "sha256": "225173c37d6c3e8de1c36ef036c5c580b33676b5edd23a6ea7dff1b657b0de6f"
+        },
+        {
+          "file": "assets/earth-BguK5Wlt.webp",
+          "sha256": "a6321613105a0d5b56739021550ea10d60e9e50369902324ee3c0648b717f053"
+        },
+        {
+          "file": "assets/earth-albedo-gB4RPNB7.webp",
+          "sha256": "d2b97c378d4d30a30061ce6c129bf5f1392f2a6dab7dd9912acce1845167163d"
+        },
+        {
+          "file": "assets/edge-layout-M4KeNYFf.js",
+          "sha256": "ac63ad2bfe765188915337e976999ab2afa4d2e2802a7ff1f199877767107bee"
+        },
+        {
+          "file": "assets/forest-CXN_0qP-.webp",
+          "sha256": "0dcba5c78bd9336dd7f16af934481a253140959fea409b640ccc08620e0bb604"
+        },
+        {
+          "file": "assets/forest-albedo-CcYmo4k8.webp",
+          "sha256": "9bb8d5d667fd4760b78c84866d039d205969bb2a2f7877790ddfb69842bc6f67"
+        },
+        {
+          "file": "assets/hero-rust-6hnVVH5H.glb",
+          "sha256": "553d499c261e9690264472fcc82d6333bc505551ce082dd35e45b20580e72ab0"
+        },
+        {
+          "file": "assets/hero-teal-sUFSV1Mz.glb",
+          "sha256": "2c2494ea3f54d6631fb2cbc972da99049b7e36ff029210ed966c7d5bf96ddddd"
+        },
+        {
+          "file": "assets/hit-ClSpEb3w.ogg",
+          "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+        },
+        {
+          "file": "assets/lane-ground-BkV_wW4P.glb",
+          "sha256": "35f5df64a3eb5e797d105fd268980c10b754af5c8ab2e4b3c0775ec39ef3d3ce"
+        },
+        {
+          "file": "assets/lane-rEqk0SD2.navmesh",
+          "sha256": "4b704a2ae42a1216f2bc9b35c88497b713b087a76e261697ae86e6445fe8a1d5"
+        },
+        {
+          "file": "assets/legacy-DjkSpj_2.js",
+          "sha256": "a2815745808c7a6642eba029b2f455a908e0e1502890dbd1abd592ed7ecf8964"
+        },
+        {
+          "file": "assets/main-C5aS2cl2.js",
+          "sha256": "dd1992675e4d96b4f2b98c7ddd397073f67f2bb7addbbde211c687aa54272b80"
+        },
+        {
+          "file": "assets/melee-rust-DlZVcWSl.glb",
+          "sha256": "8e78f5eb3a033b92d7d2f01eb1ed354ddcf6271f5b27df2865a4eb4ba8e13244"
+        },
+        {
+          "file": "assets/melee-teal-fyp_u-7O.glb",
+          "sha256": "7eb0c4fa858ad15a4ec52ac535bf32c1b07a473b07b2d5afc6ad9e82645ae91d"
+        },
+        {
+          "file": "assets/ranged-rust-rsnFKRRJ.glb",
+          "sha256": "232365c544fa973a758f5191f208323519d6e183a870acc9c6104ff31565c449"
+        },
+        {
+          "file": "assets/ranged-teal-B_rlZWgD.glb",
+          "sha256": "067a35fb9e4752c72f6784566c1f833b925fd25283c0bb55c2bf1c2946918464"
+        },
+        {
+          "file": "assets/recast-navigation.wasm-compat-Qa-X0_Ub.js",
+          "sha256": "32c03f6185eb21c7428f58164d12336ae1596d9187370e11aa9edea965ce0896"
+        },
+        {
+          "file": "assets/rock-DnYfbnCK.glb",
+          "sha256": "0b538b944c7568e379d3c0dcc0c72e605c1e50bfac1e8da3fc04bde61ddac1f8"
+        },
+        {
+          "file": "assets/shield-CiyT-Gb-.ogg",
+          "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+        },
+        {
+          "file": "assets/siege-rust-1xQRoxFB.glb",
+          "sha256": "43acd074a301587985c7d8e53e663fefdab668e960cf2ed7afd73b0f349f4748"
+        },
+        {
+          "file": "assets/siege-teal-CsgCrOmN.glb",
+          "sha256": "17f3d8bcf24b919c5438f03e9b529eb77f5fcd334fd4684fc7d1af3cf2bdd8d5"
+        },
+        {
+          "file": "assets/skill-q-DUKtO6-G.ogg",
+          "sha256": "96d0ce0cb6a4cfb3f480b6554fdfaa0dabf8baa7ee1d224ee8d3a8fffab4fb43"
+        },
+        {
+          "file": "assets/skill-w-Bw6MZLIv.ogg",
+          "sha256": "c473d791f8909c73e77d0a4890f6eb4b991b5d46737bab0066cfc109b4d57eef"
+        },
+        {
+          "file": "assets/swing-B45xdEEZ.ogg",
+          "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f"
+        },
+        {
+          "file": "assets/targeted-CuESyGQG.js",
+          "sha256": "5d7482bb2bf3c9ac7284bcc750417315e3deb44a4ca03bebf33c03ee534084ee"
+        },
+        {
+          "file": "assets/tower-rust-B3YjHLZt.glb",
+          "sha256": "ba8a06f854204e93e2f48a75bbb56145fba863576e8a524d5b5ea0922153bd41"
+        },
+        {
+          "file": "assets/tower-teal-BQ2jCRMr.glb",
+          "sha256": "058ba8b84d9e755b5e68043a3341c8e9c731bdbc713980a296b0798275360425"
+        },
+        {
+          "file": "assets/trace_02-KaZGZY6K.png",
+          "sha256": "8c224d6d4544d8437bce5ee51452957b31f5479e337c5f432dc1b55b1e2f9685"
+        },
+        {
+          "file": "assets/tree-CawC7zP0.glb",
+          "sha256": "1469f78fd61c7f23c4bb2113dcba9d7ce59dca1f4e91b741f4f26a72ce46afd7"
+        },
+        {
+          "file": "assets/veyra-rust-BSIRU2oZ.glb",
+          "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774"
+        },
+        {
+          "file": "assets/veyra-teal-CpkKDg1w.glb",
+          "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e"
+        },
+        {
+          "file": "assets/wall-OZ-rAfB1.webp",
+          "sha256": "1d0bb1679ce4b11a21a7926cee21b56ad766006d19d61ccbc99a7bb08c9cf603"
+        },
+        {
+          "file": "build-identity.json",
+          "sha256": "aa61e4cd824677c5364218656f2f5abcd7463e3e8f607ad062be1b8e4c5b7112"
+        },
+        {
+          "file": "candidate.html",
+          "sha256": "9c2e79cf25a97f698f2faa56a9d52823e909d1692c20bf7e5005b01c5d2f8461"
+        },
+        {
+          "file": "capture.html",
+          "sha256": "7aa103b840b93073484c3e14670248cfb851592406f30b418249ba5f04fa268f"
+        },
+        {
+          "file": "index.html",
+          "sha256": "c8cda994c8eb24a7f04f88d231a3bf865fc96eb4dfaaa28bc91f0c7ac6a85fed"
+        },
+        {
+          "file": "legacy-v10.html",
+          "sha256": "2360d5f651a1c7898b67bc0c33c9de279a2cd54d9236d52282decc87f684a3e5"
+        }
+      ]
+    },
+    "shot": "gameplay",
+    "seed": 1,
+    "input": "march",
+    "requestedTime": 10,
+    "t": 10,
+    "virtualFrame": 600,
+    "fixedDt": 0.016666666666666666,
+    "simTick": 300,
+    "simTime": 10,
+    "contentVersion": 11,
+    "stateHash": "4e0d5f7902a525e0",
+    "frame": 0,
+    "frames": 1,
+    "complete": true,
+    "warmupFrames": 12,
+    "alpha": 0,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "vendor": "Google Inc. (Google)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "unmasked": true,
+    "rendererClass": "software",
+    "standards": null,
+    "materials": {
+      "requested": "baseline",
+      "configured": "baseline",
+      "active": null,
+      "buildingCoverage": []
+    },
+    "lighting": {
+      "requested": "forest-light-v1",
+      "configured": "forest-light-v1",
+      "active": "forest-light-v1",
+      "stage": "frame-submitted",
+      "diffuse": "source-materials",
+      "environment": {
+        "kind": "ambient-and-hemisphere",
+        "sky": "#b9ddd8",
+        "ground": "#243e32",
+        "hemisphereIntensity": 1.35,
+        "ambientIntensity": 0.08
+      },
+      "directSun": {
+        "color": "#fff0cf",
+        "intensity": 2.8,
+        "shadow": "PCFShadowMap"
+      },
+      "toneMapping": "ACESFilmic",
+      "exposure": 1.08,
+      "post": {
+        "ao": "world-only-SSAO",
+        "kernelRadius": 1.4,
+        "samples": 16,
+        "minDistance": 0.001,
+        "maxDistance": 0.015,
+        "grade": "linear-cool-shadows-warm-highlights",
+        "output": "OutputPass",
+        "buffer": "HalfFloatType",
+        "msaaSamples": 4
+      }
+    },
+    "camera": {
+      "position": {
+        "x": -24.23333333333305,
+        "y": 24,
+        "z": 19.200000047683716
+      },
+      "target": {
+        "x": -24.23333333333305,
+        "y": 0,
+        "z": 1.2000000476837158
+      },
+      "fov": 45,
+      "aspect": 1.7777777777777777
+    },
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "pixelRatio": 1,
+      "bufferWidth": 1280,
+      "bufferHeight": 720
+    },
+    "render": {
+      "calls": 5,
+      "triangles": 72,
+      "geometries": 48,
+      "textures": 27
+    },
+    "captureRole": "gameplay",
+    "backend": "webgl2",
+    "image": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1
+    },
+    "audio": "not-captured",
+    "hud": "world-bars-only",
+    "expectedViewport": {
+      "width": 1280,
+      "height": 720
+    }
+  }
+}

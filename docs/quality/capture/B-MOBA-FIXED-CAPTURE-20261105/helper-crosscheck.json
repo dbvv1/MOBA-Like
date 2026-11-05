@@ -1,0 +1,86 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "generatedAt": "2026-11-05T11:12:53.252Z",
+  "helper": "tools/capture-output.ts",
+  "helperImport": "Node 24 direct TypeScript import; no browser or preview started",
+  "runtimeStartedAt": "2026-11-05T11:12:53.136Z",
+  "buildDir": "outputs/capture-build",
+  "checks": [
+    {
+      "name": "bundleShaMatchesBuildManifest",
+      "ok": true,
+      "actual": {
+        "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de",
+        "expected": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+      }
+    },
+    {
+      "name": "bundleFileListMatchesBuildManifest",
+      "ok": true,
+      "actual": {
+        "count": 49
+      }
+    },
+    {
+      "name": "helperVerifyServedBundleFromDisk",
+      "ok": true,
+      "actual": "47b62e7e86ef2cf92de59e9ee2c3f6b17331e6843f3f2ec28f9c44a90b9c58de"
+    },
+    {
+      "name": "closedPortRefused",
+      "ok": true,
+      "actual": "refused"
+    },
+    {
+      "name": "publicErrorRedactsEndpointAndPath",
+      "ok": true,
+      "actual": "failure at <browser-endpoint> and <private-path>\\capture.log"
+    },
+    {
+      "name": "spawnEvidenceFlags",
+      "ok": true,
+      "actual": {
+        "source": "ChildProcess.spawnargs",
+        "executable": "playwright-bundled",
+        "headless": true,
+        "headed": false,
+        "noSandbox": true,
+        "disableSetuidSandbox": false,
+        "unsafeSwiftshader": true,
+        "useAngle": "swiftshader",
+        "software": false
+      }
+    },
+    {
+      "name": "observeProcessIdentity",
+      "ok": true,
+      "actual": {
+        "pid": 12345,
+        "parentPid": 110368,
+        "registeredAt": "2026-11-05T11:12:53.252Z",
+        "identitySource": "owned-ChildProcess-handle",
+        "exit": null
+      }
+    },
+    {
+      "name": "browserExitStateOwnedHandlesClosed",
+      "ok": true,
+      "actual": null
+    },
+    {
+      "name": "browserCloserClosesBothHandles",
+      "ok": true,
+      "actual": {
+        "serverClosed": true,
+        "connectionClosed": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "repeatDescriptionMentionsExactComparison",
+      "ok": true,
+      "actual": "gameplay: 2 runs × 1 frames; exact RGBA/state/camera repeat comparison"
+    }
+  ],
+  "passed": true
+}

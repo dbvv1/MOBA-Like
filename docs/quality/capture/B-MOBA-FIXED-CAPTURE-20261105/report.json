@@ -1,0 +1,379 @@
+{
+  "taskId": "B-MOBA-FIXED-CAPTURE-20261105",
+  "commit": "7e1986f1ca2f05f07124d34fa9fdcbd3f33bfe64",
+  "tree": "316e1a3a6da5bd40e84faba90adae3ee4ac31533",
+  "generatedAt": "2026-11-05T11:11:12.779Z",
+  "capturePassed": true,
+  "cleanExitBaseline": false,
+  "passed": false,
+  "complete": false,
+  "status": "capture-complete, exit-baseline-incomplete",
+  "passedScope": "capture evidence plus observed build/harness/Chromium exits and owned-resource cleanup",
+  "cleanExitBaselineMeaning": "capturePassed && capture harness exit code 0 without signal && Chromium exit code 0 without signal && preview port closed && no owned Chromium children remain",
+  "captureInvocation": "Gameplay takes come unchanged from attempt-04. The other six shots and all four comparisons come from attempt-05. One tsc/vite build was run (attempt-04) and reused. No capture was retaken. The finalize step started no browser, preview, or build.",
+  "summary": "Eight PNGs captured, decoded, and verified; each of four cameras has two identical takes. Capture evidence is complete, but the capture harness process exited 1 after all shots and cleanup because of a post-capture bookkeeping ReferenceError; cleanExitBaseline is false.",
+  "checks": {
+    "preloadStubPassed": true,
+    "tscExit0": true,
+    "buildExit0": true,
+    "eightShots": true,
+    "allShotValidationPassed": true,
+    "allTakesMatch": true,
+    "softwareRendererEveryShot": true,
+    "webgl2EveryShot": true,
+    "servedBundlesMatch": true,
+    "sourceClean": true,
+    "chromiumVersionMatchesPrecheck": true,
+    "chromiumExit0": true,
+    "previewPortClosed": true,
+    "browserChildrenGone": true,
+    "captureHarnessExit0": false,
+    "finalizeEvidenceConsistent": true
+  },
+  "failure": {
+    "kind": "post-capture-harness-exit",
+    "stage": "final build-hash assertion after all eight shots and owned-resource cleanup",
+    "message": "ReferenceError: buildFiles is not defined",
+    "effect": "The capture harness process really exited 1. All eight PNG/JSON files and all four two-take comparisons had already passed; Chromium exited 0, the preview port closed and no owned Chromium children remained. cleanExitBaseline is therefore false.",
+    "publicEvidence": "capture-harness-exit.json",
+    "preservedAt": "attempt-05-resume-postcapture-ref (local only)"
+  },
+  "comparisons": [
+    {
+      "camera": "gameplay",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "spawn",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "first-tower",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    },
+    {
+      "camera": "spawn-to-tower",
+      "same": {
+        "rgbaSha256": true,
+        "pngSha256": true,
+        "stateHash": true,
+        "stateStable": true,
+        "cameraStable": true,
+        "rendererStable": true,
+        "lightingStable": true,
+        "materialsStable": true,
+        "seed": true,
+        "input": true,
+        "t": true,
+        "frame": true,
+        "virtualFrame": true,
+        "simTick": true
+      },
+      "passed": true
+    }
+  ],
+  "processRecords": {
+    "finalize": {
+      "role": "evidence-composer",
+      "pid": 49396,
+      "nodeVersion": "v24.22.1",
+      "runtimeStartedAt": "2026-11-05T11:11:11.939Z",
+      "startedAt": "2026-11-05T11:11:12.014Z",
+      "endedAt": "2026-11-05T11:11:12.779Z",
+      "exitCodeObservation": "observed by the invoking shell; this process does not write its own post-exit code"
+    },
+    "supervisor": {
+      "role": "supervising-parent",
+      "pid": 84556,
+      "nodeVersion": "v24.22.1",
+      "runtimeStartedAt": "2026-11-05T11:05:03.558Z",
+      "startedAt": "2026-11-05T11:05:03.593Z",
+      "windowsHidePolicy": "harness child and all harness descendants receive windowsHide=true through harness.mjs and windows-hide-preload.mjs",
+      "exitCodeObservation": "this process exit code is observed by the invoking shell; it cannot record its own post-exit code",
+      "endedAt": "2026-11-05T11:06:23.775Z"
+    },
+    "captureHarness": {
+      "pid": 99784,
+      "parentPid": 84556,
+      "parentChain": [
+        {
+          "pid": 84556,
+          "role": "supervising-parent"
+        }
+      ],
+      "startedAt": "2026-11-05T11:05:03.634Z",
+      "endedAt": "2026-11-05T11:06:23.773Z",
+      "exitCode": 1,
+      "signal": null,
+      "spawnError": null,
+      "exitSource": "ChildProcess close event observed by the supervising parent",
+      "windowsHide": true,
+      "log": "harness.log"
+    },
+    "preloadStubTest": {
+      "exitCode": 0,
+      "passed": true,
+      "processesStarted": 0,
+      "checks": [
+        {
+          "name": "apply reports wrappers and prototype patch",
+          "ok": true
+        },
+        {
+          "name": "fixed Vite config shape execFileSync(git,args,{cwd,encoding}) forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawn overloads keep command, args, options and add windowsHide",
+          "ok": true
+        },
+        {
+          "name": "spawnSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "exec overloads handle options and callback forms",
+          "ok": true
+        },
+        {
+          "name": "execSync preserves stdio and forces windowsHide",
+          "ok": true
+        },
+        {
+          "name": "execFile overloads preserve callback positions",
+          "ok": true
+        },
+        {
+          "name": "execFileSync overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "fork overloads force windowsHide",
+          "ok": true
+        },
+        {
+          "name": "internal ChildProcess.prototype.spawn path is covered",
+          "ok": true
+        },
+        {
+          "name": "application is idempotent",
+          "ok": true
+        },
+        {
+          "name": "ESM named exports were synchronized with syncBuiltinESMExports",
+          "ok": true
+        }
+      ],
+      "log": "preload-stub-test.log",
+      "pid": 81636,
+      "startedAt": "2026-11-05T11:02:25.798Z",
+      "endedAt": "2026-11-05T11:02:27.525Z"
+    },
+    "tsc": {
+      "command": "node.exe --import <local-file> <local-path> -p tsconfig.capture.json",
+      "pid": 79080,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:27.5323890+08:00",
+      "startedAt": "2026-11-05T11:02:27.527Z",
+      "endedAt": "2026-11-05T11:02:30.892Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-tsc.log"
+    },
+    "build": {
+      "command": "node.exe --import <local-file> <local-path> build --config vite.capture.config.ts",
+      "pid": 556,
+      "parentPid": 110356,
+      "creationDateFromOs": "2026-11-05T19:02:30.8978390+08:00",
+      "startedAt": "2026-11-05T11:02:30.893Z",
+      "endedAt": "2026-11-05T11:02:33.285Z",
+      "exitCode": 0,
+      "signal": null,
+      "spawnError": null,
+      "windowsHide": true,
+      "log": "build-vite.log"
+    },
+    "preview": {
+      "sameProcess": true,
+      "pid": 99784,
+      "base": "BASE",
+      "startedAt": "2026-11-05T11:05:07.309Z",
+      "closeCallbackAt": "2026-11-05T11:06:08.732Z",
+      "httpServerListeningAfterClose": false,
+      "portClosed": true
+    },
+    "chromium": {
+      "pid": 44028,
+      "parentPid": 99784,
+      "startedAt": "2026-11-05T11:05:07.630Z",
+      "endedAt": "2026-11-05T11:06:08.602Z",
+      "creationDateFromOs": "2026-11-05T19:05:07.6387320+08:00",
+      "exitCode": 0,
+      "exitSignal": null,
+      "exitObserved": true,
+      "exitSource": "owned ChildProcess exit event from BrowserServer.process()",
+      "childrenAtLaunch": [
+        {
+          "pid": 88404,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:07.8189550+08:00",
+          "name": "chrome.exe",
+          "type": "crashpad-handler"
+        },
+        {
+          "pid": 106568,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:09.5247480+08:00",
+          "name": "chrome.exe",
+          "type": "gpu-process"
+        },
+        {
+          "pid": 93428,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:09.6871470+08:00",
+          "name": "chrome.exe",
+          "type": "utility"
+        },
+        {
+          "pid": 59400,
+          "parentPid": 44028,
+          "createdAt": "2026-11-05T19:05:10.0434140+08:00",
+          "name": "chrome.exe",
+          "type": "utility"
+        }
+      ],
+      "childrenRemaining": []
+    }
+  },
+  "attempts": [
+    {
+      "attempt": "01",
+      "state": "preserved-failure",
+      "stage": "pre-capture launch",
+      "cause": "absolute Windows path passed to Node --import; loader requires file:// URL",
+      "evidence": "attempt-01-launch-failed"
+    },
+    {
+      "attempt": "02",
+      "state": "preserved-failure",
+      "stage": "pre-capture freshness check",
+      "cause": "supervisor-created harness.log not yet in the freshness allowlist",
+      "evidence": "attempt-02-fresh-root-check"
+    },
+    {
+      "attempt": "03",
+      "state": "preserved-failure",
+      "stage": "pre-capture stub-log parse",
+      "cause": "stub log parser read past JSON into the log trailer",
+      "evidence": "attempt-03-stub-log-parse"
+    },
+    {
+      "attempt": "04",
+      "state": "preserved-failure; gameplay takes reused",
+      "stage": "two gameplay takes complete, comparison bookkeeping",
+      "cause": "comparison record omitted the input field (undefined === \"march\") while all hashes/state matched",
+      "evidence": "attempt-04-gameplay-comparison-bug"
+    },
+    {
+      "attempt": "05",
+      "state": "preserved-failure; all eight shots complete",
+      "stage": "after all captures and cleanup, final build-hash assertion",
+      "cause": "ReferenceError: buildFiles is not defined (block-scoped variable)",
+      "evidence": "attempt-05-resume-postcapture-ref"
+    },
+    {
+      "attempt": "finalize",
+      "state": "evidence composition only",
+      "stage": "no browser/build/preview",
+      "cause": "reads and re-verifies existing on-disk evidence",
+      "evidence": "finalize.mjs"
+    }
+  ],
+  "cleanup": {
+    "startedAt": "2026-11-05T11:06:07.507Z",
+    "browser": null,
+    "preview": {
+      "sameProcess": true,
+      "pid": 99784,
+      "closeCallbackAt": "2026-11-05T11:06:08.732Z",
+      "httpServerListeningAfterClose": false,
+      "closeInvoked": true
+    },
+    "childrenRemaining": [],
+    "portClosed": true,
+    "knownUnclosedResources": 0,
+    "connectionClosedAt": "2026-11-05T11:06:07.507Z",
+    "browserServerCloseRequestedAt": "2026-11-05T11:06:07.545Z",
+    "endedAt": "2026-11-05T11:06:11.021Z"
+  },
+  "qualityCapabilities": {
+    "rendererClass": "software",
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "maxSamples": "unknown",
+    "maxAnisotropy": "unknown",
+    "textureFormats": "unknown",
+    "note": "The capture page does not expose these quality limits and no extra WebGL context was created to probe them."
+  },
+  "openIssues": [
+    "SwiftShader software rendering only; this is not a hardware-GPU baseline.",
+    "One fixed seed=1 march state at t=10 per camera, not a full match or live player control.",
+    "Audio, feel, reference registration, and picture ranking are not verified by this capture.",
+    "MAX_SAMPLES, anisotropy limits, and texture formats are unknown because the page does not expose them and no probe context was created.",
+    "The capture harness process really exited 1 after all eight shots and cleanup because of a post-capture bookkeeping ReferenceError; Chromium exited 0, the preview port closed, and no owned children remained. cleanExitBaseline is therefore false and passed is false."
+  ],
+  "redaction": "renderer/vendor/version, Chromium full version, prescribed flags, relative filenames and hashes are retained; usernames, absolute paths, full argv, debug endpoints and raw logs are removed.",
+  "publicCopy": {
+    "sanitized": true,
+    "note": "Public copy replaces the actual loopback origin with BASE, removes machine username and absolute paths, full browser argv and raw debug logs. Local-only originals remain under the gitignored local output root."
+  }
+}
