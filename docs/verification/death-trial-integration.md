@@ -19,9 +19,9 @@ If candidate initialization fails, the existing recovery path disposes its owned
 - Original `heroes/veyra-release`, received death source package, quiet family/layout manifest, content-set locks, frozen `default-src`, both HTML entry/link lists and `src/capture` are unchanged.
 - Quiet standard source references retain their existing hashes; the content-set total remains 680900 bytes.
 - No simulation, input rules, saves, audio, hero balance, map or stage B/C feature changes.
-- Gold HUD candidate `4d8408b` and Q/W evidence candidate `50fda56` remain separate from this branch. This integration does not silently adopt either pending candidate.
+- The death-only reviewed base `a37421c` kept Gold `4d8408b` and Q/W `50fda56` separate. The continuation below explicitly receives those fixed results into this same isolated branch.
 
-## Checks
+## Checks at the death-only base
 
 - Full Vitest suite after integration: 89 files, 585 tests passed. This includes actual client/Controls/LocalMatch Q→W releases on the default, full-trial and quiet-trial paths with controlled renderer/audio/navigation I/O.
 - Real GLTFLoader plus production loader/definition mapping/presentation: both baseline and contact paths load 19 models, verify the two selected file hashes, play the actual death clip and retain source-resource ownership until loader disposal. No WebGL renderer is created by this test.
@@ -38,3 +38,16 @@ This is a source/CPU integration candidate, not a main-branch or website deliver
 The current browser path remains unavailable after its recorded permission failure. No browser smoke, actual WebGL frame, fixed PNG, same-camera visual comparison, sound check or player feel judgment was performed. CPU contact minima are not visual approval.
 
 Before receiving into main: obtain the permitted original-operation terminal receipt; review this fixed tree; run the common clean-build default and existing-trial browser gate from ready for at least 300 ticks with no additional uncaught application error. For death appearance acceptance, require actual WebGL consumption and same-view death-frame comparison, including baseline and contact, both factions, non-death actions and lifecycle recovery. Canvas2D alone only validates fallback/playability. Keep the default unchanged unless separately accepted. Deployment and the existing quiet publication outcome must be handled independently; neither was attempted here.
+
+
+## Receive the existing Gold and Q/W results in the same trial
+
+The continuation is based on the already backed-up `a37421c9f8fac2fc8870aeae19bb488636b16136`, not on a new trial or a restarted worker. The original three relay branches remain unchanged. No new original-operation terminal receipt was available in the current cards.
+
+- Gold `4d8408b` is reused without rewriting its runtime consumer: every actual client step feeds `goldAwarded` into the player-only, tick/ordinal-deduplicated receipt; HUD reads the latest two-second simulation-time reward. The six-file result applies without conflicts, including the necessary `save-lifecycle` dependency injection and unchanged assertions.
+- Gold is visible in the shared HUD on ordinary and candidate routes in this branch. This is the intended new reward feedback, not a switch of the default hero source or a new parameter. Narrow-screen/low-height layout, reading order and actual visibility remain unverified.
+- Q/W `50fda56` is reused as the same six continuous input scenarios. Both the primary run and replay now use the production command-frame envelope; every replay tick additionally compares full presentation events. The recorded command and trace hashes remain unchanged. This does not change the v12 rules or claim that Stop/death cancellation should cast.
+- Three retained reward-boundary regressions cover actual terminal base-destruction team gold beside the victory message, other-recipient filtering/exact expiry, and incremental same-tick receipt batching. A real completed Simulation preserves the final receipt through attempted further steps. These are CPU/DOM checks, not a substitute for terminal-screen visibility.
+- The combined candidate's full suite passes 93 files / 607 tests. The current cloud environment does not reproduce the original receiver's audio-skill failure; no audio implementation or assertion was changed.
+
+The same main/browser/publication gates above still apply to the combined candidate. This receive-and-integrate step is not evidence that any original worker has exited, that the player has seen the feedback, or that main/the hosted game has changed.
