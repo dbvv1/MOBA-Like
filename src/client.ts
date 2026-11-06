@@ -13,6 +13,7 @@ import {FixedClock} from './render/clock.js';
 import {createLifetime} from './render/lifetime.js';
 import {createControls} from './input/controls.js';
 import {createHud} from './ui/hud.js';
+import {createGoldReceipt} from './ui/gold-receipt.js';
 import {KeyboardBindings} from './input/bindings.js';
 import {controlsHelp,createKeyboardSettings} from './ui/keyboard-settings.js';
 
@@ -76,12 +77,13 @@ async function boot(mode:'prompt'|'new'='prompt'){
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
+    const goldReceipt=createGoldReceipt(playerId);
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
     const commands:SimCommand[]=[];lifetime.defer(()=>{commands.length=0;});
     let settingsOpen=false;
     const enqueue=(command:SimCommand)=>{if(!settingsOpen&&commands.length<32&&snapshot.status==='running')commands.push(command);};
     let controls:ReturnType<typeof createControls>;
-    const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings);
+    const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings,goldReceipt);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
     controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
@@ -136,7 +138,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
           const alpha=clock.advance(delta,()=>{
             if(sim.isComplete())return;
             const issued=commands.splice(0);const results=match.step(issued);
-            snapshot=sim.snapshot();world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
+            snapshot=sim.snapshot();goldReceipt.consume(snapshot.events,snapshot.timeSeconds);world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             if((sim.isComplete()&&!terminalCleared)||(!sim.isComplete()&&snapshot.tick-lastAttemptTick>=300))save();
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.reject(rejection.reason??'unknown reason');

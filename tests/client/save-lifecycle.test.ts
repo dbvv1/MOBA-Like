@@ -8,6 +8,7 @@ import {LocalMatch,restoreMatch} from '../../src/save/match.js';
 import {createSaveSlot,MATCH_SAVE_KEY} from '../../src/save/storage.js';
 import {createDetourNavigation} from '../../src/sim/navigation.js';
 import {entryLightingSearch} from '../../src/ui/entry-lighting.js';
+import {createGoldReceipt} from '../../src/ui/gold-receipt.js';
 import {FixedClock} from '../../src/render/clock.js';
 import {createLifetime} from '../../src/render/lifetime.js';
 import {createSaveOwnership} from '../../src/save/ownership.js';
@@ -49,7 +50,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
     },
     createPlayableWorld:async()=>{let locked=true;return {backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline',world:{setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:()=>{if(failDraw)throw new Error('draw failed');},effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}}};},
     audioPolicyFromSearch,createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
-    createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),
+    createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),createGoldReceipt,
     createControls:()=>({setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),
     fetch:async()=>{await onNavigation?.();return {ok:!failNavigation,status:503,arrayBuffer:async()=>nav.buffer.slice(nav.byteOffset,nav.byteOffset+nav.byteLength)};},
     requestAnimationFrame:(callback:FrameRequestCallback)=>{frames.set(++next,callback);return next;},
