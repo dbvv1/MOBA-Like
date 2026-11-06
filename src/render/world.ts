@@ -11,6 +11,7 @@ import {disposeOwnedRenderer} from './owned-renderer.js';
 import {createControlMarkers} from './control-state.js';
 import {createTowerReach} from './tower-reach.js';
 import {loadBattleAssets,type BattleAssets} from './battle-assets.js';
+import {heroPresentationAssets,type HeroSource} from './hero-presentation.js';
 import {createBattlefield} from './battlefield.js';
 import {createImpacts} from './impact.js';
 import * as THREE from 'three';
@@ -24,7 +25,9 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',materials='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;materials?:MaterialFamily;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',materials='baseline',signal,cameraFollow='baseline',capture,heroSource='baseline'}:{lighting?:LightingStyle;materials?:MaterialFamily;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView;heroSource?:HeroSource}={}){
+  // Capture/quiet standards keep their pinned source, even if called directly.
+  if(capture||materials==='quiet-family-v1')heroSource='baseline';
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:!!capture});}
@@ -44,7 +47,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
   let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined,quiet:QuietTextures|undefined,quietBuildings:ReturnType<typeof applyQuietBuildings>|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
-  assets=own(await loadBattleAssets(undefined,lighting));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true}));
+  assets=own(await loadBattleAssets(undefined,lighting,heroSource));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:heroPresentationAssets(assets),heroesOnly:true}));
   const loadedAssets=assets, presentation=view;
   const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures,quiet));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
@@ -99,6 +102,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,
     setContentStandards(enabled:boolean){
+      if(enabled&&heroSource!=='baseline')throw new Error('Content standards require the pinned baseline hero source.');
       if(enabled&&!standards){
         if(!terrainTextures)throw Error('Standards require actual production terrain textures');
         if(materials==='quiet-family-v1'&&!quiet)throw Error('Quiet standards refused material fallback');

@@ -5,7 +5,7 @@ import {createWorld} from '../../src/render/world.js';
 import {getContent} from '../../src/content/catalog.js';
 import {makeSim} from '../helpers.js';
 import {renderRole} from '../../src/render/lighting-style.js';
-const doubles=vi.hoisted(()=>({failFit:false,standards:null as any,renderer:null as any,presentation:null as any,battlefield:null as any}));
+const doubles=vi.hoisted(()=>({failFit:false,standards:null as any,renderer:null as any,presentation:null as any,battlefield:null as any,heroSource:'' as string,presentationAssets:null as any}));
 vi.mock('three',async importOriginal=>{
   const actual=await importOriginal<typeof import('three')>();
   return {...actual,TextureLoader:class {async loadAsync(){return new actual.Texture();}},WebGLRenderer:class {
@@ -19,9 +19,9 @@ vi.mock('three',async importOriginal=>{
 });
 vi.mock('../../src/render/terrain-textures.js',()=>({loadTerrainTextures:async()=>({road:new THREE.Texture(),forest:new THREE.Texture(),dispose:vi.fn()})}));
 vi.mock('../../src/capture/content-standards.js',()=>({createContentStandards:()=>{const root=new THREE.Group();root.name='quiet-five-v1';const value={root,advance:vi.fn(),inspect:()=>({name:'quiet-five-v1',slotCount:5}),dispose:vi.fn(()=>root.removeFromParent())};doubles.standards=value;return value;}}));
-vi.mock('../../src/render/battle-assets.js',()=>({loadBattleAssets:async()=>({models:{},dispose:vi.fn()})}));
+vi.mock('../../src/render/battle-assets.js',()=>({loadBattleAssets:async(_load:any,_lighting:any,source:string)=>{doubles.heroSource=source;return {models:{},dispose:vi.fn()};}}));
 vi.mock('../../src/render/combat-textures.js',()=>({loadCombatTextures:async()=>({dispose:vi.fn()})}));
-vi.mock('../../asset-pipeline/presentation/adapter.js',()=>({createPresentation:()=>{
+vi.mock('../../asset-pipeline/presentation/adapter.js',()=>({createPresentation:(options:any)=>{doubles.presentationAssets=options.assets;
   const root=new THREE.Group(),hero=new THREE.Group();hero.name='hero-9';root.add(hero);
   const view={root,sync:vi.fn((snapshot:any)=>{const h=snapshot.heroes[0];hero.name=`hero-${h.id}`;hero.position.set(h.position.x,0,h.position.z);}),advance:vi.fn(),dispose:vi.fn(),motionState:()=>[]};doubles.presentation=view;return view;
 }}));
@@ -132,4 +132,17 @@ it('isolates standards from game consumers, waits for submission, restores visib
  doubles.renderer.contextLost=true;expect(world.captureState().standards).toMatchObject({active:false});doubles.renderer.contextLost=false;
  sim.step([]);const latest=sim.snapshot();world.sync(latest,sim.getHero(0)!.id);world.setContentStandards(false);expect(doubles.presentation.sync).toHaveBeenCalledWith({...latest,events:[]});expect(doubles.standards.dispose).toHaveBeenCalledTimes(1);expect(world.captureState().standards).toBeNull();expect(doubles.presentation.root.parent!.visible).toBe(true);
  world.sync(sim.snapshot(),sim.getHero(0)!.id);expect(doubles.presentation.sync).toHaveBeenCalledTimes(2);world.setContentStandards(true);const last=doubles.standards;world.dispose();world.dispose();expect(last.dispose).toHaveBeenCalledTimes(1);
+});
+
+
+it('real world forwards the trial source but fixed capture and standards retain baseline',async()=>{
+ vi.stubGlobal('window',{devicePixelRatio:1,addEventListener:vi.fn(),removeEventListener:vi.fn()});
+ const host={clientWidth:800,clientHeight:600,replaceChildren:vi.fn()} as unknown as HTMLElement;
+ const candidate=await createWorld(host,getContent(12),{heroSource:'death-contact'});
+ expect(doubles.heroSource).toBe('death-contact');
+ expect(doubles.presentationAssets.byDefinition.veyra.motionOptions).toEqual({recoilLayer:'torso-additive',firstDrawRelease:.1});
+ expect(()=>candidate.setContentStandards(true)).toThrow('pinned baseline');candidate.dispose();
+ const captured=await createWorld(host,getContent(12),{heroSource:'death-contact',capture:{width:1280,height:720,pixelRatio:1,pose:null}});
+ expect(doubles.heroSource).toBe('baseline');captured.setContentStandards(true);captured.dispose();
+ const baseline=await createWorld(host,getContent(11));expect(doubles.heroSource).toBe('baseline');baseline.dispose();
 });

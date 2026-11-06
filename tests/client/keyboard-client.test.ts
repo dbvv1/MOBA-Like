@@ -45,6 +45,20 @@ beforeEach(()=>{
 });
 afterEach(()=>{window.dispatchEvent(new Event('pagehide'));vi.restoreAllMocks();vi.unstubAllGlobals();document.body.replaceChildren();});
 
+it.each([
+ ['/', '', 'baseline'],
+ ['/candidate.html', '', 'death-contact'],
+ ['/candidate.html', '&materials=quiet-family-v1', 'baseline'],
+])('real client keeps the hero source boundary at %s%s',async(path,extra,source)=>{
+ history.replaceState(null,'',path+'?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1'+extra);
+ await boot();const read=()=>JSON.parse(document.querySelector('#debug-state')!.textContent!);
+ expect(read().heroSource).toBe(source);expect(read().contentVersion).toBe(12);
+ const world=state.worlds[0]!;world.canvas.focus();key('q');canvasClick();advance();key('w');canvasClick();
+ for(let i=0;i<12;i++)advance();
+ expect(state.releases.filter(event=>event.slot==='Q'||event.slot==='W').map(event=>event.slot)).toEqual(['Q','W']);
+ expect(read().heroSource).toBe(source);
+});
+
 describe('keyboard settings in the actual client lifecycle',()=>{
   it('blocks and clears queued gameplay while editing, then sends the saved key through the real cast and refreshes every key hint',async()=>{
     await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');expect(world.targeting).toBe('Q');canvasClick();

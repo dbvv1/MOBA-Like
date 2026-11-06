@@ -37,3 +37,17 @@ it('retired stylized route restores default without constructing the retired ren
  const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?lighting=stylized-diffuse'},{webgl,canvas:vi.fn()} as any);
  expect(webgl).toHaveBeenCalledTimes(1);expect(webgl.mock.calls[0]![2].lighting).toBe('forest-light-v1');expect(result.fallbackReason).toContain('retired');
 });
+
+it('the existing full trial uses contact heroes and a failed source restores baseline explicitly',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('death source unavailable')).mockResolvedValueOnce({dispose:vi.fn()});
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),candidateEntry:true,search:'?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1'},{webgl,canvas:vi.fn()} as any);
+ expect(webgl.mock.calls[0]![2].heroSource).toBe('death-contact');
+ expect(webgl.mock.calls[1]![2].heroSource).toBeUndefined();
+ expect(result.heroSource).toBe('baseline');expect(result.fallbackReason).toContain('death source unavailable');
+});
+
+it('never reports contact animation as active when the same trial uses Canvas2D recovery',async()=>{
+ const webgl=vi.fn().mockRejectedValue(new Error('no WebGL2')),canvas=vi.fn().mockReturnValue({});
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),candidateEntry:true,search:'?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1'},{webgl,canvas} as any);
+ expect(result.backend).toBe('canvas2d');expect(result.heroSource).toBeNull();
+});
