@@ -1,5 +1,6 @@
 import {cameraFollowPolicy} from './render/camera-follow.js';
 import {entryLightingSearch} from './ui/entry-lighting.js';
+import {isCombatTrial} from './combat-trial.js';
 import {createBattleAudio,audioPolicyFromSearch} from './audio/battle.js';
 import {getContent} from './content/catalog.js';
 import {createHeroSelection} from './ui/hero-selection.js';
@@ -23,6 +24,7 @@ const diagnostic=document.getElementById('debug-state');
 const showDiagnostic=(value:unknown)=>{if(diagnostic)diagnostic.textContent=JSON.stringify(value,null,2);};
 const contentVersion=new URLSearchParams(location.search).get('commands')==='buffer-v1'?12:11;
 const cameraPolicy=cameraFollowPolicy(location.search);
+const combatTrial=isCombatTrial(location.search,location.pathname==='/candidate.html');
 let activeCameraPolicy=cameraPolicy;
 const bindings=new KeyboardBindings(()=>window.localStorage);
 const heroSelection=createHeroSelection(element<HTMLSelectElement>('hero-select'),element<HTMLElement>('hero-choice-details'),getContent(contentVersion),slot=>bindings.label(slot));
@@ -77,7 +79,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
-    const goldReceipt=createGoldReceipt(playerId);
+    const goldReceipt=combatTrial?createGoldReceipt(playerId):undefined;
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
     const commands:SimCommand[]=[];lifetime.defer(()=>{commands.length=0;});
     let settingsOpen=false;
@@ -86,7 +88,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings,goldReceipt);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
-    controls=createControls(world,sim.catalog,player,enqueue,(text,onlyIfCurrent)=>hud.say(text,onlyIfCurrent),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
+    controls=createControls(world,sim.catalog,player,enqueue,(text,onlyIfCurrent)=>hud.say(text,onlyIfCurrent),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined,combatTrial);
     lifetime.defer(()=>controls.dispose());
     const clock=new FixedClock(1/sim.tickRateHz);let previous=performance.now(),animation=0,stopped=false;
     const definition=sim.catalog.heroes[player().hero.definitionId]!;
@@ -138,7 +140,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
           const alpha=clock.advance(delta,()=>{
             if(sim.isComplete())return;
             const issued=commands.splice(0);const results=match.step(issued);
-            snapshot=sim.snapshot();controls.sync();goldReceipt.consume(snapshot.events,snapshot.timeSeconds);world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
+            snapshot=sim.snapshot();controls.sync();goldReceipt?.consume(snapshot.events,snapshot.timeSeconds);world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             if((sim.isComplete()&&!terminalCleared)||(!sim.isComplete()&&snapshot.tick-lastAttemptTick>=300))save();
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.reject(rejection.reason??'unknown reason');

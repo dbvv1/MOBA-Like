@@ -8,9 +8,9 @@ import type {KeyboardBindings} from '../input/bindings.js';
 import type {GoldReceipt} from './gold-receipt.js';
 
 export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:AbilitySlot)=>void,onBuy:(item:string)=>void,onLock:(locked:boolean)=>void,bindings?:Pick<KeyboardBindings,'label'>,goldReceipt?:Pick<GoldReceipt,'read'>){
-  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span><span class="gold" data-gold-receipt></span><span class="attack-status" data-attack></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
+  root.innerHTML='<div class="battle-status" data-status><strong data-objective></strong><span data-hint></span></div><div class="combat-panel"><div class="hero-panel" data-hero><div class="hero-heading"><strong data-name></strong><span data-level></span></div><div class="resource health"><i data-health-fill></i><span data-health></span></div><div class="resource mana"><i data-mana-fill></i><span data-mana></span></div><span class="gold" data-gold></span>'+(goldReceipt?'<span class="gold" data-gold-receipt></span>':'')+'<span class="attack-status" data-attack></span></div><div class="skills" data-skills></div><div class="match"><span data-match></span><label><input type="checkbox" data-lock checked> Lock camera</label></div></div><details class="shop-panel"><summary>Equipment <span>Spend your gold</span></summary><div class="shop" data-shop></div></details><div role="status" data-message></div>';
   const find=(selector:string)=>{const node=root.querySelector<HTMLElement>(selector);if(!node)throw new Error('Missing HUD element');return node;};
-  const match=find('[data-match]'),heroText=find('[data-hero]'),goldReceiptText=find('[data-gold-receipt]'),skills=find('[data-skills]'),shop=find('[data-shop]'),message=find('[data-message]');
+  const match=find('[data-match]'),heroText=find('[data-hero]'),goldReceiptText=root.querySelector<HTMLElement>('[data-gold-receipt]'),skills=find('[data-skills]'),shop=find('[data-shop]'),message=find('[data-message]');
   // Keep the existing live region, but announce only actual text changes.
   const setMessage=(text:string)=>{if(message.textContent!==text)message.textContent=text;};
   const notices=createCommandNotice();let currentTime=0,matchEnded=false;
@@ -32,7 +32,7 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     heroText.querySelector<HTMLElement>('[data-health]')!.textContent=`HP ${Math.ceil(hero.hp)} / ${hero.maxHp}`;
     heroText.querySelector<HTMLElement>('[data-mana]')!.textContent=`Mana ${Math.floor(hero.mana)} / ${hero.maxMana}`;
     heroText.querySelector<HTMLElement>('[data-gold]')!.textContent=`◆ ${Math.floor(hero.gold)} gold${hero.shield>0?` · Shield ${Math.ceil(hero.shield)}`:''}`;
-    goldReceiptText.textContent=goldReceipt?.read(snapshot.timeSeconds)??'';
+    if(goldReceiptText)goldReceiptText.textContent=goldReceipt!.read(snapshot.timeSeconds);
     heroText.querySelector<HTMLElement>('[data-health-fill]')!.style.width=`${Math.max(0,Math.min(100,hero.hp/hero.maxHp*100))}%`;
     heroText.querySelector<HTMLElement>('[data-mana-fill]')!.style.width=`${Math.max(0,Math.min(100,hero.mana/hero.maxMana*100))}%`;
     const objective=battleMessage(snapshot,hero,catalog);find('[data-status]').dataset['tone']=objective.tone;find('[data-objective]').textContent=objective.label;find('[data-hint]').textContent=objective.hint;

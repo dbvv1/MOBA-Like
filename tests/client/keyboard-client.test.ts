@@ -41,6 +41,8 @@ function key(key:string,extra:KeyboardEventInit={}){const event=new KeyboardEven
 function canvasClick(button=0){const canvas=state.worlds.at(-1)!.canvas;canvas.dispatchEvent(new MouseEvent('pointerdown',{button,clientX:10,clientY:10,bubbles:true,cancelable:true}));}
 function open(){click('#keyboard-settings');}
 function capture(action:string,value:string){click(`[data-binding-action="${action}"]`);key(value);}
+const fullTrial='/candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1';
+async function bootTrial(extra=''){history.replaceState(null,'',fullTrial+extra);await boot();}
 async function boot(){await import('../../src/client.js');await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));}
 beforeEach(()=>{
   vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.lethalStart=false;state.shortMatch=false;state.worlds.length=0;state.sounds.length=0;state.releases.length=0;state.inputTrace.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
@@ -69,8 +71,8 @@ it.each([
  expect(read().heroSource).toBe(source);
 });
 
-it.each([['', 'q'],['', 'a'],['?commands=buffer-v1','q'],['?commands=buffer-v1','a']] as const)('death ends %s %s aim before a natural respawn; old click cannot act',async(search,aimKey)=>{
-  state.lethalStart=true;history.replaceState(null,'','/candidate.html'+search);await boot();
+it.each([['', 'q'],['', 'a'],['&materials=baseline','q'],['&materials=baseline','a']] as const)('death ends %s %s aim before a natural respawn; old click cannot act',async(search,aimKey)=>{
+  state.lethalStart=true;await bootTrial(search);
   const world=state.worlds[0]!;world.canvas.focus();key(aimKey);
   const message=()=>document.querySelector('[data-message]')!.textContent;
   expect(message()).toContain('left-click');
@@ -80,7 +82,8 @@ it.each([['', 'q'],['', 'a'],['?commands=buffer-v1','q'],['?commands=buffer-v1',
   expect(world.targeting).toBeNull();expect(message()).toBe('');
   key('q');key('a');canvasClick();expect(world.targeting).toBeNull();expect(message()).toBe('');
   // Dying cancels an action, not the user's camera controls.
-  world.locked=false;key(' ');expect(world.locked).toBe(true);
+  world.locked=false;key(' ',{code:'Space'});expect(world.held).toBe(true);expect(world.locked).toBe(false);
+  window.dispatchEvent(new KeyboardEvent('keyup',{key:' ',code:'Space'}));expect(world.held).toBe(false);
   for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
   const respawned=client().snapshot().heroes[0]!;
   expect(respawned.alive).toBe(true);expect(respawned.deaths).toBe(1);
@@ -95,7 +98,7 @@ it.each([['', 'q'],['', 'a'],['?commands=buffer-v1','q'],['?commands=buffer-v1',
 });
 
 it.each(['q','a'] as const)('an unconfirmed %s aim cannot survive a complete death/respawn with no intervening input',async aimKey=>{
-  state.lethalStart=true;await boot();state.worlds[0]!.canvas.focus();key(aimKey);
+  state.lethalStart=true;await bootTrial();state.worlds[0]!.canvas.focus();key(aimKey);
   for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
   expect(client().snapshot().heroes[0]!.alive).toBe(false);
   for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
@@ -106,7 +109,7 @@ it.each(['q','a'] as const)('an unconfirmed %s aim cannot survive a complete dea
 });
 
 it('natural match completion clears pending targeting without replacing the terminal announcement',async()=>{
-  state.shortMatch=true;await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');
+  state.shortMatch=true;await bootTrial();const world=state.worlds[0]!;world.canvas.focus();key('q');
   expect(world.targeting).toBe('Q');
   for(let i=0;i<50&&client().snapshot().status==='running';i++)advance();
   expect(client().snapshot().status).not.toBe('running');expect(world.targeting).toBeNull();
@@ -117,7 +120,7 @@ it('natural match completion clears pending targeting without replacing the term
 });
 
 it.each(['settings','blur','hidden','stop'] as const)('actual client withdraws expired aim instructions after %s and requires a fresh aim',async interruption=>{
-  await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();key('q');
   const message=()=>document.querySelector('[data-message]')!.textContent;
   expect(world.targeting).toBe('Q');expect(message()).toContain('left-click');
   advance();expect(message()).toContain('left-click');
@@ -143,7 +146,7 @@ it.each(['settings','blur','hidden','stop'] as const)('actual client withdraws e
 });
 
 it('self-targeted skills and attack-move cancellation also remove the previous aiming instruction',async()=>{
-  await boot();const select=document.querySelector<HTMLSelectElement>('#hero-select')!;
+  await bootTrial();const select=document.querySelector<HTMLSelectElement>('#hero-select')!;
   select.value='morrow';select.dispatchEvent(new Event('change'));click('#restart');
   await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));
   const world=state.worlds[1]!;world.canvas.focus();key('q');
@@ -156,26 +159,61 @@ it('self-targeted skills and attack-move cancellation also remove the previous a
 });
 
 it('cancelling an aim does not erase a newer authoritative command rejection',async()=>{
-  await boot();const world=state.worlds[0]!;world.canvas.focus();
-  key('q');canvasClick();key('q');canvasClick();key('e');
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();
+  key('q');canvasClick();for(let i=0;i<6;i++)advance();key('q');canvasClick();key('e');
   expect(world.targeting).toBe('E');advance();
   const message=()=>document.querySelector('[data-message]')!.textContent;
-  expect(client().snapshot().heroes[0]!.castSlot).toBe('Q');
-  expect(message()).toBe('Command rejected: alreadyCasting');
+  expect(client().snapshot().heroes[0]!.castSlot).toBeNull();
+  expect(message()).toBe('Command rejected: cooldown');
   const tick=client().snapshot().tick;
   window.dispatchEvent(new Event('blur'));expect(world.targeting).toBeNull();
-  expect(message()).toBe('Command rejected: alreadyCasting');expect(client().snapshot().tick).toBe(tick);
-  advance();expect(message()).toBe('Command rejected: alreadyCasting');
+  expect(message()).toBe('Command rejected: cooldown');expect(client().snapshot().tick).toBe(tick);
+  advance();expect(message()).toBe('Command rejected: cooldown');
   for(let i=0;i<60;i++)advance();expect(message()).toBe('');
 });
 
 it('cancellation withdraws the newer invalid-target instruction owned by the same aim',async()=>{
-  await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');world.invalidAim=true;canvasClick();
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();key('q');world.invalidAim=true;canvasClick();
   const message=()=>document.querySelector('[data-message]')!.textContent;
   expect(world.targeting).toBe('Q');expect(message()).toBe('No valid target here. Aim again or press Esc.');
   window.dispatchEvent(new Event('blur'));expect(world.targeting).toBeNull();expect(message()).toBe('');
   world.invalidAim=false;world.canvas.focus();canvasClick();advance();expect(state.releases).toHaveLength(0);
   key('q');canvasClick();for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+});
+
+
+// Opt-out intentionally retains the shipped input contract until the trial is accepted.
+it.each([
+ '/',
+ '/?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1',
+ '/candidate.html',
+ '/candidate.html?commands=buffer-v1',
+ fullTrial+'&materials=quiet-family-v1',
+ fullTrial+'&commands=buffer-v1',
+ fullTrial+'&camera=baseline',
+])('closed trial keeps old death/respawn and notice behavior at %s',async route=>{
+  state.lethalStart=true;history.replaceState(null,'',route);await boot();
+  const world=state.worlds[0]!;world.canvas.focus();key('q');
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  const instruction=message();expect(instruction).toContain('left-click');
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);
+  expect(world.targeting).toBe('Q');expect(message()).toBe(instruction);
+  for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(true);
+  canvasClick();for(let i=0;i<6;i++)advance();
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(1);
+  expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+  key('q');const nextInstruction=message();window.dispatchEvent(new Event('blur'));
+  expect(world.targeting).toBeNull();expect(message()).toBe(nextInstruction);
+  expect(document.querySelector('[data-gold-receipt]')).toBeNull();
+});
+
+it('closed trial retains the old dead attack-move input while full trial rejects it',async()=>{
+  state.lethalStart=true;await boot();const world=state.worlds[0]!;world.canvas.focus();
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);key('a');
+  expect(document.querySelector('[data-message]')!.textContent).toContain('Attack-move: left-click');
 });
 
 describe('keyboard settings in the actual client lifecycle',()=>{

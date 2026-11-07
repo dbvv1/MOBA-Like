@@ -1,5 +1,6 @@
 import type {CharacterAssets} from '../../asset-pipeline/presentation/adapter.js';
 import type {BattleAssets} from './battle-assets.js';
+import {isCombatTrial} from '../combat-trial.js';
 
 export type HeroSource='baseline'|'death-contact';
 export const VEYRA_MOTION_OPTIONS={recoilLayer:'torso-additive',firstDrawRelease:.1} as const;
@@ -7,13 +8,7 @@ export const VEYRA_MOTION_OPTIONS={recoilLayer:'torso-additive',firstDrawRelease
 /** Part of the existing full Camera + Q/W trial, never a fourth public entry.
  * Ambiguous queries, the default page and quiet standards retain the old source. */
 export function heroSourceForEntry(search:string,candidateEntry=false):HeroSource{
-  const query=new URLSearchParams(search);
-  const exactly=(name:string,value:string)=>{
-    const values=query.getAll(name);return values.length===1&&values[0]===value;
-  };
-  return candidateEntry&&exactly('commands','buffer-v1')&&exactly('audio','critical-v1')&&
-    exactly('camera','hold-follow-v1')&&exactly('lighting','forest-light-v1')&&
-    (!query.has('materials')||exactly('materials','baseline'))?'death-contact':'baseline';
+  return isCombatTrial(search,candidateEntry)?'death-contact':'baseline';
 }
 
 /** Shared by the real world and CPU consumer tests; no alternate animator. */

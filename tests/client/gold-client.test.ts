@@ -8,6 +8,7 @@ import {FixedClock} from '../../src/render/clock.js';
 import {createLifetime} from '../../src/render/lifetime.js';
 import {cameraFollowPolicy} from '../../src/render/camera-follow.js';
 import {entryLightingSearch} from '../../src/ui/entry-lighting.js';
+import {isCombatTrial} from '../../src/combat-trial.js';
 import {audioPolicyFromSearch} from '../../src/audio/battle.js';
 import {createHud} from '../../src/ui/hud.js';
 import {createGoldReceipt} from '../../src/ui/gold-receipt.js';
@@ -18,7 +19,9 @@ import {place} from '../helpers.js';
 // Rendering, audio, save ownership and input are stubs: CPU/DOM evidence, not browser or GPU.
 const navigation={closestPoint:(point:{x:number;z:number})=>({...point}),findPath:(from:{x:number;z:number},to:{x:number;z:number})=>({success:true,points:[from,to],reason:null}),destroy(){}};
 
-async function host(){
+const fullTrial='/candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1';
+async function host(route=fullTrial){
+  history.replaceState(null,'',route);
   document.body.innerHTML=['stage','notice','hud','restart','hero-select','hero-choice-details','sound-toggle','controls-help','keyboard-settings','keyboard-dialog','debug-state'].map(id=>`<div id="${id}"></div>`).join('');
   let hidden=false;
   Object.defineProperty(document,'hidden',{configurable:true,get:()=>hidden});
@@ -34,7 +37,7 @@ async function host(){
   const sound={enabled:true,setEnabled(value:boolean){sound.enabled=value;},dispose(){},unlock:async()=>{},sync(){},setPaused(){}};
   const panel={button:document.createElement('button'),say(){},dispose(){}};
   const bindings={
-    cameraFollowPolicy,entryLightingSearch,audioPolicyFromSearch,getContent,
+    isCombatTrial,cameraFollowPolicy,entryLightingSearch,audioPolicyFromSearch,getContent,
     LocalMatch:CapturedMatch,restoreMatch:async()=>{throw new Error('No saved match in this test');},
     createSaveSlot:()=>({read:()=>({status:'empty'}),write:()=>({status:'unavailable'}),clear:()=>({status:'unavailable'})}),
     acquireSaveOwnership:async()=>null,chooseSavedMatch:async()=> 'new',createSavePanel:()=>panel,SAVE_COMPATIBILITY_ID:'test-rules',
@@ -74,7 +77,7 @@ function armKill(app:Awaited<ReturnType<typeof host>>){
   return {sim,player,enemy};
 }
 
-afterEach(()=>{window.dispatchEvent(new Event('pagehide'));document.body.replaceChildren();});
+afterEach(()=>{window.dispatchEvent(new Event('pagehide'));document.body.replaceChildren();history.replaceState(null,'','/');});
 
 describe('client gold receipt follows real steps, not one rendered frame',()=>{
   it('keeps a tick-8 award readable when the frame ends on a no-award batch',async()=>{
@@ -118,4 +121,22 @@ describe('client gold receipt follows real steps, not one rendered frame',()=>{
     app.runFrame(250);
     expect(app.q('[data-gold-receipt]').textContent).toBe('');
   });
+});
+
+
+it.each([
+ '/',
+ '/?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1',
+ '/candidate.html',
+ '/candidate.html?commands=buffer-v1',
+ fullTrial+'&materials=quiet-family-v1',
+ fullTrial+'&commands=buffer-v1',
+ fullTrial+'&camera=baseline',
+])('closed trial preserves the original gold HUD at %s',async route=>{
+  const app=await host(route),{sim,player,enemy}=armKill(app);
+  app.runFrame(250);app.runFrame(250);
+  expect(enemy.alive).toBe(false);expect(player.gold).toBeGreaterThanOrEqual(300);
+  expect(app.q('[data-gold]').textContent).toContain('gold');
+  expect(document.querySelector('[data-gold-receipt]')).toBeNull();
+  expect(sim.snapshot().tick).toBeGreaterThan(7);
 });

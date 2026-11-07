@@ -5,7 +5,7 @@ import {commandForCast,commandForRightClick,isInputElement,validPoint,type Aim} 
 import {actionForKey,DEFAULT_BINDINGS,type KeyboardBindings} from './bindings.js';
 
 type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
-export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void){
+export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void,combatTrial=false){
   const abort=new AbortController();const options={signal:abort.signal};let mode:Mode=null;let enabled=true;let lastPointer:{button:number;aim:Aim;command:SimCommand|null}|null=null;
   let heldFocus:{code:string;key:string}|null=null;
   let aimMessage:string|null=null;
@@ -16,10 +16,10 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     const endedAim=mode!==null&&next===null;
     mode=next;world.setTargeting(next?.kind==='cast'?next.slot:null);
     // A cancelled mode cannot still promise that the next click will cast/attack-move.
-    if(endedAim){if(aimMessage!==null)say('',aimMessage);aimMessage=null;}
+    if(endedAim){if(combatTrial&&aimMessage!==null)say('',aimMessage);aimMessage=null;}
   }
   function sync(){
-    if(abort.signal.aborted||mode===null)return;
+    if(!combatTrial||abort.signal.aborted||mode===null)return;
     const {snapshot,hero}=current();
     // Input modes belong to the current life and match, not to a later respawn.
     if(!hero.alive||snapshot.status!=='running')setMode(null);
@@ -52,7 +52,7 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     if(!enabled||event.defaultPrevented||event.repeat||event.altKey||event.ctrlKey||event.metaKey||event.isComposing||isInputElement(event.target))return;
     const action=bindings?bindings.resolve(event):actionForKey(DEFAULT_BINDINGS,event);
     if(action==='Q'||action==='W'||action==='E'||action==='R'){event.preventDefault();skill(action);}
-    else if(action==='attackMove'){event.preventDefault();const {snapshot,hero}=current();if(!hero.alive||snapshot.status!=='running')return;setMode({kind:'attackMove'});sayAim('Attack-move: left-click a destination; Esc cancels.');}
+    else if(action==='attackMove'){event.preventDefault();if(combatTrial){const {snapshot,hero}=current();if(!hero.alive||snapshot.status!=='running')return;}setMode({kind:'attackMove'});sayAim('Attack-move: left-click a destination; Esc cancels.');}
     else if(action==='stop'){event.preventDefault();setMode(null);enqueue({type:'stop',heroId:current().hero.id});}
     else if(event.key==='Escape'){setMode(null);say('Aim cancelled.');}
     else if(action==='focusCamera'){

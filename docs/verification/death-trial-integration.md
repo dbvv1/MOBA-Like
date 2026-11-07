@@ -51,3 +51,12 @@ The continuation is based on the already backed-up `a37421c9f8fac2fc8870aeae19bb
 - The combined candidate's full suite passes 93 files / 607 tests. The current cloud environment does not reproduce the original receiver's audio-skill failure; no audio implementation or assertion was changed.
 
 The same main/browser/publication gates above still apply to the combined candidate. This receive-and-integrate step is not evidence that any original worker has exited, that the player has seen the feedback, or that main/the hosted game has changed.
+
+
+## Existing-trial boundary correction after c967c1b
+
+The combined branch had also enabled the Gold receipt and input-notice/life cleanup on the default page. These behaviors are now gated by the same exact entry predicate as the existing death-source trial. Only the full Camera + Q/W URL above enables all three. The predicate is shared, accepts an explicit single `materials=baseline`, and rejects partial, duplicate, default-page and quiet queries. There is no fourth trial or new public parameter.
+
+With the trial closed, the HUD does not create a reward line, no receipt is consumed, and Controls preserves the shipped cancellation, death/respawn and dead attack-move behavior. With it open, reward feedback and the reviewed life-scoped aiming fixes remain active, including when rendering falls back to Canvas2D. Simulation, save format, default-source pins, asset bytes and HTML links remain unchanged.
+
+Validation of this boundary change: 93 files / 636 tests pass, including 15 new closed-entry client regressions. Simulation, web and capture builds pass. Independent source review and stepwise Controls/HUD comparisons check the closed path against main and the enabled path against c967c1b. These are CPU/DOM checks. The earlier c967c1b browser observations apply only to that fixed build; they do not validate a build containing this correction. Fresh browser acceptance remains required before adoption or deployment.
