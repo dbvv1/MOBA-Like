@@ -5,10 +5,10 @@ import {commandForCast,commandForRightClick,isInputElement,validPoint,type Aim} 
 import {actionForKey,DEFAULT_BINDINGS,type KeyboardBindings} from './bindings.js';
 
 type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
-export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void,combatTrial=false){
+export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>boolean|void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void,combatTrial=false){
   const abort=new AbortController();const options={signal:abort.signal};let mode:Mode=null;let enabled=true;let lastPointer:{button:number;aim:Aim;command:SimCommand|null}|null=null;
   let heldFocus:{code:string;key:string}|null=null;
-  let aimMessage:string|null=null,commandReceipt=false;
+  let aimMessage:string|null=null,receiptCommand:SimCommand|null=null;
   function sayAim(text:string){aimMessage=text;say(text);}
   const keyIdentity=(key:string)=>key===' '||key==='Space'?'space':key.toLowerCase();
   function releaseFocus(){if(heldFocus){heldFocus=null;focusHold?.(false);}}
@@ -25,8 +25,13 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     if(!hero.alive||snapshot.status!=='running'){
       if(mode!==null)setMode(null);
       // A submitted order does not survive this life. Preserve any newer rejection or result.
-      if(commandReceipt){say('','Command queued.');commandReceipt=false;}
+      clearReceipt();
     }
+  }
+  function clearReceipt(){if(receiptCommand){say('','Command queued.');receiptCommand=null;}}
+  function discardQueued(commands:readonly SimCommand[]){
+    // Only the queue owner knows whether this exact order was dropped before a simulation step.
+    if(combatTrial&&receiptCommand&&commands.includes(receiptCommand))clearReceipt();
   }
   function release(){releaseFocus();setMode(null);lastPointer=null;bindings?.cancelCapture();}
   function skill(slot:AbilitySlot){
@@ -48,7 +53,7 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     else if(mode?.kind==='cast')command=commandForCast(hero,mode.slot,aim,snapshot,catalog);
     else if(mode?.kind==='attackMove'&&validPoint(aim.point))command={type:'attackMove',heroId:hero.id,point:{...aim.point}};
     lastPointer=structuredClone({button:event.button,aim,command});
-    if(command){enqueue(command);setMode(null);say('Command queued.');commandReceipt=true;}
+    if(command){const queued=enqueue(command);if(combatTrial&&queued===false)return;setMode(null);say('Command queued.');receiptCommand=command;}
     else if(event.button===2)say('No valid attack or movement target here.');
     else if(mode)sayAim('No valid target here. Aim again or press Esc.');
   },options);
@@ -75,5 +80,5 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     document.addEventListener('focusin',event=>{if(isInputElement(event.target)){releaseFocus();world.leavePointer();}},options);
   }
   window.addEventListener('blur',()=>{release();if(focusHold)world.leavePointer();},options);
-  return {skill,sync,setEnabled(value:boolean){if(abort.signal.aborted)return;enabled=value;if(!value)release();},inspectPointer:()=>lastPointer?structuredClone(lastPointer):null,dispose(){enabled=false;abort.abort();release();}};
+  return {skill,sync,discardQueued,setEnabled(value:boolean){if(abort.signal.aborted)return;enabled=value;if(!value)release();},inspectPointer:()=>lastPointer?structuredClone(lastPointer):null,dispose(){enabled=false;abort.abort();release();}};
 }

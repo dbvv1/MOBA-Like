@@ -83,13 +83,14 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
     const commands:SimCommand[]=[];lifetime.defer(()=>{commands.length=0;});
     let settingsOpen=false;
-    const enqueue=(command:SimCommand)=>{if(!settingsOpen&&commands.length<32&&snapshot.status==='running')commands.push(command);};
+    const enqueue=(command:SimCommand)=>{if(settingsOpen||commands.length>=32||snapshot.status!=='running')return false;commands.push(command);return true;};
     let controls:ReturnType<typeof createControls>;
     const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings,goldReceipt);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
     controls=createControls(world,sim.catalog,player,enqueue,(text,onlyIfCurrent)=>hud.say(text,onlyIfCurrent),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined,combatTrial);
     lifetime.defer(()=>controls.dispose());
+    const discardQueued=()=>{controls.discardQueued(commands);commands.length=0;};
     const clock=new FixedClock(1/sim.tickRateHz);let previous=performance.now(),animation=0,stopped=false;
     const definition=sim.catalog.heroes[player().hero.definitionId]!;
     const settings=createKeyboardSettings(element<HTMLDialogElement>('keyboard-dialog'),settingsTrigger,bindings,{
@@ -99,7 +100,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
       R:`Ultimate · ${sim.catalog.abilities[definition.abilities.R]!.name}`,
       attackMove:'Attack-move',stop:'Stop',focusCamera:rendered.cameraPolicy==='hold-follow-v1'?'Hold to follow':'Lock camera',
     },open=>{
-      settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
+      settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);discardQueued();controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
       world.leavePointer();clock.reset();previous=performance.now();
     },()=>{refreshHelp();hud.update(snapshot,playerId);});
     lifetime.defer(()=>settings.dispose());
@@ -123,12 +124,12 @@ async function boot(mode:'prompt'|'new'='prompt'){
     };
     saveBeforeLeave=save;lifetime.defer(()=>{saveBeforeLeave=()=>{};});
     panel.button.disabled=!saving;panel.button.addEventListener('click',save,{signal:lifecycle.signal});
-    document.addEventListener('visibilitychange',()=>{if(audioPolicy==='critical-v1')sound.setPaused(document.hidden||settingsOpen);clock.reset();previous=performance.now();if(document.hidden){commands.length=0;controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
+    document.addEventListener('visibilitychange',()=>{if(audioPolicy==='critical-v1')sound.setPaused(document.hidden||settingsOpen);clock.reset();previous=performance.now();if(document.hidden){discardQueued();controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
     hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D unavailable: Canvas2D recovery is active. Details in Runtime diagnostics.':'Trial renderer unavailable: default rendering restored. Details in Runtime diagnostics.';restart.disabled=false;
-    window.addEventListener('blur',()=>{commands.length=0;},{signal:lifecycle.signal});
+    window.addEventListener('blur',discardQueued,{signal:lifecycle.signal});
     const readMinimumState=()=>({ready:!stopped,backend:rendered.backend,heroSource:rendered.heroSource,fallbackReason:rendered.fallbackReason,acceptance:{requiredTicks:MINIMUM_ACCEPTANCE_TICKS,initialTick,advancedTicks:snapshot.tick-initialTick,reached:snapshot.tick-initialTick>=MINIMUM_ACCEPTANCE_TICKS},contentVersion,tick:snapshot.tick,status:snapshot.status});
     showDiagnostic(readMinimumState());lifetime.defer(()=>showDiagnostic({ready:false,phase:'disposed'}));
     const frame=(now:number)=>{

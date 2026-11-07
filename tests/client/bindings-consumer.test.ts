@@ -18,7 +18,7 @@ function fixture(){
   }} as unknown as GameWorld;
   const values=new Map<string,string>(),store={getItem:(name:string)=>values.get(name)??null,setItem:(name:string,value:string)=>{values.set(name,value);},removeItem:(name:string)=>{values.delete(name);}};
   const bindings=new KeyboardBindings(()=>store);
-  const controls=createControls(world,sim.catalog,()=>{const snapshot=sim.snapshot();return {snapshot,hero:snapshot.heroes[0]!};},command=>commands.push(command),say,focus,bindings);
+  const controls=createControls(world,sim.catalog,()=>{const snapshot=sim.snapshot();return {snapshot,hero:snapshot.heroes[0]!};},command=>{commands.push(command);},say,focus,bindings);
   const key=(key:string,extra:Record<string,unknown>={})=>{
     const event=Object.assign(new Event('keydown',{cancelable:true}),{key,code:'',repeat:false,altKey:false,ctrlKey:false,metaKey:false,isComposing:false,...extra});
     win.dispatchEvent(event);return event;
@@ -91,7 +91,7 @@ describe('remapped keys feed the original MOBA consumer, not another gameplay im
     const f=fixture();try{
       f.bindings.edit('Q','F');f.bindings.apply();f.controls.dispose();
       const fresh=new KeyboardBindings(()=>f.store);const commands:SimCommand[]=[];
-      const controls=createControls(f.world,f.sim.catalog,()=>{const snapshot=f.sim.snapshot();return {snapshot,hero:snapshot.heroes[0]!};},c=>commands.push(c),()=>{},()=>{},fresh);
+      const controls=createControls(f.world,f.sim.catalog,()=>{const snapshot=f.sim.snapshot();return {snapshot,hero:snapshot.heroes[0]!};},c=>{commands.push(c);},()=>{},()=>{},fresh);
       try{f.key('q');f.click();expect(commands).toHaveLength(0);f.key('f');f.click();expect(commands[0]).toMatchObject({type:'cast',slot:'Q'});
         fresh.defaults();expect(fresh.apply()).toBe(true);commands.length=0;f.key('f');f.click();expect(commands).toHaveLength(0);f.key('q');f.click();expect(commands).toHaveLength(1);
       }finally{controls.dispose();}

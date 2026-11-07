@@ -395,3 +395,64 @@ it('death does not erase the newer authoritative rejection of a submitted comman
   advance();expect(message()).toBe('Command rejected: cooldown');
   for(let i=0;i<60;i++)advance();expect(message()).toBe('');
 });
+
+it.each(['settings','blur','hidden'] as const)('withdraws only the discarded trial order receipt on %s before its simulation step',async interrupt=>{
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();key('q');canvasClick();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command queued.');
+  if(interrupt==='settings')open();
+  else if(interrupt==='blur')window.dispatchEvent(new Event('blur'));
+  else{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));}
+  expect(message()).toBe('');
+  if(interrupt==='settings')click('[data-binding-cancel]');
+  else if(interrupt==='hidden'){Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));}
+  world.canvas.focus();canvasClick();for(let i=0;i<6;i++)advance();
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);expect(state.releases).toHaveLength(0);
+  key('q');canvasClick();expect(message()).toBe('Command queued.');
+  for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+});
+
+it.each(['settings','blur','hidden'] as const)('retains a receipt already delivered to the simulation on %s',async interrupt=>{
+  await bootTrial();state.worlds[0]!.canvas.focus();canvasClick(2);advance();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(1);expect(message()).toBe('Command queued.');
+  if(interrupt==='settings')open();
+  else if(interrupt==='blur')window.dispatchEvent(new Event('blur'));
+  else{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));}
+  expect(message()).toBe('Command queued.');
+});
+
+it('discarding a later shop order does not withdraw the earlier delivered movement receipt',async()=>{
+  await bootTrial();state.worlds[0]!.canvas.focus();canvasClick(2);advance();
+  click('[data-shop] button');open();
+  expect(document.querySelector('[data-message]')!.textContent).toBe('Command queued.');
+  click('[data-binding-cancel]');advance();
+  const commands=state.inputTrace.flatMap((entry:any)=>entry.commands);
+  expect(commands).toHaveLength(1);expect(commands[0].type).toBe('move');
+});
+
+it.each(['/', '/candidate.html',fullTrial+'&materials=quiet-family-v1',fullTrial+'&commands=buffer-v1'])('closed trial retains the shipped pre-step order notice at %s',async route=>{
+  history.replaceState(null,'',route);await boot();state.worlds[0]!.canvas.focus();key('q');canvasClick();open();
+  expect(document.querySelector('[data-message]')!.textContent).toBe('Command queued.');
+  click('[data-binding-cancel]');advance();expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);
+});
+
+it.each(['settings','blur','hidden'] as const)('a refused 33rd pointer order cannot hide the pending receipt from %s cleanup',async interrupt=>{
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();for(let i=0;i<33;i++)canvasClick(2);
+  expect(document.querySelector('[data-message]')!.textContent).toBe('Command queued.');
+  if(interrupt==='settings')open();
+  else if(interrupt==='blur')window.dispatchEvent(new Event('blur'));
+  else{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));}
+  expect(document.querySelector('[data-message]')!.textContent).toBe('');
+  if(interrupt==='settings')click('[data-binding-cancel]');
+  else if(interrupt==='hidden'){Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));}
+  advance();expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);
+});
+
+it('keeps a refused Q aimed and accepts a fresh click after the existing queue drains',async()=>{
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();for(let i=0;i<32;i++)canvasClick(2);
+  key('q');canvasClick();expect(world.targeting).toBe('Q');expect(document.querySelector('[data-message]')!.textContent).toContain('left-click');
+  advance();expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(32);expect(state.releases).toHaveLength(0);
+  canvasClick();expect(world.targeting).toBeNull();expect(document.querySelector('[data-message]')!.textContent).toBe('Command queued.');
+  for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+});
