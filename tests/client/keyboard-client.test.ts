@@ -340,3 +340,58 @@ it('read-only DOM diagnostics mirror the live minimum gate and restart resets it
  click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));
  expect(read()).toMatchObject({ready:true,acceptance:{advancedTicks:0,reached:false}});
 });
+
+it('death withdraws a confirmed command receipt before natural respawn',async()=>{
+  state.lethalStart=true;await bootTrial();const world=state.worlds[0]!;world.canvas.focus();
+  // Confirm a real attack-move order without leaving an unconfirmed aim mode.
+  key('a');canvasClick();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command queued.');
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(1);
+  expect(message()).toBe('');
+  for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(true);expect(message()).toBe('');
+  world.canvas.focus();key('q');canvasClick();expect(message()).toBe('Command queued.');
+  for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+});
+
+
+it.each([
+ '/',
+ '/candidate.html',
+ '/candidate.html?commands=buffer-v1',
+ fullTrial+'&materials=quiet-family-v1',
+ fullTrial+'&commands=buffer-v1',
+])('closed trial keeps the shipped submitted-order notice across death at %s',async route=>{
+  state.lethalStart=true;history.replaceState(null,'',route);await boot();
+  state.worlds[0]!.canvas.focus();key('a');canvasClick();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command queued.');
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);expect(message()).toBe('Command queued.');
+});
+
+it('terminal result replaces a confirmed command receipt without being erased',async()=>{
+  state.shortMatch=true;await bootTrial();state.worlds[0]!.canvas.focus();key('a');canvasClick();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command queued.');
+  for(let i=0;i<50&&client().snapshot().status==='running';i++)advance();
+  expect(client().snapshot().status).toBe('timeout');expect(message()).toMatch(/TIME LIMIT/);
+  const result=message();advance();expect(message()).toBe(result);
+});
+
+it('death does not erase the newer authoritative rejection of a submitted command',async()=>{
+  state.lethalStart=true;await bootTrial();state.worlds[0]!.canvas.focus();
+  key('q');canvasClick();for(let i=0;i<5;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(true);
+  key('q');canvasClick();advance();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command rejected: cooldown');
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);
+  expect(message()).toBe('Command rejected: cooldown');
+  advance();expect(message()).toBe('Command rejected: cooldown');
+  for(let i=0;i<60;i++)advance();expect(message()).toBe('');
+});

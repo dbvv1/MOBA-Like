@@ -8,7 +8,7 @@ type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
 export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void,combatTrial=false){
   const abort=new AbortController();const options={signal:abort.signal};let mode:Mode=null;let enabled=true;let lastPointer:{button:number;aim:Aim;command:SimCommand|null}|null=null;
   let heldFocus:{code:string;key:string}|null=null;
-  let aimMessage:string|null=null;
+  let aimMessage:string|null=null,commandReceipt=false;
   function sayAim(text:string){aimMessage=text;say(text);}
   const keyIdentity=(key:string)=>key===' '||key==='Space'?'space':key.toLowerCase();
   function releaseFocus(){if(heldFocus){heldFocus=null;focusHold?.(false);}}
@@ -19,10 +19,14 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     if(endedAim){if(combatTrial&&aimMessage!==null)say('',aimMessage);aimMessage=null;}
   }
   function sync(){
-    if(!combatTrial||abort.signal.aborted||mode===null)return;
+    if(!combatTrial||abort.signal.aborted)return;
     const {snapshot,hero}=current();
     // Input modes belong to the current life and match, not to a later respawn.
-    if(!hero.alive||snapshot.status!=='running')setMode(null);
+    if(!hero.alive||snapshot.status!=='running'){
+      if(mode!==null)setMode(null);
+      // A submitted order does not survive this life. Preserve any newer rejection or result.
+      if(commandReceipt){say('','Command queued.');commandReceipt=false;}
+    }
   }
   function release(){releaseFocus();setMode(null);lastPointer=null;bindings?.cancelCapture();}
   function skill(slot:AbilitySlot){
@@ -44,7 +48,7 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     else if(mode?.kind==='cast')command=commandForCast(hero,mode.slot,aim,snapshot,catalog);
     else if(mode?.kind==='attackMove'&&validPoint(aim.point))command={type:'attackMove',heroId:hero.id,point:{...aim.point}};
     lastPointer=structuredClone({button:event.button,aim,command});
-    if(command){enqueue(command);setMode(null);say('Command queued.');}
+    if(command){enqueue(command);setMode(null);say('Command queued.');commandReceipt=true;}
     else if(event.button===2)say('No valid attack or movement target here.');
     else if(mode)sayAim('No valid target here. Aim again or press Esc.');
   },options);
