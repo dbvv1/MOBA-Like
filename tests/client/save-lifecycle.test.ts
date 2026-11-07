@@ -51,7 +51,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
     createPlayableWorld:async()=>{let locked=true;return {backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline',world:{setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:()=>{if(failDraw)throw new Error('draw failed');},effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}}};},
     audioPolicyFromSearch,createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
     createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),createGoldReceipt,
-    createControls:()=>({setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),
+    createControls:()=>({sync:idle,setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),
     fetch:async()=>{await onNavigation?.();return {ok:!failNavigation,status:503,arrayBuffer:async()=>nav.buffer.slice(nav.byteOffset,nav.byteOffset+nav.byteLength)};},
     requestAnimationFrame:(callback:FrameRequestCallback)=>{frames.set(++next,callback);return next;},
     cancelAnimationFrame:(id:number)=>{frames.delete(id);},

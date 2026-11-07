@@ -7,7 +7,7 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean;invalidAim:boolean}>}));
+const state=vi.hoisted(()=>({lethalStart:false,shortMatch:false,inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean;invalidAim:boolean}>}));
 vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
   const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false,invalidAim:false};state.worlds.push(world);
@@ -17,7 +17,17 @@ vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElem
     setLocked:(locked:boolean)=>{world.locked=locked;world.held=false;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
     lightingState:()=>({}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
 })}));
-vi.mock('../../src/save/match.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/save/match.js')>();return {...original,LocalMatch:class extends original.LocalMatch{override step(commands:any[]=[]){const result=super.step(commands);state.inputTrace.push({tick:this.simulation.state.tick,commands:structuredClone(commands),hash:this.simulation.finalHash()});return result;}}};});
+vi.mock('../../src/save/match.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/save/match.js')>();return {...original,LocalMatch:class extends original.LocalMatch{
+  constructor(...args:ConstructorParameters<typeof original.LocalMatch>){
+    super(state.shortMatch?{...args[0],maxMatchSeconds:1}:args[0],args[1],args[2]);
+    if(state.lethalStart){
+      // Starting situation only: the real bot attack must kill the player, and normal respawn must restore them.
+      const player=this.simulation.getHero(0,0)!,enemy=this.simulation.getHero(1,0)!;
+      player.position={x:0,z:0};enemy.position={x:1,z:0};player.hp=1;player.stats.hpRegen=0;
+      enemy.stats={...enemy.stats,moveSpeed:0,manaRegen:0};enemy.mana=0;
+    }
+  }
+  override step(commands:any[]=[]){const result=super.step(commands);state.inputTrace.push({tick:this.simulation.state.tick,commands:structuredClone(commands),hash:this.simulation.finalHash()});return result;}}};});
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));
 vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn((snapshot:Snapshot,playerId:number)=>{for(const event of snapshot.events){if(event.type!=='castResolved'||event.heroId!==playerId||event.action==='basicAttack')continue;const cue=original.battleCue(event,snapshot,playerId);if(cue)state.releases.push({slot:event.slot,sample:original.sampleForCue(cue,policy as 'baseline'|'critical-v1')});}}),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
 type Client={snapshot:()=>Snapshot;state:()=>{ready:boolean;tick:number;pointer:{command:{type:string}|null}|null}};
@@ -33,7 +43,7 @@ function open(){click('#keyboard-settings');}
 function capture(action:string,value:string){click(`[data-binding-action="${action}"]`);key(value);}
 async function boot(){await import('../../src/client.js');await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));}
 beforeEach(()=>{
-  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.worlds.length=0;state.sounds.length=0;state.releases.length=0;state.inputTrace.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
+  vi.stubGlobal('__MOBA_SAVE_COMPATIBILITY__','integration-test');vi.resetModules();now=1000;id=0;frames=new Map();state.lethalStart=false;state.shortMatch=false;state.worlds.length=0;state.sounds.length=0;state.releases.length=0;state.inputTrace.length=0;history.replaceState(null,'','/');localStorage.clear();Reflect.deleteProperty(window,'mobaClient');
   document.body.innerHTML=html.match(/<body>([\s\S]*?)<\/body>/)![1]!;
   Object.defineProperty(document,'hidden',{configurable:true,value:false});
   Object.defineProperty(HTMLDialogElement.prototype,'showModal',{configurable:true,value:function(this:HTMLDialogElement){this.open=true;}});
@@ -57,6 +67,53 @@ it.each([
  for(let i=0;i<12;i++)advance();
  expect(state.releases.filter(event=>event.slot==='Q'||event.slot==='W').map(event=>event.slot)).toEqual(['Q','W']);
  expect(read().heroSource).toBe(source);
+});
+
+it.each([['', 'q'],['', 'a'],['?commands=buffer-v1','q'],['?commands=buffer-v1','a']] as const)('death ends %s %s aim before a natural respawn; old click cannot act',async(search,aimKey)=>{
+  state.lethalStart=true;history.replaceState(null,'','/candidate.html'+search);await boot();
+  const world=state.worlds[0]!;world.canvas.focus();key(aimKey);
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toContain('left-click');
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  const dead=client().snapshot().heroes[0]!;
+  expect(dead.alive).toBe(false);expect(dead.deaths).toBe(1);
+  expect(world.targeting).toBeNull();expect(message()).toBe('');
+  key('q');key('a');canvasClick();expect(world.targeting).toBeNull();expect(message()).toBe('');
+  // Dying cancels an action, not the user's camera controls.
+  world.locked=false;key(' ');expect(world.locked).toBe(true);
+  for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
+  const respawned=client().snapshot().heroes[0]!;
+  expect(respawned.alive).toBe(true);expect(respawned.deaths).toBe(1);
+  canvasClick();advance();
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);
+  expect(client().snapshot().heroes[0]!.mana).toBe(respawned.mana);
+  key(aimKey);canvasClick();for(let i=0;i<6;i++)advance();
+  const issued=state.inputTrace.flatMap((entry:any)=>entry.commands);
+  expect(issued).toHaveLength(1);expect(issued[0].type).toBe(aimKey==='q'?'cast':'attackMove');
+  if(aimKey==='q')expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
+  else expect(client().snapshot().heroes[0]!.moveGoal).not.toBeNull();
+});
+
+it.each(['q','a'] as const)('an unconfirmed %s aim cannot survive a complete death/respawn with no intervening input',async aimKey=>{
+  state.lethalStart=true;await boot();state.worlds[0]!.canvas.focus();key(aimKey);
+  for(let i=0;i<120&&client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(false);
+  for(let i=0;i<360&&!client().snapshot().heroes[0]!.alive;i++)advance();
+  expect(client().snapshot().heroes[0]!.alive).toBe(true);
+  canvasClick();for(let i=0;i<6;i++)advance();
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);
+  expect(state.releases).toHaveLength(0);
+});
+
+it('natural match completion clears pending targeting without replacing the terminal announcement',async()=>{
+  state.shortMatch=true;await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');
+  expect(world.targeting).toBe('Q');
+  for(let i=0;i<50&&client().snapshot().status==='running';i++)advance();
+  expect(client().snapshot().status).not.toBe('running');expect(world.targeting).toBeNull();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  const result=message();expect(result).not.toBe('');expect(result).not.toContain('left-click');
+  key('a');key('q');canvasClick();advance();expect(world.targeting).toBeNull();expect(message()).toBe(result);
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands)).toHaveLength(0);
 });
 
 it.each(['settings','blur','hidden','stop'] as const)('actual client withdraws expired aim instructions after %s and requires a fresh aim',async interruption=>{

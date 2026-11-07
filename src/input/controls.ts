@@ -18,6 +18,12 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     // A cancelled mode cannot still promise that the next click will cast/attack-move.
     if(endedAim){if(aimMessage!==null)say('',aimMessage);aimMessage=null;}
   }
+  function sync(){
+    if(abort.signal.aborted||mode===null)return;
+    const {snapshot,hero}=current();
+    // Input modes belong to the current life and match, not to a later respawn.
+    if(!hero.alive||snapshot.status!=='running')setMode(null);
+  }
   function release(){releaseFocus();setMode(null);lastPointer=null;bindings?.cancelCapture();}
   function skill(slot:AbilitySlot){
     if(!enabled)return;
@@ -46,7 +52,7 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     if(!enabled||event.defaultPrevented||event.repeat||event.altKey||event.ctrlKey||event.metaKey||event.isComposing||isInputElement(event.target))return;
     const action=bindings?bindings.resolve(event):actionForKey(DEFAULT_BINDINGS,event);
     if(action==='Q'||action==='W'||action==='E'||action==='R'){event.preventDefault();skill(action);}
-    else if(action==='attackMove'){event.preventDefault();setMode({kind:'attackMove'});sayAim('Attack-move: left-click a destination; Esc cancels.');}
+    else if(action==='attackMove'){event.preventDefault();const {snapshot,hero}=current();if(!hero.alive||snapshot.status!=='running')return;setMode({kind:'attackMove'});sayAim('Attack-move: left-click a destination; Esc cancels.');}
     else if(action==='stop'){event.preventDefault();setMode(null);enqueue({type:'stop',heroId:current().hero.id});}
     else if(event.key==='Escape'){setMode(null);say('Aim cancelled.');}
     else if(action==='focusCamera'){
@@ -65,5 +71,5 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     document.addEventListener('focusin',event=>{if(isInputElement(event.target)){releaseFocus();world.leavePointer();}},options);
   }
   window.addEventListener('blur',()=>{release();if(focusHold)world.leavePointer();},options);
-  return {skill,setEnabled(value:boolean){if(abort.signal.aborted)return;enabled=value;if(!value)release();},inspectPointer:()=>lastPointer?structuredClone(lastPointer):null,dispose(){enabled=false;abort.abort();release();}};
+  return {skill,sync,setEnabled(value:boolean){if(abort.signal.aborted)return;enabled=value;if(!value)release();},inspectPointer:()=>lastPointer?structuredClone(lastPointer):null,dispose(){enabled=false;abort.abort();release();}};
 }

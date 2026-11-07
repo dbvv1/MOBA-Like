@@ -41,7 +41,7 @@ async function host(){
     createDetourNavigation:async()=>navigation,
     createPlayableWorld:async()=>({world,backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline'}),
     MINIMUM_ACCEPTANCE_TICKS:300,FixedClock,createLifetime,
-    createControls:(_world:unknown,_catalog:unknown,_player:unknown,enqueueCommand:(command:SimCommand)=>void)=>{enqueue=enqueueCommand;return {setEnabled(){},skill(){},dispose(){},inspectPointer(){}};},
+    createControls:(_world:unknown,_catalog:unknown,_player:unknown,enqueueCommand:(command:SimCommand)=>void)=>{enqueue=enqueueCommand;return {sync(){},setEnabled(){},skill(){},dispose(){},inspectPointer(){}};},
     createHud,createGoldReceipt,KeyboardBindings:class{label(value:string){return value;}},controlsHelp:()=>'',createKeyboardSettings:()=>({dispose(){}}),
     createHeroSelection:()=>({read:()=>[['veyra'],['veyra']] as [string[],string[]],setBusy(){},refresh(){}}),
     createBattleAudio:()=>sound,window,document,location,performance:{now:()=>now},
