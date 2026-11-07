@@ -7,12 +7,12 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
+const state=vi.hoisted(()=>({inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean;invalidAim:boolean}>}));
 vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
-  const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false};state.worlds.push(world);
+  const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false,invalidAim:false};state.worlds.push(world);
   return {canvas,setTargeting:(slot:string|null)=>{world.targeting=slot;},setPointer:vi.fn(),leavePointer:vi.fn(),
-    aim:()=>{const hero=client().snapshot().heroes[0]!;return {point:{x:hero.position.x+2,z:hero.position.z},entityId:null};},
+    aim:()=>{const hero=client().snapshot().heroes[0]!;return {point:world.invalidAim?null:{x:hero.position.x+2,z:hero.position.z},entityId:null};},
     setFocusHeld:(held:boolean)=>{world.held=options.cameraFollow==='hold-follow-v1'&&held;},
     setLocked:(locked:boolean)=>{world.locked=locked;world.held=false;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
     lightingState:()=>({}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
@@ -57,6 +57,68 @@ it.each([
  for(let i=0;i<12;i++)advance();
  expect(state.releases.filter(event=>event.slot==='Q'||event.slot==='W').map(event=>event.slot)).toEqual(['Q','W']);
  expect(read().heroSource).toBe(source);
+});
+
+it.each(['settings','blur','hidden','stop'] as const)('actual client withdraws expired aim instructions after %s and requires a fresh aim',async interruption=>{
+  await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(world.targeting).toBe('Q');expect(message()).toContain('left-click');
+  advance();expect(message()).toContain('left-click');
+  const mana=client().snapshot().heroes[0]!.mana;
+  if(interruption==='settings')open();
+  else if(interruption==='blur')window.dispatchEvent(new Event('blur'));
+  else if(interruption==='hidden'){
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));
+  }else key('s');
+  expect(world.targeting).toBeNull();expect(message()).toBe('');
+  if(interruption==='settings')click('[data-binding-cancel]');
+  if(interruption==='hidden'){
+    Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));
+  }
+  world.canvas.focus();canvasClick();advance();
+  expect(message()).toBe('');expect(client().snapshot().heroes[0]!.mana).toBe(mana);
+  expect(state.inputTrace.flatMap((entry:any)=>entry.commands).filter((command:any)=>command.type==='cast')).toHaveLength(0);
+  key('q');expect(message()).toContain('left-click');canvasClick();
+  expect(message()).toBe('Command queued.');advance();
+  expect(client().snapshot().heroes[0]!.mana).toBeLessThan(mana);
+  // An interruption without active aim must not wipe the latest command receipt.
+  window.dispatchEvent(new Event('blur'));expect(message()).toBe('Command queued.');
+});
+
+it('self-targeted skills and attack-move cancellation also remove the previous aiming instruction',async()=>{
+  await boot();const select=document.querySelector<HTMLSelectElement>('#hero-select')!;
+  select.value='morrow';select.dispatchEvent(new Event('change'));click('#restart');
+  await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));
+  const world=state.worlds[1]!;world.canvas.focus();key('q');
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toContain('left-click');key('w');expect(world.targeting).toBeNull();expect(message()).toBe('');
+  advance();expect(client().snapshot().heroes[0]!.shield).toBeGreaterThan(0);
+  key('a');expect(message()).toContain('Attack-move');key('Escape');expect(message()).toBe('Aim cancelled.');
+  window.dispatchEvent(new Event('blur'));expect(message()).toBe('Aim cancelled.');
+  key('a');expect(message()).toContain('Attack-move');open();expect(message()).toBe('');
+});
+
+it('cancelling an aim does not erase a newer authoritative command rejection',async()=>{
+  await boot();const world=state.worlds[0]!;world.canvas.focus();
+  key('q');canvasClick();key('q');canvasClick();key('e');
+  expect(world.targeting).toBe('E');advance();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(client().snapshot().heroes[0]!.castSlot).toBe('Q');
+  expect(message()).toBe('Command rejected: alreadyCasting');
+  const tick=client().snapshot().tick;
+  window.dispatchEvent(new Event('blur'));expect(world.targeting).toBeNull();
+  expect(message()).toBe('Command rejected: alreadyCasting');expect(client().snapshot().tick).toBe(tick);
+  advance();expect(message()).toBe('Command rejected: alreadyCasting');
+  for(let i=0;i<60;i++)advance();expect(message()).toBe('');
+});
+
+it('cancellation withdraws the newer invalid-target instruction owned by the same aim',async()=>{
+  await boot();const world=state.worlds[0]!;world.canvas.focus();key('q');world.invalidAim=true;canvasClick();
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(world.targeting).toBe('Q');expect(message()).toBe('No valid target here. Aim again or press Esc.');
+  window.dispatchEvent(new Event('blur'));expect(world.targeting).toBeNull();expect(message()).toBe('');
+  world.invalidAim=false;world.canvas.focus();canvasClick();advance();expect(state.releases).toHaveLength(0);
+  key('q');canvasClick();for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
 });
 
 describe('keyboard settings in the actual client lifecycle',()=>{

@@ -10,6 +10,14 @@ DOM `pointerdown/keydown` → 队列 → rAF 的 `FixedClock`（30 Hz）→ `Loc
 
 运行：`node --import tsx tools/measure-feel.ts`。原始逐 tick 输入、接受结果、位置、朝向、动作、冷却和事件在 [feel-baseline.json](quality/feel-baseline.json)。两次独立运行输出逐字相同。固定 seed 1、30 Hz，使用已有测试初始化工具把两英雄放到 (0,0)/(5,0)，不修改战斗参数、不派 bot 输入；真实生产导航、模拟和信封仍工作。这是隔离 CPU timing fixture，不是正常整局实机、GPU 或键鼠测量。停止／转向场景输入分别在 tick 8／7，首次移动 tick 1；输入 tick 是执行前确定的逻辑 tick，没有真实设备时间戳。
 
+## 瞄准结束时撤销旧操作指令（战斗候选）
+
+沿已有输入与 HUD 修复“模式已取消，文字还要求左击”的不一致。设置、页面隐藏、失焦、Stop 或切到自身技能结束瞄准时，只在当前仍显示该次瞄准信息时撤下，后来到达的拒绝原因与终局结果保留；仍在瞄准时保持可读，恢复后须重新选技能，旧点击不会施法。正常确认后的排队回执和 Escape 取消结果仍按原流程显示。
+
+采用 [Firefly Lasso 实玩提炼的有效期方法](https://github.com/dbvv1/a1dbv/blob/main/docs/research/2026-10-23-game-worth-trying.md#firefly-lasso先让反馈读得到再看重开后是否改变动作)：先撤销已失效信息，不靠延长全部提示解决问题。复用原 `setMode` 生命周期，不改模拟、技能排队、改键或界面布局。
+
+真实 client、Controls、HUD 与 Simulation 的无画面回归复现并核对上述中断→返回→重新选技能；渲染、音频、导航和对话框设备行为仍为替身。修改只保留于既有 `dot-b/death-existing-combat-trial-20261106`，未合 main、未部署；真实浏览器焦点、视觉可读性与屏幕阅读器播报待验。2026-11-07。
+
 ## 规格与测值
 
 | 项 | 标杆／目标与来源 | 本作取值及理由 | 实际 CPU 结果（Veyra / Morrow） | 差距 |

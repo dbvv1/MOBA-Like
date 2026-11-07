@@ -86,7 +86,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings,goldReceipt);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
-    controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
+    controls=createControls(world,sim.catalog,player,enqueue,(text,onlyIfCurrent)=>hud.say(text,onlyIfCurrent),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);
     lifetime.defer(()=>controls.dispose());
     const clock=new FixedClock(1/sim.tickRateHz);let previous=performance.now(),animation=0,stopped=false;
     const definition=sim.catalog.heroes[player().hero.definitionId]!;

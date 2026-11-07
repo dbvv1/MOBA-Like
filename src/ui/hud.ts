@@ -48,5 +48,5 @@ export function createHud(root:HTMLElement,catalog:ContentCatalog,onSkill:(slot:
     }
     for(const [id,button]of itemButtons){const item=catalog.items[id]!;button.disabled=!hero.alive||snapshot.status!=='running'||hero.gold<item.cost||hero.items.includes(id);}
   }
-  return {update,disable(){for(const button of root.querySelectorAll('button'))button.disabled=true;},setLocked(value:boolean){root.querySelector<HTMLInputElement>('[data-lock]')!.checked=value;},say(text:string){if(matchEnded)return;notices.say(text);setMessage(text);},reject(reason:string){if(matchEnded)return;notices.reject(reason,currentTime);setMessage(`Command rejected: ${reason}`);},dispose(){abort.abort();root.replaceChildren();}};
+  return {update,disable(){for(const button of root.querySelectorAll('button'))button.disabled=true;},setLocked(value:boolean){root.querySelector<HTMLInputElement>('[data-lock]')!.checked=value;},say(text:string,onlyIfCurrent?:string){if(matchEnded||(onlyIfCurrent!==undefined&&message.textContent!==onlyIfCurrent))return;notices.say(text);setMessage(text);},reject(reason:string){if(matchEnded)return;notices.reject(reason,currentTime);setMessage(`Command rejected: ${reason}`);},dispose(){abort.abort();root.replaceChildren();}};
 }

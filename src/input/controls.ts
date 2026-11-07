@@ -5,19 +5,26 @@ import {commandForCast,commandForRightClick,isInputElement,validPoint,type Aim} 
 import {actionForKey,DEFAULT_BINDINGS,type KeyboardBindings} from './bindings.js';
 
 type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
-export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void){
+export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim'|'setPointer'|'leavePointer'>,catalog:ContentCatalog,current:()=>{snapshot:Snapshot;hero:HeroSnapshot},enqueue:(command:SimCommand)=>void,say:(text:string,onlyIfCurrent?:string)=>void,focusCamera:()=>void,bindings?:Pick<KeyboardBindings,'resolve'|'label'|'cancelCapture'>,focusHold?:(held:boolean)=>void){
   const abort=new AbortController();const options={signal:abort.signal};let mode:Mode=null;let enabled=true;let lastPointer:{button:number;aim:Aim;command:SimCommand|null}|null=null;
   let heldFocus:{code:string;key:string}|null=null;
+  let aimMessage:string|null=null;
+  function sayAim(text:string){aimMessage=text;say(text);}
   const keyIdentity=(key:string)=>key===' '||key==='Space'?'space':key.toLowerCase();
   function releaseFocus(){if(heldFocus){heldFocus=null;focusHold?.(false);}}
-  function setMode(next:Mode){mode=next;world.setTargeting(next?.kind==='cast'?next.slot:null);}
+  function setMode(next:Mode){
+    const endedAim=mode!==null&&next===null;
+    mode=next;world.setTargeting(next?.kind==='cast'?next.slot:null);
+    // A cancelled mode cannot still promise that the next click will cast/attack-move.
+    if(endedAim){if(aimMessage!==null)say('',aimMessage);aimMessage=null;}
+  }
   function release(){releaseFocus();setMode(null);lastPointer=null;bindings?.cancelCapture();}
   function skill(slot:AbilitySlot){
     if(!enabled)return;
     const {snapshot,hero}=current();const definition=catalog.heroes[hero.definitionId];const ability=definition&&catalog.abilities[definition.abilities[slot]];
     if(!ability||!hero.alive||snapshot.status!=='running')return;
     if(ability.targetType==='self'){const command=commandForCast(hero,slot,world.aim(),snapshot,catalog);if(command)enqueue(command);setMode(null);}
-    else{setMode({kind:'cast',slot});say(`${bindings?.label(slot)??slot} ${ability.name}: left-click ${ability.targetType==='enemyUnit'?'an enemy':'the ground'}; dashed lines show requested aim, not a guaranteed cast. Esc cancels.`);}
+    else{setMode({kind:'cast',slot});sayAim(`${bindings?.label(slot)??slot} ${ability.name}: left-click ${ability.targetType==='enemyUnit'?'an enemy':'the ground'}; dashed lines show requested aim, not a guaranteed cast. Esc cancels.`);}
   }
   world.canvas.addEventListener('contextmenu',event=>event.preventDefault(),options);
   world.canvas.addEventListener('pointermove',event=>world.setPointer(event.clientX,event.clientY),options);
@@ -33,13 +40,13 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     lastPointer=structuredClone({button:event.button,aim,command});
     if(command){enqueue(command);setMode(null);say('Command queued.');}
     else if(event.button===2)say('No valid attack or movement target here.');
-    else if(mode)say('No valid target here. Aim again or press Esc.');
+    else if(mode)sayAim('No valid target here. Aim again or press Esc.');
   },options);
   window.addEventListener('keydown',event=>{
     if(!enabled||event.defaultPrevented||event.repeat||event.altKey||event.ctrlKey||event.metaKey||event.isComposing||isInputElement(event.target))return;
     const action=bindings?bindings.resolve(event):actionForKey(DEFAULT_BINDINGS,event);
     if(action==='Q'||action==='W'||action==='E'||action==='R'){event.preventDefault();skill(action);}
-    else if(action==='attackMove'){event.preventDefault();setMode({kind:'attackMove'});say('Attack-move: left-click a destination; Esc cancels.');}
+    else if(action==='attackMove'){event.preventDefault();setMode({kind:'attackMove'});sayAim('Attack-move: left-click a destination; Esc cancels.');}
     else if(action==='stop'){event.preventDefault();setMode(null);enqueue({type:'stop',heroId:current().hero.id});}
     else if(event.key==='Escape'){setMode(null);say('Aim cancelled.');}
     else if(action==='focusCamera'){
