@@ -38,6 +38,12 @@ def themed(source, theme):
     return source.replace('#F1F5F9', theme['preview_background']).replace('#15304B', theme['ink']).replace('#086E85', theme['accent']).replace('stroke-width="4"', f'stroke-width="{theme["stroke_width"]}"')
 
 
+def write_text_utf8_lf(path, text):
+    """Write UTF-8 with explicit LF; Path.write_text would use os.linesep (CRLF on Windows)."""
+    with open(path, 'w', encoding='utf-8', newline='\n') as stream:
+        stream.write(text)
+
+
 @contextmanager
 def output_batch(output, recipe):
     """Stage one family; roll back ordinary rename errors, not power loss."""
@@ -131,7 +137,7 @@ def render(config, output):
         draw.text((12, row * 200 + 8), variant + ' / actual pixels: 32, 48', fill=theme['ink'])
         for col, name in enumerate(NAMES):
             svg = themed((ROOT / 'source' / f'{name}.svg').read_text(encoding='utf-8'), theme)
-            (folder / f'{name}.svg').write_text(svg, encoding='utf-8')
+            write_text_utf8_lf(folder / f'{name}.svg', svg)
             for size, y in ((32, 52), (48, 108)):
                 data = cairosvg.svg2png(bytestring=svg.encode(), output_width=size, output_height=size)
                 (folder / f'{name}-{size}.png').write_bytes(data)

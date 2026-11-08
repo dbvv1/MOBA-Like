@@ -13,9 +13,16 @@ python3 -m venv asset-pipeline/icons/.venv
 asset-pipeline/icons/.venv/bin/pip install -r asset-pipeline/icons/requirements.txt
 asset-pipeline/icons/.venv/bin/python asset-pipeline/icons/export.py
 asset-pipeline/icons/.venv/bin/python asset-pipeline/icons/test_export.py
+python3 asset-pipeline/icons/test_export_text.py
 ```
 
-导出时在本地生成、Git 忽略的 `exported/preview.png` 以实际 32／48 像素并排展示两套图标。导出需要 Python 3.11+、系统 Cairo 及 requirements 中的依赖；使用已交付 SVG／PNG 不需这些工具。无时间戳、网络取材或随机生成；同一渲染依赖环境内可逐字节重建。测试核尺寸、透明边缘、viewBox、重建一致、非法参数及缺失输入失败。
+导出时在本地生成、Git 忽略的 `exported/preview.png` 以实际 32／48 像素并排展示两套图标。导出需要 Python 3.11+、系统 Cairo 及 requirements 中的依赖；使用已交付 SVG／PNG 不需这些工具。无时间戳、网络取材或随机生成；文本 SVG 在同一 UTF-8/LF 规则下跨平台逐字节一致，PNG 与预览只在同一渲染依赖环境内可逐字节重建。测试核尺寸、透明边缘、viewBox、重建一致、非法参数及缺失输入失败。
+
+## 文本字节与渲染依赖
+
+SVG 是文本产物。导出器用 `write_text_utf8_lf()` 固定 UTF-8 编码和 LF 换行（`newline='\n'`），所以在 Windows 上写出的 `exported/<theme>/*.svg` 与 POSIX 是同一串字节，并等于 `themed()` 字符串的 UTF-8 编码。未经该显式参数的 `Path.write_text()` 会按 `os.linesep` 写换行，Windows 上即 CRLF，会破坏同源重导出的字节身份；`test_export_text.py` 用真实 `TextIOWrapper` 复现该默认规则，并核 12 个 SVG 的显式 LF 字节、入库字节及只改 dark accent 时 bright 六件不变。该测试不需要 CairoSVG 或系统 Cairo。
+
+PNG 与 `preview.png` 不是文本：它们经过 CairoSVG、系统 Cairo 与 Pillow 渲染，字节由这些依赖的平台和版本决定；`requirements.txt` 只锁 Python 包版本，不锁系统 Cairo。换环境或换版本不承诺 PNG 逐字节重建，也不把文本字节一致当作渲染或画质通过。真实 CairoSVG 可用时才跑 `test_export.py` 的全部渲染断言并生成完整 PNG／预览；缺 CairoSVG 时文本回归仍可单独运行，渲染项如实记为未运行。
 
 ## 整批重导出
 

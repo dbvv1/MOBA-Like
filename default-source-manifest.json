@@ -730,13 +730,13 @@
     },
     {
       "path": "asset-pipeline/icons/README.md",
-      "sha256": "be11f025321d36635b2c5edd9eae8ddb7e617d7ffd0b1d229aeb0c5805d31379",
+      "sha256": "3e9dcb7c22d476041a998c3cb95841a11537d74f265d315db49af0485d66705b",
       "baselineSha256": "36b93420f091320ae889dde88e9a0fe939b2b1f499a05888213c6fb51a45e209",
       "maintenance": "Authoring-only batch export repair; runtime SVG/PNG bytes unchanged."
     },
     {
       "path": "asset-pipeline/icons/export.py",
-      "sha256": "e85925c4fa2faf156bc6ee895e0d2e393f7d95f9d4134ff1ef706eea74673810",
+      "sha256": "f9708373e511e068894bae8abe1c4fbd341c897a1a27e44c685542e9d3332ba9",
       "baselineSha256": "e12a51bd9ff180f97a1c87a763fafe93e8708424097200e2b0697583d7c21cb4",
       "maintenance": "Authoring-only batch export repair; runtime SVG/PNG bytes unchanged."
     },
@@ -969,6 +969,11 @@
       "sha256": "025d064d488361399a663a4dbb7725ce29334e1a07e550249bb8857e88ab06cf",
       "baselineSha256": "26ca8e0132a349c3ebfae8eaa621bf1511bee0a607410159701a922e765c6ae8",
       "maintenance": "Authoring-only batch export repair; runtime SVG/PNG bytes unchanged."
+    },
+    {
+      "path": "asset-pipeline/icons/test_export_text.py",
+      "sha256": "4819e66a94804bed40d121cbd5e60f7674702e946e3fbbcf6f1dec72eba67ff6",
+      "maintenance": "Authoring-only cross-platform LF text regression; runtime SVG/PNG bytes unchanged."
     },
     {
       "path": "asset-pipeline/placeholder/.gitignore",
