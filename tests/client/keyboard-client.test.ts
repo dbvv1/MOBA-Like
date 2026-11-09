@@ -57,6 +57,32 @@ beforeEach(()=>{
 });
 afterEach(()=>{window.dispatchEvent(new Event('pagehide'));vi.restoreAllMocks();vi.unstubAllGlobals();document.body.replaceChildren();});
 
+it.each(['/', fullTrial, fullTrial+'&materials=quiet-family-v1'])('HUD skill activation returns focus to gameplay so Escape cancels at %s',async(path)=>{
+ history.replaceState(null,'',path);await boot();
+ const world=state.worlds[0]!;const message=()=>document.querySelector('[data-message]')!.textContent;
+ for(const selector of ['[data-skills] button:nth-child(1)','[data-skills] button:nth-child(2)']){
+   click(selector);expect(world.targeting).not.toBeNull();expect(message()).toContain('Esc cancels');
+   expect(document.activeElement).toBe(world.canvas);
+   key('Escape');expect(world.targeting).toBeNull();expect(message()).toBe('Aim cancelled.');
+   canvasClick();advance();expect(state.releases).toHaveLength(0);
+   expect(state.inputTrace.flatMap(frame=>frame.commands).filter(command=>command.type==='cast')).toEqual([]);
+ }
+ // UI navigation still owns keys until a skill is actually activated.
+ button('[data-skills] button').focus();key('q');expect(world.targeting).toBeNull();
+ open();key('Escape');expect(document.querySelector('dialog')!.open).toBe(false);
+ expect(document.activeElement).toBe(button('#keyboard-settings'));
+});
+
+it('HUD self skill returns focus without entering aim or issuing a second cast',async()=>{
+ await bootTrial();document.querySelector<HTMLSelectElement>('#hero-select')!.value='morrow';
+ click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));
+ const world=state.worlds[1]!;click('[data-skills] button:nth-child(2)');
+ expect(document.activeElement).toBe(world.canvas);expect(world.targeting).toBeNull();advance();
+ const casts=()=>state.inputTrace.flatMap(frame=>frame.commands).filter(command=>command.type==='cast');
+ expect(casts()).toHaveLength(1);expect(casts()[0]).toMatchObject({slot:'W'});
+ key('Escape');canvasClick();advance();expect(casts()).toHaveLength(1);
+});
+
 it.each([
  ['/', '', 'baseline'],
  ['/candidate.html', '', 'death-contact'],
