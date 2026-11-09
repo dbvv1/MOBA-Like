@@ -2,6 +2,7 @@ import type {AbilitySlot,ContentCatalog} from '../content/types.js';
 import type {HeroSnapshot,SimCommand,Snapshot} from '../sim/types.js';
 import type {GameWorld} from '../render/world.js';
 import {commandForCast,commandForRightClick,isInputElement,validPoint,type Aim} from './commands.js';
+import {stableStringify} from '../sim/hash.js';
 import {actionForKey,DEFAULT_BINDINGS,type KeyboardBindings} from './bindings.js';
 
 type Mode={kind:'cast';slot:AbilitySlot}|{kind:'attackMove'}|null;
@@ -21,6 +22,9 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
   function sync(){
     if(!combatTrial||abort.signal.aborted)return;
     const {snapshot,hero}=current();
+    // Only an actual discarded buffer entry withdraws its matching receipt.
+    // A stun after a normal release must not retract that completed input.
+    if(receiptCommand&&snapshot.events.some(event=>event.type==='commandBufferDiscarded'&&stableStringify(event.command)===stableStringify(receiptCommand)))clearReceipt();
     // Input modes belong to the current life and match, not to a later respawn.
     if(!hero.alive||snapshot.status!=='running'){
       if(mode!==null)setMode(null);

@@ -20,6 +20,12 @@ export function saveSourceFingerprint(root:string):string{
  * The command-envelope entry is populated only after old-source replay comparison.
  */
 const COMPATIBLE_SOURCE_REVISIONS:Readonly<Record<string,string>>=Object.freeze({
+  // commandBufferDiscarded adds derived output only. Compared with 935e8a24:
+  // all eight versions matched inputs, results and per-tick state for 3600 ticks;
+  // the real v12 stun-discard fixture also matched all 80 ticks (hash asserted
+  // in buffer-discard-feedback.test.ts). Historical save fixtures remain fixed.
+  'c32f291808b8286ebc95503a66e79b6e30c6aeaecaccc44c88d685a989e845fd':
+    '344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f',
   // goldAwarded is a derived per-step presentation event: loading the 0811894
   // source as a separate baseline runtime and running
   // tools/check-gold-event-compatibility.ts --ticks 3600 --seed 1 matched every

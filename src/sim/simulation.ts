@@ -379,7 +379,7 @@ export class Simulation {
     }
 
     return {
-      events: this.stepEvents.map(event => event.type === 'minionDied' || event.type === 'basicAttackHit' || event.type === 'goldAwarded' ? { ...event, position: copyVec(event.position) } : { ...event }),
+      events: this.stepEvents.map(event => event.type === 'commandBufferDiscarded' ? { ...event, command: structuredClone(event.command) } : event.type === 'minionDied' || event.type === 'basicAttackHit' || event.type === 'goldAwarded' ? { ...event, position: copyVec(event.position) } : { ...event }),
       tick: this.state.tick,
       timeSeconds: this.state.timeSeconds,
       status: this.state.status,
@@ -650,7 +650,11 @@ export class Simulation {
     if (this.catalog.version !== 12) return;
     for (const hero of this.state.entities) {
       if (hero.kind !== 'hero' || !hero.queuedCommand) continue;
-      if (!hero.alive || this.isStunned(hero)) { delete hero.queuedCommand; continue; }
+      if (!hero.alive || this.isStunned(hero)) {
+        if (hero.alive) this.emit({ type: 'commandBufferDiscarded', command: structuredClone(hero.queuedCommand), reason: 'stunned' });
+        delete hero.queuedCommand;
+        continue;
+      }
       if (hero.cast || hero.basicAttack) continue;
       const command = hero.queuedCommand;
       // Consume exactly once, including when cooldown/resources/target became invalid.
