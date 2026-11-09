@@ -20,6 +20,11 @@ export function saveSourceFingerprint(root:string):string{
  * The command-envelope entry is populated only after old-source replay comparison.
  */
 const COMPATIBLE_SOURCE_REVISIONS:Readonly<Record<string,string>>=Object.freeze({
+  // Stop/revalidation discard events add derived output only. Against 4751337:
+  // eight versions x 3600 ticks matched inputs, results, state and hashes;
+  // real target-death and Stop/reissue fixtures also matched at every tick.
+  'e04336e3ec56a61323e08f5067ed2ebf2e4e877b508a2ee31ff78a502a555dc7':
+    '344653383010aa1167fb3ee4fda475581cf897ff0e1b38649bd46e8151284b7f',
   // commandBufferDiscarded adds derived output only. Compared with 935e8a24:
   // all eight versions matched inputs, results and per-tick state for 3600 ticks;
   // the real v12 stun-discard fixture also matched all 80 ticks (hash asserted

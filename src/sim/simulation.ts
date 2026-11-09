@@ -597,7 +597,10 @@ export class Simulation {
 
     if (this.catalog.version === 12) {
       // Stop is an immediate explicit escape, not an accidentally buffered cancel.
-      if (command.type === 'stop') delete hero.queuedCommand;
+      if (command.type === 'stop') {
+        if (hero.queuedCommand) this.emit({ type: 'commandBufferDiscarded', command: structuredClone(hero.queuedCommand), reason: 'stop' });
+        delete hero.queuedCommand;
+      }
       else if (command.type !== 'buyItem' && (hero.cast || hero.basicAttack)) {
         if (this.isStunned(hero)) return fail('stunned');
         let validation: CommandResult | undefined;
@@ -660,6 +663,7 @@ export class Simulation {
       // Consume exactly once, including when cooldown/resources/target became invalid.
       delete hero.queuedCommand;
       const result = this.applyCommand(command);
+      if (!result.accepted) this.emit({ type: 'commandBufferDiscarded', command: structuredClone(command), reason: 'rejected' });
       // The unit phase held this actor for its attack commitment; a queued move
       // may use exactly its one displacement now, before contact separation.
       if (afterUnits && result.accepted && (command.type === 'move' || command.type === 'attackMove')) this.moveAlongPath(hero);

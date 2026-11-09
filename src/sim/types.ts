@@ -345,7 +345,7 @@ export type PresentationEvent = Readonly<{ tick: number; ordinal: number } & (
   | { type: 'castCancelled'; action: 'basicAttack'; castId: number; heroId: number; abilityId: 'basicAttack'; slot: null; targetId: number; reason: BasicAttackCancelReason }
   | { type: 'castCancelled'; action?: 'ability'; castId: number; heroId: number; abilityId: string; slot: AbilitySlot;
       reason: 'stunned' | 'dead' | 'missingAbility' | 'invalidTarget' | 'missingPoint' | 'invalidDestination' }
-  | { type: 'commandBufferDiscarded'; command: SimCommand; reason: 'stunned' }
+  | { type: 'commandBufferDiscarded'; command: SimCommand; reason: 'stunned' | 'stop' | 'rejected' }
   | { type: 'minionDied'; entityId: number; team: TeamId; position: Readonly<Vec2> }
   | { type: 'basicAttack'; sourceId: number; targetId: number; attackId?: number; delivery?: 'melee' | 'projectile' }
   | { type: 'basicAttackHit'; sourceId: number; targetId: number; attackId: number; position: Readonly<Vec2>; targetTeam: TeamId; hpDamage: number; shieldAbsorbed: number }

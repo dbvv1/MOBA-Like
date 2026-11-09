@@ -141,7 +141,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
           const alpha=clock.advance(delta,()=>{
             if(sim.isComplete())return;
             const issued=commands.splice(0);const results=match.step(issued);
-            snapshot=sim.snapshot();controls.sync();goldReceipt?.consume(snapshot.events,snapshot.timeSeconds);world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
+            snapshot=sim.snapshot();controls.sync(issued);goldReceipt?.consume(snapshot.events,snapshot.timeSeconds);world.sync(snapshot,playerId);hud.update(snapshot,playerId);sound.sync(snapshot,playerId);
             if((sim.isComplete()&&!terminalCleared)||(!sim.isComplete()&&snapshot.tick-lastAttemptTick>=300))save();
             const rejection=results.find(result=>result.command.heroId===playerId&&!result.accepted);
             if(rejection)hud.reject(rejection.reason??'unknown reason');

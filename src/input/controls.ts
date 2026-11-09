@@ -19,12 +19,21 @@ export function createControls(world:Pick<GameWorld,'canvas'|'setTargeting'|'aim
     // A cancelled mode cannot still promise that the next click will cast/attack-move.
     if(endedAim){if(combatTrial&&aimMessage!==null)say('',aimMessage);aimMessage=null;}
   }
-  function sync(){
+  function sync(issued:readonly SimCommand[]=[]){
     if(!combatTrial||abort.signal.aborted)return;
     const {snapshot,hero}=current();
     // Only an actual discarded buffer entry withdraws its matching receipt.
     // A stun after a normal release must not retract that completed input.
-    if(receiptCommand&&snapshot.events.some(event=>event.type==='commandBufferDiscarded'&&stableStringify(event.command)===stableStringify(receiptCommand)))clearReceipt();
+    if(receiptCommand){
+      // The frame owner supplies original input objects, preserving receipt identity.
+      // Stop may discard an old order before an identical new order is submitted.
+      const receiptIndex=issued.indexOf(receiptCommand);
+      let lastStopIndex=-1;
+      issued.forEach((command,index)=>{if(command.type==='stop'&&command.heroId===hero.id)lastStopIndex=index;});
+      if(snapshot.events.some(event=>event.type==='commandBufferDiscarded'&&
+        stableStringify(event.command)===stableStringify(receiptCommand)&&
+        !(event.reason==='stop'&&lastStopIndex>=0&&receiptIndex>lastStopIndex)))clearReceipt();
+    }
     // Input modes belong to the current life and match, not to a later respawn.
     if(!hero.alive||snapshot.status!=='running'){
       if(mode!==null)setMode(null);

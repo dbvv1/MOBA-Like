@@ -456,3 +456,14 @@ it('keeps a refused Q aimed and accepts a fresh click after the existing queue d
   canvasClick();expect(world.targeting).toBeNull();expect(document.querySelector('[data-message]')!.textContent).toBe('Command queued.');
   for(let i=0;i<6;i++)advance();expect(state.releases.filter(event=>event.slot==='Q')).toHaveLength(1);
 });
+
+it.each([false,true])('real client passes frame receipt ownership through Stop with same-order resend=%s',async resend=>{
+  await bootTrial();const world=state.worlds[0]!;world.canvas.focus();key('q');canvasClick();advance(34);
+  canvasClick(2);advance(34);
+  const message=()=>document.querySelector('[data-message]')!.textContent;
+  expect(message()).toBe('Command queued.');key('s');if(resend)canvasClick(2);advance(34);
+  expect(client().snapshot().events).toContainEqual(expect.objectContaining({type:'commandBufferDiscarded',reason:'stop'}));
+  expect(message()).toBe(resend?'Command queued.':'');
+  for(let i=0;i<6;i++)advance(34);
+  expect(message()).toBe(resend?'Command queued.':'');
+});
