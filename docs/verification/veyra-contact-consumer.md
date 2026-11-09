@@ -112,3 +112,19 @@
 云端 Node 24.22.1、锁定依赖下，最终 `npm test` 89 文件／580 项通过，其中本文件 6 项；`npm run build` 与 `npm run build:web` 通过，后者保留已有大 chunk 提示。源包 reproduce、0.005 容差检查及 32 项 Python 回归通过。11-06 的音频失败保留为历史，本次完整套件未复现。独审与公开扫描通过。
 
 本次只接收消费者验证，不切换素材、不部署、不运行浏览器／GPU／音频或 Blender。默认死亡剪影与整场品质仍未验；下一步先按 Adoption 固定旧源、更新配方与 pin，再在可用且获准的原拍摄安排内验实际画面。
+
+## 11-09 原始基线迁移（采用前置）
+
+消费者不再从可变 `heroes/veyra-release` 读取基线 GLB 或 manifest。`tests/veyra-baseline.ts` 先按 `baseline-lock.json` 对固定 `b489ed38592dc184fffe2ab9b3b186441c7dc9bb` 快照的 manifest、两份 GLB 和两份源文件逐一验证 SHA-256 与字节数，再把已验证的 GLB 字节交给 `GLTFLoader`，不二次读取未经校验的文件。默认目录为 `asset-pipeline/veyra-death-contact/baseline`；`VEYRA_DEATH_BASELINE_DIR` 可选另一份完全一致的快照，相对路径以仓库根为准。上文的 heroes-release 基线数值现在指该固定原始版本，不随将来的运行资源采用变化。
+
+新检出需先显式运行 `python asset-pipeline/veyra-death-contact/tools/baseline.py`，再运行 `npm test`。准备只从本地 Git 取固定提交，不联网；浅克隆缺该提交时需提供对应本地历史或完整精确快照。消费者既不自动准备／fetch，也不回退到当前 release 或跳过缺失基线。实际以不存在的 override 运行消费者测试时，套件按预期失败并提示上述准备命令，目录没有被创建。
+
+本轮在锁文件一致的既有依赖下执行：
+
+- `npm test`：90 文件／595 项通过；消费者保持 6 项，新增独立基线回归 15 项。上文 11-06 的 5 项是历史记录。
+- 基线回归覆盖全部五个文件缺失、每个文件等长篡改、字节数变化、候选替换且可变 manifest 同步改 hash、精确外部快照和路径解析；缺失快照不会被准备或回退。
+- `npm run build`、`npm run typecheck:web`、`npm run build:web` 通过；web 构建仍有既有大 chunk 提示。新增 helper 与回归文件的独立严格 TypeScript 检查通过。
+- `baseline.py --check-only` 验证五文件通过；Python 包 42 项回归通过。
+- 额外的 `npx tsc --noEmit` 未通过：既有 capture 相关文件缺 DOM 类型、`tests/capture-output.test.ts:151` 的可选属性类型和 `tests/command-buffer.test.ts:8` 的可能 undefined。相同错误在未含本轮修改的 `be8015b` 检出复现；不将它记为全量类型检查通过。
+
+此次仅补采用前置验证及命令说明；未修改运行资源、源模型、默认入口或配方，未运行浏览器、socket、截图／录像或 Blender。默认接地观感与品质门槛仍未验证。
