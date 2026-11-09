@@ -20,6 +20,8 @@
 | `npm run sim -- --games <N> --seed <S>` | 无画面批量对局，输出胜率、时长、技能与 AI 统计 |
 | `npm run smoke` | 构建产物在无头浏览器里加载并截图 |
 
+`npm test` 前须显式准备 Veyra 原始基线：`python asset-pipeline/veyra-death-contact/tools/baseline.py`。该命令只读本地 Git 的固定提交，不自动 fetch；新／浅克隆若缺历史，需要先提供固定提交或以 `VEYRA_DEATH_BASELINE_DIR` 指向完整、校验一致的快照。测试不会自动准备、回退到可变 heroes release 或跳过缺失基线。
+
 ## 结构
 
 - `src/sim/`：确定性模拟。固定步长；随机数只用带种子的随机源；不读系统时间，不引用 DOM、Three.js 或网络。外部只通过输入命令影响对局，同一种子加同一命令序列必须得到同一结果。
