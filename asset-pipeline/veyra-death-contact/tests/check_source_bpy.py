@@ -14,7 +14,6 @@ from __future__ import annotations
 import argparse
 import copy
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -22,23 +21,13 @@ HERE = Path(__file__).resolve()
 PACKAGE = HERE.parents[1]
 REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(PACKAGE / "tools"))
-from baseline import verify_baseline
+from baseline import verify_baseline, resolve_baseline_dir as resolve_pinned_baseline
 from glb_contact import ContactError
 
 
 def resolve_baseline_root() -> Path:
-    """Shipped baseline, or the pinned copy named by the shared env var.
-
-    Adoption replaces the heroes source and export; point
-    ``VEYRA_DEATH_BASELINE_DIR`` at the pinned ``b489ed38`` snapshot so this
-    diff still compares the candidates with the original editable source.
-    Relative values resolve from the repository root.
-    """
-    override = os.environ.get("VEYRA_DEATH_BASELINE_DIR")
-    if not override:
-        return REPO / "asset-pipeline" / "heroes" / "veyra-release"
-    path = Path(override)
-    return path if path.is_absolute() else (REPO / path).resolve()
+    """Use the independently pinned original snapshot (or an explicit exact copy)."""
+    return resolve_pinned_baseline()
 
 
 UPSTREAM = resolve_baseline_root() / "source"

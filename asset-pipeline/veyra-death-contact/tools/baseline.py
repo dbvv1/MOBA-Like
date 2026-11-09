@@ -23,6 +23,20 @@ FILES = {"manifest.json"} | {
 }
 
 
+def resolve_baseline_dir() -> Path:
+    """Select the prepared snapshot, never the mutable heroes release.
+
+    Selection does not prepare or fetch files. Consumers verify all five pins
+    before use. An explicit environment override may select another exact copy;
+    relative values resolve from the repository root.
+    """
+    override = os.environ.get("VEYRA_DEATH_BASELINE_DIR")
+    if not override:
+        return PACKAGE / "baseline"
+    path = Path(override)
+    return path if path.is_absolute() else (REPO / path).resolve()
+
+
 def lock_rows():
     try:
         lock = json.loads((PACKAGE / "baseline-lock.json").read_text(encoding="utf-8"))

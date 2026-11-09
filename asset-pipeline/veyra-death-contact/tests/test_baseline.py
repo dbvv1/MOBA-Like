@@ -1,4 +1,6 @@
 """Immutable baseline identity and offline snapshot preparation regressions."""
+import ast
+import os
 import contextlib
 import io
 import json
@@ -120,6 +122,77 @@ class BaselineTests(unittest.TestCase):
         with contextlib.redirect_stderr(io.StringIO()) as err:
             self.assertEqual(baseline.main(["--check-only", "--baseline-dir", str(self.root / "absent")]), 2)
         self.assertIn("ERROR: missing/unreadable", err.getvalue())
+
+
+class DefaultRecipeTests(unittest.TestCase):
+    def test_all_consumers_select_snapshot_without_importing_bpy(self):
+        # Execute the actual resolver bodies from both bpy and CPU consumers,
+        # without importing Blender or running its module-level build code.
+        with patch.dict(os.environ, {}, clear=True):
+            for relative, name in (
+                ("tools/build_candidates.py", "resolve_baseline_dir"),
+                ("tools/build_source_candidates.py", "resolve_baseline_root"),
+                ("tests/check_contact.py", "resolve_baseline_dir"),
+                ("tests/check_source_bpy.py", "resolve_baseline_root"),
+            ):
+                tree = ast.parse((PACKAGE / relative).read_text())
+                imports = [node for node in tree.body if isinstance(node, ast.ImportFrom)
+                           and node.module == "baseline"]
+                resolver = next(node for node in tree.body
+                                if isinstance(node, ast.FunctionDef) and node.name == name)
+                namespace = {"Path": Path}
+                exec(compile(ast.Module(body=imports + [resolver], type_ignores=[]),
+                             relative, "exec"), namespace)
+                self.assertEqual(namespace[name](), PACKAGE / "baseline", relative)
+            os.environ["VEYRA_DEATH_BASELINE_DIR"] = "another/snapshot"
+            self.assertEqual(baseline.resolve_baseline_dir(), (REPO / "another/snapshot").resolve())
+            os.environ["VEYRA_DEATH_BASELINE_DIR"] = str(PACKAGE / "baseline")
+            self.assertEqual(baseline.resolve_baseline_dir(), PACKAGE / "baseline")
+
+    def test_default_checks_ignore_replaced_heroes_and_missing_snapshot_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            package = root / "asset-pipeline/veyra-death-contact"
+            shutil.copytree(PACKAGE, package, ignore=shutil.ignore_patterns("__pycache__"))
+            # Simulate adoption: mutable heroes now contains corrected files.
+            heroes = root / "asset-pipeline/heroes/veyra-release"
+            for folder in ("source", "exported"):
+                shutil.copytree(package / folder, heroes / folder)
+            shutil.copyfile(package / "manifest.json", heroes / "manifest.json")
+            env = {k: v for k, v in os.environ.items() if k != "VEYRA_DEATH_BASELINE_DIR"}
+            command = [sys.executable, str(package / "tests/check_contact.py"), "--mode", "reproduce"]
+            result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            shutil.rmtree(package / "baseline")
+            # Even with a heroes directory present, no fallback or auto-preparation.
+            result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("missing/unreadable baseline", result.stderr)
+            self.assertFalse((package / "baseline").exists())
+            output = root / "new-outputs"
+            result = subprocess.run(
+                [sys.executable, str(package / "tools/build_candidates.py"),
+                 "--out-dir", str(output), "--reports-dir", str(root / "new-reports")],
+                cwd=root, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse((root / "new-reports").exists())
+
+    def test_provenance_uses_independent_snapshot_and_unchanged_original_hashes(self):
+        pins = {row["path"]: row for row in baseline.lock_rows()}
+        prefix = "asset-pipeline/veyra-death-contact/baseline"
+        for name in ("manifest.json", "runtime-fallback/manifest.json"):
+            manifest = json.loads((PACKAGE / name).read_text())
+            self.assertEqual(manifest["basis"]["source"], prefix)
+            self.assertEqual(manifest["basis"]["manifestSha256"], pins["manifest.json"]["sha256"])
+            for row in manifest["assets"]:
+                export = f"exported/{row['id']}.glb"
+                self.assertEqual(row["baseline"], f"{prefix}/{export}")
+                self.assertEqual(row["baselineSha256"], pins[export]["sha256"])
+                if "upstreamSource" in row:
+                    source = f"source/{row['id']}.blend"
+                    self.assertEqual(row["upstreamSource"], f"{prefix}/{source}")
+                    self.assertEqual(row["upstreamSourceSha256"], pins[source]["sha256"])
 
 
 if __name__ == "__main__":

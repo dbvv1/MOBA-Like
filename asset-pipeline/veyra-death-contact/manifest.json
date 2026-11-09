@@ -3,7 +3,7 @@
   "kind": "source-rebuilt-candidate",
   "license": "CC0-1.0",
   "basis": {
-    "source": "asset-pipeline/heroes/veyra-release",
+    "source": "asset-pipeline/veyra-death-contact/baseline",
     "manifestSha256": "4c089c7032cda82003a684abda4d9986bb330e2e4b16f60dfef14ac5f5a52ec3",
     "fps": 30.0
   },
@@ -14,7 +14,7 @@
       "asset-pipeline/veyra-death-contact/source/veyra-rust.blend"
     ],
     "tool": "tools/build_source_candidates.py",
-    "derivedFrom": "source/veyra-{teal,rust}.blend under the upstream heroes release",
+    "derivedFrom": "source/veyra-{teal,rust}.blend under the verified original baseline",
     "change": "death Root location Y keys offset by reports/death-root-offsets.json; no other pose, geometry or action data changed (the two zero-user legacy materials keep fake users so the resave does not drop them)",
     "blender": {
       "module": "bpy",
@@ -38,9 +38,9 @@
     {
       "id": "veyra-teal",
       "team": "teal",
-      "baseline": "asset-pipeline/heroes/veyra-release/exported/veyra-teal.glb",
+      "baseline": "asset-pipeline/veyra-death-contact/baseline/exported/veyra-teal.glb",
       "baselineSha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
-      "upstreamSource": "asset-pipeline/heroes/veyra-release/source/veyra-teal.blend",
+      "upstreamSource": "asset-pipeline/veyra-death-contact/baseline/source/veyra-teal.blend",
       "upstreamSourceSha256": "6b4f97f038fde70fff070213644e567b4f88822f116a06eeca5dd81ddcda9836",
       "source": "asset-pipeline/veyra-death-contact/source/veyra-teal.blend",
       "sourceSha256": "60ec1446cbcbe0dc0b4a79310865d65f860bb977144a5e428175c38a2d860180",
@@ -279,9 +279,9 @@
     {
       "id": "veyra-rust",
       "team": "rust",
-      "baseline": "asset-pipeline/heroes/veyra-release/exported/veyra-rust.glb",
+      "baseline": "asset-pipeline/veyra-death-contact/baseline/exported/veyra-rust.glb",
       "baselineSha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774",
-      "upstreamSource": "asset-pipeline/heroes/veyra-release/source/veyra-rust.blend",
+      "upstreamSource": "asset-pipeline/veyra-death-contact/baseline/source/veyra-rust.blend",
       "upstreamSourceSha256": "ace3060ca1bcbe214fa3aeb3c996e0a50f25456cf657023c219469e6f59a02fa",
       "source": "asset-pipeline/veyra-death-contact/source/veyra-rust.blend",
       "sourceSha256": "f500e4071f7943875ce3ecdbaa8616569ef4e0a3a8e930596f471616d2321d30",

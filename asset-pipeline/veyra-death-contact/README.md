@@ -19,13 +19,9 @@ python asset-pipeline/veyra-death-contact/tools/baseline.py --check-only
 
 `baseline-lock.json` pins the original commit, manifest, both GLBs and both editable sources by SHA-256 and byte count. Preparation extracts that exact commit without fetching (including disabling Git lazy fetch), verifies every byte before publishing the directory, and verifies an existing snapshot without overwriting it. Missing local history, missing files or mismatched bytes fail with exit 2. The snapshot is ignored by Git; a fresh checkout needs preparation before selecting it. The check-only command needs no Git history.
 
-All contact checks and both candidate builders verify the full baseline against this independent lock before consuming it. They still default to the heroes release until the environment variable below is set; after adoption that default fails closed rather than accepting corrected files or a rewritten release manifest. Hash identity is enforced, not filesystem write protection: edits to a snapshot are detected on the next use.
+All Python contact checks and both candidate builders verify the full baseline against this independent lock before consuming it. They now default to this prepared snapshot. Missing or changed snapshot files fail closed; no Python consumer in this package falls back to the heroes release or prepares/fetches files automatically. Hash identity is enforced, not filesystem write protection: edits to a snapshot are detected on the next use.
 
-The manifest is required, not only the GLBs: `tests/test_checks.py::test_baseline_hashes_match_the_upstream_manifest` reads it from the same directory. `tests/check_contact.py` and `tests/test_checks.py` read the `VEYRA_DEATH_BASELINE_DIR` environment variable; `tools/build_candidates.py` and `tools/build_source_candidates.py` use the same variable (the former also accepts `--baseline-dir`), and `tests/check_source_bpy.py` reads `<pin>/source`. Relative values resolve from the repository root:
-
-```sh
-export VEYRA_DEATH_BASELINE_DIR=asset-pipeline/veyra-death-contact/baseline
-```
+The manifest is required, not only the GLBs: every Python consumer in this package verifies all five files. `VEYRA_DEATH_BASELINE_DIR` can select another exact snapshot; relative values resolve from the repository root. `check_contact.py` and `build_candidates.py` also accept `--baseline-dir`. Overrides do not relax the hash checks. No environment variable is needed for the default prepared snapshot.
 
 ### 1. Copy the adopted artifacts and update the heroes manifest
 
@@ -51,7 +47,7 @@ The supported rebuild path for this card is this package's builder, run against 
 < bpy python > asset-pipeline/veyra-death-contact/tools/build_source_candidates.py
 ```
 
-Then copy the rebuilt `source/` and `exported/` into the heroes release again and rerun the acceptance commands from step 5. The rebuild also refreshes this package's `manifest.json` and `reports/death-root-offsets.json` against the pinned baseline: `manifest.json`'s `basis.source`, `basis.manifestSha256`, each asset's `upstreamSource`, `upstreamSourceSha256` and `baseline`. Without it, `tests/test_checks.py::test_source_and_candidate_hashes_match_the_manifest` compares the adopted heroes source with the old recorded hash and fails. If Blender is unavailable, update those fields to the pinned baseline by hand instead: `basis.source` becomes the pinned directory, `basis.manifestSha256` the pinned manifest hash, and each `assets[].upstreamSource` / `assets[].baseline` the pinned `source/veyra-{teal,rust}.blend` / `exported/veyra-{teal,rust}.glb`; the matching `upstreamSourceSha256` and `baselineSha256` keep the `b489ed3` hashes. Leaving `assets[].baseline` pointing at the now-overwritten heroes export while `baselineSha256` still holds the old hash makes the record self-contradictory. Overwriting only the GLB and then running the heroes recipe is not a supported path.
+Then copy the rebuilt `source/` and `exported/` into the heroes release again and rerun the acceptance commands from step 5. The candidate and fallback manifests already point at the pinned baseline, with the original manifest, source and export hashes unchanged. The rebuild refreshes these provenance fields against the same verified snapshot. No manual environment or provenance edit is needed when adopting from the default snapshot. Overwriting only the GLB and then running the heroes recipe is not a supported path.
 
 #### Optional: keep the heroes recipe canonical
 
@@ -85,20 +81,22 @@ The candidates were re-exported with Blender 5.2.3, which reorders scene childre
 ### 5. Run the full checks
 
 ```sh
-export VEYRA_DEATH_BASELINE_DIR=asset-pipeline/veyra-death-contact/baseline
+python asset-pipeline/veyra-death-contact/tools/baseline.py --check-only
 python -m unittest discover -s asset-pipeline/veyra-death-contact/tests -v
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --mode reproduce
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --tolerance 0.01
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --tolerance 0.005
-python asset-pipeline/veyra-death-contact/tools/build_candidates.py --check-only --baseline-dir "$VEYRA_DEATH_BASELINE_DIR"
+python asset-pipeline/veyra-death-contact/tools/build_candidates.py --check-only
 PYTHONUTF8=1 python asset-pipeline/content-set/normalize.py
 PYTHONUTF8=1 python -m unittest discover -s asset-pipeline/content-set -p 'test_*.py'
 npm test
 npm run build
 ```
 
-Adoption is complete only when all of these pass: `npm test` covers `default-entry.test.ts`, `content-standards.test.ts` and `hero-source.test.ts`; the two Python discover commands cover the contact checks and content-set normalization.
+These commands are the CPU portion of adoption acceptance: `npm test` covers `default-entry.test.ts`, `content-standards.test.ts` and `hero-source.test.ts`; the two Python discover commands cover the contact checks and content-set normalization.
 
+
+The real Three.js consumer test still takes its baseline paths and `heroManifest` from the shipped heroes release (`tests/client/veyra-contact-consumer.test.ts`). Before replacing that release, migrate this test to the original snapshot and preserve its independent oracle. This change only fixes the Python recipe and candidate provenance; it does not complete that TypeScript consumer migration, port the canonical heroes recipe, adopt runtime assets, or pass the visual gate.
 
 ## Reproduced defect
 
@@ -157,9 +155,10 @@ Both the source-rebuilt candidates and the runtime fallback pass `tests/check_co
 
 ## Commands
 
-From the repository root:
+From the repository root, prepare the ignored baseline once (and verify it on later runs):
 
 ```sh
+python asset-pipeline/veyra-death-contact/tools/baseline.py
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --mode reproduce
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --tolerance 0.01
 python asset-pipeline/veyra-death-contact/tests/check_contact.py --tolerance 0.005
@@ -168,7 +167,7 @@ python asset-pipeline/veyra-death-contact/tools/build_candidates.py            #
 python asset-pipeline/veyra-death-contact/tools/build_candidates.py --check-only
 ```
 
-After adoption overwrites the heroes export, prefix these commands (including the source rebuild and source diff below) with `VEYRA_DEATH_BASELINE_DIR=asset-pipeline/veyra-death-contact/baseline`, or pass `--baseline-dir` to `check_contact.py` / `build_candidates.py`. That pinned snapshot must contain `exported/`, `source/` and `manifest.json`; see Adoption step 0.
+These commands keep using the original snapshot after adoption overwrites the heroes export. A fresh checkout must prepare it first; see Adoption step 0.
 
 Source rebuild (background only; no GUI). Run it with a Python that provides the Blender `bpy` module — the same kind of interpreter that backs the `glbprep` command:
 

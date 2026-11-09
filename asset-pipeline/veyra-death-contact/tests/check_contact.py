@@ -17,15 +17,14 @@ Usage (from the repository root):
     python asset-pipeline/veyra-death-contact/tests/check_contact.py
     python asset-pipeline/veyra-death-contact/tests/check_contact.py --tolerance 0.005
 
-The baseline defaults to the shipped heroes release.  After adoption
-overwrites that release, set ``VEYRA_DEATH_BASELINE_DIR`` (or pass
-``--baseline-dir``) to the pinned ``b489ed38`` copy.
+Prepare the pinned original snapshot with ``tools/baseline.py`` first.
+The baseline defaults to that snapshot; an explicit environment or CLI override
+may select another copy, which must pass the same independent identity checks.
 """
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -44,24 +43,12 @@ from glb_contact import (  # noqa: E402
 )
 
 
-from baseline import verify_baseline
+from baseline import verify_baseline, resolve_baseline_dir as resolve_pinned_baseline
 
 
 def resolve_baseline_dir() -> Path:
-    """Return the shipped baseline directory, optionally pinned elsewhere.
-
-    ``VEYRA_DEATH_BASELINE_DIR`` may point at a copy of the ``b489ed38``
-    baseline (``exported/veyra-{teal,rust}.glb`` plus ``manifest.json`` and,
-    for the source tools, ``source/veyra-{teal,rust}.blend``).  Relative
-    values are resolved from the repository root.  Adoption replaces the
-    heroes export, so checks must keep reading the shipped baseline instead
-    of the adopted tree.
-    """
-    override = os.environ.get("VEYRA_DEATH_BASELINE_DIR")
-    if not override:
-        return REPO / "asset-pipeline" / "heroes" / "veyra-release"
-    path = Path(override)
-    return path if path.is_absolute() else (REPO / path).resolve()
+    """Use the independently pinned original snapshot (or an explicit exact copy)."""
+    return resolve_pinned_baseline()
 
 
 BASELINE_DIR = resolve_baseline_dir()

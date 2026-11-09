@@ -48,7 +48,7 @@ class BaselineResolutionTests(unittest.TestCase):
             os.environ.pop("VEYRA_DEATH_BASELINE_DIR")
             self.assertEqual(
                 check_contact.resolve_baseline_dir(),
-                REPO / "asset-pipeline" / "heroes" / "veyra-release",
+                PACKAGE / "baseline",
             )
         finally:
             if old is None:
