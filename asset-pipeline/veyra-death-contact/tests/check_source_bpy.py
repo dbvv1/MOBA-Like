@@ -21,6 +21,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve()
 PACKAGE = HERE.parents[1]
 REPO = PACKAGE.parents[1]
+sys.path.insert(0, str(PACKAGE / "tools"))
+from baseline import verify_baseline
+from glb_contact import ContactError
 
 
 def resolve_baseline_root() -> Path:
@@ -152,6 +155,7 @@ def check_root_keys(base_keys, built_keys, offsets):
 
 
 def check_team(team: str, report_asset):
+    verify_baseline(UPSTREAM.parent)
     upstream = snapshot(UPSTREAM / f"veyra-{team}.blend")
     candidate = snapshot(SOURCE / f"veyra-{team}.blend")
 
@@ -185,4 +189,8 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except ContactError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise SystemExit(2)

@@ -44,6 +44,9 @@ from glb_contact import (  # noqa: E402
 )
 
 
+from baseline import verify_baseline
+
+
 def resolve_baseline_dir() -> Path:
     """Return the shipped baseline directory, optionally pinned elsewhere.
 
@@ -301,6 +304,7 @@ def sample_rows(asset: Asset):
 
 
 def verify_team(team: str, baseline_dir: Path, candidate_dir: Path, tolerance: float):
+    verify_baseline(baseline_dir)
     baseline_path = baseline_dir / "exported" / f"veyra-{team}.glb"
     candidate_path = candidate_dir / "exported" / f"veyra-{team}.glb"
     baseline = Asset(baseline_path)
@@ -353,6 +357,7 @@ def verify_team(team: str, baseline_dir: Path, candidate_dir: Path, tolerance: f
 
 
 def reproduce_team(team: str, baseline_dir: Path, penetration: float):
+    verify_baseline(baseline_dir)
     baseline = Asset(baseline_dir / "exported" / f"veyra-{team}.glb")
     samples = sample_rows(baseline)
     rows = []

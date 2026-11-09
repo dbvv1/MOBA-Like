@@ -23,8 +23,7 @@ builds, so the manifest records the exact source hashes that were delivered.
 After adoption overwrites the heroes release, set
 ``VEYRA_DEATH_BASELINE_DIR`` to the pinned ``b489ed38`` snapshot (which must
 contain ``exported/``, ``source/`` and ``manifest.json``); otherwise the
-adopted, already-fixed export is used as the baseline and the offsets
-collapse to about 2e-9 m.
+adopted, already-fixed export is rejected by the immutable baseline lock.
 
 Usage:
     <python with the Blender bpy module> \
@@ -47,6 +46,7 @@ REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(HERE.parent))
 
 from glb_contact import ContactError  # noqa: E402
+from baseline import verify_baseline
 
 try:
     import bpy  # noqa: E402
@@ -110,6 +110,7 @@ def baseline_source(team: str) -> Path:
 
 
 def load_upstream_manifest():
+    verify_baseline(BASELINE_ROOT)
     path = BASELINE_ROOT / "manifest.json"
     if not path.is_file():
         raise ContactError(f"missing upstream manifest: {display_path(path)}")

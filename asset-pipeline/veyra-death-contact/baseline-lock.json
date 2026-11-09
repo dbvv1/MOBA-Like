@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "commit": "b489ed38592dc184fffe2ab9b3b186441c7dc9bb",
+  "source": "asset-pipeline/heroes/veyra-release",
+  "files": [
+    {
+      "path": "manifest.json",
+      "sha256": "4c089c7032cda82003a684abda4d9986bb330e2e4b16f60dfef14ac5f5a52ec3",
+      "bytes": 2695
+    },
+    {
+      "path": "exported/veyra-teal.glb",
+      "sha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
+      "bytes": 181652
+    },
+    {
+      "path": "exported/veyra-rust.glb",
+      "sha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774",
+      "bytes": 182508
+    },
+    {
+      "path": "source/veyra-teal.blend",
+      "sha256": "6b4f97f038fde70fff070213644e567b4f88822f116a06eeca5dd81ddcda9836",
+      "bytes": 173782
+    },
+    {
+      "path": "source/veyra-rust.blend",
+      "sha256": "ace3060ca1bcbe214fa3aeb3c996e0a50f25456cf657023c219469e6f59a02fa",
+      "bytes": 174003
+    }
+  ]
+}

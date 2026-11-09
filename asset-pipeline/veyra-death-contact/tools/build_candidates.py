@@ -25,6 +25,8 @@ PACKAGE = HERE.parents[1]
 REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(HERE.parent))
 
+from baseline import verify_baseline
+
 from glb_contact import (  # noqa: E402
     Asset,
     ContactError,
@@ -123,6 +125,7 @@ def main(argv=None):
     args.baseline_dir = args.baseline_dir.resolve()
     args.out_dir = args.out_dir.resolve()
     args.reports_dir = args.reports_dir.resolve()
+    verify_baseline(args.baseline_dir)
     manifest = load_manifest(args.baseline_dir)
     expected = {row["id"]: row["sha256"] for row in manifest.get("assets", [])}
     if not args.check_only:

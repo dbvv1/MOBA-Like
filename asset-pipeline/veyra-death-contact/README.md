@@ -10,14 +10,16 @@ The game loader does not see this directory. `src/render/battle-assets.ts` globs
 
 ### 0. Pin the `b489ed3` baseline before overwriting the heroes release
 
-All offsets and contact checks are defined against the shipped `b489ed38` export. The adopted GLB cannot serve as its own baseline: `root_offsets(..., zero_from_frame=18)` forces every key at frame 18 and later to zero, so recomputing from an already fixed export yields offsets of at most **2.1e-9 m** (measured on this package), not a lift of the 0.000182 m tail. Rebuilding the old source with those near-zero offsets re-exports the unfixed clip and fails acceptance; rebuilding the fixed source is a no-op. Snapshot the shipped files first:
+All offsets and contact checks are defined against the shipped `b489ed38` export. The adopted GLB cannot serve as its own baseline: `root_offsets(..., zero_from_frame=18)` forces every key at frame 18 and later to zero, so recomputing from an already fixed export yields offsets of at most **2.1e-9 m** (measured on this package), not a lift of the 0.000182 m tail. Rebuilding the old source with those near-zero offsets re-exports the unfixed clip and fails acceptance; rebuilding the fixed source is a no-op. Prepare the original files from the local Git object database, never from the mutable heroes release:
 
 ```sh
-mkdir -p asset-pipeline/veyra-death-contact/baseline/exported asset-pipeline/veyra-death-contact/baseline/source
-cp asset-pipeline/heroes/veyra-release/exported/veyra-{teal,rust}.glb asset-pipeline/veyra-death-contact/baseline/exported/
-cp asset-pipeline/heroes/veyra-release/source/veyra-{teal,rust}.blend asset-pipeline/veyra-death-contact/baseline/source/
-cp asset-pipeline/heroes/veyra-release/manifest.json asset-pipeline/veyra-death-contact/baseline/manifest.json
+python asset-pipeline/veyra-death-contact/tools/baseline.py
+python asset-pipeline/veyra-death-contact/tools/baseline.py --check-only
 ```
+
+`baseline-lock.json` pins the original commit, manifest, both GLBs and both editable sources by SHA-256 and byte count. Preparation extracts that exact commit without fetching (including disabling Git lazy fetch), verifies every byte before publishing the directory, and verifies an existing snapshot without overwriting it. Missing local history, missing files or mismatched bytes fail with exit 2. The snapshot is ignored by Git; a fresh checkout needs preparation before selecting it. The check-only command needs no Git history.
+
+All contact checks and both candidate builders verify the full baseline against this independent lock before consuming it. They still default to the heroes release until the environment variable below is set; after adoption that default fails closed rather than accepting corrected files or a rewritten release manifest. Hash identity is enforced, not filesystem write protection: edits to a snapshot are detected on the next use.
 
 The manifest is required, not only the GLBs: `tests/test_checks.py::test_baseline_hashes_match_the_upstream_manifest` reads it from the same directory. `tests/check_contact.py` and `tests/test_checks.py` read the `VEYRA_DEATH_BASELINE_DIR` environment variable; `tools/build_candidates.py` and `tools/build_source_candidates.py` use the same variable (the former also accepts `--baseline-dir`), and `tests/check_source_bpy.py` reads `<pin>/source`. Relative values resolve from the repository root:
 
@@ -149,6 +151,8 @@ Both the source-rebuilt candidates and the runtime fallback pass `tests/check_co
 
 ## Failure paths covered
 
+`tests/test_baseline.py` covers exact snapshot preparation and repeat verification, unavailable local Git history, corrupt Git bytes before any output is written, each missing/corrupt pinned file, corrected sources/exports paired with a matching mutable manifest, missing-snapshot CLI errors, and a file blocking the output parent. These tests work with either the original release or the explicitly selected snapshot.
+
 `tests/test_checks.py` (32 tests) also exercises: missing GLB, missing animation clip, invalid tolerance (`0`, negative, `> 0.02`, `NaN`, boolean), zero penetration threshold on the CLI, a bind-pose skinning invariant, a negative control that copies the unfixed baseline and must fail the contact acceptance, the runtime-fallback byte-diff rule, source/candidate hash checks against the manifest, and repo-relative resolution of `VEYRA_DEATH_BASELINE_DIR`. Two `AdoptionDocTests` keep the adoption instructions consistent with the delivered files: the step 1 table's SHA-256 and byte counts must equal both the delivered GLBs and `manifest.json`, and because step 2 names the heroes recipe scripts (`build.py`, `retarget.py`), step 3 must place each script's path directly before its current `sharedAssets` sha256; the test reads those pins from `default-source-manifest.json` and fails when a pin is missing, malformed or stale. The mesh invariants also compare normals and nonzero skin influences by bone name, with mutation controls for both. Source-curve unit tests reject changed key frames, interpolation and counts without requiring bpy; these synthetic checks do not replace reopening the actual source. The source builder refuses a missing upstream file, an upstream hash mismatch, a wrong death key count, a source that does not reproduce its GLB, or a rebuilt GLB that fails either tolerance. `tools/build_candidates.py` accepts relative or repository-external `--baseline-dir` values and reports a `ContactError` (exit 2) instead of a traceback.
 
 ## Commands
@@ -189,6 +193,9 @@ The checks themselves use only the Python standard library: no Blender, browser,
 - `manifest.json` — baseline GLB, upstream source, delivered source and candidate hashes, per-key offsets, contact summary, export settings and editable-source status.
 - `runtime-fallback/manifest.json` — fallback byte-diff summary.
 - `reports/death-root-offsets.json` — the 31 Root Y offsets per team, ready to apply in a Blender pass.
+- `baseline-lock.json` — original commit and five immutable SHA-256/byte-count pins.
+- `tools/baseline.py` — offline snapshot preparation and shared baseline identity checks.
+- `tests/test_baseline.py` — preparation, repeat-run and failure-path regressions.
 - `tools/glb_contact.py` — GLB container, dependency-free skinning and contact sampling.
 - `tools/build_source_candidates.py` — bpy source edit, save and GLB re-export.
 - `tools/build_candidates.py` — stdlib runtime-fallback patcher.
