@@ -60,3 +60,23 @@ The combined branch had also enabled the Gold receipt and input-notice/life clea
 With the trial closed, the HUD does not create a reward line, no receipt is consumed, and Controls preserves the shipped cancellation, death/respawn and dead attack-move behavior. With it open, reward feedback and the reviewed life-scoped aiming fixes remain active, including when rendering falls back to Canvas2D. Simulation, save format, default-source pins, asset bytes and HTML links remain unchanged.
 
 Validation of this boundary change: 93 files / 636 tests pass, including 15 new closed-entry client regressions. Simulation, web and capture builds pass. Independent source review and stepwise Controls/HUD comparisons check the closed path against main and the enabled path against c967c1b. These are CPU/DOM checks. The earlier c967c1b browser observations apply only to that fixed build; they do not validate a build containing this correction. Fresh browser acceptance remains required before adoption or deployment.
+
+## Continue the same candidate with pinned contact exports
+
+The continuation from `00f82c7` includes accepted main `aade37c`: the original five-file snapshot verifier and the isolated heroes recipe are now available to this same combat trial. Merge resolution retains the candidate's production motion options, full 61-point contact sampling, mesh topology checks and command-frame replay, while adopting main's complete baseline-byte verification and observable Escape-cancel regression. No original-operation terminal receipt was supplied by those commits.
+
+Previously, this trial selected the source-rebuilt exports by a mutable manifest path, but the actual downloader did not check that the bytes reaching `GLTFLoader` were the received exports. `src/render/veyra-contact-pin.ts` fixes the two received Blender 5.2 export IDs, paths, byte counts and SHA-256 values. The existing ordered loader verifies the downloaded buffer and passes that same buffer to the parser. A missing/changed manifest entry fails before downloads; truncated or same-size changed bytes fail before parsing that model. Missing Web Crypto fails the candidate rather than skipping the check. Other successfully loaded models are disposed through the existing failure path, and the existing playable-world recovery can still load the original heroes release without contact verification.
+
+This closes the candidate's **selected-file → verified downloaded bytes → real parser** gap. It does not replace the original `heroes/veyra-release` exports, their default/content-standard locks, or the source-rebuilt candidate with the separate Blender 4.3 recipe outputs. No default, quiet-family entry, public switch, asset or deployment changed in this continuation. Full default adoption still requires the source/manifest/standard-set pin changes in the package's Adoption section, after the outstanding browser and visual gates.
+
+Reproduce the CPU portion after preparing the original snapshot:
+
+```sh
+python3 asset-pipeline/veyra-death-contact/tools/baseline.py
+npm test -- --run tests/client/death-source-loader.test.ts tests/client/veyra-contact-consumer.test.ts tests/client/playable-world.test.ts
+npm test
+npm run build
+npm run build:web
+```
+
+The actual-loader tests use real exports and the production parser/animation data with CPU PNG decoding, not a WebGL renderer. They cover both fixed source exports, same-size byte replacement, truncation, missing crypto, changed/missing manifest entries and loading the old release after failure. Main adoption, actual WebGL death frames, both-faction same-view comparison, default/full-trial smoke, sound and feel remain unverified. The original unknown invocation and prior browser/DevTools denials remain unchanged.

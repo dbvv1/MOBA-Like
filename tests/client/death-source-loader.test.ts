@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';
+import {afterEach,describe,it,expect,vi} from 'vitest';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
@@ -70,5 +70,89 @@ describe('existing combat trial death-source boundary',()=>{
       view.dispose();expect(released).toBe(0);
       assets.dispose();assets.dispose();expect(released).toBe(resources.size);
     }finally{view.dispose();assets.dispose();}
+  });
+});
+
+// Exercise the actual download -> pin -> GLTFLoader path without a renderer.
+// The existing injected-loader tests above exercise model ownership separately.
+describe('received contact release bytes reach the actual parser',()=>{
+  afterEach(()=>{vi.restoreAllMocks();vi.unstubAllGlobals();});
+  function downloaded(change?:(bytes:ArrayBuffer,url:string)=>ArrayBuffer){
+    const parse=GLTFLoader.prototype.parseAsync,parsed:string[]=[],sourceByBytes=new Map<ArrayBuffer,string>();
+    vi.spyOn(THREE.FileLoader.prototype,'loadAsync').mockImplementation(async url=>{
+      const path=url.split('?')[0]!.replace(/^\//,'');
+      const buffer=await readFile(new URL(`../../${path}`,import.meta.url));
+      const bytes=buffer.buffer.slice(buffer.byteOffset,buffer.byteOffset+buffer.byteLength);
+      const selected=change?change(bytes,url):bytes;sourceByBytes.set(selected,url);return selected;
+    });
+    vi.spyOn(GLTFLoader.prototype,'parseAsync').mockImplementation(async function(this:GLTFLoader,bytes,path){
+      parsed.push(sourceByBytes.get(bytes as ArrayBuffer)!);
+      const {PNG}=createRequire(import.meta.url)('pngjs');
+      this.register(parser=>({name:'CPU_actual_PNG',async loadTexture(index:number){
+        const texture=parser.json.textures[index],image=parser.json.images[texture.source];
+        const input=await parser.getDependency('bufferView',image.bufferView),png=PNG.sync.read(Buffer.from(input));
+        const value=new THREE.DataTexture(new Uint8Array(png.data),png.width,png.height);value.flipY=false;return value;
+      }}));
+      return parse.call(this,bytes,path);
+    });
+    return parsed;
+  }
+
+  it('verifies both source exports, parses them in original slot order and plays their actual death tracks',async()=>{
+    const parsed=downloaded(),digest=vi.spyOn(globalThis.crypto.subtle,'digest');
+    const assets=await loadBattleAssets(undefined,'forest-light-v1','death-contact');
+    try{
+      expect(parsed).toHaveLength(19);expect(digest).toHaveBeenCalledTimes(2);
+      const selected=parsed.filter(path=>path.includes('veyra-'));
+      expect(selected).toHaveLength(2);
+      for(const [index,team] of ['teal','rust'].entries()){
+        expect(selected[index]).toContain(`/veyra-death-contact/exported/veyra-${team}.glb`);
+        const model=assets.models[`veyra-${team}`]!;
+        const source=await readFile(new URL(`../../asset-pipeline/veyra-death-contact/exported/veyra-${team}.glb`,import.meta.url));
+        const expected=await new GLTFLoader().parseAsync(source.buffer.slice(source.byteOffset,source.byteOffset+source.byteLength),'');
+        const actualRoot=model.scene.clone(),mixer=new THREE.AnimationMixer(actualRoot),clip=model.animations.find(clip=>clip.name==='death')!;
+        mixer.clipAction(clip).play();mixer.setTime(13/30);actualRoot.updateMatrixWorld(true);
+        const track=expected.animations.find(clip=>clip.name==='death')!.tracks.find(track=>track.name==='Root.position')!;
+        expect(actualRoot.getObjectByName('Root')!.position.y).toBeCloseTo(track.values[12*3+1]!,5);
+        mixer.stopAllAction();mixer.uncacheRoot(actualRoot);
+      }
+    }finally{assets.dispose();}
+  });
+
+  it.each(['same-size','truncated','missing-crypto'] as const)('rejects %s contact before parsing it, releases other models and allows the original release to load',async failure=>{
+    const parsed=downloaded((bytes,url)=>{
+      if(!url.includes('/veyra-death-contact/exported/veyra-teal'))return bytes;
+      if(failure==='truncated')return bytes.slice(0,-1);
+      if(failure==='same-size'){new Uint8Array(bytes)[bytes.byteLength-1]^=1;}
+      return bytes;
+    });
+    const disposed=vi.spyOn(THREE.BufferGeometry.prototype,'dispose');
+    if(failure==='missing-crypto')vi.stubGlobal('crypto',undefined);
+    const message=failure==='truncated'?'byte count mismatch':failure==='same-size'?'SHA-256 mismatch':'verification unavailable';
+    await expect(loadBattleAssets(undefined,'forest-light-v1','death-contact')).rejects.toThrow(message);
+    expect(parsed.some(path=>path.includes('/veyra-death-contact/exported/veyra-teal'))).toBe(false);
+    expect(disposed).toHaveBeenCalled();
+    const afterFailure=parsed.length;
+    const restored=await loadBattleAssets(undefined,'forest-light-v1','baseline');
+    try{
+      const retry=parsed.slice(afterFailure);expect(retry).toHaveLength(19);
+      expect(retry.filter(path=>path.includes('/heroes/veyra-release/exported/'))).toHaveLength(2);
+      expect(retry.some(path=>path.includes('/veyra-death-contact/'))).toBe(false);
+    }finally{restored.dispose();}
+  });
+
+  it('rejects a replaced or missing contact manifest entry before requesting assets',async()=>{
+    const load=vi.fn();
+    const first=contactManifest.assets[0]!,original=first.sha256;
+    try{
+      first.sha256='0'.repeat(64);
+      await expect(loadBattleAssets(load,'forest-light-v1','death-contact')).rejects.toThrow('release pin mismatch');
+      expect(load).not.toHaveBeenCalled();
+    }finally{first.sha256=original;}
+    const removed=contactManifest.assets.pop()!;
+    try{
+      await expect(loadBattleAssets(load,'forest-light-v1','death-contact')).rejects.toThrow('release pin mismatch');
+      expect(load).not.toHaveBeenCalled();
+    }finally{contactManifest.assets.push(removed);}
   });
 });

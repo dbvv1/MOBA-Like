@@ -8,6 +8,8 @@ Veyra's 5.2 m basic attack uses a physical focus and an extended casting hand ra
 
 The original body, idle/walk/hurt/death curves and rig remain unchanged. The sword and shield islands are replaced by a short forked focus and a casting bracer; attack adopts UAL1 Enter → Shoot → Exit: preparation reaches an extended ready stance; the committed pulse and exit follow. The ready stance itself is not a hit or a resolve event. True `castStarted`/`castResolved` still determine cast phases. The instantaneous version-10 `basicAttack` begins at the release section, never inventing a preparation before damage. The optional release-time recoil layering is described below; death remains highest priority.
 
+For an isolated rebuild with the accepted death-contact correction, use the [canonical recipe commands](../../veyra-death-contact/README.md#rebuild-through-the-original-heroes-recipe-blender-43). This writes only an explicitly named `outputs/` child; the shipped source and runtime exports stay unchanged until separate adoption. The normal two-step command above still reproduces the original death curve.
+
 The focus was shortened after a whole-clip floor check found the first long shaft crossing the floor during death. The adopted body already has some foot penetration in that action; this export does not claim to remove that older defect.
 
 ## Source choice

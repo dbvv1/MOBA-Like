@@ -1,11 +1,15 @@
 """One source-specific upper-body bake: UAL1 spell phases -> the owned guard rig.
 Run after build.py. No network; root/legs and four non-attack actions are retained.
 """
-import bpy,json,hashlib
+import bpy,json,hashlib,sys
 from pathlib import Path
 from mathutils import Matrix,Vector
-ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from recipe_options import parse_options,SOURCE_ROOT
+ROOT,CONTACT=parse_options(retarget=True)
 SRC=ROOT/'source/UAL1_Standard.glb'
+if CONTACT:
+ from death_contact import apply_contact
 # Names are not anatomical proof. These two rigs use opposite side suffixes:
 # target Hand_R and source hand_l are both on positive model X at bind pose.
 MAP={'Torso':'spine_03','Head':'Head','UpperArm_L':'upperarm_r','Forearm_L':'lowerarm_r','Hand_L':'hand_r','UpperArm_R':'upperarm_l','Forearm_R':'lowerarm_l','Hand_R':'hand_l'}
@@ -41,8 +45,14 @@ for row in manifest['assets']:
  for curve in action.fcurves:
   for key in curve.keyframe_points:key.interpolation='LINEAR'
  action.use_fake_user=True;target.animation_data.action=bpy.data.actions['idle'];bpy.context.scene.frame_set(1)
+ if CONTACT:apply_contact(team)
  bpy.ops.wm.save_as_mainfile(filepath=str(blend),compress=True)
  output=ROOT/row['file'];bpy.ops.export_scene.gltf(filepath=str(output),export_format='GLB',export_animations=True,export_animation_mode='ACTIONS',export_force_sampling=True,export_yup=True)
  row['sha256']=hashlib.sha256(output.read_bytes()).hexdigest();row['bytes']=output.stat().st_size
+ if CONTACT:
+  row['sourceSha256']=hashlib.sha256(blend.read_bytes()).hexdigest();row['sourceBytes']=blend.stat().st_size
 manifest['animationSource']={'url':'https://quaternius.itch.io/universal-animation-library','license':'CC0-1.0','packageSha256':'cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724','file':'source/UAL1_Standard.glb','sha256':hashlib.sha256(SRC.read_bytes()).hexdigest(),'clips':['Spell_Simple_Enter','Spell_Simple_Shoot','Spell_Simple_Exit'],'targetFrames':{'prepare':[1,14],'release':[14,19],'recover':[19,36]},'boneMap':MAP}
+if CONTACT:
+ from death_contact import PACKAGE
+ manifest['deathContact']={'baselineCommit':json.loads((PACKAGE/'baseline-lock.json').read_text())['commit'],'change':'death Root location Y only','status':'isolated recipe output; not runtime adoption'}
 (ROOT/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

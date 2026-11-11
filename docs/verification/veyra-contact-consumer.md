@@ -2,16 +2,16 @@
 
 日期：2026-11-06。基线：`7e1986f`（已接收 `asset-pipeline/veyra-death-contact/` 源候选）。
 
-**结论：已接收的 `veyra-teal` / `veyra-rust` 源重建 GLB 在现有生产动画消费者中保留了死亡接触修正，不需要改动画消费者实现；默认采用仍需资产、来源锁和回归更新。** 本卡只验 CPU 骨骼/蒙皮结果；游戏默认仍未采用候选。当前隔离分支已另行把候选接入既有镜头/QW候选路径；本卡只验CPU动画消费者，不把该路径的源码接通称作浏览器加载或画面验收。画面、死亡接地观感、默认切换和配套出图都未验证。
+**结论：已接收的 `veyra-teal` / `veyra-rust` 源重建 GLB 在现有生产动画消费者中保留了死亡接触修正，不需要改源代码。** 本卡只验 CPU 骨骼/蒙皮结果；游戏默认仍未采用候选，画面、死亡接地观感、默认切换和配套出图都未验证，留给 dot-B 判断。
 
-本消费者卡只修改以下测试与报告；运行资源、源模型和默认选择未改变。生产配置由产品侧共享导出，本测试直接消费：
+本卡没有修改运行资源、源模型、渲染代码或默认选择。只新增：
 
-- `tests/client/veyra-contact-consumer.test.ts`（8 个测试，含生产配置与 override 对照）
+- `tests/client/veyra-contact-consumer.test.ts`（5 个测试）
 - `docs/verification/veyra-contact-consumer.md`（本文件）
 
 ## 消费者实际调用链（读自源码）
 
-- 原交回基线的 `loadBattleAssets()` 只读取 heroes release。当前隔离分支另外提供 `heroSource='death-contact'`，从源重建候选目录替换两个既有 Veyra 槽位；默认参数仍为 `baseline`。产品入口/loader路径由独立接入测试负责，本卡不以直接GLB夹具代替loader验证。
+- `src/render/battle-assets.ts::loadBattleAssets()` 只用 `import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb')` 和 `heroManifest.assets[].file`。它看不到 `veyra-death-contact/`，因此默认对局仍播放旧 heroes release 的死亡 clip；本验证不改变该事实。
 - `asset-pipeline/presentation/adapter.js::createPresentation()` 已经支持按英雄定义注入资产：`assets.byDefinition?.[hero.definitionId] ?? assets`，再按 `hero.team === 0 ? selected.blue : selected.amber` 建角色。测试正是通过这个既有入口把夹具换成两阵营候选 GLB，没有复制动画器，也没有改 adapter。
 - `character()` 用 `SkeletonUtils.clone` 克隆骨架，克隆材质，保留共享只读几何；随后 `createMotion(root, asset, motionOptions)` 并 `motion.sample({time:0})`。
 - `sync(snapshot)` 从快照写外根 `actor.root.position` 的 x/z；按相邻 tick 位移选择 `motion.play('walk'|'idle')`；观察到 alive→dead 时记录 `deathStarted`；调用 `motion.sample({time:actor.visualTime, deathElapsed, ...})`。
@@ -34,7 +34,7 @@
 
 ## 生产消费者采样结果
 
-用真实 `createMotion`，分别以产品共享的 `VEYRA_MOTION_OPTIONS`（`torso-additive`、`firstDrawRelease = 0.1`）及 `override` 对照 + CPU `SkinnedMesh.getVertexPosition` 在 61 个源采样点（31 个整数帧 + 30 个半帧）上测得，teal 与 rust 数值相同：
+用真实 `createMotion` + CPU `SkinnedMesh.getVertexPosition` 在 61 个源采样点（31 个整数帧 + 30 个半帧）上测得，teal 与 rust 数值相同：
 
 | 指标 | 基线 heroes release | 候选 `veyra-death-contact/exported` |
 |---|---|---|
@@ -59,8 +59,8 @@
 
 - **骨骼**：两边均为 15 根骨，`name:parent` 排序集合完全一致（`Root:GuardRig`、`Torso:Root`、四肢与 `Foot_L/Foot_R` 等）。候选容器重排了节点和 joint 顺序，因此测试从不按 traversal index 比较。
 - **NORMAL**：每个 skinned mesh 都有 NORMAL 且数量等于 POSITION；按材质名分组的法线记录逐项一致。
-- **权重**：按“骨名 = 权重”比较非零蒙皮影响，候选重排 `JOINTS_0` 索引不影响结论；每个材质的顶点数、三角数、索引序列及量化后的 POSITION（5 位小数）、NORMAL（4 位小数）、骨名权重（6 位小数）记录与固定旧基线一致；这不是逐字节顶点身份断言；合计 teal 2119 顶点 / 1189 三角面，rust 2137 顶点 / 1197 三角面（团队材质 `battle-rust` 比 `battle-teal` 多 18 顶点 / 8 三角面，其余材质一致）。
-- **非死亡动作**：`idle/walk/attack/hurt` 的 clip 名、时长、轨道名集合、每轨 times 与 interpolation 一致，逐 key values 差 <1e-5（分量单位取决于轨道，不统一称米）；通过真实产品配置的 `createMotion`，对四类动作分别取 0/0.03/0.1/0.2/0.42/0.7/1.1 秒，共 28 个情况后，15 根骨的世界矩阵差为 0（断言 <1e-9），`inspect()` 的 clip/weight/time 摘要也一致。死亡之外的姿势没有相对原包漂移。
+- **权重**：按“骨名 = 权重”比较非零蒙皮影响，候选重排 `JOINTS_0` 索引不影响结论；每个材质的顶点数、三角数及按位置 5 位小数／法线 4 位小数／非零权重 6 位小数比较的记录与 heroes-release 基线一致；未逐项比较三角连接索引；合计 teal 2119 顶点 / 1189 三角面，rust 2137 顶点 / 1197 三角面（团队材质 `battle-rust` 比 `battle-teal` 多 18 顶点 / 8 三角面，其余材质一致）。
+- **非死亡动作**：`idle/walk/attack/hurt` 的 clip 名、时长、轨道名集合、逐 key 时间与插值模式一致，逐 key 数值差小于 1e-5；通过生产 `createMotion` 驱动四类姿势后，15 根骨的世界矩阵差为 0（断言 <1e-9），`inspect()` 的 clip/weight/time 摘要也一致。死亡之外的姿势没有相对原包漂移。
 
 ## runtime-fallback 分离
 
@@ -72,7 +72,7 @@
 
 ## 实例隔离
 
-用真实 `createPresentation` 和产品共享 `VEYRA_MOTION_OPTIONS` 驱动一个由 `makeSim(10, 61).snapshot()` 派生的合成时间线：
+用真实 `createPresentation` 驱动一个由 `makeSim(10, 61).snapshot()` 派生的合成时间线：
 
 1. A（teal，id 9）与 B（rust，id 10）同时存在；两人 `Root` 骨骼对象、骨架对象都不同，材质分别含 `battle-teal` / `battle-rust`。
 2. A 在 tick 1 死亡，B 持续移动：A 的 action 为 `death`，`inspect()` 只有 `death.full`（weight 1）；B 为 `walk`，只有 `walk.lower` / `walk.upper`，没有 death。A 的 `Root.position.y` 到 1.0 s 时约 0.733078，B 不是死亡姿态。
@@ -81,25 +81,7 @@
 5. tick 5–6 C 死亡而 B 继续移动：C 为 `death.full`，B 仍为 `walk`。把 B 的最终骨骼世界矩阵与“同一时间线只有 B”的参考 presentation 对比，差 <1e-9；两者的 action clip/weight/time 也一致，说明 A 的死亡和 C 的创建/死亡都没有串到 B。
 6. 两个 presentation 都 `dispose()` 后，源几何/材质 dispose 计数仍为 0；共用源没有被实例销毁误释放。
 
-## 独立接收补强（2026-11-06）
-
-- 测试直接导入 `src/render/hero-presentation.ts::VEYRA_MOTION_OPTIONS`；产品与测试共用 `torso-additive` / `firstDrawRelease: 0.1`，不再仅用默认 override 推断产品行为。死亡 61 点保留 override 对照。
-- `VEYRA_DEATH_BASELINE_DIR` 支持仓库根目录相对路径与绝对路径；未设置时使用候选 manifest 的 `basis.source`。读取所选目录的 `manifest.json` 与 `exported/veyra-{teal,rust}.glb`，严格核对 `basis.manifestSha256`、各 `baselineSha256` 和所选 manifest 的资产 hash。候选 GLB 不能充当旧基线，负例必须被拒绝。默认采用时先保存固定旧基线，再用此变量运行；不能把更新后的 heroes manifest 作为历史基线。
-- 武器分类明确为 focus 材质全排除，gold/team 材质仅排除 Hand_L。加入 Hand_R/Torso/Foot_L 的合成分类断言，避免旧三元运算优先级错误被当前资产恰好全为 Hand_L 掩盖。
-- 非死亡轨补 times/interpolation、mesh 补索引序列。产品配置另外覆盖跳过释放后的首次绘制补帧只出现一次、受击 torso-additive、controlled 抑制攻击、取消后停止、死亡覆盖全部叠加。与旧基线对比的是 CPU 骨骼矩阵和 action 状态。
-- 实例隔离使用同一产品配置。仍是合成快照时间线，不覆盖真实浏览器加载、GPU 蒙皮、视觉质量、帧率或完整游戏生命周期。
-
-补强后实际执行：
-
-- `./node_modules/.bin/vitest run tests/client/veyra-contact-consumer.test.ts`：8 passed，exit 0。
-- 同一命令设置 `VEYRA_DEATH_BASELINE_DIR=asset-pipeline/heroes/veyra-release`：8 passed，exit 0。
-- 同一命令将该变量设为同一旧基线目录的绝对路径：8 passed，exit 0。
-- 同一命令设置 `VEYRA_DEATH_BASELINE_DIR=asset-pipeline/veyra-death-contact`：预期拒绝，suite 在收集阶段报 `Pinned death baseline manifest SHA-256 mismatch`、exit 1，没有以错误基线执行测试。
-- 上述8测试内另有候选GLB冒充旧基线的逐阵营负例，均被拒绝。
-
-只用已有依赖，未安装、未打开浏览器/GPU/音频，也未重跑全套测试或构建。下节保留原候选的历史运行结果，不冒充本次全量复跑。
-
-## 原候选运行命令与结果
+## 运行命令与结果
 
 在 Node 22.23.2、`three@0.186.1`、`vitest@3.2.4`（均由仓库 `package-lock.json` 固定的已有依赖；用 `npm ci --offline --ignore-scripts` 从本机缓存安装，未联网、未新增依赖）下实际执行：
 
@@ -116,9 +98,33 @@
 
 ## 未验证 / 待人工
 
-- **游戏默认采用：未做。** 默认对局仍加载 heroes release。隔离候选路径现可选择 death-contact，其入口和loader验证不属于本消费者卡。若将来覆盖默认源，仍须执行 `asset-pipeline/veyra-death-contact/README.md` Adoption 的固定旧基线及 manifest/lock 更新步骤。
+- **游戏默认采用：未做。** `src/render/battle-assets.ts` 仍只 glob `heroes/veyra-release/exported/*.glb`；候选没有被默认对局加载。采用所需的 manifest/lock 更新见 `asset-pipeline/veyra-death-contact/README.md` Adoption 步骤，未在本卡执行。
 - **生产接口可达性：无阻塞。** `createMotion` / `createPresentation` 都能在现有导出下直接调用，`byDefinition` 注入点已存在，不需要新增导出或改写替身。未验项是采用决定与画面对外承诺，不是接口不可达。
 - **画面与死亡接地观感：未验证。** 本卡按合同不开浏览器、GPU、音频设备或桌面，不做截图/录像，也不以 CPU 接触数字代替观感。
 - **默认切换、heroes recipe 端口、配套出图：待 dot-B 判断。** 需要用户手感/画面判断的项应记入 a1dbv TASKS「待人工验收」。
 - **性能与大规模：未验。** 只测两个实例的 CPU 蒙皮，不推断大量角色或 GPU 成本。
 - **Blender 源重导出：未重跑。** 本卡只消费已接收 GLB；源 `.blend`、`bpy` 重建和 heroes recipe 端口不在范围内。
+
+## 11-09 负责人接收
+
+在 main `fc1657a` 接收原 `43af65e` 的测试与文档，运行资源和默认选择不变。独审修正了测试的材质分类优先级：法器材质一律排除，其余队伍／金属材质只在主导骨为 Hand_L 时排除；新增独立回归，防止当前素材恰好遮住分类错误。非死亡轨补验每个 key 的时间及插值模式，网格结论收窄至实际比较的精度与字段。
+
+云端 Node 24.22.1、锁定依赖下，最终 `npm test` 89 文件／580 项通过，其中本文件 6 项；`npm run build` 与 `npm run build:web` 通过，后者保留已有大 chunk 提示。源包 reproduce、0.005 容差检查及 32 项 Python 回归通过。11-06 的音频失败保留为历史，本次完整套件未复现。独审与公开扫描通过。
+
+本次只接收消费者验证，不切换素材、不部署、不运行浏览器／GPU／音频或 Blender。默认死亡剪影与整场品质仍未验；下一步先按 Adoption 固定旧源、更新配方与 pin，再在可用且获准的原拍摄安排内验实际画面。
+
+## 11-09 原始基线迁移（采用前置）
+
+消费者不再从可变 `heroes/veyra-release` 读取基线 GLB 或 manifest。`tests/veyra-baseline.ts` 先按 `baseline-lock.json` 对固定 `b489ed38592dc184fffe2ab9b3b186441c7dc9bb` 快照的 manifest、两份 GLB 和两份源文件逐一验证 SHA-256 与字节数，再把已验证的 GLB 字节交给 `GLTFLoader`，不二次读取未经校验的文件。默认目录为 `asset-pipeline/veyra-death-contact/baseline`；`VEYRA_DEATH_BASELINE_DIR` 可选另一份完全一致的快照，相对路径以仓库根为准。上文的 heroes-release 基线数值现在指该固定原始版本，不随将来的运行资源采用变化。
+
+新检出需先显式运行 `python asset-pipeline/veyra-death-contact/tools/baseline.py`，再运行 `npm test`。准备只从本地 Git 取固定提交，不联网；浅克隆缺该提交时需提供对应本地历史或完整精确快照。消费者既不自动准备／fetch，也不回退到当前 release 或跳过缺失基线。实际以不存在的 override 运行消费者测试时，套件按预期失败并提示上述准备命令，目录没有被创建。
+
+本轮在锁文件一致的既有依赖下执行：
+
+- `npm test`：90 文件／595 项通过；消费者保持 6 项，新增独立基线回归 15 项。上文 11-06 的 5 项是历史记录。
+- 基线回归覆盖全部五个文件缺失、每个文件等长篡改、字节数变化、候选替换且可变 manifest 同步改 hash、精确外部快照和路径解析；缺失快照不会被准备或回退。
+- `npm run build`、`npm run typecheck:web`、`npm run build:web` 通过；web 构建仍有既有大 chunk 提示。新增 helper 与回归文件的独立严格 TypeScript 检查通过。
+- `baseline.py --check-only` 验证五文件通过；Python 包 42 项回归通过。
+- 额外的 `npx tsc --noEmit` 未通过：既有 capture 相关文件缺 DOM 类型、`tests/capture-output.test.ts:151` 的可选属性类型和 `tests/command-buffer.test.ts:8` 的可能 undefined。相同错误在未含本轮修改的 `be8015b` 检出复现；不将它记为全量类型检查通过。
+
+此次仅补采用前置验证及命令说明；未修改运行资源、源模型、默认入口或配方，未运行浏览器、socket、截图／录像或 Blender。默认接地观感与品质门槛仍未验证。

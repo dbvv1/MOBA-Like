@@ -1,14 +1,14 @@
 import {describe,it,expect} from 'vitest';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {resolve} from 'node:path';
-import {fileURLToPath,pathToFileURL} from 'node:url';
 import {VEYRA_MOTION_OPTIONS} from '../../src/render/hero-presentation.js';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {AnimationMixer,LoopOnce,Vector3} from 'three';
 import candidateManifest from '../../asset-pipeline/veyra-death-contact/manifest.json';
 import fallbackManifest from '../../asset-pipeline/veyra-death-contact/runtime-fallback/manifest.json';
+import baselineLock from '../../asset-pipeline/veyra-death-contact/baseline-lock.json';
+import {readVeyraBaseline} from '../veyra-baseline.js';
 import {createMotion} from '../../asset-pipeline/presentation/motion.js';
 import {createPresentation} from '../../asset-pipeline/presentation/adapter.js';
 import {makeSim} from '../helpers.js';
@@ -19,35 +19,20 @@ import {makeSim} from '../helpers.js';
 // createPresentation is the real snapshot consumer. Only the test fixture is
 // swapped to the candidate GLBs; the source model, render code and defaults are
 // read-only here.
-const read=async(path:string|URL)=>{
-  const bytes=await readFile(new URL(path,import.meta.url));
+const parse=async(bytes:Buffer)=>{
   const asset=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength) as ArrayBuffer,'');
   return {bytes,asset};
 };
+const read=async(path:string)=>parse(await readFile(new URL(path,import.meta.url)));
+const original=await readVeyraBaseline();
 const candidatePaths=['../../asset-pipeline/veyra-death-contact/exported/veyra-teal.glb','../../asset-pipeline/veyra-death-contact/exported/veyra-rust.glb'] as const;
-const repoRoot=fileURLToPath(new URL('../../',import.meta.url));
-const baselineDir=resolve(repoRoot,process.env.VEYRA_DEATH_BASELINE_DIR??candidateManifest.basis.source);
-const baselineManifestBytes=await readFile(resolve(baselineDir,'manifest.json'));
-const baselineManifest=JSON.parse(baselineManifestBytes.toString('utf8'));
-const sha256=(bytes:Uint8Array)=>createHash('sha256').update(bytes).digest('hex');
-function validateBaselineManifest(bytes:Uint8Array){
-  if(sha256(bytes)!==candidateManifest.basis.manifestSha256)throw new Error('Pinned death baseline manifest SHA-256 mismatch');
-}
-function validateBaselineAsset(bytes:Uint8Array,team:string){
-  const candidate=candidateManifest.assets.find(asset=>asset.id===`veyra-${team}`)!;
-  const entry=baselineManifest.assets.find((asset:any)=>asset.id===candidate.id);
-  if(!entry||entry.sha256!==candidate.baselineSha256||sha256(bytes)!==candidate.baselineSha256||sha256(bytes)===candidate.sha256)
-    throw new Error(`Pinned death baseline GLB SHA-256 mismatch: ${team}`);
-}
-validateBaselineManifest(baselineManifestBytes);
-const baselinePaths=['teal','rust'].map(team=>pathToFileURL(resolve(baselineDir,`exported/veyra-${team}.glb`)));
 const fallbackPaths=['../../asset-pipeline/veyra-death-contact/runtime-fallback/exported/veyra-teal.glb','../../asset-pipeline/veyra-death-contact/runtime-fallback/exported/veyra-rust.glb'] as const;
 const teams=['teal','rust'] as const;
 const candidates=[await read(candidatePaths[0]),await read(candidatePaths[1])] as const;
-const baselines=[await read(baselinePaths[0]),await read(baselinePaths[1])] as const;
+const baselines=[await parse(original.get('exported/veyra-teal.glb')!),await parse(original.get('exported/veyra-rust.glb')!)] as const;
 const fallbacks=[await read(fallbackPaths[0]),await read(fallbackPaths[1])] as const;
 
-teams.forEach((team,index)=>validateBaselineAsset(baselines[index]!.bytes,team));
+const sha256=(bytes:Uint8Array)=>createHash('sha256').update(bytes).digest('hex');
 const clipOf=(asset:GLTF,name:string)=>asset.animations.find(clip=>clip.name===name)!;
 const materialName=(mesh:any)=>{
   const materials=Array.isArray(mesh.material)?mesh.material:[mesh.material];
@@ -190,9 +175,6 @@ function driveNonDeath(motion:any,clip:'idle'|'walk'|'attack'|'hurt',time:number
 
 describe('received Veyra death-contact candidates through the production consumer',()=>{
   it('uses the source-rebuilt two-faction GLBs as fixtures and keeps the runtime fallback separate',()=>{
-    validateBaselineManifest(baselineManifestBytes);
-    expect(()=>validateBaselineManifest(candidates[0].bytes)).toThrow('baseline manifest');
-    teams.forEach((team,index)=>expect(()=>validateBaselineAsset(candidates[index]!.bytes,team)).toThrow('baseline GLB'));
     expect(candidateManifest.kind).toBe('source-rebuilt-candidate');
     expect(candidateManifest.editableSource.status).toBe('produced');
     expect(fallbackManifest.kind).toBe('runtime-fallback');
@@ -206,7 +188,9 @@ describe('received Veyra death-contact candidates through the production consume
       expect(candidates[index]!.bytes.length).toBe(candidate.bytes);
       expect(sha256(fallbacks[index]!.bytes)).toBe(fallback.sha256);
       expect(sha256(fallbacks[index]!.bytes)).not.toBe(candidate.sha256);
-      expect(sha256(baselines[index]!.bytes)).toBe(candidate.baselineSha256);
+      const pin=baselineLock.files.find(file=>file.path===`exported/veyra-${team}.glb`)!;
+      expect(sha256(baselines[index]!.bytes)).toBe(pin.sha256);
+      expect(baselines[index]!.bytes.length).toBe(pin.bytes);
     });
   });
 
@@ -279,7 +263,7 @@ describe('received Veyra death-contact candidates through the production consume
       for(const row of deathFrames()){
         const candidateRow=candidateRows.get(row.frame)!;
         const baselineRow=baselineRows.get(row.frame)!;
-        expect(candidateRow.body,`${team} frame ${row.frame} must not fall below the shipped baseline`).toBeGreaterThanOrEqual(baselineRow.body-1e-6);
+        expect(candidateRow.body,`${team} frame ${row.frame} must not fall below the pinned original baseline`).toBeGreaterThanOrEqual(baselineRow.body-1e-6);
         expect(candidateRow.foot,`${team} frame ${row.frame} foot tolerance`).toBeGreaterThanOrEqual(-0.005);
         expect(candidateRow.body,`${team} frame ${row.frame} body tolerance`).toBeGreaterThanOrEqual(-0.01);
         expect(candidateRow.body,`${team} frame ${row.frame} must not float`).toBeLessThanOrEqual(0.02);
@@ -341,7 +325,7 @@ describe('received Veyra death-contact candidates through the production consume
     });
   });
 
-  it('keeps bones, NORMALs, skin weights and non-death clips identical to the shipped release',()=>{
+  it('keeps bones, NORMALs, skin weights and non-death clips identical to the pinned original release',()=>{
     teams.forEach((team,index)=>{
       const candidate=candidates[index]!.asset,baseline=baselines[index]!.asset;
       expect(boneHierarchy(candidate)).toEqual(boneHierarchy(baseline));

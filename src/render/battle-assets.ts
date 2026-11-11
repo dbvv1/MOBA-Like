@@ -3,7 +3,7 @@ import {applyWorldDiffuse,type LightingStyle} from './lighting-style.js';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import manifest from '../../asset-pipeline/battle/manifest.json';
 import heroManifest from '../../asset-pipeline/heroes/veyra-release/manifest.json';
-import contactManifest from '../../asset-pipeline/veyra-death-contact/manifest.json';
+import {veyraContactPin,verifyVeyraContactBytes,type VeyraContactPin} from './veyra-contact-pin.js';
 import siegeManifest from '../../asset-pipeline/content-set/siege/manifest.json';
 import type {HeroSource} from './hero-presentation.js';
 
@@ -29,7 +29,7 @@ export function releaseModels(models:Iterable<GLTF>){
 }
 function orderedModelLoader(){
   let previous=Promise.resolve();
-  return (url:string)=>{
+  return (url:string,pin?:VeyraContactPin)=>{
     const loader=new GLTFLoader(),manager=loader.manager;
     // Keep GLTFLoader's extra manager item open through parsing (including textures).
     manager.itemStart(url);
@@ -41,6 +41,7 @@ function orderedModelLoader(){
       .then(bytes=>({ok:true as const,bytes}),error=>({ok:false as const,error}));
     const loaded=previous.then(async()=>{
       const result=await data;if(!result.ok)throw result.error;
+      if(pin)await verifyVeyraContactBytes(result.bytes as ArrayBuffer,pin);
       // Same URL base as an unconfigured GLTFLoader.load; embedded resources and
       // relative external references keep their existing resolution contract.
       return loader.parseAsync(result.bytes as ArrayBuffer,THREE.LoaderUtils.extractUrlBase(url));
@@ -56,13 +57,14 @@ export async function loadBattleAssets(load=orderedModelLoader(),lighting:Lighti
   // order. The source-rebuilt GLBs are used, never the binary runtime fallback.
   const heroes=heroManifest.assets.map(asset=>{
     if(heroSource==='baseline')return {id:asset.id,url:heroUrls[`../../asset-pipeline/heroes/veyra-release/${asset.file}`]};
-    const candidate=contactManifest.assets.find(entry=>entry.id===asset.id);
-    return {id:asset.id,url:candidate?contactUrls[`../../${candidate.file}`]:undefined};
+    const pin=veyraContactPin(asset.id);
+    return {id:asset.id,url:contactUrls[`../../${pin.file}`],pin};
   });
-  const results=await Promise.allSettled([...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroes,...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))].map(async asset=>{
+  const requests:Array<{id:string;url:string|undefined;pin?:VeyraContactPin}>=[...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroes,...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))];
+  const results=await Promise.allSettled(requests.map(async asset=>{
     const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);
-    return [asset.id,await load(url)] as const;
+    return [asset.id,await load(url,asset.pin)] as const;
   }));
   const fulfilled=results.filter((r):r is PromiseFulfilledResult<readonly[string,GLTF]>=>r.status==='fulfilled');
   const failed=results.find(r=>r.status==='rejected');

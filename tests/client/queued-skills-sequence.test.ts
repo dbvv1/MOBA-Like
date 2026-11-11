@@ -91,6 +91,7 @@ function createInputHarness(sim: Simulation) {
   }
   return {
     controls,
+    targeting: world.setTargeting,
     pending,
     key,
     click,
@@ -322,10 +323,14 @@ async function verifyReplay(records: readonly QueuedState[], setup: (sim: Simula
       const results = sim.step(sim.commandFrame(record.commands));
       expect(sim.state.tick).toBe(record.tick);
       expect(sim.finalHash()).toBe(record.hash);
-      expect(sim.snapshot().events).toEqual(record.events);
       expect(results.map(result => ({accepted: result.accepted, queued: result.queued ?? false, reason: result.reason})))
         .toEqual(record.results.map(result => ({accepted: result.accepted, queued: result.queued ?? false, reason: result.reason})));
-      if (sim.state.tick % cadence === 0) samples.push({tick: sim.state.tick, projection: gameplayView(sim.snapshot())});
+      expect(sim.snapshot().events).toEqual(record.events);
+      if (sim.state.tick % cadence === 0) {
+        const snapshot = sim.snapshot();
+        expect(snapshot.events).toEqual(record.events);
+        samples.push({tick: sim.state.tick, projection: gameplayView(snapshot)});
+      }
     }
     expect(sim.finalHash()).toBe(records[records.length - 1]!.hash);
     for (const sample of samples) {
@@ -412,7 +417,11 @@ describe('v12 queued skills through real Controls input', () => {
       expect(aimTick).toHaveLength(0);
       expect(blue.cooldowns.W).toBe(0);
 
+      expect(harness.targeting).toHaveBeenLastCalledWith('W');
+      harness.aimPoint({x: blue.position.x + 4, z: 0});
       harness.key('Escape');
+      expect(harness.targeting).toHaveBeenLastCalledWith(null);
+      harness.click(0);
       const cancelTick = run.advance();
       expect(cancelTick).toHaveLength(0);
       expect(blue.cooldowns.W).toBe(0);
@@ -556,7 +565,11 @@ describe('v12 queued skills through real Controls input', () => {
       // Aim cancel produces no command; the next Q is accepted immediately.
       harness.key('w');
       expect(run.advance()).toHaveLength(0);
+      expect(harness.targeting).toHaveBeenLastCalledWith('W');
+      harness.aimPoint({x: blue.position.x + 4, z: 0});
       harness.key('Escape');
+      expect(harness.targeting).toHaveBeenLastCalledWith(null);
+      harness.click(0);
       expect(run.advance()).toHaveLength(0);
       harness.aimPoint({x: blue.position.x + 4, z: 0});
       harness.key('q');

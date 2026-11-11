@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "runtime-fallback",
   "basis": {
-    "source": "asset-pipeline/heroes/veyra-release",
+    "source": "asset-pipeline/veyra-death-contact/baseline",
     "manifestSha256": "4c089c7032cda82003a684abda4d9986bb330e2e4b16f60dfef14ac5f5a52ec3",
     "fps": 30.0
   },
@@ -14,7 +14,7 @@
     {
       "id": "veyra-teal",
       "team": "teal",
-      "baseline": "asset-pipeline/heroes/veyra-release/exported/veyra-teal.glb",
+      "baseline": "asset-pipeline/veyra-death-contact/baseline/exported/veyra-teal.glb",
       "baselineSha256": "c686ae6e01c7b551159a3307f16ea2b3955f6a62f3ae522897de8a7a338c6d6e",
       "file": "asset-pipeline/veyra-death-contact/runtime-fallback/exported/veyra-teal.glb",
       "sha256": "17bb8e1a3dbfc683167ad153a0e72bccacc41f87e9305d8f5ed60a011be83707",
@@ -257,7 +257,7 @@
     {
       "id": "veyra-rust",
       "team": "rust",
-      "baseline": "asset-pipeline/heroes/veyra-release/exported/veyra-rust.glb",
+      "baseline": "asset-pipeline/veyra-death-contact/baseline/exported/veyra-rust.glb",
       "baselineSha256": "a3d88008610ba64fe7c17d7256c413b822317d4c66bfdeffd9a86f9273c5e774",
       "file": "asset-pipeline/veyra-death-contact/runtime-fallback/exported/veyra-rust.glb",
       "sha256": "d55535fd6cbc1cd06f7d1d5aeac7c564909cdc0c980cbba65e6cc5999ed8d046",

@@ -2,8 +2,8 @@
 
 This script runs inside Blender's Python (`bpy`).  For each team it:
 
-1. opens the shipped editable source ``asset-pipeline/heroes/veyra-release/
-   source/veyra-<team>.blend`` read-only,
+1. opens the pinned original editable source under this package's
+   ``baseline/source/`` read-only,
 2. computes the per-key death ``Root`` Y lift with the dependency-free
    :mod:`glb_contact` sampler (the same values ``tools/build_candidates.py``
    writes into the runtime fallback),
@@ -20,11 +20,9 @@ exporting reproduces ``exported/*.glb`` byte-for-byte (``--check-only`` proves
 it).  The compressed ``.blend`` bytes themselves can differ between Blender
 builds, so the manifest records the exact source hashes that were delivered.
 
-After adoption overwrites the heroes release, set
-``VEYRA_DEATH_BASELINE_DIR`` to the pinned ``b489ed38`` snapshot (which must
-contain ``exported/``, ``source/`` and ``manifest.json``); otherwise the
-adopted, already-fixed export is used as the baseline and the offsets
-collapse to about 2e-9 m.
+Prepare the original snapshot with ``tools/baseline.py`` before running this
+builder. It defaults to that snapshot; ``VEYRA_DEATH_BASELINE_DIR`` may select
+another exact copy, verified against the same independent lock.
 
 Usage:
     <python with the Blender bpy module> \
@@ -36,7 +34,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sys
 import tempfile
 from pathlib import Path
@@ -47,6 +44,7 @@ REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(HERE.parent))
 
 from glb_contact import ContactError  # noqa: E402
+from baseline import verify_baseline, resolve_baseline_dir as resolve_pinned_baseline
 
 try:
     import bpy  # noqa: E402
@@ -58,18 +56,8 @@ except ImportError as exc:  # pragma: no cover - exercised only without bpy
     ) from exc
 
 def resolve_baseline_root() -> Path:
-    """Shipped baseline, or the pinned copy named by the shared env var.
-
-    The builder needs ``exported/``, ``source/`` and ``manifest.json`` from
-    one snapshot.  Adoption overwrites the heroes export, so point
-    ``VEYRA_DEATH_BASELINE_DIR`` at a pinned ``b489ed38`` copy to rebuild the
-    candidates after adoption.  Relative values resolve from the repo root.
-    """
-    override = os.environ.get("VEYRA_DEATH_BASELINE_DIR")
-    if not override:
-        return REPO / "asset-pipeline" / "heroes" / "veyra-release"
-    path = Path(override)
-    return path if path.is_absolute() else (REPO / path).resolve()
+    """Use the independently pinned original snapshot (or an explicit exact copy)."""
+    return resolve_pinned_baseline()
 
 
 BASELINE_ROOT = resolve_baseline_root()
@@ -110,6 +98,7 @@ def baseline_source(team: str) -> Path:
 
 
 def load_upstream_manifest():
+    verify_baseline(BASELINE_ROOT)
     path = BASELINE_ROOT / "manifest.json"
     if not path.is_file():
         raise ContactError(f"missing upstream manifest: {display_path(path)}")
@@ -328,7 +317,7 @@ def write_reports(results):
             "status": "produced",
             "files": [row["source"] for row in results],
             "tool": "tools/build_source_candidates.py",
-            "derivedFrom": "source/veyra-{teal,rust}.blend under the upstream heroes release",
+            "derivedFrom": "source/veyra-{teal,rust}.blend under the verified original baseline",
             "change": "death Root location Y keys offset by reports/death-root-offsets.json; "
                       "no other pose, geometry or action data changed (the two zero-user "
                       "legacy materials keep fake users so the resave does not drop them)",

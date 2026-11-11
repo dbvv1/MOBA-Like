@@ -16,7 +16,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -24,6 +23,8 @@ HERE = Path(__file__).resolve()
 PACKAGE = HERE.parents[1]
 REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(HERE.parent))
+
+from baseline import verify_baseline, resolve_baseline_dir as resolve_pinned_baseline
 
 from glb_contact import (  # noqa: E402
     Asset,
@@ -35,17 +36,8 @@ from glb_contact import (  # noqa: E402
 )
 
 def resolve_baseline_dir() -> Path:
-    """Shipped baseline, or the pinned copy named by the shared env var.
-
-    Adoption overwrites the heroes export; ``VEYRA_DEATH_BASELINE_DIR`` keeps
-    this builder on the shipped ``b489ed38`` GLBs without a code change.
-    Relative values resolve from the repository root.
-    """
-    override = os.environ.get("VEYRA_DEATH_BASELINE_DIR")
-    if not override:
-        return REPO / "asset-pipeline" / "heroes" / "veyra-release"
-    path = Path(override)
-    return path if path.is_absolute() else (REPO / path).resolve()
+    """Use the independently pinned original snapshot (or an explicit exact copy)."""
+    return resolve_pinned_baseline()
 
 
 DEFAULT_BASELINE = resolve_baseline_dir()
@@ -123,6 +115,7 @@ def main(argv=None):
     args.baseline_dir = args.baseline_dir.resolve()
     args.out_dir = args.out_dir.resolve()
     args.reports_dir = args.reports_dir.resolve()
+    verify_baseline(args.baseline_dir)
     manifest = load_manifest(args.baseline_dir)
     expected = {row["id"]: row["sha256"] for row in manifest.get("assets", [])}
     if not args.check_only:
