@@ -149,7 +149,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     animation=requestAnimationFrame(frame);
 
     // Explicit read-only, structured diagnostic snapshot for a future real browser smoke.
-    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({...readMinimumState(),lighting:world.lightingState(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
+    Object.defineProperty(window,'mobaClient',{configurable:true,value:{snapshot:()=>sim.snapshot(),state:()=>({...readMinimumState(),lighting:world.lightingState(),materials:world.materialState(),camera:world.cameraState(),pointer:controls.inspectPointer(),effects:world.effectState(),targeting:world.targetingState(),motions:world.motionState(),tick:sim.snapshot().tick,status:sim.status})}});
     // Commit replacement only after all startup consumers and diagnostics succeed.
     // write() compares the exact originally read bytes; conflicts keep the newer save.
     if(replacePending)save();

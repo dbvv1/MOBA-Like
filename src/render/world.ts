@@ -2,7 +2,7 @@ import {createLifetime} from './lifetime.js';
 import {createCameraFollow,type CameraFollowPolicy} from './camera-follow.js';
 import {createContentStandards} from '../capture/content-standards.js';
 import {applyQuietBuildings} from './quiet-buildings.js';
-import {loadQuietFamily,type QuietTextures,type MaterialFamily} from './quiet-family.js';
+import {loadQuietFamily,inspectMaterialFamily,type QuietTextures,type MaterialFamily} from './quiet-family.js';
 import {createLightingPost} from './lighting-post.js';
 import {loadTerrainTextures,type OwnedTerrainTextures} from './terrain-textures.js';
 import {addEnvironmentLighting,lightingState,type LightingStyle} from './lighting-style.js';
@@ -120,7 +120,8 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     renderOnly(){renderScene();},
     captureContext(){return renderer.getContext();},
     lightingState(){return currentLightingState();},
-    captureState(){return {standards:standards?{...standards.inspect(),active:frameSubmitted&&!renderer.getContext().isContextLost()}:null,materials:{requested:materials,configured:quiet?'quiet-family-v1':'baseline',active:quiet&&frameSubmitted?'quiet-family-v1':null,buildingCoverage:quietBuildings?.coverage??[]},lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
+    materialState(){return inspectMaterialFamily(materials,quiet,frameSubmitted,renderer.getContext().isContextLost());},
+    captureState(){return {standards:standards?{...standards.inspect(),active:frameSubmitted&&!renderer.getContext().isContextLost()}:null,materials:{...inspectMaterialFamily(materials,quiet,frameSubmitted,renderer.getContext().isContextLost()),buildingCoverage:quietBuildings?.coverage??[]},lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},

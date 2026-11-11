@@ -9,6 +9,11 @@ export function parseMaterialFamily(search:string):MaterialFamily{
   return values.length===1&&values[0]==='quiet-family-v1'?'quiet-family-v1':'baseline';
 }
 export type QuietTextures={road:THREE.Texture;forest:THREE.Texture;wall:THREE.Texture;dispose():void};
+/** Read actual owned resources and successful frame submission, never just the URL. */
+export function inspectMaterialFamily(requested:MaterialFamily,textures:QuietTextures|undefined,frameSubmitted:boolean,contextLost:boolean){
+  const configured:MaterialFamily=textures?'quiet-family-v1':'baseline';
+  return {requested,configured,active:frameSubmitted&&!contextLost&&requested===configured?configured:null};
+}
 export async function loadQuietFamily(mode:MaterialFamily,load:(url:string)=>Promise<THREE.Texture>=url=>new THREE.TextureLoader().loadAsync(url),signal?:AbortSignal):Promise<QuietTextures|undefined>{
   if(mode!=='quiet-family-v1'||signal?.aborted)return undefined;
   const urls=[new URL('../../asset-pipeline/quiet-family/exported/earth.webp',import.meta.url).href,new URL('../../asset-pipeline/quiet-family/exported/forest.webp',import.meta.url).href,new URL('../../asset-pipeline/quiet-family/exported/wall.webp',import.meta.url).href];

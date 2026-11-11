@@ -15,7 +15,7 @@ vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElem
     aim:()=>{const hero=client().snapshot().heroes[0]!;return {point:{x:hero.position.x+2,z:hero.position.z},entityId:null};},
     setFocusHeld:(held:boolean)=>{world.held=options.cameraFollow==='hold-follow-v1'&&held;},
     setLocked:(locked:boolean)=>{world.locked=locked;world.held=false;},sync:vi.fn(),draw:vi.fn(),dispose:()=>{world.disposed=true;canvas.remove();},
-    lightingState:()=>({}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
+    lightingState:()=>({}),materialState:()=>({configured:'baseline',active:'baseline'}),cameraState:()=>({locked:world.locked,temporaryFollow:world.held}),effectState:()=>({}),targetingState:()=>world.targeting,motionState:()=>({})};
 })}));
 vi.mock('../../src/save/match.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/save/match.js')>();return {...original,LocalMatch:class extends original.LocalMatch{override step(commands:any[]=[]){const result=super.step(commands);state.inputTrace.push({tick:this.simulation.state.tick,commands:structuredClone(commands),hash:this.simulation.finalHash()});return result;}}};});
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));

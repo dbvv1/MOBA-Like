@@ -32,7 +32,7 @@ export function createCanvasWorld(host:HTMLElement,catalog:ContentCatalog){
   return {canvas,aim,groundPoint:()=>aim().point,setPointer(x:number,y:number){const r=canvas.getBoundingClientRect();pointer={x:(x-r.left)*canvas.width/Math.max(1,r.width),z:(y-r.top)*canvas.height/Math.max(1,r.height)};inside=true;},leavePointer(){inside=false;},
     sync(value:Snapshot,id:number){snapshot=value;playerId=id;},draw:(seconds:number,_alpha?:number)=>draw(seconds),
     setLocked(value:boolean){locked=value;},setFocusHeld(_value:boolean){},setTargeting(value:AbilitySlot|null){slot=value;},
-    cameraState:()=>({locked,temporaryFollow:false,position:{x:focus.x,y:0,z:focus.z}}),lightingState:()=>({style:'canvas2d-recovery'}),effectState:()=>({}),targetingState:()=>({slot}),motionState:()=>({}),
+    cameraState:()=>({locked,temporaryFollow:false,position:{x:focus.x,y:0,z:focus.z}}),lightingState:()=>({style:'canvas2d-recovery'}),materialState:()=>({requested:null,configured:'canvas2d-recovery',active:null}),effectState:()=>({}),targetingState:()=>({slot}),motionState:()=>({}),
     dispose(){window.removeEventListener('resize',fit);canvas.remove();snapshot=null;}
   };
 }

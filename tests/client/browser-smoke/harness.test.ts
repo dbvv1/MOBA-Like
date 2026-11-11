@@ -29,16 +29,17 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
     for(const variant of ['default','quiet']){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant});
+      state.materials={configured:variant==='quiet'?'quiet-family-v1':'baseline',active:variant==='quiet'?'quiet-family-v1':'baseline'};
       expect(()=>assertSmokeEntry(state,entry,new URL(entry.route,'https://example.test').href)).not.toThrow();
       for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
-        {...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
+        {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
         expect(()=>assertSmokeEntry(bad,entry,new URL(entry.route,'https://example.test').href)).toThrow();
       }
     }
   });
   it.each(['Morrow selection','Morrow reset','Veyra return'])('rejects transient fallback or wrong URL at the %s restart',()=>{
     const entry=smokeEntry({MOBA_SMOKE_VARIANT:'quiet'}),url=new URL(entry.route,'https://example.test').href;
-    const ready={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
+    const ready={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'},materials:{configured:'quiet-family-v1',active:'quiet-family-v1'}};
     expect(()=>assertSmokeEntry(ready,entry,url)).not.toThrow();
     // A later successful restart cannot make this intermediate failure acceptable.
     expect(()=>assertSmokeEntry({...ready,fallbackReason:'restored default rendering'},entry,url)).toThrow();

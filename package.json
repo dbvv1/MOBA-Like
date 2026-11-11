@@ -19,6 +19,7 @@
     "preview:web": "vite preview --config vite.config.ts",
     "dev:sim": "node --import tsx tools/sim.ts --games 1 --seed 1",
     "smoke": "npm run build:web && node tests/client/browser-smoke/run.mjs",
+    "smoke:match": "npm run build:web && node tests/client/browser-smoke/run.mjs --full-match",
     "smoke:serve": "npm run build:web && node tests/client/browser-smoke/server.mjs"
   },
   "dependencies": {

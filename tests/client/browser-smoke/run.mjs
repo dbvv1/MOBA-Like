@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
 import {PNG} from 'pngjs';
 import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting} from './options.mjs';
+import {fullMatchOptions,installFullMatchProbe,summarizeFullMatch} from './full-match.mjs';
 import {startServer} from './server.mjs';
 import {installMovementProbe,assertActiveMoveAtStop,assertStoppedAtKeyPosition} from './movement-probe.mjs';
 
@@ -44,6 +45,7 @@ const report={startedAt:new Date().toISOString(),passed:false,consoleErrors:[],p
 const resources={};let browserServer,browserProcess,page,stage='configure';
 try {
   const entry=smokeEntry();report.entry=entry;
+  const matchOptions=fullMatchOptions();report.fullMatchRequested=matchOptions.enabled;
   const options=launchOptions();report.launch=options;
   resources.server=await startServer();const {origin}=resources.server;
   stage='launch';browserServer=await chromium.launchServer(options);browserProcess=browserServer.process();report.browserProcess={pid:browserProcess.pid,args:browserProcess.spawnargs};assert.ok(!browserProcess.spawnargs.some(arg=>arg==='--no-sandbox'||arg==='--disable-setuid-sandbox'||arg==='--enable-unsafe-swiftshader'),'Unsafe browser argument');resources.browser=await chromium.connect(browserServer.wsEndpoint());report.browserVersion=resources.browser.version();
@@ -54,6 +56,41 @@ try {
   page.on('response',response=>{if(response.ok()&&new URL(response.url()).pathname.endsWith('.glb'))report.characterAssets.push(new URL(response.url()).pathname);if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
   await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
   stage='identity';const identity=await (await fetch(origin+'/build-identity.json')).json();report.source=identity;assert.equal(identity.commit,expectedSha);assert.equal(identity.tree,execFileSync('git',['rev-parse',`${expectedSha}^{tree}`],{encoding:'utf8'}).trim());assert.equal(identity.dirty,false,'Smoke must target committed clean source');
+  if(matchOptions.enabled){
+    stage='full-match';
+    await page.addInitScript(installFullMatchProbe);
+    await page.goto(origin+entry.route,{waitUntil:'networkidle'});
+    await page.waitForFunction(()=>window.mobaClient?.state().ready);
+    assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
+    report.fullMatchMaterialsStart=await page.evaluate(()=>window.mobaClient.state().materials);
+    report.fullMatchEnvironment=await page.locator('#stage canvas').evaluate(canvas=>{
+      const gl=canvas.getContext('webgl2'),ext=gl?.getExtension('WEBGL_debug_renderer_info');
+      return {viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},canvas:{width:canvas.width,height:canvas.height},renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl?.getParameter(gl.RENDERER),hidden:document.hidden,dialogOpen:Boolean(document.querySelector('dialog[open]'))};
+    });
+    try {
+      await page.waitForFunction(()=>window.__mobaFullMatch?.terminal||window.__mobaFullMatch?.error||window.mobaClient?.state().ready===false,null,{timeout:matchOptions.timeoutMs,polling:1000});
+    } finally {
+      // Keep partial evidence on failure; incomplete observation cannot pass.
+      const evidence=await page.evaluate(()=>window.__mobaFullMatch);
+      await writeFile(new URL('full-match-frames.json',output),JSON.stringify(evidence));
+      report.fullMatch=summarizeFullMatch(evidence);
+    }
+    assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
+    assert.equal(await page.locator('#notice').isVisible(),false,'Full-match runtime failure notice');
+    report.fullMatchMaterialsEnd=await page.evaluate(()=>window.mobaClient.state().materials);
+    await page.screenshot({path:fileURLToPath(new URL('full-match-terminal.png',output))});
+    for(const key of ['consoleErrors','pageErrors','httpErrors','requestFailures'])assert.deepEqual(report[key],[],key);
+    await page.locator('#restart').click();
+    await page.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.snapshot().status==='running'&&window.mobaClient.snapshot().tick<150);
+    assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
+    const restarted=await page.evaluate(()=>window.mobaClient.snapshot().tick);
+    await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,restarted);
+    const restartHero=await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0));
+    const restartBox=await page.locator('#stage canvas').boundingBox();assert.ok(restartBox);
+    await page.mouse.click(restartBox.x+restartBox.width*.85,restartBox.y+restartBox.height*.5,{button:'right'});
+    await page.waitForFunction(before=>{const h=window.mobaClient.snapshot().heroes.find(h=>h.id===before.id);return Math.hypot(h.position.x-before.position.x,h.position.z-before.position.z)>.1;},restartHero);
+    report.fullMatchRestart={initialTick:restarted,advancedTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),beforeMove:restartHero,afterMove:await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0))};
+  }
   stage='legacy-entry';await page.goto(origin+'/legacy-v10.html',{waitUntil:'networkidle'});await page.waitForFunction(()=>window.mobaClient?.state().ready);
   const beforeDefault=await page.evaluate(()=>window.mobaClient.snapshot());assert.equal(beforeDefault.contentVersion,10);await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,beforeDefault.tick);
   report.legacyEntry={contentVersion:beforeDefault.contentVersion,initialTick:beforeDefault.tick,finalTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),pixels:pixelEvidence(PNG.sync.read(await page.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('legacy-v10-canvas.png',output))})))};assert.ok(report.legacyEntry.pixels.nonBackground);

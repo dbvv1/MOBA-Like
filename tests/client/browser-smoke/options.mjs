@@ -16,6 +16,9 @@ export function assertSmokeEntry(state,entry,pageURL) {
   assert.equal(state.fallbackReason,'','Selected entry must not silently recover to default materials');
   assert.equal(state.contentVersion,entry.contentVersion);
   assert.equal(state.lighting?.active,entry.lighting);
+  const material=entry.variant==='quiet'?'quiet-family-v1':'baseline';
+  assert.equal(state.materials?.configured,material,'Actual loaded material family must match the selected entry');
+  assert.equal(state.materials?.active,material,'Material family must have submitted a live frame');
 }
 
 export function assertRetiredLighting(state,noticeVisible) {

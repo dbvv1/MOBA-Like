@@ -47,7 +47,7 @@ async function host(options:{acquire?:ReturnType<typeof createSaveOwnership>;dat
       if(!holdChoice)return choice;
       return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true}));
     },
-    createPlayableWorld:async()=>{let locked=true;return {backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline',world:{setLocked:(value:boolean)=>{locked=value;},lightingState:idle,leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:()=>{if(failDraw)throw new Error('draw failed');},effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}}};},
+    createPlayableWorld:async()=>{let locked=true;return {backend:'three-webgl2',fallbackReason:'',cameraPolicy:'baseline',world:{setLocked:(value:boolean)=>{locked=value;},lightingState:idle,materialState:()=>({configured:'baseline',active:'baseline'}),leavePointer:idle,cameraState:()=>({locked}),sync:idle,draw:()=>{if(failDraw)throw new Error('draw failed');},effectState:idle,targetingState:idle,motionState:idle,dispose:()=>{worldsDisposed++;}}};},
     audioPolicyFromSearch,createBattleAudio:()=>({enabled:true,setEnabled:idle,dispose:idle,unlock:idle,sync:idle}),
     createHud:()=>({say:idle,setLocked:idle,dispose:idle,update:idle,reject:idle,disable:idle}),
     createControls:()=>({setEnabled:idle,skill:idle,dispose:idle,inspectPointer:idle}),

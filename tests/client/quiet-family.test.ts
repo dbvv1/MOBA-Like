@@ -27,3 +27,14 @@ it('preserves all ground positions, indices, UVs and colors while covering road,
  }
  for(const material of [new THREE.MeshStandardMaterial(),new THREE.MeshToonMaterial()]){bindQuietGround(material,tex);const shader={uniforms:{},vertexShader:'#include <project_vertex>',fragmentShader:'#include <map_fragment>'};material.onBeforeCompile(shader as never,{} as never);expect(shader.fragmentShader).toContain('vQuietWorld/10.0');expect(shader.fragmentShader).toContain('vQuietWorld/12.0');expect(shader.fragmentShader).toContain('smoothstep(-0.4,0.4');expect(shader.vertexShader).toContain('modelMatrix');}
 });
+it('reports the actually owned family only after a submitted live frame, never URL intent',async()=>{
+ const {inspectMaterialFamily}=await import('../../src/render/quiet-family.js');
+ expect(inspectMaterialFamily('baseline',undefined,true,false)).toEqual({requested:'baseline',configured:'baseline',active:'baseline'});
+ const owned=await loadQuietFamily('quiet-family-v1',async()=>new THREE.Texture());
+ expect(inspectMaterialFamily('quiet-family-v1',owned,true,false).active).toBe('quiet-family-v1');
+ for(const state of [inspectMaterialFamily('quiet-family-v1',undefined,true,false),inspectMaterialFamily('quiet-family-v1',owned,false,false),inspectMaterialFamily('quiet-family-v1',owned,true,true)])expect(state.active).toBeNull();
+ const missing=await loadQuietFamily('quiet-family-v1',async()=>{throw Error('unavailable');});
+ expect(inspectMaterialFamily('quiet-family-v1',missing,true,false).active).toBeNull();
+ expect(inspectMaterialFamily('baseline',undefined,false,false).active).toBeNull();
+ expect(inspectMaterialFamily('baseline',undefined,true,true).active).toBeNull();owned!.dispose();
+});
