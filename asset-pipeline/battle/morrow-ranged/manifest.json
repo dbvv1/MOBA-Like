@@ -1,0 +1,20 @@
+{
+  "blender": "4.3.2",
+  "status": "source-candidate-not-visually-accepted",
+  "assets": [
+    {
+      "team": "teal",
+      "sourceSha256": "963240cca558d3ff1d238583e53399956905a580db07f56b94ed21e3c2bce74a",
+      "sha256": "36f04c77e937d16450c959df5b44d0c9b5a2a48d995bde121eacc44210314f23",
+      "bytes": 168160,
+      "triangles": 1057
+    },
+    {
+      "team": "rust",
+      "sourceSha256": "d4812021324111483565b5cd81fe9ee0fe14f5df23c4dbf734f8b117e32f0580",
+      "sha256": "72762163d01b7cc28a3f0f58a23c8120d8d7e8d8b69f2823d11481fa4775c528",
+      "bytes": 169036,
+      "triangles": 1065
+    }
+  ]
+}
