@@ -10,7 +10,7 @@ import type {HeroSource} from './hero-presentation.js';
 // Vite emits every referenced GLB; source manifest URLs are not server-root assumptions.
 const urls=import.meta.glob('../../asset-pipeline/battle/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const heroUrls=import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
-const contactUrls=import.meta.glob('../../asset-pipeline/veyra-death-contact/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
+const contactUrls=import.meta.glob('../../asset-pipeline/veyra-death-contact/canonical/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const siegeUrls=import.meta.glob('../../asset-pipeline/content-set/siege/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 export type BattleAssets={models:Record<string,GLTF>;dispose():void};
 function modelResources(models:Iterable<GLTF>,resources=new Set<{dispose():void}>()){

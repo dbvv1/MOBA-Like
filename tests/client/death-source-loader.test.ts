@@ -7,7 +7,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {loadBattleAssets} from '../../src/render/battle-assets.js';
 import {heroSourceForEntry,heroPresentationAssets,VEYRA_MOTION_OPTIONS,type HeroSource} from '../../src/render/hero-presentation.js';
 import {createPresentation} from '../../asset-pipeline/presentation/adapter.js';
-import contactManifest from '../../asset-pipeline/veyra-death-contact/manifest.json';
+import contactManifest from '../../asset-pipeline/veyra-death-contact/canonical/manifest.json';
 import heroManifest from '../../asset-pipeline/heroes/veyra-release/manifest.json';
 import {makeSim} from '../helpers.js';
 
@@ -49,7 +49,7 @@ describe('existing combat trial death-source boundary',()=>{
         const entry=(source==='baseline'?heroManifest:contactManifest).assets.find(asset=>asset.id===`veyra-${team}`)!;
         const request=requests.find(row=>row.path.endsWith(`/veyra-${team}.glb`))!;
         expect(request.hash).toBe(entry.sha256);
-        expect(request.path).toContain(source==='baseline'?'heroes/veyra-release/exported/':'veyra-death-contact/exported/');
+        expect(request.path).toContain(source==='baseline'?'heroes/veyra-release/exported/':'veyra-death-contact/canonical/exported/');
       }
       expect(viewAssets.byDefinition!.veyra!.motionOptions).toBe(VEYRA_MOTION_OPTIONS);
       // Actual production loader -> definition mapping -> snapshot consumer.
@@ -106,9 +106,9 @@ describe('received contact release bytes reach the actual parser',()=>{
       const selected=parsed.filter(path=>path.includes('veyra-'));
       expect(selected).toHaveLength(2);
       for(const [index,team] of ['teal','rust'].entries()){
-        expect(selected[index]).toContain(`/veyra-death-contact/exported/veyra-${team}.glb`);
+        expect(selected[index]).toContain(`/veyra-death-contact/canonical/exported/veyra-${team}.glb`);
         const model=assets.models[`veyra-${team}`]!;
-        const source=await readFile(new URL(`../../asset-pipeline/veyra-death-contact/exported/veyra-${team}.glb`,import.meta.url));
+        const source=await readFile(new URL(`../../asset-pipeline/veyra-death-contact/canonical/exported/veyra-${team}.glb`,import.meta.url));
         const expected=await new GLTFLoader().parseAsync(source.buffer.slice(source.byteOffset,source.byteOffset+source.byteLength),'');
         const actualRoot=model.scene.clone(),mixer=new THREE.AnimationMixer(actualRoot),clip=model.animations.find(clip=>clip.name==='death')!;
         mixer.clipAction(clip).play();mixer.setTime(13/30);actualRoot.updateMatrixWorld(true);
@@ -121,7 +121,7 @@ describe('received contact release bytes reach the actual parser',()=>{
 
   it.each(['same-size','truncated','missing-crypto'] as const)('rejects %s contact before parsing it, releases other models and allows the original release to load',async failure=>{
     const parsed=downloaded((bytes,url)=>{
-      if(!url.includes('/veyra-death-contact/exported/veyra-teal'))return bytes;
+      if(!url.includes('/veyra-death-contact/canonical/exported/veyra-teal'))return bytes;
       if(failure==='truncated')return bytes.slice(0,-1);
       if(failure==='same-size'){new Uint8Array(bytes)[bytes.byteLength-1]^=1;}
       return bytes;
@@ -130,7 +130,7 @@ describe('received contact release bytes reach the actual parser',()=>{
     if(failure==='missing-crypto')vi.stubGlobal('crypto',undefined);
     const message=failure==='truncated'?'byte count mismatch':failure==='same-size'?'SHA-256 mismatch':'verification unavailable';
     await expect(loadBattleAssets(undefined,'forest-light-v1','death-contact')).rejects.toThrow(message);
-    expect(parsed.some(path=>path.includes('/veyra-death-contact/exported/veyra-teal'))).toBe(false);
+    expect(parsed.some(path=>path.includes('/veyra-death-contact/canonical/exported/veyra-teal'))).toBe(false);
     expect(disposed).toHaveBeenCalled();
     const afterFailure=parsed.length;
     const restored=await loadBattleAssets(undefined,'forest-light-v1','baseline');

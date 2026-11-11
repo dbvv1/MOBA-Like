@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "kind": "canonical-recipe-trial",
+  "license": "CC0-1.0",
+  "blenderVersion": "4.3.2",
+  "baselineCommit": "b489ed38592dc184fffe2ab9b3b186441c7dc9bb",
+  "assets": [
+    {
+      "id": "veyra-teal",
+      "file": "asset-pipeline/veyra-death-contact/canonical/exported/veyra-teal.glb",
+      "bytes": 181652,
+      "sha256": "17bb8e1a3dbfc683167ad153a0e72bccacc41f87e9305d8f5ed60a011be83707"
+    },
+    {
+      "id": "veyra-rust",
+      "file": "asset-pipeline/veyra-death-contact/canonical/exported/veyra-rust.glb",
+      "bytes": 182508,
+      "sha256": "d55535fd6cbc1cd06f7d1d5aeac7c564909cdc0c980cbba65e6cc5999ed8d046"
+    }
+  ]
+}

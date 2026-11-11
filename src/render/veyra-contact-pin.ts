@@ -1,11 +1,20 @@
-import manifest from '../../asset-pipeline/veyra-death-contact/manifest.json';
+import manifest from '../../asset-pipeline/veyra-death-contact/canonical/manifest.json';
 
-// Pin the already received Blender 5.2 source exports, not the binary fallback
-// or the separate Blender 4.3 recipe outputs. Only the existing combat trial
-// consumes these two files; default/quiet releases keep their own locks.
+// Pin actual Blender 4.3 canonical build -> UAL1 retarget outputs.
+// Only the existing full combat trial consumes these; shipped defaults stay unchanged.
 export const VEYRA_CONTACT_PINS=[
-  {id:'veyra-teal',file:'asset-pipeline/veyra-death-contact/exported/veyra-teal.glb',bytes:164164,sha256:'32102965a65ea13248cbb88d28f522e3e3f8b9bd5ccf99dc9b3dedcf5ab60e12'},
-  {id:'veyra-rust',file:'asset-pipeline/veyra-death-contact/exported/veyra-rust.glb',bytes:165016,sha256:'80e0512ca0f57aed589c8a0aca9f5c1de4d0aa789f6dd43a0ab0a2beb1a2e921'},
+  {
+    "id": "veyra-teal",
+    "file": "asset-pipeline/veyra-death-contact/canonical/exported/veyra-teal.glb",
+    "bytes": 181652,
+    "sha256": "17bb8e1a3dbfc683167ad153a0e72bccacc41f87e9305d8f5ed60a011be83707"
+  },
+  {
+    "id": "veyra-rust",
+    "file": "asset-pipeline/veyra-death-contact/canonical/exported/veyra-rust.glb",
+    "bytes": 182508,
+    "sha256": "d55535fd6cbc1cd06f7d1d5aeac7c564909cdc0c980cbba65e6cc5999ed8d046"
+  }
 ] as const;
 export type VeyraContactPin=typeof VEYRA_CONTACT_PINS[number];
 

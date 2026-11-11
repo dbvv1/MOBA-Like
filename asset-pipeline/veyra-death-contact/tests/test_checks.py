@@ -471,7 +471,7 @@ class AdoptionDocTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.readme = (PACKAGE / "README.md").read_text(encoding="utf-8")
-        cls.adoption = cls.readme.split("## Adoption", 1)[1]
+        cls.adoption = cls.readme.split("## Current trial and future default adoption", 1)[1]
 
     def test_adoption_table_matches_delivered_glbs(self):
         manifest = json.loads((PACKAGE / "manifest.json").read_text(encoding="utf-8"))
