@@ -5,7 +5,7 @@ import {createRequire} from 'node:module';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {loadBattleAssets} from '../../src/render/battle-assets.js';
-import {heroSourceForEntry,heroPresentationAssets,VEYRA_MOTION_OPTIONS,type HeroSource} from '../../src/render/hero-presentation.js';
+import {heroSourceForEntry,heroPresentationAssets,MORROW_MOTION_OPTIONS,VEYRA_MOTION_OPTIONS,type HeroSource} from '../../src/render/hero-presentation.js';
 import {createPresentation} from '../../asset-pipeline/presentation/adapter.js';
 import contactManifest from '../../asset-pipeline/veyra-death-contact/canonical/manifest.json';
 import morrowManifest from '../../asset-pipeline/battle/morrow-ranged/manifest.json';
@@ -40,7 +40,8 @@ describe('existing combat trial death-source boundary',()=>{
       requests.push({path,hash:sha(bytes)});
       return loader.parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
     },'forest-light-v1',source);
-    const viewAssets=heroPresentationAssets(assets);
+    const viewAssets=heroPresentationAssets(assets,source);
+    expect(viewAssets.byDefinition!.morrow!.motionOptions).toBe(source==='death-contact'?MORROW_MOTION_OPTIONS:undefined);
     const sim=await makeSim(12,61),snapshot=sim.snapshot();
     const view=createPresentation({catalog:sim.catalog,assets:viewAssets,heroesOnly:true});
     try{
@@ -179,7 +180,7 @@ describe('received contact release bytes reach the actual parser',()=>{
     const parsed=downloaded();
     const assets=await loadBattleAssets(undefined,'forest-light-v1','death-contact');
     const sim=await makeSim(12,61),snapshot=sim.snapshot();
-    const mapped=heroPresentationAssets(assets);expect(mapped.byDefinition!.morrow!.blue).toBe(assets.models['hero-teal']);expect(mapped.byDefinition!.morrow!.amber).toBe(assets.models['hero-rust']);
+    const mapped=heroPresentationAssets(assets,'death-contact');expect(mapped.byDefinition!.morrow!.blue).toBe(assets.models['hero-teal']);expect(mapped.byDefinition!.morrow!.amber).toBe(assets.models['hero-rust']);
     const view=createPresentation({catalog:sim.catalog,assets:mapped,heroesOnly:true});
     const heroes=snapshot.heroes.map(h=>({...h,definitionId:'morrow'}));
     try{
@@ -192,6 +193,11 @@ describe('received contact release bytes reach the actual parser',()=>{
       view.sync({...snapshot,tick:1,timeSeconds:.3,heroes,events:[{type:'castResolved',heroId:actor.id,castId:9,tick:1,ordinal:0}]});view.advance(0,1);
       expect(view.motionState().find(a=>a.id===actor.id)!.actions.some(a=>a.clip==='attack.upper'&&Math.abs(a.time-.6)<1e-6)).toBe(true);
       expect(roots[1]!.getObjectByName('Hand_R')!.quaternion.equals(baseline)).toBe(true);
+      view.sync({...snapshot,tick:2,timeSeconds:.32,heroes,events:[{type:'heroDamaged',targetId:actor.id,sourceId:heroes[1]!.id,hpDamage:5,shieldAbsorbed:0,abilityId:null,tick:2,ordinal:0}]});view.advance(0,1);
+      view.sync({...snapshot,tick:3,timeSeconds:.4,heroes,events:[]});view.advance(0,1);
+      const damaged=view.motionState().find(a=>a.id===actor.id)!.actions;
+      expect(damaged.find(a=>a.clip==='attack.upper')?.weight).toBeCloseTo(1);
+      expect(damaged.find(a=>a.clip==='hurt.additiveTorso')?.weight).toBeCloseTo(.3);
       expect(roots[0]!.getObjectByName('Hand_R')).not.toBe(roots[1]!.getObjectByName('Hand_R'));
       view.reset();view.sync({...snapshot,heroes});view.advance(0,1);expect(view.inspect().heroes.every(h=>h.action==='idle')).toBe(true);
     }finally{view.dispose();assets.dispose();}
