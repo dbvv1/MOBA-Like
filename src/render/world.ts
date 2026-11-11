@@ -47,7 +47,19 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
   let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined,quiet:QuietTextures|undefined,quietBuildings:ReturnType<typeof applyQuietBuildings>|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
-  assets=own(await loadBattleAssets(undefined,lighting,heroSource));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:heroPresentationAssets(assets,heroSource),heroesOnly:true}));
+  // Check each completed load before starting another request. A cancelled world
+  // still owns late results, but must not wait on the next unrelated download.
+  const alive=()=>{if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');};
+  assets=own(await loadBattleAssets(undefined,lighting,heroSource));alive();
+  combatTextures=own(await loadCombatTextures());alive();
+  quiet=await loadQuietFamily(materials,undefined,signal);
+  if(signal?.aborted){quiet?.dispose();alive();}
+  if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}
+  if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');
+  terrainTextures=quiet??own(await loadTerrainTextures());alive();
+  statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));alive();
+  statusTexture.colorSpace=THREE.SRGBColorSpace;
+  view=own(createPresentation({catalog,assets:heroPresentationAssets(assets,heroSource),heroesOnly:true}));
   const loadedAssets=assets, presentation=view;
   const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures,quiet));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
