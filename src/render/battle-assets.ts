@@ -3,7 +3,9 @@ import {applyWorldDiffuse,type LightingStyle} from './lighting-style.js';
 import {GLTFLoader,type GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import manifest from '../../asset-pipeline/battle/manifest.json';
 import heroManifest from '../../asset-pipeline/heroes/veyra-release/manifest.json';
-import {veyraContactPin,verifyVeyraContactBytes,type VeyraContactPin} from './veyra-contact-pin.js';
+import {veyraContactPin} from './veyra-contact-pin.js';
+import {morrowRangedPin} from './morrow-ranged-pin.js';
+import {verifyPinnedAssetBytes,type AssetBytePin} from './veyra-contact-pin.js';
 import siegeManifest from '../../asset-pipeline/content-set/siege/manifest.json';
 import type {HeroSource} from './hero-presentation.js';
 
@@ -11,6 +13,7 @@ import type {HeroSource} from './hero-presentation.js';
 const urls=import.meta.glob('../../asset-pipeline/battle/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const heroUrls=import.meta.glob('../../asset-pipeline/heroes/veyra-release/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const contactUrls=import.meta.glob('../../asset-pipeline/veyra-death-contact/canonical/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
+const morrowUrls=import.meta.glob('../../asset-pipeline/battle/morrow-ranged/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 const siegeUrls=import.meta.glob('../../asset-pipeline/content-set/siege/exported/*.glb',{query:'?url',import:'default',eager:true}) as Record<string,string>;
 export type BattleAssets={models:Record<string,GLTF>;dispose():void};
 function modelResources(models:Iterable<GLTF>,resources=new Set<{dispose():void}>()){
@@ -29,7 +32,7 @@ export function releaseModels(models:Iterable<GLTF>){
 }
 function orderedModelLoader(){
   let previous=Promise.resolve();
-  return (url:string,pin?:VeyraContactPin)=>{
+  return (url:string,pin?:AssetBytePin)=>{
     const loader=new GLTFLoader(),manager=loader.manager;
     // Keep GLTFLoader's extra manager item open through parsing (including textures).
     manager.itemStart(url);
@@ -41,7 +44,7 @@ function orderedModelLoader(){
       .then(bytes=>({ok:true as const,bytes}),error=>({ok:false as const,error}));
     const loaded=previous.then(async()=>{
       const result=await data;if(!result.ok)throw result.error;
-      if(pin)await verifyVeyraContactBytes(result.bytes as ArrayBuffer,pin);
+      if(pin)await verifyPinnedAssetBytes(result.bytes as ArrayBuffer,pin,pin.id.startsWith('morrow-')?'Morrow ranged':'Veyra contact');
       // Same URL base as an unconfigured GLTFLoader.load; embedded resources and
       // relative external references keep their existing resolution contract.
       return loader.parseAsync(result.bytes as ArrayBuffer,THREE.LoaderUtils.extractUrlBase(url));
@@ -60,7 +63,14 @@ export async function loadBattleAssets(load=orderedModelLoader(),lighting:Lighti
     const pin=veyraContactPin(asset.id);
     return {id:asset.id,url:contactUrls[`../../${pin.file}`],pin};
   });
-  const requests:Array<{id:string;url:string|undefined;pin?:VeyraContactPin}>=[...manifest.assets.map(asset=>({id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]})),...heroes,...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))];
+  const battle=manifest.assets.map(asset=>{
+    if(heroSource==='death-contact'&&(asset.id==='hero-teal'||asset.id==='hero-rust')){
+      const pin=morrowRangedPin(asset.id.replace('hero-','morrow-'));
+      return {id:asset.id,url:morrowUrls[`../../${pin.file}`],pin};
+    }
+    return {id:asset.id,url:urls[`../../asset-pipeline/battle/exported/${asset.id}.glb`]};
+  });
+  const requests:Array<{id:string;url:string|undefined;pin?:AssetBytePin}>=[...battle,...heroes,...siegeManifest.assets.map(asset=>({id:asset.id,url:siegeUrls[`../../asset-pipeline/content-set/siege/${asset.file}`]}))];
   const results=await Promise.allSettled(requests.map(async asset=>{
     const url=asset.url;
     if(!url)throw new Error(`Missing bundled battle asset ${asset.id}`);

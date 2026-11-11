@@ -26,10 +26,14 @@ export function veyraContactPin(id:string):VeyraContactPin{
   return pin;
 }
 
-export async function verifyVeyraContactBytes(bytes:ArrayBuffer,pin:VeyraContactPin):Promise<void>{
-  if(bytes.byteLength!==pin.bytes)throw new Error(`Veyra contact byte count mismatch: ${pin.id}`);
-  if(!globalThis.crypto?.subtle)throw new Error('Veyra contact SHA-256 verification unavailable');
+export type AssetBytePin={id:string;file:string;bytes:number;sha256:string};
+export function verifyVeyraContactBytes(bytes:ArrayBuffer,pin:VeyraContactPin):Promise<void>{
+  return verifyPinnedAssetBytes(bytes,pin,'Veyra contact');
+}
+export async function verifyPinnedAssetBytes(bytes:ArrayBuffer,pin:AssetBytePin,label:string):Promise<void>{
+  if(bytes.byteLength!==pin.bytes)throw new Error(`${label} byte count mismatch: ${pin.id}`);
+  if(!globalThis.crypto?.subtle)throw new Error(`${label} SHA-256 verification unavailable`);
   const hash=await globalThis.crypto.subtle.digest('SHA-256',bytes);
   const actual=Array.from(new Uint8Array(hash),value=>value.toString(16).padStart(2,'0')).join('');
-  if(actual!==pin.sha256)throw new Error(`Veyra contact SHA-256 mismatch: ${pin.id}`);
+  if(actual!==pin.sha256)throw new Error(`${label} SHA-256 mismatch: ${pin.id}`);
 }

@@ -14,5 +14,5 @@ export function heroSourceForEntry(search:string,candidateEntry=false):HeroSourc
 /** Shared by the real world and CPU consumer tests; no alternate animator. */
 export function heroPresentationAssets(assets:BattleAssets):CharacterAssets{
   return {blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,
-    byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:VEYRA_MOTION_OPTIONS}}};
+    byDefinition:{morrow:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!},veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:VEYRA_MOTION_OPTIONS}}};
 }
