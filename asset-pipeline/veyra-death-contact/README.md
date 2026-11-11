@@ -2,7 +2,7 @@
 
 Editable source candidates and rebuilt GLBs for the two Veyra faction exports (`veyra-teal`, `veyra-rust`) that remove the death foot penetration already acknowledged in [`../heroes/veyra-release/README.md`](../heroes/veyra-release/README.md).
 
-**Status: source-rebuilt candidates.** `source/veyra-{teal,rust}.blend` are editable copies of the shipped sources with only the death `Root` location Y keyframes changed; `exported/veyra-{teal,rust}.glb` are exported from those files. The build runs in a background Python with the Blender `bpy` module (5.2.3 LTS, layered actions), uses no GUI/GPU/network, and reopens the saved source to prove the GLB rebuild is reproducible. The old binary-patch GLBs are kept in `runtime-fallback/` as fallback evidence. Nothing under `../heroes/` was modified.
+**Status: source-rebuilt candidates.** `source/veyra-{teal,rust}.blend` are editable copies of the shipped sources with only the death `Root` location Y keyframes changed; `exported/veyra-{teal,rust}.glb` are exported from those files. The build runs in a background Python with the Blender `bpy` module (5.2.3 LTS, layered actions), uses no GUI/GPU/network, and reopens the saved source to prove the GLB rebuild is reproducible. The old binary-patch GLBs are kept in `runtime-fallback/` as fallback evidence. The received candidate did not replace the shipped heroes source or exports; the canonical recipe extension below only changes offline tooling.
 
 ## Adoption (these candidates are not loaded by the game)
 
@@ -39,7 +39,7 @@ Update `asset-pipeline/heroes/veyra-release/manifest.json` for both assets:
 
 ### 2. Do not rerun the heroes build recipe as-is
 
-`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Neither applies this card's death `Root` Y offsets, so running either after step 1 silently resets the fix.
+`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Without the explicit contact option, a full `build.py` → `retarget.py` rebuild does not apply this card's death `Root` Y offsets and resets the fix. Running only `retarget.py` preserves the death curve already in its input source; it does not add the correction.
 
 The supported rebuild path for this card is this package's builder, run against the pinned baseline:
 
@@ -49,22 +49,28 @@ The supported rebuild path for this card is this package's builder, run against 
 
 Then copy the rebuilt `source/` and `exported/` into the heroes release again and rerun the acceptance commands from step 5. The candidate and fallback manifests already point at the pinned baseline, with the original manifest, source and export hashes unchanged. The rebuild refreshes these provenance fields against the same verified snapshot. No manual environment or provenance edit is needed when adopting from the default snapshot. Overwriting only the GLB and then running the heroes recipe is not a supported path.
 
-#### Optional: keep the heroes recipe canonical
+#### Rebuild through the original heroes recipe (Blender 4.3)
 
-If Veyra's heroes recipe must remain the canonical build (for example a later full-repo re-export), the offset step can be ported into it, but that is a separate pipeline change and not part of the copy-only adoption above. It must do all of the following, or it will produce a file set that looks correct while `npm test` still fails:
+The canonical `build.py` → UAL1 `retarget.py` path now supports an explicit contact correction in an isolated output directory. The original source, runtime exports and their asset hashes remain unchanged. Prepare the pinned baseline first, then run from the repository root:
 
-- Apply the death `Root` location Y offsets from `reports/death-root-offsets.json` after the recipe has finished writing the rig/action data and before `retarget.py` exports the GLB. The heroes scripts still use the pre-5.0 `Action.fcurves` API; this package's builder uses the 5.x layered-action channelbag API, so the offset code cannot be copied verbatim.
-- Update the pinned `sharedAssets` sha256 for `asset-pipeline/heroes/veyra-release/tools/build.py` and `asset-pipeline/heroes/veyra-release/tools/retarget.py` in `default-source-manifest.json` in the same change (step 3). `tests/client/default-entry.test.ts:7` hashes every listed path, including these two scripts, so editing them without refreshing their pins fails `npm test` even when the GLB, source and manifest hashes are all correct.
-- Rerun step 5 and the package acceptance tests; confirm the ported recipe still reproduces the delivered death `Root` Y keys (baseline + offsets) and leaves the other four actions unchanged.
+```sh
+blender -b --disable-autoexec --python-exit-code 1 --python asset-pipeline/heroes/veyra-release/tools/build.py -- --output-dir outputs/veyra-recipe-contact
+blender -b --disable-autoexec --python-exit-code 1 --python asset-pipeline/heroes/veyra-release/tools/retarget.py -- --output-dir outputs/veyra-recipe-contact --death-contact
+python asset-pipeline/veyra-death-contact/tests/check_contact.py --candidate-dir outputs/veyra-recipe-contact --tolerance 0.005
+```
 
-Until that port lands, treat the heroes recipe as superseded for this hero: a bare rerun rewrites the death action without the offsets and returns the old penetration.
+The output includes both editable sources, both exports, their manifest and the original UAL1 input/licenses. `--death-contact` requires a child of `outputs/`; it cannot overwrite the shipped heroes release. The retarget step verifies all five pinned baseline files, loads the original death action, then assigns each Root Y key to **original source value + contact offset**. Repeating the retarget step therefore does not accumulate lift; a second actual Blender retarget produced byte-identical GLBs for both factions. Missing/altered baseline files, changed key times or unrelated Root Y edits fail rather than using the mutable heroes release.
+
+Blender 4.3.2 was actually run through both stages for both factions. The resulting GLBs retain the baseline JSON/chunk layout; only 55 binary bytes in death Root Y differ. All 61 contact samples per faction pass the 0.005 m tolerance, including the existing non-death, material, rig and geometry checks. The final lying pose still reaches -0.000182 m; this is not a zero-penetration claim. This is an independently checked source/CPU recipe result, not browser, visual or runtime adoption. The original Blender 5.2 source-rebuilt package remains the received runtime candidate; the new recipe outputs do not replace it automatically.
+
+Without `--death-contact`, both scripts retain their original behavior; a full bare build → retarget rerun still produces the old death curve. A future runtime adoption must choose and validate its artifacts and update the locks below. The recipe scripts and their new helper dependencies are pinned in `default-source-manifest.json`; none of the shipped source/GLB/manifest pins change in this pipeline update.
 
 ### 3. Update every lock that pins the shipped GLB/source
 
 Adoption is not complete while any of these still point at `b489ed3`:
 
 - `default-source-manifest.json` — `sharedAssets` entries for `asset-pipeline/heroes/veyra-release/manifest.json`, both `exported/veyra-*.glb` and both `source/veyra-*.blend`; `tests/client/default-entry.test.ts:7` hashes every listed `path`.
-- `default-source-manifest.json` — **only if the optional heroes-recipe port in step 2 was performed**, the `sharedAssets` entries for `asset-pipeline/heroes/veyra-release/tools/build.py` (currently pinned at `ae6ee8f1e8c7946bf5fef8fb8147bebd4c60a4387fcf358771f416f840c1a45f`) and `asset-pipeline/heroes/veyra-release/tools/retarget.py` (currently pinned at `617f6ac209e05dcb3ab5906c758eadb5a196f84d9df54617e103139e79105f5c`). Recompute each with `sha256sum` after the port and update them in the same change; leaving them stale fails the same `tests/client/default-entry.test.ts:7` hash check. A copy-only adoption leaves both scripts untouched and must not change their pins.
+- `default-source-manifest.json` — the canonical recipe scripts and helpers are already pinned by this pipeline update. Refresh their hashes only when their code changes; asset adoption alone does not change them.
 - `default-source-manifest.json` — `asset-pipeline/heroes/veyra-release/README.md` is also a pinned `sharedAssets` entry; refresh it only if adoption rewrites that file's known-defect paragraph.
 - `asset-pipeline/quiet-family/standards/layout-manifest.json` — `entries[id=hero].sourceSha256` must be the new teal SHA; regenerate with `node tools/build-quiet-standards.mjs` (`tests/client/content-standards.test.ts:11`).
 - `asset-pipeline/content-set/standard-set.json` — `files[id=veyra-teal].sha256`; then run `PYTHONUTF8=1 python asset-pipeline/content-set/normalize.py` to regenerate `reports/normalized-set.json` (`normalize.py::build` raises `Source changed` on a mismatch; the `PYTHONUTF8=1` prefix is needed where the locale is not UTF-8). The smaller GLB also changes `asset-pipeline/content-set/test_normalize.py`'s pinned `totalReferencedBytes` from 680900 to **663412** (680900 − (181652 − 164164) = 663412, a 17488-byte drop); `standard-set.json` references only `veyra-teal`, not `veyra-rust`, so don't count the rust delta. After the lock update, `PYTHONUTF8=1 python asset-pipeline/content-set/normalize.py` must print `Validated 14 locked files; 663412 bytes.` The teal triangle count stays 1189.

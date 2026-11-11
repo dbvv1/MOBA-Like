@@ -490,31 +490,19 @@ class AdoptionDocTests(unittest.TestCase):
             self.assertEqual(sha, asset["sha256"], team)
             self.assertEqual(int(size), asset["bytes"], team)
 
-    def test_heroes_recipe_scripts_are_pinned_whenever_adoption_mentions_them(self):
-        # The recipe scripts are themselves sharedAssets.  Whenever the
-        # adoption instruction text points at one of them before step 3 (step 2
-        # does, both to warn against rerunning them and for the optional port),
-        # step 3 must carry that script's current pin, or a reader who edits it
-        # copies a stale value.  Compare with default-source-manifest.json so a
-        # pin that is missing, malformed or out of date fails here.
-        before, after = self.adoption.split("### 3.", 1)
-        step3 = after.split("### 4.", 1)[0]
+    def test_canonical_recipe_and_helpers_match_their_current_pins(self):
+        # The completed port is a runnable recipe, not instructions to copy old
+        # hash literals. Verify its entire dependency set against actual bytes.
         shared = {
             entry["path"]: entry["sha256"]
             for entry in json.loads(
                 (REPO / "default-source-manifest.json").read_text(encoding="utf-8")
             )["sharedAssets"]
         }
-        for script in ("build.py", "retarget.py"):
+        for script in ("build.py", "retarget.py", "recipe_options.py", "death_contact.py"):
             path = f"asset-pipeline/heroes/veyra-release/tools/{script}"
-            if path not in before:
-                continue
-            match = re.search(
-                re.escape(path) + r".{0,200}?`([0-9a-f]{64})`", step3, re.DOTALL
-            )
-            self.assertIsNotNone(match, f"step 3 does not list a pin after {path}")
             self.assertIn(path, shared, f"{path} is not a pinned sharedAsset")
-            self.assertEqual(match.group(1), shared[path], path)
+            self.assertEqual(hashlib.sha256((REPO / path).read_bytes()).hexdigest(), shared[path], path)
 
 
 if __name__ == "__main__":

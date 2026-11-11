@@ -1,11 +1,17 @@
 """Veyra's ranged focus and release poses, derived from the adopted original guard.
 Blender 4.3, no network. Does not write the shared battle source or manifest.
 """
-import bpy,bmesh,math,json,hashlib,importlib.util
+import bpy,bmesh,math,json,hashlib,importlib.util,sys,shutil
 from pathlib import Path
 from mathutils import Vector,Quaternion,Matrix
-ROOT=Path(__file__).resolve().parents[1]
-BATTLE=ROOT.parents[1]/'battle'
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from recipe_options import parse_options,SOURCE_ROOT
+ROOT,_=parse_options()
+BATTLE=SOURCE_ROOT.parents[1]/'battle'
+for directory in ['source','exported']:(ROOT/directory).mkdir(parents=True,exist_ok=True)
+if ROOT!=SOURCE_ROOT:
+ for name in ['UAL1_Standard.glb','UAL1-License.txt','LICENSE.txt']:
+  shutil.copyfile(SOURCE_ROOT/'source'/name,ROOT/'source'/name)
 spec=importlib.util.spec_from_file_location('battle_mesh_helpers',BATTLE/'tools/build.py')
 h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
 rows=[]

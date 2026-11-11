@@ -682,7 +682,7 @@
     },
     {
       "path": "asset-pipeline/heroes/veyra-release/README.md",
-      "sha256": "c33943662f2a8ffade710713ee4a5e8e3090283fa9eab22f5e8792972e3e386b"
+      "sha256": "fb5c776d4a38f92fad0fdd5f654474de9c17fb2423d6b5f500c989e6728a42fd"
     },
     {
       "path": "asset-pipeline/heroes/veyra-release/exported/veyra-rust.glb",
@@ -718,11 +718,11 @@
     },
     {
       "path": "asset-pipeline/heroes/veyra-release/tools/build.py",
-      "sha256": "ae6ee8f1e8c7946bf5fef8fb8147bebd4c60a4387fcf358771f416f840c1a45f"
+      "sha256": "01e0d63f6610ed121e064e6f20905aadd2b7a2dc59c56203174a2a2983c5ec0f"
     },
     {
       "path": "asset-pipeline/heroes/veyra-release/tools/retarget.py",
-      "sha256": "617f6ac209e05dcb3ab5906c758eadb5a196f84d9df54617e103139e79105f5c"
+      "sha256": "68cca5144f19c36e15db0dd53b957a71426a960da8c3c43c938b0f4542d2c5ec"
     },
     {
       "path": "asset-pipeline/icons/.gitignore",
@@ -1134,6 +1134,14 @@
     {
       "path": "asset-pipeline/viewer/viewer.js",
       "sha256": "e5fdd13a79615450867a1d05de325f75046c1f1670e6a3606ec2476342bfaa67"
+    },
+    {
+      "path": "asset-pipeline/heroes/veyra-release/tools/recipe_options.py",
+      "sha256": "ffe4e314a81fec92334212dd2329c938ff4c52c19c1222b92417215a5c2d0e3b"
+    },
+    {
+      "path": "asset-pipeline/heroes/veyra-release/tools/death_contact.py",
+      "sha256": "cbc42b733deb55f212a6b3742428889cd6a8f0636801e77541ecc59705b04d59"
     }
   ],
   "htmlSourceSha256": "9769afc538d1d942eb24de191c383e92ced25c02eee000324dffcad7b5b60ad9"
