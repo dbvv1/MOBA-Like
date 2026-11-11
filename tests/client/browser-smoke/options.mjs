@@ -1,4 +1,30 @@
 import {isAbsolute} from 'node:path';
+import assert from 'node:assert/strict';
+
+// Both variants run the same full input/restart/save sequence, never a load-only probe.
+export function smokeEntry(env = process.env) {
+  const variant=env.MOBA_SMOKE_VARIANT??'default';
+  if(!['default','quiet'].includes(variant))throw new Error('MOBA_SMOKE_VARIANT must be default or quiet');
+  return {variant,route:variant==='default'?'/':'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1',contentVersion:11,lighting:'forest-light-v1'};
+}
+
+export function assertSmokeEntry(state,entry,pageURL) {
+  const url=new URL(pageURL);
+  assert.equal(url.pathname+url.search,entry.route,'Selected entry URL must survive every restart and resume');
+  assert.equal(state.ready,true,'Selected entry must be ready');
+  assert.equal(state.backend,'three-webgl2','Selected entry must render WebGL2');
+  assert.equal(state.fallbackReason,'','Selected entry must not silently recover to default materials');
+  assert.equal(state.contentVersion,entry.contentVersion);
+  assert.equal(state.lighting?.active,entry.lighting);
+}
+
+export function assertRetiredLighting(state,noticeVisible) {
+  assert.equal(state.ready,true);
+  assert.equal(state.backend,'three-webgl2','Retirement probe must restore the real default renderer');
+  assert.equal(state.lighting?.active,'forest-light-v1');
+  assert.match(state.fallbackReason,/stylized-diffuse trial is retired/);
+  assert.equal(noticeVisible,true,'Retired trial must explain visible default recovery');
+}
 
 // Explicit opt-ins only. Never retry using a different binary or sandbox mode.
 export function launchOptions(env = process.env) {

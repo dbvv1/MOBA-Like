@@ -2,10 +2,60 @@ import {describe,it,expect} from 'vitest';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {launchOptions,pixelEvidence,failureCategory,cleanup} from './options.mjs';
+import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting} from './options.mjs';
+import {parseMaterialFamily} from '../../../src/render/quiet-family.js';
+import {parseLightingStyle} from '../../../src/render/lighting-style.js';
+import {entryLightingSearch} from '../../../src/ui/entry-lighting.js';
 import {startServer} from './server.mjs';
 
 describe('strict browser smoke helpers (no browser launched)',()=>{
+  it('selects the real default when omitted and the existing quiet route explicitly',()=>{
+    expect(smokeEntry({})).toEqual(smokeEntry({MOBA_SMOKE_VARIANT:'default'}));
+    expect(smokeEntry({}).route).toBe('/');
+    const quiet=smokeEntry({MOBA_SMOKE_VARIANT:'quiet'});
+    expect(quiet.route).toBe('/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1');
+    for(const variant of ['default','quiet']){
+      const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test');
+      expect(parseMaterialFamily(url.search)).toBe(variant==='quiet'?'quiet-family-v1':'baseline');
+      expect(parseLightingStyle(entryLightingSearch(url.search,variant==='default'?'forest-light-v1':undefined))).toBe(entry.lighting);
+      expect(url.searchParams.has('commands')).toBe(false);
+      expect(entry.contentVersion).toBe(11);
+    }
+    for(const variant of ['', 'baseline','stylized-diffuse','quiet-family-v1','quiet&commands=buffer-v1']){
+      expect(()=>smokeEntry({MOBA_SMOKE_VARIANT:variant})).toThrow('MOBA_SMOKE_VARIANT');
+    }
+  });
+  it('rejects missing state, material recovery, Canvas and wrong lighting for either full sequence',()=>{
+    const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
+    for(const variant of ['default','quiet']){
+      const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant});
+      expect(()=>assertSmokeEntry(state,entry,new URL(entry.route,'https://example.test').href)).not.toThrow();
+      for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
+        {...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
+        expect(()=>assertSmokeEntry(bad,entry,new URL(entry.route,'https://example.test').href)).toThrow();
+      }
+    }
+  });
+  it.each(['Morrow selection','Morrow reset','Veyra return'])('rejects transient fallback or wrong URL at the %s restart',()=>{
+    const entry=smokeEntry({MOBA_SMOKE_VARIANT:'quiet'}),url=new URL(entry.route,'https://example.test').href;
+    const ready={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
+    expect(()=>assertSmokeEntry(ready,entry,url)).not.toThrow();
+    // A later successful restart cannot make this intermediate failure acceptable.
+    expect(()=>assertSmokeEntry({...ready,fallbackReason:'restored default rendering'},entry,url)).toThrow();
+    expect(()=>assertSmokeEntry({...ready,backend:'canvas2d'},entry,url)).toThrow();
+    expect(()=>assertSmokeEntry(ready,entry,'https://example.test/')).toThrow();
+    expect(()=>assertSmokeEntry(ready,entry,'https://example.test/candidate.html')).toThrow();
+    expect(()=>assertSmokeEntry(ready,entry,undefined)).toThrow();
+  });
+  it('treats retired stylized lighting as visible recovery, never an active variant',()=>{
+    expect(()=>parseLightingStyle('?lighting=stylized-diffuse')).toThrow('retired');
+    const state={ready:true,backend:'three-webgl2',lighting:{active:'forest-light-v1'},fallbackReason:'Candidate renderer unavailable; restored default rendering. The stylized-diffuse trial is retired; use the quiet material trial.'};
+    expect(()=>assertRetiredLighting(state,true)).not.toThrow();
+    expect(()=>assertRetiredLighting(state,false)).toThrow();
+    for(const bad of [{},{...state,backend:'canvas2d'},{...state,fallbackReason:''},{...state,lighting:{active:'stylized-diffuse'}}]){
+      expect(()=>assertRetiredLighting(bad,true)).toThrow();
+    }
+  });
   it('defaults to sandbox; explicit binary/sandbox options never silently fall back',()=>{
     expect(launchOptions({}).chromiumSandbox).toBe(true);
     expect(launchOptions({}).ignoreDefaultArgs).toEqual(['--enable-unsafe-swiftshader']);

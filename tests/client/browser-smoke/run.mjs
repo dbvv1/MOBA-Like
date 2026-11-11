@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
 import {PNG} from 'pngjs';
-import {launchOptions,pixelEvidence,failureCategory,cleanup} from './options.mjs';
+import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting} from './options.mjs';
 import {startServer} from './server.mjs';
 import {installMovementProbe,assertActiveMoveAtStop,assertStoppedAtKeyPosition} from './movement-probe.mjs';
 
@@ -43,6 +43,7 @@ const expectedSha=process.env.MOBA_SMOKE_SOURCE_SHA??execFileSync('git',['rev-pa
 const report={startedAt:new Date().toISOString(),passed:false,consoleErrors:[],pageErrors:[],httpErrors:[],requestFailures:[],warnings:[],characterAssets:[]};
 const resources={};let browserServer,browserProcess,page,stage='configure';
 try {
+  const entry=smokeEntry();report.entry=entry;
   const options=launchOptions();report.launch=options;
   resources.server=await startServer();const {origin}=resources.server;
   stage='launch';browserServer=await chromium.launchServer(options);browserProcess=browserServer.process();report.browserProcess={pid:browserProcess.pid,args:browserProcess.spawnargs};assert.ok(!browserProcess.spawnargs.some(arg=>arg==='--no-sandbox'||arg==='--disable-setuid-sandbox'||arg==='--enable-unsafe-swiftshader'),'Unsafe browser argument');resources.browser=await chromium.connect(browserServer.wsEndpoint());report.browserVersion=resources.browser.version();
@@ -57,7 +58,7 @@ try {
   const beforeDefault=await page.evaluate(()=>window.mobaClient.snapshot());assert.equal(beforeDefault.contentVersion,10);await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,beforeDefault.tick);
   report.legacyEntry={contentVersion:beforeDefault.contentVersion,initialTick:beforeDefault.tick,finalTick:await page.evaluate(()=>window.mobaClient.snapshot().tick),pixels:pixelEvidence(PNG.sync.read(await page.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('legacy-v10-canvas.png',output))})))};assert.ok(report.legacyEntry.pixels.nonBackground);
   report.legacyCharacterAssets=[...report.characterAssets];report.characterAssets=[];
-  stage='navigate';const response=await page.goto(origin+'/candidate.html',{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
+  stage='navigate';const response=await page.goto(origin+entry.route,{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
   stage='initialize';
   await page.waitForFunction(()=>window.mobaClient?.state().ready || (!document.querySelector('#restart').disabled && !document.querySelector('#notice').hidden));
   const notice=await page.locator('#notice').textContent();
@@ -68,8 +69,8 @@ try {
   report.webgl2=await page.locator('#stage canvas').evaluate(canvas=>{const gl=canvas.getContext('webgl2');const ext=gl?.getExtension('WEBGL_debug_renderer_info');return gl&&!gl.isContextLost()?{version:gl.getParameter(gl.VERSION),renderer:gl.getParameter(gl.RENDERER),vendor:gl.getParameter(gl.VENDOR),unmaskedRenderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):null,unmaskedVendor:ext?gl.getParameter(ext.UNMASKED_VENDOR_WEBGL):null}:null;});
   assert.ok(report.webgl2,'A live WebGL2 context is required');const raw=report.webgl2.unmaskedRenderer??'';report.rendererClass=/swiftshader|llvmpipe|softpipe|software/i.test(raw)?'software':/NVIDIA|AMD|Intel|Apple|Radeon|GeForce|Adreno|Mali/i.test(raw)?'gpu':'unknown';
   stage='hud-layout';report.hudLayout=await checkHudLayout(page);
-  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,11,'Candidate browser entry must use the versioned basic attack cycle');
-  assert.equal(await page.evaluate(()=>window.mobaClient.state().lighting.active),'baseline');
+  stage='input';const initial=await page.evaluate(()=>window.mobaClient.snapshot());report.initialTick=initial.tick;report.contentVersion=initial.contentVersion;assert.equal(initial.contentVersion,entry.contentVersion,'Selected browser entry must use the versioned basic attack cycle');
+  assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
   await page.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initial.tick);
   const hero=initial.heroes.find(hero=>hero.team===0);assert.ok(hero,'Player hero exists');
   const canvas=page.locator('#stage canvas');const box=await canvas.boundingBox();assert.ok(box,'Canvas visible');
@@ -148,6 +149,7 @@ try {
   assert.equal(await page.evaluate(()=>window.mobaClient.snapshot().heroes.find(h=>h.team===0).definitionId),'veyra');
   await page.locator('#restart').click();
   await page.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.snapshot().heroes.find(h=>h.team===0)?.definitionId==='morrow');
+  assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
   assert.equal(await page.locator('#hero-select').inputValue(),'morrow');
   assert.match(await page.locator('[data-hero]').textContent(),/Morrow/);
   assert.match(await page.locator('[data-skills]').textContent(),/Barkguard/);
@@ -165,10 +167,12 @@ try {
   stage='hud-layout-morrow-cooldown';report.morrowCooldownHudLayout=await checkHudLayout(page);
   assert.ok(await page.evaluate(()=>window.mobaClient.snapshot().zones.some(z=>z.team===0&&z.abilityId==='morrow.e')),'Morrow E must produce its actual zone');
   await page.locator('#restart').click();
-  await page.waitForFunction(()=>{const h=window.mobaClient?.snapshot().heroes.find(h=>h.team===0);return h?.definitionId==='morrow'&&h.mana===h.maxMana&&Object.values(h.cooldowns).every(x=>x===0);});
+  await page.waitForFunction(()=>{const h=window.mobaClient?.snapshot().heroes.find(h=>h.team===0);return window.mobaClient?.state().ready&&h?.definitionId==='morrow'&&h.mana===h.maxMana&&Object.values(h.cooldowns).every(x=>x===0);});
+  assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
   assert.equal(await page.locator('#hero-select').inputValue(),'morrow');
   await page.locator('#hero-select').selectOption('veyra');await page.locator('#restart').click();
-  await page.waitForFunction(()=>window.mobaClient?.snapshot().heroes.find(h=>h.team===0)?.definitionId==='veyra');
+  await page.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.snapshot().heroes.find(h=>h.team===0)?.definitionId==='veyra');
+  assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
   await page.waitForFunction(()=>window.mobaClient.snapshot().tick>5);
   assert.match(await page.locator('[data-skills]').textContent(),/Slipstream/);
   assert.equal(await page.locator('#stage canvas').count(),1,'Restarts must replace, not accumulate, renderers');
@@ -181,6 +185,7 @@ try {
   await page.mouse.move(reboundBox.x+reboundBox.width*.58,reboundBox.y+reboundBox.height*.52);
   await page.keyboard.press('f');await page.waitForFunction(()=>window.mobaClient.state().targeting.visible);await page.keyboard.press('Escape');
   const beforeResume=await page.evaluate(()=>window.mobaClient.snapshot());await page.getByRole('button',{name:'Save match',exact:true}).click();await page.reload({waitUntil:'networkidle'});await page.getByRole('button',{name:'Continue saved match',exact:true}).click();await page.waitForFunction(()=>window.mobaClient?.state().ready);
+  assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
   const resumed=await page.evaluate(()=>window.mobaClient.snapshot());assert.ok(resumed.tick>=beforeResume.tick);assert.equal(resumed.contentVersion,11);assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);report.resume={savedTick:beforeResume.tick,resumedTick:resumed.tick,remappedQ:'F'};
   report.finalTick=await page.evaluate(()=>window.mobaClient.snapshot().tick);
   await page.screenshot({path:fileURLToPath(new URL('page.png',output))});
@@ -189,12 +194,13 @@ try {
   report.pixels=pixelEvidence(PNG.sync.read(bytes));assert.ok(report.pixels.nonBackground,'Canvas must have non-background scene pixels');
   stage='errors';assert.equal(await page.locator('#notice').isVisible(),false,'Runtime failure notice');
   for(const key of ['consoleErrors','pageErrors','httpErrors','requestFailures'])assert.deepEqual(report[key],[],key);
-  stage='diffuse-entry';await page.close();const diffuse=await resources.browser.newPage({viewport:{width:1280,height:900}});diffuse.setDefaultTimeout(15000);page=diffuse;
+  stage='retired-lighting-entry';await page.close();const diffuse=await resources.browser.newPage({viewport:{width:1280,height:900}});diffuse.setDefaultTimeout(15000);page=diffuse;
   diffuse.on('pageerror',error=>report.pageErrors.push(String(error)));diffuse.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
   await diffuse.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
-  await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await diffuse.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='stylized-diffuse');
-  report.diffuseEntry={contentVersion:await diffuse.evaluate(()=>window.mobaClient.snapshot().contentVersion),lighting:await diffuse.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await diffuse.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('diffuse-canvas.png',output))})))};
-  assert.equal(report.diffuseEntry.contentVersion,11);assert.ok(report.diffuseEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
+  await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await diffuse.waitForFunction(()=>window.mobaClient?.state().ready);
+  assertRetiredLighting(await diffuse.evaluate(()=>window.mobaClient.state()),await diffuse.locator('#notice').isVisible());
+  report.retiredLightingEntry={contentVersion:await diffuse.evaluate(()=>window.mobaClient.snapshot().contentVersion),lighting:await diffuse.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await diffuse.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('diffuse-canvas.png',output))})))};
+  assert.equal(report.retiredLightingEntry.contentVersion,11);assert.ok(report.retiredLightingEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
   // A fresh context avoids carrying candidate checkpoints into this independent entry check.
   stage='default-entry';const main=await resources.browser.newPage({viewport:{width:1280,height:900}});page=main;main.setDefaultTimeout(15000);
   main.on('pageerror',error=>report.pageErrors.push(String(error)));main.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
@@ -221,6 +227,6 @@ try {
   if(report.cleanupErrors.length){report.passed=false;process.exitCode=1;}
   report.finishedAt=new Date().toISOString();
   const files=[];for(const name of await readdir(output)){const bytes=await readFile(new URL(name,output));files.push({path:name,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});}
-  await writeFile(new URL('manifest.json',output),JSON.stringify({source:report.source,startedAt:report.startedAt,finishedAt:report.finishedAt,passed:report.passed,renderer:report.webgl2,rendererClass:report.rendererClass??'unknown',processExit:report.processExit,previewClosed:report.previewClosed??false,files},null,2)+'\n');
+  await writeFile(new URL('manifest.json',output),JSON.stringify({source:report.source,entry:report.entry,startedAt:report.startedAt,finishedAt:report.finishedAt,passed:report.passed,renderer:report.webgl2,rendererClass:report.rendererClass??'unknown',processExit:report.processExit,previewClosed:report.previewClosed??false,files},null,2)+'\n');
   await writeFile(new URL('report.json',output),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }
