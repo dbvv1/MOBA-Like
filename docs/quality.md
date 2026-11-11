@@ -10,6 +10,10 @@
 
 旁置范围与证据见[单份验收结论](side-release-acceptance.md)：quiet 受检构建 `d6f31ee` 的默认／旁置从零推进 653／470 tick，均为带提示的 Canvas2D 回退，未呈现 quiet 材质。镜头＋Q/W 的 `e9ab955` 实测使用同一 context 的新标签，尚未满足合同“各自新 context”的隔离要求；其加载／推进记录不代填隔离或存档替换验收。以上不改变品质评分。
 
+## 换默认与品质评分分开
+
+quiet 材质换默认以当前默认为前图做同机位盲选，两位非作者都不判新版更差、至少一位偏好新版；拟发布入口另过完整整局 smoke 并记帧耗，明显劣化不换。升档、目标图、硬件 GPU 和人工试听不是前置，换后补。下列目标／锚图和正式评分欠项继续用于品质提升，不阻塞符合上述条件的换默认；历史截图不冒充当前默认前图。
+
 ## 命名机位与目标状态
 
 四机位名称来自 `src/capture/cameras.ts`，固定1280×720、45°；不能把被拒塔候选额外机位当第五个现行机位。当前仓库的 `current-target.png` 是历史游戏截图，不因文件名被当成目标效果图。
@@ -141,7 +145,7 @@ Chromium 154.0.8037.57；原始 renderer：`ANGLE (Google, Vulkan 1.3.0 (SwiftSh
 
 证据入口：`src/content/catalog.ts`、`asset-pipeline/battle/exported/`、`asset-pipeline/heroes/veyra-release/exported/`、`asset-pipeline/content-set/siege/exported/`、`src/render/`、`assets/audio/battle/README.md`、`src/audio/battle.ts`。动画数量直接读glTF animation数组；不把历史素材来源审查当品质验收。已有source-lineup等图尚未对上述每件建立标准件同框非作者结论。
 
-**本轮没有新的已证实画面改善。后续补齐四机位同源目标与正式双盲闭环，优先解决“无法可靠比较”的最大证据缺口；手感已定位缓冲缺口但不在此同时改玩法。**
+**本轮没有新的已证实画面改善。换默认先补当前默认与 quiet 的同机位成对图、两位非作者盲选及完整 smoke／帧耗；四机位目标与正式评分另行补齐，不作换默认前置。**
 
 ---
 
