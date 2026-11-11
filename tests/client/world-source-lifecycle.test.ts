@@ -25,7 +25,7 @@ vi.mock('../../src/render/lighting-post.js',()=>({createLightingPost:(renderer:a
 const trial='?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1';
 afterEach(()=>{vi.restoreAllMocks();vi.unstubAllGlobals();doubles.renderers.length=0;});
 
-function setup(stage?:'models'|'combat'|'terrain',corrupt=false){
+function setup(stage?:'models'|'combat'|'terrain-road'|'terrain',corrupt=false){
   const controller=new AbortController(),paths:string[]=[],textures:string[]=[],resources=new Set<THREE.BufferGeometry>(),disposed=new Map<THREE.BufferGeometry,number>();
   vi.stubGlobal('window',{devicePixelRatio:1,addEventListener:vi.fn(),removeEventListener:vi.fn()});
   vi.spyOn(THREE.FileLoader.prototype,'loadAsync').mockImplementation(async url=>{
@@ -53,19 +53,20 @@ function setup(stage?:'models'|'combat'|'terrain',corrupt=false){
     // outside this CPU test (embedded GLB PNGs are actually decoded above).
     await readFile(new URL(url));
     if(stage==='combat'&&url.includes('/combat-vfx/'))controller.abort();
+    if(stage==='terrain-road'&&url.includes('/earth-albedo.webp'))controller.abort();
     if(stage==='terrain'&&url.includes('/forest-albedo.webp'))controller.abort();
     return new THREE.Texture();
   });
   const host={clientWidth:800,clientHeight:600,replaceChildren:vi.fn()} as unknown as HTMLElement;
-  const run=()=>createPlayableWorld(host,getContent(12),{search:trial,defaultLightingSearch:'?lighting=forest-light-v1',cameraFollow:'hold-follow-v1',candidateEntry:true,signal:controller.signal});
+  const run=(signal=controller.signal)=>createPlayableWorld(host,getContent(12),{search:trial,defaultLightingSearch:'?lighting=forest-light-v1',cameraFollow:'hold-follow-v1',candidateEntry:true,signal});
   return {run,controller,host,paths,textures,resources,disposed};
 }
 
-it.each(['models','combat','terrain'] as const)('cancel after actual %s acquisition releases the obsolete world without starting the next request',async stage=>{
+it.each(['models','combat','terrain-road','terrain'] as const)('cancel after actual %s acquisition releases the obsolete world without starting the next request',async stage=>{
   const test=setup(stage);
   await expect(test.run()).rejects.toMatchObject({name:'AbortError'});
   expect(test.paths).toHaveLength(19);expect(test.paths.filter(path=>path.includes('/morrow-ranged/'))).toHaveLength(2);
-  expect(test.textures).toHaveLength(stage==='models'?0:stage==='combat'?1:3);
+  expect(test.textures).toHaveLength(stage==='models'?0:stage==='combat'?1:stage==='terrain-road'?2:3);
   expect(test.textures.some(path=>path.includes('/control.svg'))).toBe(false);
   expect(test.resources.size).toBeGreaterThan(0);
   for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);
@@ -82,6 +83,26 @@ it('a corrupt shipped character fails the integrated route, releases it and rest
     const sim=await makeSim(12,61),player=sim.getHero(0,0)!;
     result.world.sync(sim.snapshot(),player.id);result.world.draw(0,1,false);
     expect(result.world.cameraState().position.x).toBe(player.position.x);
+    expect(test.host.replaceChildren).toHaveBeenCalledTimes(1);
+  }finally{result.world.dispose();result.world.dispose();}
+  for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);
+  for(const renderer of doubles.renderers)expect(renderer.dispose).toHaveBeenCalledTimes(1);
+});
+
+
+it('restarts the actual full character consumer after cancellation within the terrain pair',async()=>{
+  const test=setup('terrain-road');
+  await expect(test.run()).rejects.toMatchObject({name:'AbortError'});
+  expect(test.textures).toHaveLength(2);
+  for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);
+  const result=await test.run(new AbortController().signal);
+  try{
+    expect(result.heroSource).toBe('death-contact');
+    expect(test.paths).toHaveLength(38);
+    expect(test.paths.slice(19).filter(path=>path.includes('/morrow-ranged/'))).toHaveLength(2);
+    expect(test.textures).toHaveLength(6);
+    const sim=await makeSim(12,61),player=sim.getHero(0,0)!;
+    result.world.sync(sim.snapshot(),player.id);result.world.draw(0,1,false);
     expect(test.host.replaceChildren).toHaveBeenCalledTimes(1);
   }finally{result.world.dispose();result.world.dispose();}
   for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);

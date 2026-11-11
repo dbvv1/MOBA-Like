@@ -56,7 +56,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   if(signal?.aborted){quiet?.dispose();alive();}
   if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}
   if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');
-  terrainTextures=quiet??own(await loadTerrainTextures());alive();
+  terrainTextures=quiet??own(await loadTerrainTextures(signal));alive();
   statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));alive();
   statusTexture.colorSpace=THREE.SRGBColorSpace;
   view=own(createPresentation({catalog,assets:heroPresentationAssets(assets,heroSource),heroesOnly:true}));
