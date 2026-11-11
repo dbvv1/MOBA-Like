@@ -81,7 +81,8 @@ async function boot(mode:'prompt'|'new'='prompt'){
     let settingsOpen=false;
     const enqueue=(command:SimCommand)=>{if(!settingsOpen&&commands.length<32&&snapshot.status==='running')commands.push(command);};
     let controls:ReturnType<typeof createControls>;
-    const hud=createHud(hudRoot,sim.catalog,slot=>controls.skill(slot),itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings);
+    // Activating a HUD skill returns input ownership to the playable canvas, including Escape.
+    const hud=createHud(hudRoot,sim.catalog,slot=>{controls.skill(slot);world.canvas.focus();},itemId=>enqueue({type:'buyItem',heroId:playerId,itemId}),locked=>{if(!settingsOpen)world.setLocked(locked);},bindings);
     hud.setLocked(saved?.view.cameraLocked??true);
     lifetime.defer(()=>hud.dispose());
     controls=createControls(world,sim.catalog,player,enqueue,text=>hud.say(text),()=>{world.setLocked(true);hud.setLocked(true);},bindings,rendered.cameraPolicy==='hold-follow-v1'?held=>world.setFocusHeld(held):undefined);

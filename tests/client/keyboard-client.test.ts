@@ -7,7 +7,7 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({inputTrace:[] as unknown[],releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
+const state=vi.hoisted(()=>({inputTrace:[] as Array<{tick:number;commands:Array<{type:string;slot?:string}>;hash:string}>,releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
 vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
   const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false};state.worlds.push(world);
@@ -44,6 +44,34 @@ beforeEach(()=>{
   vi.stubGlobal('cancelAnimationFrame',vi.fn((key:number)=>frames.delete(key)));
 });
 afterEach(()=>{window.dispatchEvent(new Event('pagehide'));vi.restoreAllMocks();vi.unstubAllGlobals();document.body.replaceChildren();});
+
+const fullTrial='/candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1';
+async function bootTrial(){history.replaceState(null,'',fullTrial);await boot();}
+it.each(['/', '/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1', fullTrial, fullTrial+'&materials=quiet-family-v1'])('HUD skill activation returns focus to gameplay so Escape cancels at %s',async(path)=>{
+ history.replaceState(null,'',path);await boot();
+ const world=state.worlds[0]!;const message=()=>document.querySelector('[data-message]')!.textContent;
+ for(const selector of ['[data-skills] button:nth-child(1)','[data-skills] button:nth-child(2)']){
+   click(selector);expect(world.targeting).not.toBeNull();expect(message()).toContain('Esc cancels');
+   expect(document.activeElement).toBe(world.canvas);
+   key('Escape');expect(world.targeting).toBeNull();expect(message()).toBe('Aim cancelled.');
+   canvasClick();advance();expect(state.releases).toHaveLength(0);
+   expect(state.inputTrace.flatMap(frame=>frame.commands).filter(command=>command.type==='cast')).toEqual([]);
+ }
+ // UI navigation still owns keys until a skill is actually activated.
+ button('[data-skills] button').focus();key('q');expect(world.targeting).toBeNull();
+ open();key('Escape');expect(document.querySelector('dialog')!.open).toBe(false);
+ expect(document.activeElement).toBe(button('#keyboard-settings'));
+});
+
+it('HUD self skill returns focus without entering aim or issuing a second cast',async()=>{
+ await bootTrial();document.querySelector<HTMLSelectElement>('#hero-select')!.value='morrow';
+ click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));
+ const world=state.worlds[1]!;click('[data-skills] button:nth-child(2)');
+ expect(document.activeElement).toBe(world.canvas);expect(world.targeting).toBeNull();advance();
+ const casts=()=>state.inputTrace.flatMap(frame=>frame.commands).filter(command=>command.type==='cast');
+ expect(casts()).toHaveLength(1);expect(casts()[0]).toMatchObject({slot:'W'});
+ key('Escape');canvasClick();advance();expect(casts()).toHaveLength(1);
+});
 
 describe('keyboard settings in the actual client lifecycle',()=>{
   it('blocks and clears queued gameplay while editing, then sends the saved key through the real cast and refreshes every key hint',async()=>{
