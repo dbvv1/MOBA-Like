@@ -4,9 +4,11 @@ Editable source candidates and rebuilt GLBs for the two Veyra faction exports (`
 
 **Status: source-rebuilt candidates.** `source/veyra-{teal,rust}.blend` are editable copies of the shipped sources with only the death `Root` location Y keyframes changed; `exported/veyra-{teal,rust}.glb` are exported from those files. The build runs in a background Python with the Blender `bpy` module (5.2.3 LTS, layered actions), uses no GUI/GPU/network, and reopens the saved source to prove the GLB rebuild is reproducible. The old binary-patch GLBs are kept in `runtime-fallback/` as fallback evidence. The received candidate did not replace the shipped heroes source or exports; the canonical recipe extension below only changes offline tooling.
 
-## Adoption (these candidates are not loaded by the game)
+## Current trial and future default adoption
 
-The game loader does not see this directory. `src/render/battle-assets.ts` globs only `asset-pipeline/heroes/veyra-release/exported/*.glb` and resolves `heroManifest.assets[].file`; no code references `asset-pipeline/veyra-death-contact/`. Merging this unit therefore does **not** change the in-game death motion — it still plays the old clip until a separate adoption change lands. Adoption must do all of the following in one change, in this order.
+The existing full Camera + Q/W trial selects these two Blender 5.2 exports through `heroSourceForEntry` and `src/render/battle-assets.ts`: `/candidate.html?commands=buffer-v1&audio=critical-v1&camera=hold-follow-v1&lighting=forest-light-v1`. Its ordered loader verifies each downloaded buffer against `veyra-contact-pin.ts` before passing those same bytes to GLTFLoader. This is CPU-checked candidate wiring, not browser or visual acceptance. Default, partial/ambiguous queries, quiet-family and capture standards keep the original heroes release.
+
+Do not copy candidate files into the shipped release merely to try this existing route. The steps below describe a **future default replacement**, after choosing the exact artifacts and passing browser, death/non-death visual and non-author acceptance. They do not authorize adoption or deployment. The listed sizes and hashes apply only to the received Blender 5.2 exports, not the separate Blender 4.3 recipe outputs.
 
 ### 0. Pin the `b489ed3` baseline before overwriting the heroes release
 
@@ -39,7 +41,7 @@ Update `asset-pipeline/heroes/veyra-release/manifest.json` for both assets:
 
 ### 2. Do not rerun the heroes build recipe as-is
 
-`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Without the explicit contact option, a full `build.py` → `retarget.py` rebuild does not apply this card's death `Root` Y offsets and resets the fix. Running only `retarget.py` preserves the death curve already in its input source; it does not add the correction.
+`asset-pipeline/heroes/veyra-release/tools/build.py` reopens `asset-pipeline/battle/source/hero-{team}.blend`, rewrites `source/veyra-{team}.blend`, and `retarget.py` re-exports it. Without the explicit contact option, a full `build.py` → `retarget.py` rebuild does not apply this card's death `Root` Y offsets and resets the fix. Running only `retarget.py` without `--death-contact` preserves the death curve already in its input source; it does not add the correction.
 
 The supported rebuild path for this card is this package's builder, run against the pinned baseline:
 
@@ -102,7 +104,7 @@ npm run build
 These commands are the CPU portion of adoption acceptance: `npm test` covers `default-entry.test.ts`, `content-standards.test.ts` and `hero-source.test.ts`; the two Python discover commands cover the contact checks and content-set normalization.
 
 
-The real Three.js consumer test (`tests/client/veyra-contact-consumer.test.ts`) now consumes the original snapshot through `tests/veyra-baseline.ts`. Before parsing either GLB, it verifies all five files against `baseline-lock.json` by exact byte count and SHA-256 and retains those verified bytes. Its oracle no longer reads the mutable heroes release or its manifest. The same `VEYRA_DEATH_BASELINE_DIR` override rules apply. Fresh checkouts must explicitly run `python asset-pipeline/veyra-death-contact/tools/baseline.py` before `npm test`; missing or altered snapshots fail with an actionable error, with no preparation, fetch, fallback or skip in the tests. A shallow checkout without the pinned commit needs that local history or an exact external snapshot. `tests/veyra-baseline.test.ts` covers missing files, same-size tampering, changed sizes, a substituted candidate with a matching mutable manifest, and override resolution. This migration does not port the canonical heroes recipe, adopt runtime assets, or pass the visual gate.
+The real Three.js consumer test (`tests/client/veyra-contact-consumer.test.ts`) now consumes the original snapshot through `tests/veyra-baseline.ts`. Before parsing either GLB, it verifies all five files against `baseline-lock.json` by exact byte count and SHA-256 and retains those verified bytes. Its oracle no longer reads the mutable heroes release or its manifest. The same `VEYRA_DEATH_BASELINE_DIR` override rules apply. Fresh checkouts must explicitly run `python asset-pipeline/veyra-death-contact/tools/baseline.py` before `npm test`; missing or altered snapshots fail with an actionable error, with no preparation, fetch, fallback or skip in the tests. A shallow checkout without the pinned commit needs that local history or an exact external snapshot. `tests/veyra-baseline.test.ts` covers missing files, same-size tampering, changed sizes, a substituted candidate with a matching mutable manifest, and override resolution. This baseline migration does not itself adopt runtime assets or pass the visual gate. The separate canonical recipe extension is described in step 2; the existing trial still selects the received Blender 5.2 exports.
 
 ## Reproduced defect
 
@@ -213,8 +215,8 @@ The checks themselves use only the Python standard library: no Blender, browser,
 - **In-game death silhouette and side-by-side quality judgment:** not run. This card forbids browsers and GPU work, and CPU contact numbers are not a substitute.
 - **Old weapon contact defects:** intentionally out of scope; only the "not below baseline - 0.01 m" rule was checked.
 - **Blender 4.3 compatibility of the delivered source:** not tested. The source files were saved by 5.2.3 LTS; reopen/export was verified only with that version. The GLB deliverables are version-independent.
-- **Adoption:** not performed; no file under `../heroes/`, the battle export, the runtime renderer or `quality.md` was modified.
-- **Heroes-recipe port:** the optional path in Adoption step 2 is documented but not implemented or tested. No recipe script was edited. Package checks cover candidate data and documentation consistency only; neither adoption path has been exercised end to end.
+- **Default adoption:** not performed. The existing full combat trial consumes the received exports, but the shipped heroes source, exports and default pins remain unchanged. Browser/visual acceptance and deployment are still pending.
+- **Heroes-recipe port:** implemented and independently checked with Blender 4.3.2 in isolated output, as described in step 2. This does not prove that Blender 4.3 can reopen the delivered 5.2 source, and its new exports have not replaced the trial assets.
 
 ## Provenance and licence
 
