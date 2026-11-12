@@ -124,7 +124,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
-    hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D unavailable: Canvas2D recovery is active. Details in Runtime diagnostics.':'Trial renderer unavailable: default rendering restored. Details in Runtime diagnostics.';restart.disabled=false;
+    hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D unavailable: Canvas2D recovery is active.':'Enhanced rendering unavailable: default rendering restored.';restart.disabled=false;
     window.addEventListener('blur',()=>{commands.length=0;},{signal:lifecycle.signal});
     const readMinimumState=()=>({ready:!stopped,backend:rendered.backend,fallbackReason:rendered.fallbackReason,acceptance:{requiredTicks:MINIMUM_ACCEPTANCE_TICKS,initialTick,advancedTicks:snapshot.tick-initialTick,reached:snapshot.tick-initialTick>=MINIMUM_ACCEPTANCE_TICKS},contentVersion,tick:snapshot.tick,status:snapshot.status});
     showDiagnostic(readMinimumState());lifetime.defer(()=>showDiagnostic({ready:false,phase:'disposed'}));
