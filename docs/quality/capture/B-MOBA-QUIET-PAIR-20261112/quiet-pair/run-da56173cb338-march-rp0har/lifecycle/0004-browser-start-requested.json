@@ -1,0 +1,24 @@
+{
+  "sequence": 4,
+  "event": "browser-start-requested",
+  "observedAt": "2026-11-12T06:40:54.090Z",
+  "runId": "run-da56173cb338-march-rp0har",
+  "launch": {
+    "host": "127.0.0.1",
+    "handleSIGINT": false,
+    "handleSIGTERM": false,
+    "handleSIGHUP": false,
+    "headless": true,
+    "chromiumSandbox": true,
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ],
+    "args": [
+      "--disable-background-timer-throttling",
+      "--disable-renderer-backgrounding",
+      "--disable-backgrounding-occluded-windows",
+      "--use-angle=swiftshader"
+    ],
+    "explicitExecutable": true
+  }
+}

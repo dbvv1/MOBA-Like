@@ -1,0 +1,298 @@
+{
+  "task": "B-MOBA-QUIET-PAIR-20261112",
+  "unit": 1,
+  "role": "implementer",
+  "baseRef": "da56173cb338b3706d20d769ce34cecaa1edb385",
+  "head": "da56173cb338b3706d20d769ce34cecaa1edb385",
+  "tree": "124bd49479970e12fee9d17492a5819851ebe165",
+  "trackedCleanBeforeAndAfter": true,
+  "sourceChanged": false,
+  "startUtc": "2026-11-12T06:39:04Z",
+  "firstHandoffUtc": "2026-11-12T06:55:45Z",
+  "handoffUtc": "2026-11-12T07:55:08Z",
+  "revision": {
+    "rev": 3,
+    "revisedUtc": "2026-11-12T07:55:08Z",
+    "reason": "correct the rev2 handoffUtc and revisedUtc, which were recorded about 1.5 minutes before the receipt was actually written to disk and verified; no other content changed",
+    "scope": "receipt timestamps only; no source, tool, asset, default or build change; no browser action was rerun in this unit",
+    "rev2": {
+      "actualWrittenUtc": "2026-11-12T07:22:23Z",
+      "verificationCompletedUtc": "2026-11-12T07:22:52Z",
+      "recordedUtcBeforeCorrection": "2026-11-12T07:21:21Z",
+      "reason": "address independent review findings on this receipt and record the reviewer-reported smoke tool defects for the owner",
+      "scope": "receipt only; no source, tool, asset, default or build change; no browser action was rerun in this unit because the job card stops later browser actions after the step 7 failure"
+    }
+  },
+  "node": "v22.23.2",
+  "browser": {
+    "family": "Playwright chromium-1248 chrome-win64",
+    "version": "156.0.8078.4",
+    "sha256": "7f08161bbeb2853ffe1780a9ded4985087f52efb9725d7d8207aabdd42f7cfb9",
+    "captureAndSmokeSameBinary": true,
+    "env": "MOBA_CAPTURE_CHROMIUM and MOBA_SMOKE_CHROMIUM set to the same absolute executable; MOBA_SMOKE_CLOUD_NO_SANDBOX unset"
+  },
+  "dependencies": {
+    "reusedInstalledTree": true,
+    "installedTreeSource": "pre-existing shared node_modules junction to another local worktree; this unit did not install anything",
+    "packageLockSha256": "edefefba9571006039cd9ff4035b180fbb1a11c7bdfa6fa558ed5a98a4556b3a",
+    "installedEntries": 123,
+    "installedEntriesBasis": "package-lock.json packages keys starting 'node_modules/' with a readable package.json; 197 lock entries = 123 installed + 74 missing",
+    "versionMismatches": 0,
+    "missingPackages": 74,
+    "missingAllOptionalPlatformPackages": true,
+    "extraLockEntries": "0 个锁外包版本条目（包版本计数口径）",
+    "extraDirectoryEntries": "目录枚举层面存在 1 个锁外历史 junction node_modules/node_modules，指向另一本机 worktree 的 node_modules；它不参与包版本计数。node_modules/.package-lock.json 同样列出 123 个包",
+    "installOrCiRun": false
+  },
+  "specDifference": {
+    "capture": "1280x720, DPR 1, headless SwiftShader",
+    "smoke": "newPage 1280x900, DPR 1; HUD layout also sweeps 320/375/420/421/640/750/751/1280 wide",
+    "noSmoke720Parameter": true,
+    "frameCostClaim": "rAF callback CPU and callback intervals only, not GPU time; never claimed as 720 smoke frame cost"
+  },
+  "handoffDecision": {
+    "questionAnswered": "现在推荐做什么、第一步先做什么、什么情况下不能换默认",
+    "recommendation": "两材质成对证据完整（4 机位 × 每机位双拍、逐机位 RGBA 一致、跨材质同状态/机位像素不同），可以现在交给两位非作者按同机位做 A/B 盲选。",
+    "blindAb": "can-start-now",
+    "promotion": "blocked",
+    "blockers": [
+      "default full-match 未通过既有摘要契约（同帧重复 rAF 时间戳 atMs 1884.7，见 smokeDefault.failure）",
+      "quiet full-match 未跑（步骤 8 未执行）",
+      "两个入口的 keyboard-and-resume 阶段都会被 footer details 严格选择器阻断（openToolDefects[0]）",
+      "成功跑到 navigate/initialize 的入口可能被 Continue your match? 本地存档对话框阻断（openToolDefects[2]）"
+    ],
+    "firstAction": "先判定 index0/index1 同 atMs 1884.7 是 harness 契约过严还是同帧重复 rAF（统计首个 tick 前 rAF 注册次数/确认是否同帧两个合法回调），再按 steps[7] 与 steps[8] 的完整命令重跑 default 与 quiet。判定前不得只修工具、也不得把 category=harness 当根因。",
+    "recoveryCondition": "同一 clean commit（da56173cb338b3706d20d769ce34cecaa1edb385）与同一浏览器下，default 和 quiet 两条 `node tests/client/browser-smoke/run.mjs --full-match` 都通过，且 quiet 相对 default 无回退；随后才走帧耗（p50/p95/p99/max、>33.333ms 计数）与两位非作者盲选门禁。",
+    "actionsTakenAfterFailure": [
+      "停止本卡后续浏览器动作，未执行步骤 8 的 quiet full-match",
+      "已关闭由本卡启动的浏览器与 preview；report 记录 previewClosed=true、browser process exit code 0 且已确认退出",
+      "保留 default-smoke 原目录与失败时的全部日志/截图（不删除、不改名、不换根重试）"
+    ]
+  },
+  "openToolDefects": [
+    {
+      "id": "tool-strict-footer-details",
+      "file": "tests/client/browser-smoke/run.mjs",
+      "line": 217,
+      "stage": "keyboard-and-resume",
+      "symptom": "page.locator('footer details') 在 index.html 与 candidate.html 的 footer 中各匹配 2 个 <details>（Controls & help、Runtime diagnostics）。Playwright Locator.evaluate 经 _withElement 走严格选择器解析（bundled playwright-core 中 waitForSelector {strict:true}），因此两个入口都会抛 strict mode violation，后续重开/输入/存档恢复全链无法完成。",
+      "confirmation": "confirmed-statically: DOM 中各 2 个匹配，且 playwright-core 的 _withElement 使用 strict:true；运行时失败为独立审查者报告，本单元未重跑复现",
+      "proposedFix": "把选择器限定到帮助面板，例如 page.locator('footer details').filter({has:page.locator('#keyboard-settings')})、'footer details:first-of-type' 或 'footer details:has(#keyboard-settings)'；或把 #diagnostics 的 details 移出 footer。修复后对 default 与 quiet 各重跑一次完整 smoke。",
+      "ownerAction": true,
+      "fixedInThisUnit": false,
+      "reasonNotFixed": "任务卡禁止本单元改源码/工具，并写明工具失败由负责人按交回证据处理；审查给出的修复也标注由负责人执行"
+    },
+    {
+      "id": "tool-same-frame-raf-timestamps",
+      "file": "tests/client/browser-smoke/full-match.mjs",
+      "line": 69,
+      "stage": "full-match",
+      "symptom": "summarizeFullMatch 用 s.atMs > previousAt 断言连续帧；同一帧内多个合法 rAF 回调拿到相同时间戳，得到 intervalMs=0 并抛 'Non-contiguous frame timestamps'。保存的 default full-match-frames.json 中恰有 1 对相等时间戳：index0/index1 同为 atMs 1884.7、tick 0、timeSeconds 0。",
+      "confirmation": "confirmed from saved full-match-frames.json（1232 个样本中仅 1 对相等）；独立审查者在同命令/同提交/同浏览器重跑时摘要通过（1255 个样本），说明该失败是时序性的契约问题，但本单元未独立复现该通过",
+      "proposedFix": "在 summarize 前按 atMs 去重/合并同帧回调（每帧保留一个样本），或允许 atMs 相等但要求 intervalMs=0；保留对真正缺段、restart 与加速的现有断言。修复后按原命令重跑 default 与 quiet。",
+      "ownerAction": true,
+      "fixedInThisUnit": false,
+      "reasonNotFixed": "任务卡禁止本单元改源码/工具；该诊断仍需与客户端帧循环/探针重复调度区分，不能只按 category=harness 处理"
+    },
+    {
+      "id": "tool-initialize-local-save-dialog",
+      "file": "tests/client/browser-smoke/run.mjs",
+      "line": 100,
+      "stage": "navigate/initialize",
+      "symptom": "成功跑完 full-match 并完成 restart/右键移动后导航回 '/' 时，pagehide 自动存档可能弹出 dialog.local-save-choice（'Continue your match?'）；initialize 的 waitForFunction 只等 mobaClient ready 或 restart 可用，对话框打开时会 15s 超时，后续重开/输入/保存恢复全链无法继续。",
+      "confirmation": "dialog 元素、class 与按钮文案已由 src/save/browser.ts 静态确认；运行时超时为独立审查者在其重跑中报告（其 failure.png），本单元运行在 full-match 摘要处已停止，未复现该阶段",
+      "proposedFix": "在 stage='navigate'/'initialize' 前后显式处理 dialog.local-save-choice（如选 'New match · replace save' 或 'Play without saving'），或在 full-match 重开检查完成后清理本地存档；修复后按原命令重跑。",
+      "ownerAction": true,
+      "fixedInThisUnit": false,
+      "reasonNotFixed": "任务卡禁止本单元改源码/工具，且本单元在步骤 7 失败后已停止后续浏览器动作"
+    }
+  ],
+  "steps": [
+    {"step": 1, "command": "node node_modules/typescript/bin/tsc -p tsconfig.capture.json", "exit": 0},
+    {"step": 2, "command": "node node_modules/vite/bin/vite.js build --config vite.capture.config.ts", "exit": 0},
+    {"step": 3, "command": "node --import tsx tools/capture.mjs --software --lighting forest-light-v1 --materials baseline --shot all --seed 1 --t 10 --input march --frames 1 --repeat 2 --out outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair", "exit": 0},
+    {"step": 4, "command": "node --import tsx tools/capture.mjs --software --lighting forest-light-v1 --materials quiet-family-v1 --shot all --seed 1 --t 10 --input march --frames 1 --repeat 2 --out outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair", "exit": 0},
+    {"step": 5, "command": "npm run build:web", "exit": 0},
+    {
+      "step": 6,
+      "kind": "environment (no command, no exit code)",
+      "appliedTo": "step 7 child process only",
+      "env": {
+        "MOBA_SMOKE_SOURCE_SHA": "da56173cb338b3706d20d769ce34cecaa1edb385",
+        "MOBA_SMOKE_RENDERER": "software",
+        "MOBA_SMOKE_VARIANT": "default",
+        "MOBA_SMOKE_OUTPUT": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke"
+      },
+      "note": "环境只施加本卡子进程，不写全局设置；MOBA_CAPTURE_CHROMIUM 与 MOBA_SMOKE_CHROMIUM 指向同一已装 Chromium，MOBA_SMOKE_CLOUD_NO_SANDBOX 未设置"
+    },
+    {
+      "step": 7,
+      "command": "node tests/client/browser-smoke/run.mjs --full-match",
+      "env": {
+        "MOBA_SMOKE_SOURCE_SHA": "da56173cb338b3706d20d769ce34cecaa1edb385",
+        "MOBA_SMOKE_RENDERER": "software",
+        "MOBA_SMOKE_VARIANT": "default",
+        "MOBA_SMOKE_OUTPUT": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke"
+      },
+      "exit": 1,
+      "failure": true
+    },
+    {
+      "step": 8,
+      "command": "node tests/client/browser-smoke/run.mjs --full-match",
+      "env": {
+        "MOBA_SMOKE_SOURCE_SHA": "da56173cb338b3706d20d769ce34cecaa1edb385",
+        "MOBA_SMOKE_RENDERER": "software",
+        "MOBA_SMOKE_VARIANT": "quiet",
+        "MOBA_SMOKE_OUTPUT": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-smoke"
+      },
+      "status": "not-run",
+      "exit": null,
+      "reason": "任务卡要求步骤 7 失败后停止本卡后续浏览器动作"
+    }
+  ],
+  "capture": {
+    "sourceCommit": "da56173cb338b3706d20d769ce34cecaa1edb385",
+    "sourceDirty": false,
+    "bundleSha256": "5dee7c4cd465c65d007dfbe450fe05b991bca2e063295b2a5a82e3d776829a1e",
+    "rendererClass": "software",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "vendor": "Google Inc. (Google)",
+    "backend": "webgl2",
+    "unmasked": true,
+    "viewports": "1280x720 DPR1 buffer 1280x720 in every frame",
+    "lighting": {
+      "requested": "forest-light-v1",
+      "active": "forest-light-v1",
+      "identicalAcrossMaterials": true
+    },
+    "runs": {
+      "default-pair": {
+        "runId": "run-da56173cb338-march-XwL7J0",
+        "reportSha256": "e047770c6e1383e3c52d0eb9d0fea23464aea7bc3ae49261754f7f012af36426",
+        "passed": true,
+        "capturePassed": true,
+        "shots": 4,
+        "repeatsPerShot": 2,
+        "repeatRgbaIdentical": true,
+        "materialsConfiguredActive": "baseline/baseline",
+        "buildingCoverage": 0,
+        "browserPidExit": {"pid": 130160, "code": 0, "signal": null, "observed": true},
+        "previewClosed": {"listening": false, "portState": "refused", "exitProven": true},
+        "stateHash": "4e0d5f7902a525e0"
+      },
+      "quiet-pair": {
+        "runId": "run-da56173cb338-march-rp0har",
+        "reportSha256": "15eb4d58bde16c9a522aac01a33ae0e8c8dfa826be463661b9288500602a825a",
+        "passed": true,
+        "capturePassed": true,
+        "shots": 4,
+        "repeatsPerShot": 2,
+        "repeatRgbaIdentical": true,
+        "materialsConfiguredActive": "quiet-family-v1/quiet-family-v1",
+        "buildingCoverage": 6,
+        "browserPidExit": {"pid": 64136, "code": 0, "signal": null, "observed": true},
+        "previewClosed": {"listening": false, "portState": "refused", "exitProven": true},
+        "stateHash": "4e0d5f7902a525e0"
+      }
+    },
+    "crossMaterial": {
+      "sameStateHashPerShot": true,
+      "sameCameraPerShot": true,
+      "sameLightingPerShot": true,
+      "rgbaDiffersPerShot": true,
+      "meanAbsRgbDiff": {"gameplay": 11.446, "spawn": 11.777, "first-tower": 11.417, "spawn-to-tower": 9.724}
+    }
+  },
+  "buildWeb": {
+    "identity": {"commit": "da56173cb338b3706d20d769ce34cecaa1edb385", "tree": "124bd49479970e12fee9d17492a5819851ebe165", "dirty": false},
+    "fileCount": 43,
+    "relativeManifestSha256": "4296f7ed938e972142de2cdf8016deda9b3adfd47c96922059e17f76cf40e9b3",
+    "receiptDir": "build-web-receipt"
+  },
+  "smokeDefault": {
+    "entry": {"variant": "default", "route": "/", "contentVersion": 11, "lighting": "forest-light-v1"},
+    "requestedFullMatch": true,
+    "startedAt": "2026-11-12T06:43:04.182Z",
+    "finishedAt": "2026-11-12T06:53:21.346Z",
+    "exit": 1,
+    "browserProcessExit": {"pid": 86584, "code": 0, "signal": null, "exited": true},
+    "previewClosed": true,
+    "cleanupErrors": [],
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "httpErrors": 0,
+    "requestFailures": 0,
+    "rendererObserved": "SwiftShader software (fullMatchEnvironment.renderer); manifest rendererClass stayed unknown because the later context stage was not reached",
+    "materialsStart": "baseline/baseline/baseline",
+    "failure": {
+      "stage": "full-match",
+      "category": "harness",
+      "categoryMeaning": "未映射 stage 的默认分类，不是根因诊断。tests/client/browser-smoke/options.mjs 的 failureCategory() 只映射 launch/navigate/initialize/context/input/pixels/errors，full-match 不在映射表中，因此自动回退为 'harness'。",
+      "message": "AssertionError: Non-contiguous frame timestamps",
+      "harnessRule": "summarizeFullMatch requires strictly increasing rAF atMs and |atMs-previousAt-intervalMs| < 0.00001",
+      "sample": "index 1 repeats the first timestamp: previousAtMs 1884.7, atMs 1884.7, intervalMs 0, tick 0",
+      "otherIntervalsNonContiguous": 0,
+      "duplicateTimestampSource": {
+        "status": "undetermined",
+        "observed": "1232 个样本中恰有 1 对相等 atMs：index0 与 index1 同为 atMs 1884.7、tick 0、timeSeconds 0；callbackMs 分别 0.4 与 7.7",
+        "candidateA": "同一帧内两个合法 rAF 回调（浏览器允许同帧回调共享同一时间戳；可能是客户端主循环与另一消费者，或一次重启/引导重叠）",
+        "candidateB": "客户端或探针重复调度了同一循环",
+        "howToDistinguish": "在首个 tick 前统计 rAF 注册/回调次数并给每个回调标记 boot generation，确认两个回调是否属于不同循环；或明确要求 summarizer 合并同帧样本。仅 1 对重复说明任何重复注册都是瞬时的，不像持续存在的第二条循环。",
+        "reviewerObservation": "独立审查者在同命令、同提交、同浏览器上重跑时 full-match 摘要通过（1255 个样本，initial tick0，terminal redWin/blueBaseDestroyed tick9010）；本单元未独立复现该通过",
+        "decisionRule": "定性前不得据 category 或该重复时间戳决定只修工具，也不得据此判定对局无效/证据不实"
+      },
+      "actionsTaken": [
+        "停止本卡后续浏览器动作，步骤 8 未执行",
+        "关闭本卡启动的浏览器与 preview（browser exit code 0 已确认，previewClosed=true）",
+        "保留 default-smoke 目录及全部日志/截图，未删除、未改名、未换根重试"
+      ],
+      "recoveryCondition": "同一 clean commit（da56173cb338b3706d20d769ce34cecaa1edb385）与同一浏览器下，先判定同帧重复时间戳来源并按所有者修复工具缺陷，再重跑 default 与 quiet 两条 --full-match 均通过且 quiet 无回退；之后才进入帧耗与盲选门禁"
+    },
+    "terminalScreenshot": {
+      "path": "default-smoke/failure.png",
+      "kind": "自然终局画面（不是失败状态页）",
+      "width": 1280,
+      "height": 900,
+      "dpr": 1,
+      "content": "DEFEAT；比赛时钟 5:00；玩家 HP 0/954；'Your Heartwood was destroyed. Restart to play again.'；'Match finished. The local checkpoint has been cleared.'",
+      "capturedWhen": "自然终局（tick 9010, redWin/blueBaseDestroyed）之后、summarizeFullMatch 抛错后，由 run.mjs 的 catch 在 cleanup 前截取",
+      "sha256": "26457df335e779727caac4e47321420d4cb165826829c43a360ad95f9e892423",
+      "manifestEntry": "default-smoke/manifest.json files[] path=failure.png, bytes=1843965"
+    },
+    "naturalMatchObservedBeforeSummaryFailure": {
+      "initial": {"tick": 0, "timeSeconds": 0, "status": "running", "contentVersion": 11},
+      "terminal": {"tick": 9010, "timeSeconds": 300.3333333333333, "status": "redWin", "winner": 1, "endReason": "blueBaseDestroyed", "blueBaseAlive": false, "redBaseHp": 2600},
+      "observation": {"startedAt": "2026-11-12T06:43:11.890Z", "finishedAt": "2026-11-12T06:53:16.324Z"},
+      "totalFrames": 1232,
+      "visibilityChanges": 0
+    },
+    "derivedTimingsReadOnly": {
+      "note": "computed from saved full-match-frames.json for information only; not a harness pass",
+      "callbackCpuMs": {"count": 1232, "mean": 46.5629058437688, "p50": 13.100000023841858, "p95": 29.100000023841858, "p99": 1403.8000000715256, "max": 1631.2999999523163, "over33ms": 59},
+      "frameIntervalsMs": {"count": 1231, "mean": 488.4730300568644, "p50": 490, "p95": 550, "p99": 1420, "max": 2150, "over33ms": 1210}
+    },
+    "notCompleted": ["未生成名为 full-match-terminal.png 的截图（summarize 先抛错）；终局画面见 default-smoke/failure.png", "restart and fresh progression check", "right-click movement check", "legacy-v10 entry check", "HUD layout sweep", "input/simulation sequence", "save/resume sequence"]
+  },
+  "smokeQuiet": {"status": "not-run", "reason": "卡片要求步骤 7 失败后停止后续浏览器动作"},
+  "reviewFollowUp": [
+    {"finding": 1, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "增加顶层 handoffDecision：recommendation/blindAb/promotion/blockers/firstAction/recoveryCondition/actionsTakenAfterFailure"},
+    {"finding": 2, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "failure.categoryMeaning 标明为未映射 stage 的默认分类；新增 duplicateTimestampSource，列两种候选、验证方式与‘定性前不得只修工具’"},
+    {"finding": 3, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "新增 smokeDefault.terminalScreenshot 指向 default-smoke/failure.png（1280x900、DEFEAT/5:00、manifest sha256）；notCompleted 改为未生成 full-match-terminal.png"},
+    {"finding": 4, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "步骤 6 单列为无退出码的环境项；步骤 8 给出完整命令与四个 env 值，status=not-run"},
+    {"finding": 5, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "installedEntries 改为 123 并注明计数口径；‘0 额外条目’限定为锁内包版本口径，另记 1 个锁外历史 junction"},
+    {"finding": 6, "file": "tests/client/browser-smoke/run.mjs", "line": 217, "status": "handed-to-owner-not-fixed", "reason": "任务卡禁止本单元改工具；已在 openToolDefects[0] 记录静态确认与修复建议"},
+    {"finding": 7, "file": "tests/client/browser-smoke/full-match.mjs", "line": 69, "status": "handed-to-owner-not-fixed", "reason": "任务卡禁止本单元改工具；已在 openToolDefects[1] 记录、保存证据与修复建议"},
+    {"finding": 8, "file": "tests/client/browser-smoke/run.mjs", "line": 100, "status": "handed-to-owner-not-fixed", "reason": "任务卡禁止本单元改工具；已在 openToolDefects[2] 记录存档对话框机制与修复建议"},
+    {"finding": 9, "file": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json", "status": "fixed", "change": "handoffUtc 与 revision.revisedUtc 原同写 07:21:21Z，早于回执实际写盘 07:22:23Z 和核对结束 07:22:52Z；现 handoffUtc 与 revision.revisedUtc 改为 rev3 实际最终写盘 UTC（与文件 LastWriteTimeUtc 同一秒），并在 revision.rev2 保留 rev2 实际写盘/核对时间及更正前的错误值"}
+  ],
+  "remaining": [
+    "default full-match smoke 未通过既有摘要契约（同帧重复 atMs；category=harness 只是未映射 stage 默认值，根因未定）",
+    "quiet full-match smoke 未跑；原样重跑命令与 env 见 steps[8]",
+    "两个入口的 keyboard-and-resume 阶段被 footer details 严格选择器阻断（owner tool fix）",
+    "成功重跑后的 navigate/initialize 阶段可能被 Continue your match? 本地存档对话框阻断（owner tool fix）",
+    "两个入口的 restart/input/save-resume 全链都未完成",
+    "两材质成对图的 A/B 盲选可由两位非作者现在开始；换默认仍被 smoke 门禁阻断",
+    "帧耗（p50/p95/p99/max、>33.333ms 计数）与盲选后的性能不劣化判定仍待负责人"
+  ]
+}

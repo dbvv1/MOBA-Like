@@ -1,0 +1,289 @@
+{
+  "job": "B-MOBA-QUIET-PAIR-20261112",
+  "reason": "outputs/ is ignored by .gitignore and the original names exceed the Windows path limit; evidence relocated to the existing docs/quality/capture root",
+  "sourceRoot": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/",
+  "files": [
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/build-web-receipt/README.txt",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/build-web-receipt/README.txt",
+      "sha256": "dcb4573fe72b750385febca7bb087fc9f4beb5a984a03eda8e2d98402e277e39"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/build-web-receipt/capture-build-identity.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/build-web-receipt/capture-build-identity.json",
+      "sha256": "d743fa3970129fc947b10dd136a8678e5386887c5bb61e78883ebfff7b14b6d3"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/build-web-receipt/files.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/build-web-receipt/files.sha256",
+      "sha256": "4296f7ed938e972142de2cdf8016deda9b3adfd47c96922059e17f76cf40e9b3"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/first-tower-r1/00000.json",
+      "sha256": "3a01684f53496b426f80ee2fac41f066a43196e4d2c55df6b275525f20d48fee"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/first-tower-r1/00000.png",
+      "sha256": "8afad42695a104e3477563c6e1361352b180c60595d1697479554dbd0cb61216"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/first-tower-r2/00000.json",
+      "sha256": "3d8fffdefb59d7b59b44255fbd0b5934d6653e24ed13028d3a6e3ae3003e1223"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/first-tower-r2/00000.png",
+      "sha256": "8afad42695a104e3477563c6e1361352b180c60595d1697479554dbd0cb61216"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/gameplay-r1/00000.json",
+      "sha256": "8044d02a7f46bed7387b6a91e63f0917b045dc2dc4a6dab992c1f5f5f309e83b"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/gameplay-r1/00000.png",
+      "sha256": "05208e165a7e308e8d70285703cbf0e98176b3c3c5ae2595ed10e2c269d0c4fc"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/gameplay-r2/00000.json",
+      "sha256": "cd73a90982d9b7fbb2608353925f6a9b4f521cbaf908fefd8ee1c138b1f0cf36"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/gameplay-r2/00000.png",
+      "sha256": "05208e165a7e308e8d70285703cbf0e98176b3c3c5ae2595ed10e2c269d0c4fc"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0001-runner-started.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0001-runner-started.json",
+      "sha256": "a4cffe5d12ef1bd720b6beaf8133a2656d047b49a54cbb6bd1acc8c1dc20f3d1"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0002-preview-start-requested.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0002-preview-start-requested.json",
+      "sha256": "97d4b4bed5993698b2c6428363d32ed4b30c83be654a2abf8a972b88453f14ee"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0003-preview-listening.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0003-preview-listening.json",
+      "sha256": "a35423203e7ee5139608ce377a14385e18bd121374788dda013ae9374cab0fc0"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0004-browser-start-requested.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0004-browser-start-requested.json",
+      "sha256": "9bc1db30d39d073e57d14932a8add47748eb1d1056737e4147bf83510eff9336"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0005-browser-process-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0005-browser-process-observed.json",
+      "sha256": "725487bb758b6f8cd3e0c7c74b787795659fe1cafcbd6d1a1614e25dbc88aa03"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0006-browser-close-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0006-browser-close-observed.json",
+      "sha256": "c890bb0a95c112849cc126a6486d145e366d958d706fc6e060a5ac9e89900e33"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0007-preview-close-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/lifecycle/0007-preview-close-observed.json",
+      "sha256": "b46719da651fcd157a473fa72be26d79dd63666d03935274719e2bc78ca60591"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/report.json",
+      "sha256": "e047770c6e1383e3c52d0eb9d0fea23464aea7bc3ae49261754f7f012af36426"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-r1/00000.json",
+      "sha256": "413485a5d8b20714edb04f80d72dfe7da48fe345ff99434d72f073f506f3cf16"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-r1/00000.png",
+      "sha256": "341c29337f6d63ffba8179fcaf8720b6b3220f144c9669ef83565adbb0c09a54"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-r2/00000.json",
+      "sha256": "02c99906777f69b33d12055a31d457a4b7f200b6e65935ff2d1dd0b486b4c1d3"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-r2/00000.png",
+      "sha256": "341c29337f6d63ffba8179fcaf8720b6b3220f144c9669ef83565adbb0c09a54"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-r1/00000.json",
+      "sha256": "b25fc588f62937ffee78749b6f8c895930a3401b09f6f2659c68e014bdb3ffa5"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-r1/00000.png",
+      "sha256": "2be1f12d3bd8c1592c7a2e3647060e32d530159627a733bc64be73f5788a63fd"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-r2/00000.json",
+      "sha256": "7908c4f9788bba986aa6bc2b1f00fc7fe74776aec74ee63f79cd1f67604ee7d7"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-pair/run-da56173cb338-march-XwL7J0/spawn-to-tower-r2/00000.png",
+      "sha256": "2be1f12d3bd8c1592c7a2e3647060e32d530159627a733bc64be73f5788a63fd"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke/failure.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-smoke/failure.png",
+      "sha256": "26457df335e779727caac4e47321420d4cb165826829c43a360ad95f9e892423"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke/full-match-frames.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-smoke/full-match-frames.json",
+      "sha256": "7ce4fe5a88ef1c02a268090e22297c7215d533db5b4336a7d54e6144dce06983"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke/manifest.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-smoke/manifest.json",
+      "sha256": "8584402b8927b9b07f64cfb5707a0106424183512bb191f5c24ed3d8348f8cff"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/default-smoke/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/default-smoke/report.json",
+      "sha256": "1c48556eb97b0ca435f00c5a0d2bf3f26e58c516256b7814a7b1efe4d53c3a0b",
+      "publishedSha256": "1350426616226a77274e2daa58c3906ff976447369abff95b8f708d8219c6aa0",
+      "note": "local prefixes redacted: browser install -> <ms-playwright>, receiver run dir -> <receiver-run>, worktree -> <repo>; all other bytes unchanged"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/first-tower-r1/00000.json",
+      "sha256": "d991cac4db89426c74f00662ff4acd5f91bbaa90211fb1b7b1fca7ad32988d05"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/first-tower-r1/00000.png",
+      "sha256": "fa275e8c051f3f73d9756ac7c8270dcfa9c89857044ca40395d4722cac066048"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/first-tower-r2/00000.json",
+      "sha256": "83e1045004cf9164e0b96a11797b93d2517d719b513b7519f943162b101e93b4"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/first-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/first-tower-r2/00000.png",
+      "sha256": "fa275e8c051f3f73d9756ac7c8270dcfa9c89857044ca40395d4722cac066048"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/gameplay-r1/00000.json",
+      "sha256": "9d42e13067909c811e190f963b9214c68212635c14b8bf39f969b8859d4560e5"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/gameplay-r1/00000.png",
+      "sha256": "90ec790888ba1bb2523ae4a711f7c388a325f5fc4e6d13a44ce16a9b03741be2"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/gameplay-r2/00000.json",
+      "sha256": "cf4283f9f2c888eef464d4840f6c77418425894ecb23f9f5dd10a55b1dd21f47"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/gameplay-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/gameplay-r2/00000.png",
+      "sha256": "90ec790888ba1bb2523ae4a711f7c388a325f5fc4e6d13a44ce16a9b03741be2"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0001-runner-started.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0001-runner-started.json",
+      "sha256": "3100d5cce318caddbee92fd9ac9a0640129717ac2b0415c8b2d5add140154ad9"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0002-preview-start-requested.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0002-preview-start-requested.json",
+      "sha256": "517d2e29085c0074873efdba41625c900e65721ed301f00fdf607c9fb17e4c80"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0003-preview-listening.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0003-preview-listening.json",
+      "sha256": "0b2ba5ba3510d039ce7be75c2ac269f90393cf563edff31ef4c5ed792f8e964f"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0004-browser-start-requested.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0004-browser-start-requested.json",
+      "sha256": "c44702bd192a70968f221c7e6181e065b97368149166a4f5d63f0deec5803132"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0005-browser-process-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0005-browser-process-observed.json",
+      "sha256": "da22d36765669ff3b98993fb1de01771bfb3d5fc2e201773ec28fa6d3b99832a"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0006-browser-close-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0006-browser-close-observed.json",
+      "sha256": "2d5aa948eff23f5ba9b49cc37dbdbcb160887bf187d23746fb6b184c382dd154"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0007-preview-close-observed.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/lifecycle/0007-preview-close-observed.json",
+      "sha256": "e0532adf0ed8b3812a5a53c2340b247ab9bd88a76308ff9cbf787297f0b8e9b1"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/report.json",
+      "sha256": "15eb4d58bde16c9a522aac01a33ae0e8c8dfa826be463661b9288500602a825a"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-r1/00000.json",
+      "sha256": "1b423f11fec3b3ffbc3bb5438705e9c00c59e3dc62d0f375293942802e6f94fb"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-r1/00000.png",
+      "sha256": "32d017367505465383ac5adf15ddce34603a1d1de59fc209e1197729823dc767"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-r2/00000.json",
+      "sha256": "13e489146edfede397b9edc322499d953c9f32c2ee70865b9286b10554ea9571"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-r2/00000.png",
+      "sha256": "32d017367505465383ac5adf15ddce34603a1d1de59fc209e1197729823dc767"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-r1/00000.json",
+      "sha256": "c28d073f7e5d1471df1a03427a0ed36f2414f787f858a511fa76d680dbba9674"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r1/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-r1/00000.png",
+      "sha256": "c6f6d675f0f865b581b8b8fe985781f7ae26e5e4fc5aa4cfbb00b3f26ab2730d"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-r2/00000.json",
+      "sha256": "325822636d1f2d9b14841376569da966a9645f7c98d4eecd2ef9fb9d2063fa82"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-software-ANGLE-Google-Vulkan-1-3-0-SwiftShader-Device-Subzero-0x0000C0DE-4f551a508a-seed1-frame600-r2/00000.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/quiet-pair/run-da56173cb338-march-rp0har/spawn-to-tower-r2/00000.png",
+      "sha256": "c6f6d675f0f865b581b8b8fe985781f7ae26e5e4fc5aa4cfbb00b3f26ab2730d"
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/da56173-swiftshader/run-receipt.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/run-receipt.json",
+      "sha256": "64de66f58494abaf73b4f45adfb293f826f3c5090f138139eac47a5f43aef4b0"
+    }
+  ]
+}

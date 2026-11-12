@@ -1,0 +1,36 @@
+{
+  "source": {
+    "commit": "da56173cb338b3706d20d769ce34cecaa1edb385",
+    "tree": "124bd49479970e12fee9d17492a5819851ebe165",
+    "dirty": false
+  },
+  "entry": {
+    "variant": "default",
+    "route": "/",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "startedAt": "2026-11-12T06:43:04.182Z",
+  "finishedAt": "2026-11-12T06:53:21.346Z",
+  "passed": false,
+  "rendererClass": "unknown",
+  "processExit": {
+    "pid": 86584,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "failure.png",
+      "bytes": 1843965,
+      "sha256": "26457df335e779727caac4e47321420d4cb165826829c43a360ad95f9e892423"
+    },
+    {
+      "path": "full-match-frames.json",
+      "bytes": 130781,
+      "sha256": "7ce4fe5a88ef1c02a268090e22297c7215d533db5b4336a7d54e6144dce06983"
+    }
+  ]
+}

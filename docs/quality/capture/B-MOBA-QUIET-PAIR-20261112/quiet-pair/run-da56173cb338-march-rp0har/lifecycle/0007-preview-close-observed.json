@@ -1,0 +1,14 @@
+{
+  "sequence": 7,
+  "event": "preview-close-observed",
+  "observedAt": "2026-11-12T06:42:19.523Z",
+  "runId": "run-da56173cb338-march-rp0har",
+  "pid": 128120,
+  "port": 13752,
+  "closedAt": "2026-11-12T06:42:19.523Z",
+  "listening": false,
+  "portState": "refused",
+  "exitProven": true,
+  "state": "closed-port-refused",
+  "externalNotOwned": false
+}

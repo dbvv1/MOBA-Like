@@ -1,0 +1,10 @@
+{
+  "sequence": 3,
+  "event": "preview-listening",
+  "observedAt": "2026-11-12T06:39:23.139Z",
+  "runId": "run-da56173cb338-march-XwL7J0",
+  "pid": 141868,
+  "host": "127.0.0.1",
+  "port": 8603,
+  "inProcess": true
+}
