@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createPlayableWorld} from '../../src/render/playable-world.js';
 import {getContent} from '../../src/content/catalog.js';
-import {makeSim} from '../helpers.js';
+import {makeSim,place} from '../helpers.js';
 
 const doubles=vi.hoisted(()=>({renderers:[] as any[]}));
 // GPU submission only is doubled. Route, world, GLB parsing/pins, presentation,
@@ -107,4 +107,37 @@ it('restarts the actual full character consumer after cancellation within the te
   }finally{result.world.dispose();result.world.dispose();}
   for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);
   for(const renderer of doubles.renderers)expect(renderer.dispose).toHaveBeenCalledTimes(1);
+});
+
+
+it.each(['veyra','morrow'])('consumes real %s lethal contact, corpse expiry and respawn without replaying death',async definition=>{
+  const test=setup(),result=await test.run();
+  try{
+    expect(result.heroSource).toBe('death-contact');
+    const sim=await makeSim(12,61,{blueHero:definition,redHero:'veyra'});
+    const player=sim.getHero(0,0)!,enemy=sim.getHero(1,0)!;
+    place(player,{x:0,z:0});place(enemy,{x:2,z:0});player.hp=1;
+    const present=()=>{const before=sim.finalHash();result.world.sync(sim.snapshot(),player.id);result.world.draw(1/30,1,false);expect(sim.finalHash()).toBe(before);return result.world.motionState().find(actor=>actor.id===player.id)!;};
+    expect(present().visible).toBe(true);
+    let lethalContact=false;
+    for(let n=0;n<120&&player.alive;n++){
+      sim.step([{type:'attack',heroId:enemy.id,targetId:player.id}]);
+      lethalContact ||= sim.snapshot().events.some(e=>e.type==='basicAttackHit'&&e.targetId===player.id);
+      present();
+    }
+    expect(lethalContact).toBe(true);expect(player.alive).toBe(false);
+    expect(present().actions.map(a=>a.clip)).toEqual(['death.full']);
+    sim.step([{type:'stop',heroId:enemy.id}]);present();
+    let hidden=false,respawned=false;
+    for(let n=0;n<1800;n++){
+      sim.step([]);const actor=present();
+      if(!player.alive&&!actor.visible)hidden=true;
+      if(player.alive){expect(actor.attached).toBe(true);expect(actor.visible).toBe(true);expect(actor.actions.some(a=>a.clip==='death.full')).toBe(false);respawned=true;break;}
+    }
+    expect(hidden).toBe(true);expect(respawned).toBe(true);
+    for(let n=0;n<3;n++){sim.step([]);expect(present().actions.some(a=>a.clip==='death.full')).toBe(false);}
+    expect(test.paths).toHaveLength(19);expect(test.host.replaceChildren).toHaveBeenCalledTimes(1);
+  }finally{result.world.dispose();result.world.dispose();}
+  for(const resource of test.resources)expect(test.disposed.get(resource)).toBe(1);
+  expect(doubles.renderers).toHaveLength(1);expect(doubles.renderers[0].dispose).toHaveBeenCalledTimes(1);
 });
