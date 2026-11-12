@@ -60,7 +60,8 @@ try {
     stage='full-match';
     await page.addInitScript(installFullMatchProbe);
     await page.goto(origin+entry.route,{waitUntil:'networkidle'});
-    await page.waitForFunction(()=>window.mobaClient?.state().ready);
+    // Timer polling avoids adding readiness RAF callbacks to the measured page.
+    await page.waitForFunction(()=>window.mobaClient?.state().ready,null,{polling:1000});
     assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
     report.fullMatchMaterialsStart=await page.evaluate(()=>window.mobaClient.state().materials);
     report.fullMatchEnvironment=await page.locator('#stage canvas').evaluate(canvas=>{

@@ -64,17 +64,25 @@ export function summarizeFullMatch(result) {
 
   assert.ok(Array.isArray(samples)&&samples.length>1,'Missing full-match frames');
   let tick=0,time=0,previousAt=null;
+  // RAF timestamps identify rendering opportunities, not individual callbacks.
+  // Preserve every raw callback and aggregate same-timestamp CPU without discarding work.
+  const frames=[];
   for(const s of samples){
     assert.ok(Number.isFinite(s.atMs)&&s.atMs>=0,'Missing RAF timestamp');
-    if(previousAt!==null)assert.ok(s.atMs>previousAt&&Math.abs(s.atMs-previousAt-s.intervalMs)<.00001,'Non-contiguous frame timestamps');
+    if(previousAt!==null)assert.ok(s.atMs>=previousAt&&Math.abs(s.atMs-previousAt-s.intervalMs)<.00001,'Non-contiguous frame timestamps');
+    assert.ok(Number.isFinite(s.callbackMs)&&s.callbackMs>=0,'Invalid callback timing');
+    if(previousAt!==null)assert.ok(Number.isFinite(s.intervalMs)&&s.intervalMs>=0,'Invalid callback interval');
+    if(frames.at(-1)?.atMs===s.atMs){frames.at(-1).callbackMs+=s.callbackMs;frames.at(-1).callbacks++;}
+    else frames.push({atMs:s.atMs,callbackMs:s.callbackMs,callbacks:1});
     previousAt=s.atMs;
     assert.ok(Number.isInteger(s.tick)&&s.tick>=tick&&Number.isFinite(s.timeSeconds)&&s.timeSeconds>=time,'Match restarted or invalid sample');
     tick=s.tick;time=s.timeSeconds;
   }
   assert.equal(tick,terminal.tick);assert.equal(time,terminal.timeSeconds);
   assert.equal(samples[0].intervalMs,null,'First interval must be unmeasured');
-  const intervals=samples.slice(1).map(s=>s.intervalMs);
+  assert.ok(frames.length>1,'Missing distinct full-match frames');
+  const intervals=frames.slice(1).map((f,i)=>f.atMs-frames[i].atMs);
   const elapsedMs=intervals.reduce((a,b)=>a+b,0);
   assert.ok(elapsedMs>=terminal.timeSeconds*1000-1000,'Match timing does not cover real-time simulation');
-  return {acceptanceReady:false,acceptanceLimit:'Functional observation only; comparative performance and blind quality review are not established.',scenario:'fresh idle player, normal opposing bot, no injected commands',initial,terminal,elapsedMs,firstFrameAtMs:samples[0].atMs,lastFrameAtMs:samples.at(-1).atMs,frames:samples.length,startedAt:result.startedAt,finishedAt:result.finishedAt,visibilityChanges:result.visibilityChanges,callbackCpu:distribution(samples.map(s=>s.callbackMs)),frameIntervals:distribution(intervals),timingScope:'requestAnimationFrame callback CPU and callback intervals; not GPU execution time; observer overhead affects intervals'};
+  return {acceptanceReady:false,acceptanceLimit:'Functional observation only; comparative performance and blind quality review are not established.',scenario:'fresh idle player, normal opposing bot, no injected commands',initial,terminal,elapsedMs,firstFrameAtMs:samples[0].atMs,lastFrameAtMs:samples.at(-1).atMs,frames:frames.length,callbacks:samples.length,sameFrameExtraCallbacks:samples.length-frames.length,startedAt:result.startedAt,finishedAt:result.finishedAt,visibilityChanges:result.visibilityChanges,callbackCpu:distribution(samples.map(s=>s.callbackMs)),frameCallbackCpu:distribution(frames.map(f=>f.callbackMs)),frameIntervals:distribution(intervals),timingScope:'All observed requestAnimationFrame callbacks retained; per-callback CPU and summed callback CPU per shared RAF timestamp, intervals between distinct RAF timestamps; not GPU execution time or exclusively game CPU; observer overhead affects intervals'};
 }
