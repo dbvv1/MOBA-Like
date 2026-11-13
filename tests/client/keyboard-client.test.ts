@@ -7,7 +7,7 @@ import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS} from '../../src/input/bindings.js
 
 // Run the real client boot, UI, Controls and Simulation. Only rendering/audio/nav I/O and dialog
 // platform methods are controlled; no browser, WebGL, layout or perceived responsiveness is claimed.
-const state=vi.hoisted(()=>({inputTrace:[] as Array<{tick:number;commands:Array<{type:string;slot?:string}>;hash:string}>,releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
+const state=vi.hoisted(()=>({inputTrace:[] as Array<{tick:number;commands:Array<{type:string;slot?:string}>;hash:string}>,releases:[] as Array<{slot:string;sample:string}>,sounds:[] as Array<{setForestEnabled?:ReturnType<typeof vi.fn>;policy:string;setPaused:ReturnType<typeof vi.fn>;dispose:ReturnType<typeof vi.fn>}>,worlds:[] as Array<{canvas:HTMLCanvasElement;targeting:string|null;disposed:boolean;locked:boolean;held:boolean}>}));
 vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElement,_catalog:unknown,options:{cameraFollow?:string})=>{
   const canvas=document.createElement('canvas');canvas.tabIndex=0;stage.append(canvas);
   const world={canvas,targeting:null as string|null,disposed:false,locked:true,held:false};state.worlds.push(world);
@@ -19,7 +19,7 @@ vi.mock('../../src/render/world.js',()=>({createWorld:vi.fn(async(stage:HTMLElem
 })}));
 vi.mock('../../src/save/match.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/save/match.js')>();return {...original,LocalMatch:class extends original.LocalMatch{override step(commands:any[]=[]){const result=super.step(commands);state.inputTrace.push({tick:this.simulation.state.tick,commands:structuredClone(commands),hash:this.simulation.finalHash()});return result;}}};});
 vi.mock('../../src/sim/navigation.js',()=>({createDetourNavigation:async()=>({destroy:vi.fn(),closestPoint:(p:{x:number;z:number})=>({...p}),findPath:(a:{x:number;z:number},b:{x:number;z:number})=>({success:true,points:[a,b],reason:null})})}));
-vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn((snapshot:Snapshot,playerId:number)=>{for(const event of snapshot.events){if(event.type!=='castResolved'||event.heroId!==playerId||event.action==='basicAttack')continue;const cue=original.battleCue(event,snapshot,playerId);if(cue)state.releases.push({slot:event.slot,sample:original.sampleForCue(cue,policy as 'baseline'|'critical-v1')});}}),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
+vi.mock('../../src/audio/battle.js',async importOriginal=>{const original=await importOriginal<typeof import('../../src/audio/battle.js')>();return {...original,createBattleAudio:(enabled:boolean,policy:string)=>{const sound={enabled,policy,...(new URLSearchParams(location.search).get('scene')==='forest-verge-v1'?{setForestEnabled:vi.fn()}:{}),setPaused:vi.fn(),setEnabled:vi.fn(),unlock:vi.fn(),sync:vi.fn((snapshot:Snapshot,playerId:number)=>{for(const event of snapshot.events){if(event.type!=='castResolved'||event.heroId!==playerId||event.action==='basicAttack')continue;const cue=original.battleCue(event,snapshot,playerId);if(cue)state.releases.push({slot:event.slot,sample:original.sampleForCue(cue,policy as 'baseline'|'critical-v1')});}}),dispose:vi.fn()};state.sounds.push(sound);return sound;}};});
 type Client={snapshot:()=>Snapshot;state:()=>{ready:boolean;tick:number;pointer:{command:{type:string}|null}|null}};
 function client(){return (window as unknown as {mobaClient:Client}).mobaClient;}
 const html=readFileSync('candidate.html','utf8');
@@ -196,4 +196,13 @@ it('read-only DOM diagnostics mirror the live minimum gate and restart resets it
  expect(read().acceptance.advancedTicks).toBe(client().snapshot().tick);expect(read().acceptance.reached).toBe(true);expect(read().ready).toBe(true);
  click('#restart');await vi.waitFor(()=>expect(state.worlds).toHaveLength(2));await vi.waitFor(()=>expect(client()?.state().ready).toBe(true));
  expect(read()).toMatchObject({ready:true,acceptance:{advancedTicks:0,reached:false}});
+});
+
+it('forest scene alone opts into environment and pause lifecycle, but renderer fallback does not',async()=>{
+ history.replaceState(null,'','/?scene=forest-verge-v1');await boot();const sound=state.sounds[0]!;
+ expect(sound.setForestEnabled).toHaveBeenCalledExactlyOnceWith(true);expect(sound.setPaused).toHaveBeenLastCalledWith(false);
+ open();expect(sound.setPaused).toHaveBeenLastCalledWith(true);click('[data-binding-cancel]');expect(sound.setPaused).toHaveBeenLastCalledWith(false);
+ const {createWorld}=await import('../../src/render/world.js');vi.mocked(createWorld).mockRejectedValueOnce(new Error('scene rejected'));
+ click('#restart');await vi.waitFor(()=>expect(state.sounds).toHaveLength(2));await vi.waitFor(()=>expect(client().state().ready).toBe(true));
+ expect(state.sounds[1]!.setForestEnabled).not.toHaveBeenCalled();expect(sound.dispose).toHaveBeenCalledOnce();
 });
