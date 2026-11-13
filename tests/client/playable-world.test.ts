@@ -38,8 +38,55 @@ it('retired stylized route restores default without constructing the retired ren
  expect(webgl).toHaveBeenCalledTimes(1);expect(webgl.mock.calls[0]![2].lighting).toBe('forest-light-v1');expect(result.fallbackReason).toContain('retired');
 });
 
-it('forest scene initialization failure restores the original environment and reports failure',async()=>{
+const forestQuietSearch='?materials=quiet-family-v1&scene=forest-verge-v1';
+
+it('forest-only initialization failure restores the default scene without losing healthy quiet materials',async()=>{
  const webgl=vi.fn().mockRejectedValueOnce(new Error('forest scene failed')).mockResolvedValueOnce({dispose:vi.fn()});
- const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?materials=quiet-family-v1&scene=forest-verge-v1'},{webgl,canvas:vi.fn()} as any);
- expect(webgl.mock.calls[0]![2]).toMatchObject({sceneStyle:'forest-verge-v1',materials:'quiet-family-v1'});expect(webgl.mock.calls[1]![2].sceneStyle).toBeUndefined();expect(webgl.mock.calls[1]![2].materials).toBeUndefined();expect(result.fallbackReason).toContain('forest scene failed');
+ const canvas=vi.fn();
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:forestQuietSearch},{webgl,canvas} as any);
+ expect(webgl.mock.calls[0]![2]).toMatchObject({sceneStyle:'forest-verge-v1',materials:'quiet-family-v1'});
+ expect(webgl.mock.calls[1]![2]).toMatchObject({materials:'quiet-family-v1',lighting:'forest-light-v1',cameraFollow:'baseline'});
+ expect(webgl.mock.calls[1]![2].sceneStyle).toBeUndefined();
+ expect(webgl).toHaveBeenCalledTimes(2);expect(canvas).not.toHaveBeenCalled();
+ // The player enables forest audio only when sceneStyle is forest and fallbackReason is empty.
+ expect(result).toMatchObject({backend:'three-webgl2',sceneStyle:'baseline',cameraPolicy:'baseline'});
+ expect(result.fallbackReason).toContain('forest scene failed');
+});
+
+it('failure of quiet assets without forest also restores baseline materials before Canvas2D',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('forest scene failed'))
+  .mockRejectedValueOnce(new Error('Quiet material family unavailable')).mockResolvedValueOnce({dispose:vi.fn()});
+ const canvas=vi.fn();
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:forestQuietSearch},{webgl,canvas} as any);
+ expect(webgl.mock.calls.map(([, ,opts])=>[opts.sceneStyle,opts.materials])).toEqual([
+  ['forest-verge-v1','quiet-family-v1'],[undefined,'quiet-family-v1'],[undefined,undefined],
+ ]);
+ expect(canvas).not.toHaveBeenCalled();
+ expect(result).toMatchObject({backend:'three-webgl2',sceneStyle:'baseline'});
+ expect(result.fallbackReason).toContain('forest scene failed');
+ expect(result.fallbackReason).toContain('Quiet material family unavailable');
+});
+
+it('explicit baseline materials never trigger a quiet retry',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('forest scene failed')).mockResolvedValueOnce({dispose:vi.fn()});
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?scene=forest-verge-v1&materials=baseline'},{webgl,canvas:vi.fn()} as any);
+ expect(webgl.mock.calls.map(([, ,opts])=>opts.materials)).toEqual(['baseline',undefined]);
+ expect(result.sceneStyle).toBe('baseline');
+});
+
+it('abort settling the forest attempt does not start another owner',async()=>{
+ const controller=new AbortController();
+ const webgl=vi.fn().mockImplementationOnce(async()=>{controller.abort();throw new Error('forest cancelled');});
+ const canvas=vi.fn();
+ await expect(createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:forestQuietSearch,signal:controller.signal},{webgl,canvas} as any)).rejects.toMatchObject({name:'AbortError'});
+ expect(webgl).toHaveBeenCalledTimes(1);expect(canvas).not.toHaveBeenCalled();
+});
+
+it('a quiet recovery world settling after abort is disposed without another owner',async()=>{
+ const controller=new AbortController(),dispose=vi.fn();
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('forest scene failed'))
+  .mockImplementationOnce(async()=>{controller.abort();return {dispose};});
+ const canvas=vi.fn();
+ await expect(createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:forestQuietSearch,signal:controller.signal},{webgl,canvas} as any)).rejects.toMatchObject({name:'AbortError'});
+ expect(webgl).toHaveBeenCalledTimes(2);expect(dispose).toHaveBeenCalledTimes(1);expect(canvas).not.toHaveBeenCalled();
 });
