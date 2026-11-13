@@ -1,3 +1,4 @@
+import {applyForestGround,type ForestScene} from './forest-scene.js';
 import {bindQuietGround,type QuietTextures} from './quiet-family.js';
 import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
 import * as THREE from 'three';
@@ -17,7 +18,7 @@ export function roadCrossSection(x:number){
   const cap=Math.min(1,Math.max(0,(110-Math.abs(x))/2));
   return {south:south*cap,north:north*cap};
 }
-export function createTerrainComposition(textures:TerrainTextures,lighting:LightingStyle='baseline',quiet?:QuietTextures){
+export function createTerrainComposition(textures:TerrainTextures,lighting:LightingStyle='baseline',quiet?:QuietTextures,sceneStyle:ForestScene='baseline'){
   const root=new THREE.Group();root.name='TerrainComposition';
   const geometries:THREE.BufferGeometry[]=[],materials:Array<THREE.MeshStandardMaterial|THREE.MeshToonMaterial>=[];
   const road:number[]=[],forest:number[]=[];
@@ -40,6 +41,7 @@ export function createTerrainComposition(textures:TerrainTextures,lighting:Light
     geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.computeVertexNormals();geometry.computeBoundingSphere();
     const material=surfaceMaterial(lighting,{map:texture,color:0xffffff});
     if(quiet)bindQuietGround(material,quiet);
+    if(sceneStyle==='forest-verge-v1')applyForestGround(geometry,material);
     const mesh=new THREE.Mesh(geometry,material);mesh.name=name;mesh.receiveShadow=true;mesh.raycast=()=>{};root.add(mesh);geometries.push(geometry);materials.push(material);
   }
   add('ContinuousRoadAndClearings',road,textures.road,layout.road.tileMeters);

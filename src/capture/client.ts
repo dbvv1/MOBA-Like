@@ -1,3 +1,4 @@
+import {parseForestScene} from '../render/forest-scene.js';
 import {captureOutput} from './output.js';
 import {parseMaterialFamily} from '../render/quiet-family.js';
 import {parseLightingStyle} from '../render/lighting-style.js';
@@ -70,7 +71,7 @@ try {
   phase('创建 WebGL 场景与加载模型/纹理');
   await yieldCaptureTask(abort.signal);
   const pose=config.standards?STANDARD_POSE:CAMERAS[config.shot].pose;
-  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,materials:parseMaterialFamily(location.search),signal:abort.signal,capture:{...CAPTURE_SIZE,pixelRatio:1,pose}}),value=>value.dispose());
+  const world=lifetime.own(await createWorld(stage,session.sim.catalog,{lighting,materials:parseMaterialFamily(location.search),sceneStyle:parseForestScene(location.search),signal:abort.signal,capture:{...CAPTURE_SIZE,pixelRatio:1,pose}}),value=>value.dispose());
   if(config.standards)world.setContentStandards(true);
   world.setCaptureView({...CAPTURE_SIZE,pixelRatio:1,pose});
   const gl=world.captureContext(),evidence=rendererEvidence(gl);
