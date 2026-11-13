@@ -1,3 +1,4 @@
+import {applyForestAtmosphere,type ForestScene} from './forest-scene.js';
 import {createLifetime} from './lifetime.js';
 import {createCameraFollow,type CameraFollowPolicy} from './camera-follow.js';
 import {createContentStandards} from '../capture/content-standards.js';
@@ -24,7 +25,7 @@ import {pickLivingEntity} from './picking.js';
 import {createTargeting,targetingPlan} from './targeting.js';
 import {applyCapturePose,copyCaptureView,type CaptureView} from './capture-view.js';
 
-export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',materials='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;materials?:MaterialFamily;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
+export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{lighting='baseline',materials='baseline',sceneStyle='baseline',signal,cameraFollow='baseline',capture}:{lighting?:LightingStyle;materials?:MaterialFamily;sceneStyle?:ForestScene;signal?:AbortSignal;cameraFollow?:CameraFollowPolicy;capture?:CaptureView}={}){
   if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:!!capture});}
@@ -40,13 +41,13 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   const scene=new THREE.Scene();scene.userData['renderRole']='cue';scene.background=new THREE.Color('#304c49');scene.fog=new THREE.Fog('#304c49',75,160);
   const camera=new THREE.PerspectiveCamera(45,1,.1,200);
   const focus=new THREE.Vector3(0,0,0);
-  addEnvironmentLighting(scene,lighting);
+  addEnvironmentLighting(scene,lighting);if(sceneStyle==='forest-verge-v1')applyForestAtmosphere(scene);
   const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
   let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined,quiet:QuietTextures|undefined,quietBuildings:ReturnType<typeof applyQuietBuildings>|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
   assets=own(await loadBattleAssets(undefined,lighting));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true}));
   const loadedAssets=assets, presentation=view;
-  const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures,quiet));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
+  const battlefield=own(createBattlefield(catalog,loadedAssets,lighting,terrainTextures,quiet,sceneStyle));const actors=new THREE.Group();actors.userData['renderRole']='world';actors.add(presentation.root,battlefield.root);
   presentation.root.traverse(object=>{if((object as THREE.Mesh).isMesh){object.castShadow=true;object.receiveShadow=true;}});
   scene.add(actors);const controls=own(createControlMarkers(scene,statusTexture!));const reach=own(createTowerReach(scene,catalog));const health=own(createHealthBars(scene));const effects=own(createEffects(scene));const impacts=own(createImpacts(scene,combatTextures));const targeting=own(createTargeting(scene));let targetingSlot:AbilitySlot|null=null;if(!capture)host.replaceChildren(renderer.domElement);renderer.domElement.tabIndex=0;
   const ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
@@ -68,7 +69,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     // submission evidence only, not shader/pixel validation.
     frameSubmitted=!renderer.getContext().isContextLost()&&renderer.info.render.frame>before;
   }
-  const currentLightingState=()=>lightingState(lighting,frameSubmitted&&!renderer.getContext().isContextLost());
+  const currentLightingState=()=>{const state=lightingState(lighting,frameSubmitted&&!renderer.getContext().isContextLost());return sceneStyle==='forest-verge-v1'?{...state,environment:{...state.environment,sky:'#c6dedb',ground:'#303f30',hemisphereIntensity:1.45},sceneStyle}:state;};
   function positionCamera(){if(captureView?.pose){applyCapturePose(camera,captureView.pose);return;}camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
   function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();post?.resize(width,height,renderer.getPixelRatio());}
   fit();positionCamera();
@@ -121,7 +122,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     captureContext(){return renderer.getContext();},
     lightingState(){return currentLightingState();},
     materialState(){return inspectMaterialFamily(materials,quiet,frameSubmitted,renderer.getContext().isContextLost());},
-    captureState(){return {standards:standards?{...standards.inspect(),active:frameSubmitted&&!renderer.getContext().isContextLost()}:null,materials:{...inspectMaterialFamily(materials,quiet,frameSubmitted,renderer.getContext().isContextLost()),buildingCoverage:quietBuildings?.coverage??[]},lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
+    captureState(){return {sceneStyle,standards:standards?{...standards.inspect(),active:frameSubmitted&&!renderer.getContext().isContextLost()}:null,materials:{...inspectMaterialFamily(materials,quiet,frameSubmitted,renderer.getContext().isContextLost()),buildingCoverage:quietBuildings?.coverage??[]},lighting:currentLightingState(),camera:{position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},target:{x:focus.x,y:focus.y,z:focus.z},fov:camera.fov,aspect:camera.aspect},viewport:{width:renderer.domElement.width/renderer.getPixelRatio(),height:renderer.domElement.height/renderer.getPixelRatio(),pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height},render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}};},
     effectState(){return effects.inspect();},
     motionState(){return presentation.motionState();},
     targetingState(){return targeting.inspect();},

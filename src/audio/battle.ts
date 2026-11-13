@@ -1,3 +1,4 @@
+import {createForestBed} from './forest.js';
 import type {PresentationEvent,Snapshot} from '../sim/types.js';
 export type BattleCue={kind:'swing'|'cast'|'hit'|'shield';strength:number;pan:number;skillSlot?:'Q'|'W'};
 type SampleKind=BattleCue['kind']|'skill-q'|'skill-w';
@@ -56,7 +57,13 @@ function criticalEvent(event:PresentationEvent,playerId:number){
 export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='baseline'){
   let context:AudioContext|null=null,master:GainNode|null=null;
   let enabled=initiallyEnabled,disposed=false,lastTick=-1,lastOrdinal=-1,lastSound=-Infinity;
-  let paused=false;
+  let paused=false,forestEnabled=false,forestFailure='',forestTerminal=false;
+  let forest:ReturnType<typeof createForestBed>|null=null;
+  function ensureForest(){
+    if(!forestEnabled||forest||forestFailure||!context||!master||disposed)return;
+    try{forest=createForestBed(context,master);forest.silence(paused||!enabled||forestTerminal||context.state!=='running');}
+    catch(error){forestFailure=error instanceof Error?error.message:String(error);}
+  }
   const decisions:AudioDecision[]=[],scheduled=new Map<AudioBufferSourceNode,{at:number;decision:AudioDecision}>();
   function record(decision:AudioDecision){decisions.push(decision);if(decisions.length>64)decisions.shift();}
   function cancel(reason:string){
@@ -71,10 +78,11 @@ export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='base
   async function unlock(){
     if(disposed||!enabled)return;
     try{
-      if(!context){context=new AudioContext();if(policy==='critical-v1')context.addEventListener('statechange',()=>{if(context?.state!=='running')cancel('device-reset');});}const ctx=context;
+      if(!context){context=new AudioContext();context.addEventListener?.('statechange',()=>{if(context?.state!=='running'&&policy==='critical-v1')cancel('device-reset');forest?.silence(context?.state!=='running'||paused||!enabled||forestTerminal);});}const ctx=context;
       if(!master){master=ctx.createGain();master.gain.value=.32;master.connect(ctx.destination);}
       if(ctx.state==='suspended')await ctx.resume();
       if(disposed)return;
+      ensureForest();
       loading??=Promise.all(Object.entries(policy==='critical-v1'?{...soundUrls,...skillSoundUrls}:soundUrls).map(async([key,url])=>{
         const bytes=await readSample(key as SampleKind,url);if(disposed)return;
         const buffer=await ctx.decodeAudioData(bytes.slice(0));
@@ -99,6 +107,7 @@ export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='base
       if(at>now&&[...scheduled.values()].filter(v=>v.at>now).length>=CRITICAL_AUDIO_LIMITS.maxPending){drop('pending-limit');return;}
     }else if(now-lastSound<.025){drop('density');return;}
     lastSound=at;
+    forest?.duck(at);
     const gain=context.createGain(),pan=context.createStereoPanner(),source=context.createBufferSource();
     source.buffer=buffer;pan.pan.value=cue.pan;
     const duration=Math.min(buffer.duration,.6);gain.gain.setValueAtTime(cue.strength,at);
@@ -108,8 +117,9 @@ export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='base
     if(decision){const accepted={...decision,sample:actual,plannedAt:at,reason:'scheduled'};scheduled.set(source,{at,decision:accepted});record(accepted);}
     source.start(at);source.stop(at+duration);
   }
-  return {unlock,inspect:()=>({policy,paused,voices:voices.size,pending:[...scheduled.values()].filter(v=>v.at>(context?.currentTime??Infinity)).length,decisions:decisions.map(d=>({...d}))}),setPaused(value:boolean){if(policy==='critical-v1'){paused=value;if(value)cancel('pause-reset');}},get enabled(){return enabled;},setEnabled(value:boolean){enabled=value;if(!value&&policy==='critical-v1')cancel('mute-reset');if(master)master.gain.value=value?.32:0;if(value)void unlock();},
+  return {unlock,setForestEnabled(value:boolean){forestEnabled=value;if(!value){forest?.dispose();forest=null;}else ensureForest();},inspect:()=>({policy,paused,forest:{requested:forestEnabled,active:!!forest&&!paused&&enabled&&!forestTerminal&&context?.state==='running',failure:forestFailure},voices:voices.size,pending:[...scheduled.values()].filter(v=>v.at>(context?.currentTime??Infinity)).length,decisions:decisions.map(d=>({...d}))}),setPaused(value:boolean){if(policy==='critical-v1'||forestEnabled){paused=value;forest?.silence(value||!enabled||forestTerminal);if(value&&policy==='critical-v1')cancel('pause-reset');}},get enabled(){return enabled;},setEnabled(value:boolean){enabled=value;forest?.silence(!value||paused||forestTerminal);if(!value&&policy==='critical-v1')cancel('mute-reset');if(master)master.gain.value=value?.32:0;if(value)void unlock();},
     sync(snapshot:Snapshot,playerId:number){
+      if(snapshot.status!=='running'){forestTerminal=true;forest?.silence(true);}
       const entries:Array<{cue:BattleCue;decision:AudioDecision}>=[];
       for(const event of snapshot.events){
         if(event.tick<lastTick||(event.tick===lastTick&&event.ordinal<=lastOrdinal))continue;
@@ -125,6 +135,6 @@ export function createBattleAudio(initiallyEnabled=true,policy:AudioPolicy='base
       for(const entry of entries)if(!retained.includes(entry))record({...entry.decision,reason:'coalesced'});
       for(const entry of retained)play(entry.cue,entry.decision);
     },
-    dispose(){if(disposed)return;disposed=true;enabled=false;if(policy==='critical-v1')cancel('dispose-reset');if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
+    dispose(){if(disposed)return;disposed=true;enabled=false;forest?.dispose();forest=null;if(policy==='critical-v1')cancel('dispose-reset');if(master)master.gain.value=0;for(const voice of voices){try{voice.stop();}catch{}}voices.clear();void context?.close().catch(()=>{});context=null;master=null;buffers.clear();}
   };
 }

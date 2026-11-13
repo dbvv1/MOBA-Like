@@ -72,10 +72,13 @@ async function boot(mode:'prompt'|'new'='prompt'){
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
     const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'],document.documentElement.dataset['defaultMaterials']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
+    const forestScene=rendered.backend==='three-webgl2'&&!rendered.fallbackReason&&rendered.sceneStyle==='forest-verge-v1';
+    if(forestScene){sound.setForestEnabled(true);sound.setPaused(document.hidden);}
     const initialTick=sim.snapshot().tick;activeCameraPolicy=rendered.cameraPolicy;refreshHelp();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
     if(playerId===undefined)throw new Error('No player hero in snapshot');
+    if(forestScene)sound.sync(snapshot,playerId); // empty historical events, but terminal ambience stays silent
     const player=()=>{const hero=snapshot.heroes.find(value=>value.id===playerId);if(!hero)throw new Error('Player snapshot missing');return {snapshot,hero};};
     const commands:SimCommand[]=[];lifetime.defer(()=>{commands.length=0;});
     let settingsOpen=false;
@@ -96,7 +99,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
       R:`Ultimate · ${sim.catalog.abilities[definition.abilities.R]!.name}`,
       attackMove:'Attack-move',stop:'Stop',focusCamera:rendered.cameraPolicy==='hold-follow-v1'?'Hold to follow':'Lock camera',
     },open=>{
-      settingsOpen=open;if(audioPolicy==='critical-v1')sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
+      settingsOpen=open;if(audioPolicy==='critical-v1'||forestScene)sound.setPaused(open||document.hidden);commands.length=0;controls.setEnabled(!open&&!document.hidden&&!stopped&&snapshot.status==='running');
       world.leavePointer();clock.reset();previous=performance.now();
     },()=>{refreshHelp();hud.update(snapshot,playerId);});
     lifetime.defer(()=>settings.dispose());
@@ -120,7 +123,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     };
     saveBeforeLeave=save;lifetime.defer(()=>{saveBeforeLeave=()=>{};});
     panel.button.disabled=!saving;panel.button.addEventListener('click',save,{signal:lifecycle.signal});
-    document.addEventListener('visibilitychange',()=>{if(audioPolicy==='critical-v1')sound.setPaused(document.hidden||settingsOpen);clock.reset();previous=performance.now();if(document.hidden){commands.length=0;controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
+    document.addEventListener('visibilitychange',()=>{if(audioPolicy==='critical-v1'||forestScene)sound.setPaused(document.hidden||settingsOpen);clock.reset();previous=performance.now();if(document.hidden){commands.length=0;controls.setEnabled(false);save();}else controls.setEnabled(!settingsOpen&&!stopped&&snapshot.status==='running');},{signal:lifecycle.signal});
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
@@ -145,7 +148,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
           world.draw(Math.min(delta,.25),sim.isComplete()?1:alpha);
         }else clock.reset();
         showDiagnostic(readMinimumState());animation=requestAnimationFrame(frame);
-      }catch(error){if(audioPolicy==='critical-v1')sound.setPaused(true);stopped=true;notice.setAttribute('data-recovery','false');saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;showDiagnostic(readMinimumState());}
+      }catch(error){if(audioPolicy==='critical-v1'||forestScene)sound.setPaused(true);stopped=true;notice.setAttribute('data-recovery','false');saving=false;panel.button.disabled=true;settings.dispose();controls.dispose();hud.disable();notice.hidden=false;notice.textContent=`Client stopped: ${error instanceof Error?error.message:String(error)}. The previous checkpoint is unchanged.`;showDiagnostic(readMinimumState());}
     };
     animation=requestAnimationFrame(frame);
 
