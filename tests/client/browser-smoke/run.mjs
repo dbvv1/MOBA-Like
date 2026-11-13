@@ -37,6 +37,16 @@ async function checkHudLayout(page){
   return layouts;
 }
 
+// A checkpoint written by an earlier page in this run (full-match restart, legacy
+// entry or the save/resume check) makes a later entry show the ordinary save
+// choice before boot can finish. Pick a fresh match there, the state the original
+// sequence expects; the dedicated save/resume check still exercises Continue.
+async function chooseFreshMatchIfSaved(page){
+  await page.waitForFunction(()=>window.mobaClient?.state().ready || document.querySelector('dialog.local-save-choice') || (!document.querySelector('#restart')?.disabled && !document.querySelector('#notice')?.hidden),null,{timeout:15000});
+  const dialog=page.locator('dialog.local-save-choice');
+  if(await dialog.isVisible())await dialog.getByRole('button',{name:'New match · replace save',exact:true}).click();
+}
+
 const output=pathToFileURL(resolve(process.env.MOBA_SMOKE_OUTPUT??`smoke-artifacts/${new Date().toISOString().replace(/[:.]/g,'-')}-${process.pid}`)+'/');
 await mkdir(dirname(fileURLToPath(output)),{recursive:true});
 await mkdir(output,{recursive:false}); // Each run owns a new directory; never overwrite prior evidence.
@@ -60,7 +70,8 @@ try {
     stage='full-match';
     await page.addInitScript(installFullMatchProbe);
     await page.goto(origin+entry.route,{waitUntil:'networkidle'});
-    await page.waitForFunction(()=>window.mobaClient?.state().ready);
+    // Timer polling avoids adding readiness RAF callbacks to the measured page.
+    await page.waitForFunction(()=>window.mobaClient?.state().ready,null,{polling:1000});
     assertSmokeEntry(await page.evaluate(()=>window.mobaClient.state()),entry,page.url());
     report.fullMatchMaterialsStart=await page.evaluate(()=>window.mobaClient.state().materials);
     report.fullMatchEnvironment=await page.locator('#stage canvas').evaluate(canvas=>{
@@ -97,6 +108,7 @@ try {
   report.legacyCharacterAssets=[...report.characterAssets];report.characterAssets=[];
   stage='navigate';const response=await page.goto(origin+entry.route,{waitUntil:'networkidle'});assert.ok(response?.ok(),'HTML must load successfully');
   stage='initialize';
+  await chooseFreshMatchIfSaved(page);
   await page.waitForFunction(()=>window.mobaClient?.state().ready || (!document.querySelector('#restart').disabled && !document.querySelector('#notice').hidden));
   const notice=await page.locator('#notice').textContent();
   assert.equal(await page.locator('#notice').isVisible(),false,notice || 'Initialization failed');
@@ -214,7 +226,7 @@ try {
   assert.match(await page.locator('[data-skills]').textContent(),/Slipstream/);
   assert.equal(await page.locator('#stage canvas').count(),1,'Restarts must replace, not accumulate, renderers');
   report.heroSelection.restartPreserved=true;report.heroSelection.changedBack=true;
-  stage='keyboard-and-resume';await page.locator('footer details').evaluate(node=>{node.open=true;});await page.locator('#keyboard-settings').click();await page.locator('[data-binding-action="Q"]').click();await page.keyboard.press('f');await page.locator('[data-binding-save]').click();
+  stage='keyboard-and-resume';await page.locator('footer details').filter({has:page.locator('#keyboard-settings')}).evaluate(node=>{node.open=true;});await page.locator('#keyboard-settings').click();await page.locator('[data-binding-action="Q"]').click();await page.keyboard.press('f');await page.locator('[data-binding-save]').click();
   assert.match(await page.locator('[data-skills] button').first().textContent(),/^F /);
   // Closing settings intentionally clears pointer ownership. Focus alone is not a pointer event.
   // Re-enter the current canvas through real page input before checking the remapped aim.
@@ -234,7 +246,7 @@ try {
   stage='retired-lighting-entry';await page.close();const diffuse=await resources.browser.newPage({viewport:{width:1280,height:900}});diffuse.setDefaultTimeout(15000);page=diffuse;
   diffuse.on('pageerror',error=>report.pageErrors.push(String(error)));diffuse.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
   await diffuse.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
-  await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await diffuse.waitForFunction(()=>window.mobaClient?.state().ready);
+  await diffuse.goto(origin+'/candidate.html?lighting=stylized-diffuse',{waitUntil:'networkidle'});await chooseFreshMatchIfSaved(diffuse);await diffuse.waitForFunction(()=>window.mobaClient?.state().ready);
   assertRetiredLighting(await diffuse.evaluate(()=>window.mobaClient.state()),await diffuse.locator('#notice').isVisible());
   report.retiredLightingEntry={contentVersion:await diffuse.evaluate(()=>window.mobaClient.snapshot().contentVersion),lighting:await diffuse.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await diffuse.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('diffuse-canvas.png',output))})))};
   assert.equal(report.retiredLightingEntry.contentVersion,11);assert.ok(report.retiredLightingEntry.pixels.nonBackground);await diffuse.close();for(const key of ['consoleErrors','pageErrors'])assert.deepEqual(report[key],[],key);
@@ -244,7 +256,7 @@ try {
   main.on('requestfailed',request=>report.requestFailures.push({url:request.url(),error:request.failure()?.errorText}));
   main.on('response',response=>{if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()});});
   await main.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort('blockedbyclient'));
-  await main.goto(origin,{waitUntil:'networkidle'});await main.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='forest-light-v1');
+  await main.goto(origin,{waitUntil:'networkidle'});await chooseFreshMatchIfSaved(main);await main.waitForFunction(()=>window.mobaClient?.state().ready&&window.mobaClient.state().lighting.active==='forest-light-v1');
   const initialMain=await main.evaluate(()=>window.mobaClient.snapshot());assert.equal(initialMain.contentVersion,11);
   await main.waitForFunction(tick=>window.mobaClient.snapshot().tick>tick+5,initialMain.tick);
   report.defaultEntry={contentVersion:initialMain.contentVersion,initialTick:initialMain.tick,finalTick:await main.evaluate(()=>window.mobaClient.snapshot().tick),lighting:await main.evaluate(()=>window.mobaClient.state().lighting),pixels:pixelEvidence(PNG.sync.read(await main.locator('#stage canvas').screenshot({path:fileURLToPath(new URL('default-canvas.png',output))})))};

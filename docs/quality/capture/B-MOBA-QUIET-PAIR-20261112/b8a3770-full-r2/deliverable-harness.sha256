@@ -1,0 +1,3 @@
+2c0cc30345b2a1295cce56cb72106062b8b8d4ce29af14fd6266b98d4983f535 *tests/client/browser-smoke/run.mjs
+8dadeb5dbe2c31396ffc0bbf7b2fea45d138877d3dc371152ec11b79a8bcaa5d *tests/client/browser-smoke/full-match.mjs
+cf1e9e61f4fee539eb28c0865797fbd6d87cb94bea3888eaa820c4ee94eec6e2 *tests/client/browser-smoke/full-match.test.ts

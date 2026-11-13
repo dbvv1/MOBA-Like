@@ -1,0 +1,362 @@
+{
+  "job": "B-MOBA-QUIET-PAIR-20261112",
+  "sourceRoot": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2",
+  "scratchRoot": "scratch",
+  "reason": "outputs/ is gitignored and the run directory lives under the job scratch; evidence relocated to this short capture directory. sha256 is of the original bytes before any path sanitization.",
+  "files": [
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/capture-build-identity.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/capture-build-identity.json",
+      "sha256": "47bc2238ca42f461fd3329b1be0d4e6c0de20d208e8cf1be2c0dc07c72ca3ce9",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/files.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/files.sha256",
+      "sha256": "3062b07d029924393dc37e063c4399ccf32dd1ac7fc673003b35f26dac3a560b",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/README.txt",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/build-web-receipt/README.txt",
+      "sha256": "c1abc30d2b27e55ca80b7c263123d0635bcc6280ce8359cf02eb0dd2e800fade",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/failure.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/failure.png",
+      "sha256": "fddbcdad85ab350c989a8cff152856031f1d8f2119f4c6a84f23fa9c91ce406a",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/FIRST-FAILURE.txt",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/FIRST-FAILURE.txt",
+      "sha256": "520f39987b5d270ee7a8aecffe9379fc519876e84e42633378aa755788577cc0",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/full-match-frames.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/full-match-frames.json",
+      "sha256": "1e46ca0fa8a3b5a23d7074ffd46ebd0b842e5f4c71f79e99eae7c4360b030d16",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/full-match-terminal.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/full-match-terminal.png",
+      "sha256": "572b3211d61c3eac99355115ef7b1b28d1ecd5a9645a738b77ec4700f7e70e79",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/legacy-v10-canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/legacy-v10-canvas.png",
+      "sha256": "4bdb8f09c98a37081efc097ab7bf8ee23886ad9efb4da8bfbcc4168ba682032d",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/manifest.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/manifest.json",
+      "sha256": "b91f11c060d4bbf82beb2c4d3638f2dc5a4488edcd9d1d0a0e8acbb4532e79bf",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke/report.json",
+      "sha256": "56fc3b30d3f14a7e1a60ea32ce3df6aba8590430610640f60bd5ea8d19b393a2",
+      "sanitized": true
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke-retry/manifest.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke-retry/manifest.json",
+      "sha256": "4a8af08cacbb6fa143ad9d2d2b49197bb56ae678d7d0ac3529e11929351f2d41",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke-retry/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-smoke-retry/report.json",
+      "sha256": "3fc015f0a4e81c3764e6edb6ce5d59c0ca1418991d3d2c7123a8617e1aa6a535",
+      "sanitized": true
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/FIRST-FAILURE.txt",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/FIRST-FAILURE.txt",
+      "sha256": "7ce322dcc34c6d46468286d56f2949b647d31e6388a94ef4f71f1f26f1e2816c",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/full-match-frames.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/full-match-frames.json",
+      "sha256": "89ea2ceb681209d3de5e781575ded3c0cf811a5253ecdeb85c2735a6621924f1",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/full-match-terminal.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/full-match-terminal.png",
+      "sha256": "b5166c9588f5fe68d333a65a2c4ef61bea3d7978cf59520a9c3b0c8e14536341",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/legacy-v10-canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/legacy-v10-canvas.png",
+      "sha256": "69024f9f55917c3a41454d75c0aa5528194b8f590caa685487494eb5101d6441",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/manifest.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/manifest.json",
+      "sha256": "1645a79cede0a3b8d7ae4bf0e1dc3684e59de4045edd36a6af9d824d533d65eb",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke/report.json",
+      "sha256": "eec1388bc0d098f9a2b5ce23b7d156dd2fc326db9e85db1245c3a6bf9146ee8f",
+      "sanitized": true
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/canvas.png",
+      "sha256": "3e30704e82e872d97a8ba85f7c4b0f741bd1c8a2904c1702d19457b8646c6aa9",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/default-canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/default-canvas.png",
+      "sha256": "84902e71a75ada02565e3c255dd8c810644815a9fd40fb19b8e61dd982b4aabf",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/diffuse-canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/diffuse-canvas.png",
+      "sha256": "6dba8578d582363c0e9612f07a3bf2ec0d3b6470e805673e2cb79802e6fdf6ab",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/full-match-frames.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/full-match-frames.json",
+      "sha256": "593498189bb1f690dae3bcfbd0dd8ed63df959f433ee99b07525b970ec3ea4b8",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/full-match-terminal.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/full-match-terminal.png",
+      "sha256": "83ca8a48410df274665b5e7eb589f1ed785fa65b0e24dd10357f7212c6d43ea8",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/legacy-v10-canvas.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/legacy-v10-canvas.png",
+      "sha256": "5253de78d5fccb73580e5c5731e4d2d0ccb8cbb0350690f8f70d9d3f81659b0e",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/manifest.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/manifest.json",
+      "sha256": "b220955c888c7a51a3e067468114e4bedbe1702bacea0e8a4052c308a3523436",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/page.png",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/page.png",
+      "sha256": "e5dfb25d940f0a68c896d3e19c1f957b7edd822cf7be9e92068ca4b6f29e9ca2",
+      "sanitized": false
+    },
+    {
+      "from": "outputs/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/report.json",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-smoke-retry/report.json",
+      "sha256": "bd7b5505cd8a8a62088e465a5db5303b4616fabce3451a16395bc52975fb6444",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/npm-ci.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/npm-ci.log",
+      "sha256": "8b2fb7d3e42521b5d4be0f64c88cbf4c652168f67b5e0b459ed0f95688a25561",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/build-web.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/build-web.log",
+      "sha256": "4f2af0af5c095e132c5cf3ebbafbe2e5f86014570f2f6976791f9db02ee92022",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/browser-smoke-tests.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/browser-smoke-tests.log",
+      "sha256": "735e32ce16d6995bdf91796cfb66054b99aa78a05d4c18dc762c0a37b00d5b76",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/browser-smoke-tests-r1.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/browser-smoke-tests-r1.log",
+      "sha256": "71419c302bd8f8978a955a36e01484f959001d6670f58988adf089060268d7bd",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/browser-smoke-tests-v2.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/browser-smoke-tests-v2.log",
+      "sha256": "57c83297a122f6f4aba373baf01b5b6199b85f843f77df9aecfd7c29c3174cbf",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/default-smoke.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke.log",
+      "sha256": "56fc3b30d3f14a7e1a60ea32ce3df6aba8590430610640f60bd5ea8d19b393a2",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/default-smoke-retry.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke-retry.log",
+      "sha256": "3fc015f0a4e81c3764e6edb6ce5d59c0ca1418991d3d2c7123a8617e1aa6a535",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/quiet-smoke.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke.log",
+      "sha256": "eec1388bc0d098f9a2b5ce23b7d156dd2fc326db9e85db1245c3a6bf9146ee8f",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/quiet-smoke-retry.log",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke-retry.log",
+      "sha256": "bd7b5505cd8a8a62088e465a5db5303b4616fabce3451a16395bc52975fb6444",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/default-smoke.start",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke.start",
+      "sha256": "028798bbf89370768be144c110115c32fd95b7da858b8d0cf02f888e6894d026",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/default-smoke.end",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke.end",
+      "sha256": "21f6bafd284dcaef55ff8e254ec3bc82e8e81bd5a959711165defccf1d7cf448",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/default-smoke.exit",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/default-smoke-retry.start",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke-retry.start",
+      "sha256": "1af392ca2a7b537504a4c4287b3dd73e85b00d934ab3c071191dbe20f3fe61da",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/default-smoke-retry.end",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke-retry.end",
+      "sha256": "31fe7cf4b5e0e49fe616a568c56c8016220dd7c68006ca29c70023d09ffad694",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/default-smoke-retry.exit",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/default-smoke-retry.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke.start",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke.start",
+      "sha256": "e03051e55d56cf0493dc8c262b3f965823b955c44fd2f92ac8952c6aa4e704e2",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke.end",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke.end",
+      "sha256": "4c9877dbf4fdf0119bc1ce9e5251209d0953ae477606b02d92e91410c6e155d8",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke.exit",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke-retry.start",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke-retry.start",
+      "sha256": "65976b217c0fa3075c3ad7dbb3725544bea8cbce32f679520d0342c1268c9e8f",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke-retry.end",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke-retry.end",
+      "sha256": "4ccb230c73f356c036a450e2143d4c2c21f8bab14319c7a23bab2c5ebd2595f7",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/quiet-smoke-retry.exit",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/quiet-smoke-retry.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/chromium.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/chromium.sha256",
+      "sha256": "112397b1201d0d37c753a2f260532328c4f41f012e5a48e2cd4478267f761ce6",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/inputs-before.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/inputs-before.sha256",
+      "sha256": "b24b46d02936abc4fe970e3ccd4ca1c226c30a930039683977dff66907404d75",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/git-before-build.txt",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/logs/git-before-build.txt",
+      "sha256": "48c4ca05fbd54bbb343270e93e42ad4b64c61f45515574bc1acc9b09b59ef82e",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/script-patch-applied.diff",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/script-patch-v1.diff",
+      "sha256": "6bfc339431489d012981c9df270ce52ead78752910956f610b67ba57de614d8b",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/script-patch-v2.diff",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/script-patch-v2.diff",
+      "sha256": "e0c7f0f17ea392df9afc40b2813829afa42164dc7a1206f8bc4b4515e43c000e",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/script-patch-delivered.diff",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/script-patch-delivered.diff",
+      "sha256": "e0c7f0f17ea392df9afc40b2813829afa42164dc7a1206f8bc4b4515e43c000e",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/script-patch-applied.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/script-patch-v1.sha256",
+      "sha256": "3d0a46082dd7187dbf47a0f5a668a1f48fc8688bc5915d71d2eabf8653c99323",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/script-patch-v2.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/script-patch-v2.sha256",
+      "sha256": "08cd4877c26e115c448549d118e9c8e38d22bd51be433acf35d281ab0cdd6902",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/deliverable-harness.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/deliverable-harness.sha256",
+      "sha256": "9eb311d837a938a8d1361309fbcda26923ad64a30535edce9b8b2dcfabbc79e1",
+      "sanitized": false
+    },
+    {
+      "from": "scratch/logs/first-failure.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/default-first-failure.sha256",
+      "sha256": "5387f917517709fd82f3d4c29bb085248f9ed6a31934082ac9700f8c95e4618c",
+      "sanitized": true
+    },
+    {
+      "from": "scratch/logs/quiet-first.sha256",
+      "to": "docs/quality/capture/B-MOBA-QUIET-PAIR-20261112/b8a3770-full-r2/quiet-first-failure.sha256",
+      "sha256": "1cba2254a90c79c35ab50413b78718e7dd97831e466a4a3f080170b49b0a7346",
+      "sanitized": true
+    }
+  ]
+}

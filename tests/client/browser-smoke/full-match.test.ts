@@ -21,6 +21,26 @@ describe('natural complete-match smoke contract (CPU only)',()=>{
     timed.samples[2]={...timed.samples[2],tick:36000,timeSeconds:1200,atMs:1200000,intervalMs:1199000};
     expect(summarizeFullMatch(timed).terminal.status).toBe('timeout');
   });
+  it('retains same-frame callbacks while measuring distinct rendering intervals',()=>{
+    const result=evidence();
+    result.samples.splice(1,0,{...result.samples[0],callbackMs:40,intervalMs:0});
+    const summary=summarizeFullMatch(result);
+    expect(summary.frames).toBe(3);expect(summary.callbacks).toBe(4);
+    expect(summary.sameFrameExtraCallbacks).toBe(1);
+    expect(summary.callbackCpu.count).toBe(4);expect(summary.frameCallbackCpu.count).toBe(3);
+    expect(summary.frameCallbackCpu.meanMs).toBe(110/3);
+    expect(summary.frameIntervals.count).toBe(2);expect(summary.frameIntervals.meanMs).toBe(1000);
+    expect(result.samples).toHaveLength(4);
+    const invalid=evidence();invalid.samples[1]={...invalid.samples[0],intervalMs:1};
+    expect(()=>summarizeFullMatch(invalid)).toThrow('Non-contiguous');
+    for(const field of ['callbackMs','intervalMs','atMs'])for(const value of [-1,Infinity,undefined]){
+      const bad=evidence();bad.samples[1][field]=value;expect(()=>summarizeFullMatch(bad)).toThrow();
+    }
+    const same=evidence();same.samples.forEach((s,i)=>{s.atMs=0;s.intervalMs=i===0?null:0;});
+    expect(()=>summarizeFullMatch(same)).toThrow('Missing distinct');
+    const reverse=evidence();reverse.samples[2].atMs=999;reverse.samples[2].intervalMs=-1;
+    expect(()=>summarizeFullMatch(reverse)).toThrow();
+  });
   it('rejects absent, partial, restarted, accelerated and corrupt evidence',()=>{
     for(const bad of [undefined,{}, {...evidence(),initial:{...initial,tick:8}}, {...evidence(),terminal:null}, {...evidence(),error:'hidden'}, {...evidence(),samples:[]}, {...evidence(),terminal:{...terminal,bases:[]}}, {...evidence(),terminal:{...terminal,endReason:'testHook'}}, {...evidence(),terminal:{...terminal,winner:0}}])expect(()=>summarizeFullMatch(bad)).toThrow();
     for(const field of ['callbackMs','intervalMs','atMs']){
@@ -41,6 +61,22 @@ describe('natural complete-match smoke contract (CPU only)',()=>{
     expect(callback).toHaveBeenCalledWith(500);expect(native).toHaveBeenCalledTimes(1);
     expect(host.__mobaFullMatch.initial).toEqual({...initial,bases:[]});expect(host.__mobaFullMatch.terminal).toEqual(terminal);
     expect(host.__mobaFullMatch.samples).toHaveLength(1);expect(snapshot).toBe(terminal);
+  });
+  it('records two native callbacks sharing a timestamp without losing either',()=>{
+    const queue:Function[]=[];let snapshot=initial;
+    const native=vi.fn(cb=>{queue.push(cb);return queue.length;});
+    const host={requestAnimationFrame:native,mobaClient:{snapshot:()=>({...snapshot,entities:(snapshot.bases??[]).map(b=>({...b,structureKind:'base'}))})}};
+    vi.stubGlobal('window',host);vi.stubGlobal('document',{hidden:false,addEventListener:vi.fn(),querySelector:()=>null});
+    installFullMatchProbe();
+    host.requestAnimationFrame(()=>{});host.requestAnimationFrame(()=>{snapshot={...initial,tick:1,timeSeconds:1/30};});
+    queue[0](100);queue[1](100);
+    host.requestAnimationFrame(()=>{snapshot=terminal;});queue[2](2100);
+    const raw=host.__mobaFullMatch;
+    expect(raw.samples.map(s=>s.intervalMs)).toEqual([null,0,2000]);
+    expect(raw.samples.map(s=>s.tick)).toEqual([0,1,60]);
+    const summary=summarizeFullMatch(raw);
+    expect(summary.callbacks).toBe(3);expect(summary.frames).toBe(2);
+    expect(native).toHaveBeenCalledTimes(3);
   });
   it('rejects an open pause dialog and a transient hide between callbacks',()=>{
     let queued:Function,visibility:Function;
