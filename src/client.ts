@@ -71,7 +71,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
+    const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'],document.documentElement.dataset['defaultMaterials']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
     const initialTick=sim.snapshot().tick;activeCameraPolicy=rendered.cameraPolicy;refreshHelp();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;
@@ -124,7 +124,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     // Start on the recovered hero even when the saved preference is free camera.
     // A zero-time draw uses the existing camera path without advancing gameplay.
     world.sync(snapshot,playerId);world.draw(0,1);world.setLocked(saved?.view.cameraLocked??true);
-    hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D unavailable: Canvas2D recovery is active. Details in Runtime diagnostics.':'Trial renderer unavailable: default rendering restored. Details in Runtime diagnostics.';restart.disabled=false;
+    hud.update(snapshot,playerId);notice.hidden=!rendered.fallbackReason;notice.setAttribute('data-recovery',String(Boolean(rendered.fallbackReason)));if(rendered.fallbackReason)notice.textContent=rendered.backend==='canvas2d'?'3D is unavailable. The match can continue in 2D.':'Some visual settings could not load. The match can continue with fallback rendering.';restart.disabled=false;
     window.addEventListener('blur',()=>{commands.length=0;},{signal:lifecycle.signal});
     const readMinimumState=()=>({ready:!stopped,backend:rendered.backend,fallbackReason:rendered.fallbackReason,acceptance:{requiredTicks:MINIMUM_ACCEPTANCE_TICKS,initialTick,advancedTicks:snapshot.tick-initialTick,reached:snapshot.tick-initialTick>=MINIMUM_ACCEPTANCE_TICKS},contentVersion,tick:snapshot.tick,status:snapshot.status});
     showDiagnostic(readMinimumState());lifetime.defer(()=>showDiagnostic({ready:false,phase:'disposed'}));

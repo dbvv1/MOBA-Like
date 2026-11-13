@@ -16,7 +16,7 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     expect(quiet.route).toBe('/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1');
     for(const variant of ['default','quiet']){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test');
-      expect(parseMaterialFamily(url.search)).toBe(variant==='quiet'?'quiet-family-v1':'baseline');
+      expect(parseMaterialFamily(entryLightingSearch(url.search,undefined,variant==='default'?'quiet-family-v1':undefined))).toBe('quiet-family-v1');
       expect(parseLightingStyle(entryLightingSearch(url.search,variant==='default'?'forest-light-v1':undefined))).toBe(entry.lighting);
       expect(url.searchParams.has('commands')).toBe(false);
       expect(entry.contentVersion).toBe(11);
@@ -29,7 +29,7 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
     for(const variant of ['default','quiet']){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant});
-      state.materials={configured:variant==='quiet'?'quiet-family-v1':'baseline',active:variant==='quiet'?'quiet-family-v1':'baseline'};
+      state.materials={configured:'quiet-family-v1',active:'quiet-family-v1'};
       expect(()=>assertSmokeEntry(state,entry,new URL(entry.route,'https://example.test').href)).not.toThrow();
       for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
         {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
