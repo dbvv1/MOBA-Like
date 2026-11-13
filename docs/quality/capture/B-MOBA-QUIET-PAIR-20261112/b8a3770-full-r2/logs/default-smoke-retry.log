@@ -1,0 +1,123 @@
+{
+  "startedAt": "2026-11-13T03:37:04.805Z",
+  "passed": false,
+  "consoleErrors": [],
+  "pageErrors": [],
+  "httpErrors": [],
+  "requestFailures": [],
+  "warnings": [
+    "[]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content."
+  ],
+  "characterAssets": [
+    "/assets/tower-teal-BQ2jCRMr.glb",
+    "/assets/barracks-teal-DplTNS_l.glb",
+    "/assets/base-teal-L4GVNWxZ.glb",
+    "/assets/tower-rust-B3YjHLZt.glb",
+    "/assets/barracks-rust-ELYrhKWW.glb",
+    "/assets/base-rust-CiTXTXEl.glb",
+    "/assets/tree-CawC7zP0.glb",
+    "/assets/rock-DnYfbnCK.glb",
+    "/assets/melee-teal-fyp_u-7O.glb",
+    "/assets/hero-teal-sUFSV1Mz.glb",
+    "/assets/ranged-teal-B_rlZWgD.glb",
+    "/assets/hero-rust-6hnVVH5H.glb",
+    "/assets/melee-rust-DlZVcWSl.glb",
+    "/assets/ranged-rust-rsnFKRRJ.glb",
+    "/assets/lane-ground-BkV_wW4P.glb",
+    "/assets/veyra-teal-CpkKDg1w.glb",
+    "/assets/veyra-rust-BSIRU2oZ.glb",
+    "/assets/siege-rust-1xQRoxFB.glb",
+    "/assets/siege-teal-CsgCrOmN.glb"
+  ],
+  "entry": {
+    "variant": "default",
+    "route": "/",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "fullMatchRequested": true,
+  "launch": {
+    "headless": true,
+    "chromiumSandbox": true,
+    "timeout": 30000,
+    "args": [
+      "--use-angle=swiftshader"
+    ],
+    "ignoreDefaultArgs": [
+      "--enable-unsafe-swiftshader"
+    ],
+    "executablePath": "<ms-playwright>/chromium-1248/chrome-win64/chrome.exe"
+  },
+  "browserProcess": {
+    "pid": 133556,
+    "args": [
+      "<ms-playwright>/chromium-1248/chrome-win64/chrome.exe",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-edgeupdater",
+      "--disable-extensions",
+      "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+      "--enable-features=CDPScreenshotNewSurface",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--disable-updater-scheduler",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--disable-infobars",
+      "--disable-search-engine-choice-screen",
+      "--disable-sync",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--use-angle=swiftshader",
+      "--user-data-dir=<receiver-run>\\scratch\\playwright_chromiumdev_profile-ATn7Aa",
+      "--remote-debugging-pipe",
+      "--no-startup-window"
+    ]
+  },
+  "browserVersion": "156.0.8078.4",
+  "source": {
+    "commit": "b8a377078e15c0dd2fb7c367b0bf24adbee09468",
+    "tree": "66467272f24642230a31a7195b4b0b08a19bad82",
+    "dirty": false
+  },
+  "failure": {
+    "stage": "full-match",
+    "category": "harness",
+    "message": "page.waitForFunction: Timeout 15000ms exceeded.\n    at <repo>\\tests\\client\\browser-smoke\\run.mjs:74:16"
+  },
+  "notice": "Loading simulation and Three.js assets…",
+  "captureError": "TimeoutError: page.screenshot: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+  "cleanupErrors": [],
+  "processExit": {
+    "pid": 133556,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "finishedAt": "2026-11-13T03:39:22.538Z"
+}

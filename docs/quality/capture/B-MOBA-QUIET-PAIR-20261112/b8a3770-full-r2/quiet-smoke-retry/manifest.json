@@ -1,0 +1,68 @@
+{
+  "source": {
+    "commit": "b8a377078e15c0dd2fb7c367b0bf24adbee09468",
+    "tree": "66467272f24642230a31a7195b4b0b08a19bad82",
+    "dirty": false
+  },
+  "entry": {
+    "variant": "quiet",
+    "route": "/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "startedAt": "2026-11-13T03:58:15.501Z",
+  "finishedAt": "2026-11-13T04:10:16.464Z",
+  "passed": true,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "pid": 145152,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "canvas.png",
+      "bytes": 1511977,
+      "sha256": "3e30704e82e872d97a8ba85f7c4b0f741bd1c8a2904c1702d19457b8646c6aa9"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 1825766,
+      "sha256": "84902e71a75ada02565e3c255dd8c810644815a9fd40fb19b8e61dd982b4aabf"
+    },
+    {
+      "path": "diffuse-canvas.png",
+      "bytes": 1821588,
+      "sha256": "6dba8578d582363c0e9612f07a3bf2ec0d3b6470e805673e2cb79802e6fdf6ab"
+    },
+    {
+      "path": "full-match-frames.json",
+      "bytes": 135458,
+      "sha256": "593498189bb1f690dae3bcfbd0dd8ed63df959f433ee99b07525b970ec3ea4b8"
+    },
+    {
+      "path": "full-match-terminal.png",
+      "bytes": 1503687,
+      "sha256": "83ca8a48410df274665b5e7eb589f1ed785fa65b0e24dd10357f7212c6d43ea8"
+    },
+    {
+      "path": "legacy-v10-canvas.png",
+      "bytes": 240965,
+      "sha256": "5253de78d5fccb73580e5c5731e4d2d0ccb8cbb0350690f8f70d9d3f81659b0e"
+    },
+    {
+      "path": "page.png",
+      "bytes": 1511976,
+      "sha256": "e5dfb25d940f0a68c896d3e19c1f957b7edd822cf7be9e92068ca4b6f29e9ca2"
+    }
+  ]
+}
