@@ -80,7 +80,7 @@ export function createEffects(scene:THREE.Scene){
     const seenProjectiles=new Set<number>(),seenZones=new Set<number>(),seenWarnings=new Set<number>();
     for(const entity of snapshot.projectiles){
       seenProjectiles.add(entity.id);let visual=projectiles.get(entity.id);
-      const to=new THREE.Vector3(entity.position.x,entity.basicAttack?(entity.basicAttack.sourceKind==='structure'?4.3:entity.basicAttack.sourceKind==='hero'?1.2:.7):entity.width+.1,entity.position.z);
+      const to=new THREE.Vector3(entity.position.x,entity.basicAttack?(entity.basicAttack.sourceKind==='structure'?6.25:entity.basicAttack.sourceKind==='hero'?1.2:.7):entity.width+.1,entity.position.z);
       if(entity.basicAttack&&visual){
         // Cosmetic vertical pursuit follows the same 2D flight, connecting the
         // launch socket to the selected target rather than vanishing overhead.

@@ -8,7 +8,21 @@ import type {Snapshot,EntitySnapshot} from '../sim/types.js';
 import type {BattleAssets} from './battle-assets.js';
 import {battleManifest,siegeAssetManifest} from './battle-assets.js';
 import {createGroundSurfaces} from './ground-surfaces.js';
+import {createForest} from './forest.js';
+import {createTowerRuins} from './ruin-towers.js';
 import {createMotionState} from '../../asset-pipeline/presentation/motion-state.js';
+
+function contactShadowTexture(){
+  const size=128,data=new Uint8Array(size*size*4);
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const dx=(x+.5)/size*2-1,dy=(y+.5)/size*2-1,r=Math.min(1,Math.hypot(dx,dy));
+    const alpha=Math.round(215*Math.pow(1-r*r,1.5));
+    const offset=(y*size+x)*4;data[offset]=255;data[offset+1]=255;data[offset+2]=255;data[offset+3]=alpha;
+  }
+  const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
+  texture.minFilter=THREE.LinearFilter;texture.magFilter=THREE.LinearFilter;texture.wrapS=texture.wrapT=THREE.ClampToEdgeWrapping;
+  texture.needsUpdate=true;return texture;
+}
 
 export function battleAssetId(entity:EntitySnapshot){
   const team=entity.team===0?'teal':'rust';
@@ -17,6 +31,7 @@ export function battleAssetId(entity:EntitySnapshot){
 export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lighting:LightingStyle='baseline',terrainTextures?:TerrainTextures,quiet?:QuietTextures){
   const root=new THREE.Group();root.name='Battlefield';root.userData['renderRole']='world';
   const owned:Array<{dispose():void}>=[];
+  const towerRuins=createTowerRuins(lighting);
   const actors=new Map<number,{root:THREE.Group;from:THREE.Vector3;to:THREE.Vector3;mixer:THREE.AnimationMixer;actions:Map<string,THREE.AnimationAction>;action:string;activeClip:string;attackUntil:number;events:ReturnType<typeof createMotionState>;visualTime:number;kind:EntitySnapshot['kind'];siege:boolean;walkNominalSpeed:number;walkTimeScale:number;wheelTravel:number;wheelStep:number;wheelSamples:Array<{bone:THREE.Object3D;sample:THREE.Interpolant}>;death:{elapsed:number;duration:number}|null;skeletons:Set<THREE.Skeleton>}>();
   function useClip(actor:NonNullable<ReturnType<typeof actors.get>>,name:string){
     if(actor.activeClip===name)return;
@@ -38,14 +53,19 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
   if(terrainTextures){const terrain=createTerrainComposition(terrainTextures,lighting,quiet);root.add(terrain.root);owned.push(terrain);}
   else for(let x=world.minX+6;x<world.maxX;x+=12)decorate('lane-ground',x,0);
   const groundSurfaces=createGroundSurfaces(lighting,terrainTextures?.forest,quiet);root.add(groundSurfaces.root);owned.push(groundSurfaces);
-  // Deterministic art layout only; no simulation random stream consumption.
-  for(let group=0;group<26;group++)for(const side of [-1,1]){
-    const x=world.minX-18+group*10.4+Math.sin(group*2.1+side)*3.2;
-    const z=side*(13.5+(group%4)*2.6);
-    const count=2+group%3;
-    for(let n=0;n<count;n++)decorate('tree',x+Math.sin(n*2.7+group)*3.2,z+side*Math.cos(n*1.8)*2, .72+((group+n)%5)*.14,group*.71+n);
-    if(group%3!==1)decorate('rock',x+4,z-side*2,.7+(group%4)*.2,group);
+  const forest=createForest(lighting,assets);root.add(forest.root);owned.push(forest);
+  // Shared soft contact disc for every structure. It is a transparent ground
+  // decal, not a shadow-map receiver, so it stays soft at tower scale.
+  const contactTexture=contactShadowTexture(),contactGeometry=new THREE.PlaneGeometry(1,1);
+  const contactMaterial=new THREE.MeshBasicMaterial({map:contactTexture,color:'#000000',transparent:true,opacity:.5,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2,toneMapped:false});
+  owned.push(contactTexture,contactGeometry,contactMaterial);
+  function contactShadow(id:string){
+    const radius=battleManifest.assets.find(asset=>asset.id===id)?.footprintRadius??2.2;
+    const mesh=new THREE.Mesh(contactGeometry,contactMaterial);
+    mesh.rotation.x=-Math.PI/2;mesh.position.y=.018;mesh.scale.set(radius*3.6,radius*3.6,1);
+    mesh.renderOrder=2;mesh.raycast=()=>{};return mesh;
   }
+  // Deterministic art layout only; no simulation random stream consumption.
   function remove(id:number){const actor=actors.get(id);if(!actor)return;actor.mixer.stopAllAction();actor.mixer.uncacheRoot(actor.root);for(const skeleton of actor.skeletons)skeleton.dispose();root.remove(actor.root);actors.delete(id);}
   let tick=-1,terminal=false,logicTime=0;
   function sync(snapshot:Snapshot){
@@ -75,6 +95,10 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
         const siegeEntry=siegeAssetManifest.assets.find(item=>item.id===id);
         // GLB is already final metres. The 1.85m bar clears its sampled 1.77m arm envelope.
         object.scale.setScalar(1);object.userData['visualHeight']=siege?1.85:entry!.nominalHeight;object.userData['simEntityId']=entity.id;object.name=`entity-${entity.id}`;
+        if(entity.kind==='structure'&&entity.structureKind==='tower'){
+          towerRuins.attach(object,entity.team);object.userData['visualHeight']=8.05;
+        }
+        if(entity.kind==='structure'&&lighting!=='stylized-diffuse')object.add(contactShadow(id));
         const mixer=new THREE.AnimationMixer(object),actions=new Map(model.animations.map(clip=>[clip.name,mixer.clipAction(clip)]));
         // Wheels are locomotion, not a cast phase. Sample only their authored
         // quaternion tracks after the primary mixer, so recovery can coexist with travel.
@@ -144,5 +168,5 @@ export function createBattlefield(catalog:ContentCatalog,assets:BattleAssets,lig
         for(const {bone,sample} of actor.wheelSamples)bone.quaternion.fromArray(sample.evaluate(time));
       }
     }
-  }},dispose(){for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();root.clear();}};
+  }},dispose(){for(const id of actors.keys())remove(id);for(const resource of owned)resource.dispose();towerRuins.dispose();root.clear();}};
 }

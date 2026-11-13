@@ -24,10 +24,10 @@ export function renderRole(object:THREE.Object3D):RenderRole|undefined {
 }
 
 export function lightingState(style:LightingStyle,frameSubmitted=false){
-  if(style==='forest-light-v1')return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:'source-materials',environment:{kind:'ambient-and-hemisphere',sky:'#b9ddd8',ground:'#243e32',hemisphereIntensity:1.35,ambientIntensity:.08},directSun:{color:'#fff0cf',intensity:2.8,shadow:'PCFShadowMap'},toneMapping:'ACESFilmic',exposure:1.08,post:{ao:'world-only-SSAO',kernelRadius:1.4,samples:16,minDistance:.001,maxDistance:.015,grade:'linear-cool-shadows-warm-highlights',output:'OutputPass',buffer:'HalfFloatType',msaaSamples:4}};
+  if(style==='forest-light-v1')return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:'source-materials',environment:{kind:'hemisphere-light',sky:'#cfe4d6',ground:'#4a5c49',hemisphereIntensity:1.55,ambientIntensity:0},directSun:{color:'#ffd7a4',intensity:2.25,shadow:'PCFSoftShadowMap'},toneMapping:'ACESFilmic',exposure:1.06,post:{ao:'world-only-SSAO',kernelRadius:1.4,samples:16,minDistance:.001,maxDistance:.015,grade:'linear-cool-shadows-warm-highlights',output:'OutputPass',buffer:'HalfFloatType',msaaSamples:4,bloom:'crystal-layer-only'}};
   return {requested:style,configured:style,active:frameSubmitted?style:null,stage:frameSubmitted?'frame-submitted':'configured',diffuse:style!=='stylized-diffuse'?'source-materials':'three-native-toon',
-    environment:{kind:'ambient-and-hemisphere',sky:'#d7e9e3',ground:'#3c4333',hemisphereIntensity:style==='baseline'?1.65:1,ambientIntensity:style==='baseline'?0:.9},
-    directSun:{color:'#fff0cf',intensity:2.5,shadow:'original-pcf-soft'},toneMapping:'ACESFilmic',exposure:1.12};
+    environment:{kind:'hemisphere-light',sky:style==='baseline'?'#cfe4d6':'#b9ddd8',ground:style==='baseline'?'#4f6048':'#243e32',hemisphereIntensity:style==='baseline'?1.65:1,ambientIntensity:style==='baseline'?0:.9},
+    directSun:{color:'#ffd39d',intensity:style==='baseline'?2.35:2.5,shadow:'PCFSoftShadowMap'},toneMapping:'ACESFilmic',exposure:style==='baseline'?1.06:1.12};
 }
 
 export function addEnvironmentLighting(scene:THREE.Scene,style:LightingStyle){

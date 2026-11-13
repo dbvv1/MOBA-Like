@@ -46,7 +46,7 @@ export function createImpacts(scene:THREE.Scene,textures?:CombatTextures){
         const material=hero?new THREE.MeshBasicMaterial({vertexColors:!textures,color:textures?(source.team===0?0xc5fff0:0xffc5a0):0xffffff,map:textures?.release??null,transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false}):new THREE.LineBasicMaterial({color:tower?0xffb36a:source.team===0?0xbce8ce:0xf4b29a,transparent:true,opacity:.65,depthWrite:false});
         const line=hero?new THREE.Mesh(textures?texturedStreak:heroStreaks[source.team]!,material):new THREE.Line(swingGeometry,material),dx=target.position.x-source.position.x,dz=target.position.z-source.position.z;
         line.name=hero?'hero-release-streak':'unit-release-trail';
-        const startY=source.kind==='structure'?4.3:source.kind==='hero'?1.2:.7;
+        const startY=source.kind==='structure'?6.25:source.kind==='hero'?1.2:.7;
         const endY=target.kind==='hero'?1.2:target.kind==='structure'?2:.7;
         line.position.set(source.position.x,startY,source.position.z);line.lookAt(target.position.x,endY,target.position.z);line.scale.z=event.delivery==='projectile'?.8:Math.hypot(dx,dz,endY-startY);root.add(line);
         if(bursts.length>=48){const old=bursts.shift();if(old)remove(old);}

@@ -5,6 +5,7 @@ import {SSAOPass} from 'three/addons/postprocessing/SSAOPass.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {renderRole} from './lighting-style.js';
+import {createSelectiveBloom} from './selective-bloom.js';
 
 /** Fixed sampling, independent of the simulation/random stream and wall clock. */
 export function aoKernel(count=16){
@@ -15,10 +16,14 @@ export function aoKernel(count=16){
 }
 
 /** Only world meshes occlude. UI, targeting and effects never enter the normal buffer. */
+function transparent(object:THREE.Object3D){
+  const value=(object as THREE.Mesh).material;if(!value)return false;
+  return (Array.isArray(value)?value:[value]).some(material=>material.transparent);
+}
 class WorldAO extends SSAOPass {
   private hidden:THREE.Object3D[]=[];
   _overrideVisibility(){
-    this.scene.traverse(o=>{if(o.visible&&((o as THREE.Mesh).isMesh||(o as THREE.Line).isLine||(o as THREE.Points).isPoints||(o as THREE.Sprite).isSprite)&&(!(o as THREE.Mesh).isMesh||renderRole(o)!=='world')){o.visible=false;this.hidden.push(o);}});
+    this.scene.traverse(o=>{if(o.visible&&((o as THREE.Mesh).isMesh||(o as THREE.Line).isLine||(o as THREE.Points).isPoints||(o as THREE.Sprite).isSprite)&&(!(o as THREE.Mesh).isMesh||renderRole(o)!=='world'||transparent(o))){o.visible=false;this.hidden.push(o);}});
   }
   _restoreVisibility(){for(const o of this.hidden)o.visible=true;this.hidden.length=0;}
 }
@@ -43,8 +48,15 @@ export function createLightingPost(renderer:THREE.WebGLRenderer,scene:THREE.Scen
         vec3 balance=mix(vec3(.82,1.02,1.05),vec3(1.04,1.01,.94),smoothstep(.04,.65,l));
         gl_FragColor=vec4(max(c*balance,vec3(0.0)),source.a);}`
   });
+  const bloom=createSelectiveBloom(renderer,scene,camera,.4);
+  const bloomCombine=new ShaderPass({
+    uniforms:{tDiffuse:{value:null},tBloom:{value:null},strength:{value:1}},
+    vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    fragmentShader:`uniform sampler2D tDiffuse;uniform sampler2D tBloom;uniform float strength;varying vec2 vUv;
+      void main(){vec4 source=texture2D(tDiffuse,vUv);vec3 glow=texture2D(tBloom,vUv).rgb;gl_FragColor=vec4(source.rgb+glow*strength,source.a);}`
+  });
   const output=new OutputPass();
-  for(const pass of [beauty,ao,grade,output])composer.addPass(pass);
+  for(const pass of [beauty,ao,grade,bloomCombine,output])composer.addPass(pass);
   let disposed=false;
   function renderLayers(){
     const objects:Array<{object:THREE.Object3D;visible:boolean;world:boolean}>=[];
@@ -75,12 +87,13 @@ export function createLightingPost(renderer:THREE.WebGLRenderer,scene:THREE.Scen
     }
   }
   return {
-    resize(width:number,height:number,pixelRatio:number){composer.setPixelRatio(pixelRatio);composer.setSize(width,height);},
+    resize(width:number,height:number,pixelRatio:number){composer.setPixelRatio(pixelRatio);composer.setSize(width,height);bloom.setSize(Math.max(1,Math.floor(width*pixelRatio*.5)),Math.max(1,Math.floor(height*pixelRatio*.5)));},
     render(){
       ao.ssaoMaterial.uniforms['cameraProjectionMatrix']!.value.copy(camera.projectionMatrix);
       ao.ssaoMaterial.uniforms['cameraInverseProjectionMatrix']!.value.copy(camera.projectionMatrixInverse);
+      bloom.render();bloomCombine.uniforms['tBloom']!.value=bloom.texture();
       renderLayers();
     },
-    dispose(){if(disposed)return;disposed=true;ao.ssaoMaterial.dispose();ao.noiseTexture.dispose();for(const pass of [beauty,ao,grade,output])pass.dispose();composer.dispose();}
+    dispose(){if(disposed)return;disposed=true;ao.ssaoMaterial.dispose();ao.noiseTexture.dispose();bloom.dispose();for(const pass of [beauty,ao,grade,bloomCombine,output])pass.dispose();composer.dispose();}
   };
 }

@@ -4,6 +4,8 @@ import {createContentStandards} from '../capture/content-standards.js';
 import {applyQuietBuildings} from './quiet-buildings.js';
 import {loadQuietFamily,inspectMaterialFamily,type QuietTextures,type MaterialFamily} from './quiet-family.js';
 import {createLightingPost} from './lighting-post.js';
+import {createCrystalBloomPost} from './selective-bloom.js';
+import {createLightShafts} from './volumetric-light.js';
 import {loadTerrainTextures,type OwnedTerrainTextures} from './terrain-textures.js';
 import {addEnvironmentLighting,lightingState,type LightingStyle} from './lighting-style.js';
 import {loadCombatTextures,type CombatTextures} from './combat-textures.js';
@@ -36,12 +38,17 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   try{
   renderer.setPixelRatio(capture?.pixelRatio??Math.min(window.devicePixelRatio,2));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=lightingState(lighting).exposure;
-  if(lighting==='forest-light-v1')renderer.shadowMap.type=THREE.PCFShadowMap;
-  const scene=new THREE.Scene();scene.userData['renderRole']='cue';scene.background=new THREE.Color('#304c49');scene.fog=new THREE.Fog('#304c49',75,160);
+  const scene=new THREE.Scene();scene.userData['renderRole']='cue';scene.background=new THREE.Color('#294536');scene.fog=new THREE.Fog('#2d4a3b',42,155);
   const camera=new THREE.PerspectiveCamera(45,1,.1,200);
   const focus=new THREE.Vector3(0,0,0);
   addEnvironmentLighting(scene,lighting);
-  const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.set(10,24,12);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:70});light.shadow.bias=-.0004;light.shadow.normalBias=.035;scene.add(light,light.target);
+  // Forest sun enters from the north-west. Projected tree shadows therefore
+  // run diagonally across the shoulders instead of forming a horizontal fence
+  // over the lane, and the visible shafts share the same direction.
+  const sunOffset=new THREE.Vector3(-20,31,-13);
+  const softShadow=lighting!=='stylized-diffuse';
+  const light=new THREE.DirectionalLight(lightingState(lighting).directSun.color,lightingState(lighting).directSun.intensity);light.position.copy(sunOffset);light.castShadow=true;light.shadow.mapSize.set(softShadow?2048:1024,softShadow?2048:1024);Object.assign(light.shadow.camera,{left:-27,right:27,top:22,bottom:-22,near:.5,far:72});light.shadow.camera.updateProjectionMatrix();light.shadow.bias=softShadow?-.0002:-.0004;light.shadow.normalBias=softShadow?.055:.04;scene.add(light,light.target);
+  const placeSun=()=>{light.position.set(focus.x+sunOffset.x,sunOffset.y,focus.z+sunOffset.z);light.target.position.set(focus.x,0,focus.z);light.target.updateMatrixWorld();};placeSun();
   let combatTextures:CombatTextures|undefined,terrainTextures:OwnedTerrainTextures|undefined,quiet:QuietTextures|undefined,quietBuildings:ReturnType<typeof applyQuietBuildings>|undefined;
   let assets:BattleAssets|undefined,view:Presentation|undefined,statusTexture:THREE.Texture|undefined;
   assets=own(await loadBattleAssets(undefined,lighting));combatTextures=own(await loadCombatTextures());quiet=await loadQuietFamily(materials,undefined,signal);if(signal?.aborted){quiet?.dispose();throw new DOMException('World loading cancelled.','AbortError');}if(quiet){try{quietBuildings=applyQuietBuildings(assets,quiet);own(quiet);own(quietBuildings);}catch{quiet.dispose();quiet=undefined;}}if(materials==='quiet-family-v1'&&!quiet)throw new Error('Quiet material family unavailable; restoring default rendering.');terrainTextures=quiet??own(await loadTerrainTextures());statusTexture=own(await new THREE.TextureLoader().loadAsync(new URL('../../asset-pipeline/icons/exported/bright/control.svg',import.meta.url).href));statusTexture.colorSpace=THREE.SRGBColorSpace;if(signal?.aborted)throw new DOMException('World loading cancelled.','AbortError');view=own(createPresentation({catalog,assets:{blue:assets.models['hero-teal']!,amber:assets.models['hero-rust']!,byDefinition:{veyra:{blue:assets.models['veyra-teal']!,amber:assets.models['veyra-rust']!,motionOptions:{recoilLayer:'torso-additive',firstDrawRelease:.1}}}},heroesOnly:true}));
@@ -55,7 +62,8 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   marker.rotation.x=-Math.PI/2;marker.position.y=.04;scene.add(marker);
   let captureView:CaptureView|null=capture?copyCaptureView(capture):null,savedFocus:THREE.Vector3|null=null;
   cameraMode.setCapture(captureView!==null);
-  const post=lighting==='forest-light-v1'?own(createLightingPost(renderer,scene,camera)):null;
+  const shafts=own(createLightShafts(scene,camera,{sunOffset}));
+  const post=lighting==='forest-light-v1'?own(createLightingPost(renderer,scene,camera)):own(createCrystalBloomPost(renderer,scene,camera));
   let standards:ReturnType<typeof createContentStandards>|null=null;
   const hiddenForStandards=new Map<THREE.Object3D,boolean>();
   lifetime.defer(()=>{standards?.dispose();hiddenForStandards.clear();});
@@ -63,6 +71,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   function renderScene(){
     frameSubmitted=false;
     const before=renderer.info.render.frame;
+    shafts.renderDepth(renderer,scene,camera);
     if(post)post.render();else renderer.render(scene,camera);
     // Three can return normally on context loss. A renderer frame advance is
     // submission evidence only, not shader/pixel validation.
@@ -70,7 +79,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   }
   const currentLightingState=()=>lightingState(lighting,frameSubmitted&&!renderer.getContext().isContextLost());
   function positionCamera(){if(captureView?.pose){applyCapturePose(camera,captureView.pose);return;}camera.position.set(focus.x,24,focus.z+18);camera.lookAt(focus);camera.updateMatrixWorld(true);}
-  function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();post?.resize(width,height,renderer.getPixelRatio());}
+  function fit(){const width=captureView?.width??Math.max(host.clientWidth,1),height=captureView?.height??Math.max(host.clientHeight,1);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();post?.resize(width,height,renderer.getPixelRatio());shafts.resize(renderer.domElement.width,renderer.domElement.height);}
   fit();positionCamera();
   const onResize=()=>fit();window.addEventListener('resize',onResize);lifetime.defer(()=>window.removeEventListener('resize',onResize));
   function setPointer(clientX:number,clientY:number){const box=renderer.domElement.getBoundingClientRect();cursor.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);pointerInside=true;}
@@ -81,7 +90,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
   }
   function sync(next:Snapshot,id:number){if(standards){snapshot=next;playerId=id;return;}snapshot=next;playerId=id;presentation.sync(next);battlefield.sync(next);effects.sync(next);impacts.sync(next);health.sync(next,actors,id);reach.sync(next,id);controls.sync(next,actors);const player=next.heroes.find(h=>h.id===id);if(player){marker.visible=player.alive;marker.position.set(player.position.x,.04,player.position.z);}}
   function draw(seconds:number,alpha:number,render=true){
-    if(standards){standards.advance(seconds);positionCamera();if(captureView?.pose)focus.set(captureView.pose.target.x,captureView.pose.target.y,captureView.pose.target.z);light.position.set(focus.x-12,26,focus.z+12);light.target.position.copy(focus);light.target.updateMatrixWorld();if(render)renderScene();return;}
+    if(standards){standards.advance(seconds);positionCamera();if(captureView?.pose)focus.set(captureView.pose.target.x,captureView.pose.target.y,captureView.pose.target.z);placeSun();if(render)renderScene();return;}
     const player=snapshot?.heroes.find(hero=>hero.id===playerId);
     // While playing, actions share the snapshot interpolation clock. After the
     // terminal snapshot, cosmetic tails may finish without advancing simulation.
@@ -94,7 +103,7 @@ export async function createWorld(host:HTMLElement,catalog:ContentCatalog,{light
     focus.z=THREE.MathUtils.clamp(focus.z,catalog.map.world.minZ,catalog.map.world.maxZ);
     positionCamera();if(playerRoot&&player?.alive)marker.position.set(playerRoot.position.x,.04,playerRoot.position.z);health.draw(camera);controls.draw();
     targeting.update(player&&snapshot&&pointerInside&&targetingSlot?targetingPlan(player,targetingSlot,aim(),snapshot,catalog):null);
-    light.position.set(focus.x-12,26,focus.z+12);light.target.position.copy(focus);light.target.updateMatrixWorld();
+    placeSun();
     if(render)renderScene();
   }
   return {canvas:renderer.domElement,sync,draw,aim,setPointer,

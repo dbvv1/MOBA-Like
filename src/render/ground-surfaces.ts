@@ -1,4 +1,4 @@
-import {bindQuietGround,type QuietTextures} from './quiet-family.js';
+import {bindQuietGround,groundHeightAt,type QuietTextures} from './quiet-family.js';
 import * as THREE from 'three';
 import {surfaceMaterial,type LightingStyle} from './lighting-style.js';
 import source from '../../asset-pipeline/ground-surfaces/exported/grass-geometries.json';
@@ -27,20 +27,20 @@ export function createGroundSurfaces(lighting:LightingStyle='baseline',forestTex
     // Same base colour as the surrounding grass makes the bank part of the
     // ground, not a disconnected flower-bed decal. Keep later seeded placement.
     random();
-    const colour=patchColour;
+    const colour=patchColour,patchY=groundHeightAt(cluster.x,cluster.z)+.009;
     for(let i=0;i<edge.length;i++){
       // Mirroring the far/near bank also mirrors winding; keep both facing up.
       const pair=side>0?[edge[(i+1)%edge.length]!,edge[i]!]:[edge[i]!,edge[(i+1)%edge.length]!];
       for(const point of [[cluster.x,cluster.z],...pair]){
-        positions.push(point[0]!,.009,point[1]!);colours.push(colour.r,colour.g,colour.b);
+        positions.push(point[0]!,patchY,point[1]!);colours.push(colour.r,colour.g,colour.b);
       }
     }
-    for(let i=0;i<7;i++){
+    for(let i=0;i<4;i++){
       const kind=i%3===0?'leaf':'blade',scale=1.25+random()*.65;
       const x=cluster.x+(random()-.5)*cluster.width*.72;
       const z=side*Math.max(layout.clearHalfWidth+.55,Math.abs(cluster.z)+(random()-.5)*cluster.depth*.65);
-      const transform=new THREE.Object3D();transform.position.set(x,.013,z);
-      transform.rotation.y=random()*Math.PI*2;transform.scale.set(scale,scale,scale);transform.updateMatrix();
+      const transform=new THREE.Object3D();transform.position.set(x,groundHeightAt(x,z)+.013,z);
+      transform.rotation.y=random()*Math.PI*2;transform.scale.set(scale,scale*.34,scale);transform.updateMatrix();
       instances[kind].push(transform.matrix.clone());
     }
   }
