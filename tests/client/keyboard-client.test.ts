@@ -209,7 +209,7 @@ it('forest keeps the player material default and only enables ambience when its 
  vi.mocked(createWorld).mockRejectedValueOnce(new Error('scene rejected'));
  click('#restart');await vi.waitFor(()=>expect(state.sounds).toHaveLength(2));await vi.waitFor(()=>expect(client().state().ready).toBe(true));
  expect(vi.mocked(createWorld).mock.calls.at(-1)![2]).not.toHaveProperty('sceneStyle');
- expect(vi.mocked(createWorld).mock.calls.at(-1)![2]).not.toHaveProperty('materials');
+ expect(vi.mocked(createWorld).mock.calls.at(-1)![2]).toHaveProperty('materials','quiet-family-v1');
  expect(document.querySelector('[data-recovery="true"]')?.textContent).toContain('fallback rendering');
  expect(state.sounds[1]!.setForestEnabled).not.toHaveBeenCalled();expect(sound.dispose).toHaveBeenCalledOnce();
 });
