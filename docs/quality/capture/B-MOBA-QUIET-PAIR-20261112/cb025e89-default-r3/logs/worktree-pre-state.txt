@@ -1,0 +1,4 @@
+== worktree pre-state 2026-11-13T06:25:45Z
+332fa5f755be8b4a1d91d5fc8071ad4bcbeda2ef
+46ca761b48cc013b4f8253d8cff72b5dd156433f
+-- tracked diff vs cb025e89 (src/tests/config):

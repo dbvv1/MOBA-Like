@@ -1,0 +1,68 @@
+{
+  "source": {
+    "commit": "cb025e897b9d92f9db470d0a057098adb0404f87",
+    "tree": "96748ddd7c0061d901bd96195da0fb704b43c4ab",
+    "dirty": false
+  },
+  "entry": {
+    "variant": "default",
+    "route": "/",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "startedAt": "2026-11-13T06:27:08.120Z",
+  "finishedAt": "2026-11-13T06:38:56.678Z",
+  "passed": true,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "pid": 93648,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "canvas.png",
+      "bytes": 1825648,
+      "sha256": "aa19f4354fb66d9705ed2166a56b13b64a4b13f1ae09ccd0850f5982415d15db"
+    },
+    {
+      "path": "default-canvas.png",
+      "bytes": 1825638,
+      "sha256": "262c8774f390ea9d17319979c76957e51fa2aa48bc9800a987018af949c2062b"
+    },
+    {
+      "path": "diffuse-canvas.png",
+      "bytes": 1821698,
+      "sha256": "696dec76c9fd920cb7998f3e645df3ac2f75cc6662d43a784a18cee80706b28a"
+    },
+    {
+      "path": "full-match-frames.json",
+      "bytes": 132812,
+      "sha256": "788add58000f4d6aaab7e35a6261ed305f012e2f365e673ab7683ca8a5a3cb7c"
+    },
+    {
+      "path": "full-match-terminal.png",
+      "bytes": 1843533,
+      "sha256": "05554ace8d1b6cd45c4d8a0469273a62eec688d7c6e69005d8290eecdfddaf51"
+    },
+    {
+      "path": "legacy-v10-canvas.png",
+      "bytes": 241062,
+      "sha256": "64059d132216e55a0edf3f637b89e52610f52de51da06d4d13085459d45280fe"
+    },
+    {
+      "path": "page.png",
+      "bytes": 1825642,
+      "sha256": "d31ea7e41d24a4f542c302973b4b5370158371cbaf732ccf7e6424c99c9b6460"
+    }
+  ]
+}

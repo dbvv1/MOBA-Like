@@ -1,0 +1,48 @@
+{
+  "source": {
+    "commit": "b8a377078e15c0dd2fb7c367b0bf24adbee09468",
+    "tree": "66467272f24642230a31a7195b4b0b08a19bad82",
+    "dirty": false
+  },
+  "entry": {
+    "variant": "quiet",
+    "route": "/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "startedAt": "2026-11-13T03:42:56.376Z",
+  "finishedAt": "2026-11-13T03:54:45.640Z",
+  "passed": false,
+  "renderer": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "unmaskedVendor": "Google Inc. (Google)"
+  },
+  "rendererClass": "software",
+  "processExit": {
+    "pid": 79724,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "full-match-frames.json",
+      "bytes": 134250,
+      "sha256": "89ea2ceb681209d3de5e781575ded3c0cf811a5253ecdeb85c2735a6621924f1"
+    },
+    {
+      "path": "full-match-terminal.png",
+      "bytes": 1503413,
+      "sha256": "b5166c9588f5fe68d333a65a2c4ef61bea3d7978cf59520a9c3b0c8e14536341"
+    },
+    {
+      "path": "legacy-v10-canvas.png",
+      "bytes": 240989,
+      "sha256": "69024f9f55917c3a41454d75c0aa5528194b8f590caa685487494eb5101d6441"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+recorded_at_utc=2026-11-13T06:26:34Z
+node=v22.23.2
+npm=10.9.8
+playwright=1.64.1
+chromium_path=<ms-playwright>/chromium-1248/chrome-win64/chrome.exe
+7f08161bbeb2853ffe1780a9ded4985087f52efb9725d7d8207aabdd42f7cfb9 *<ms-playwright>/chromium-1248/chrome-win64/chrome.exe
+head=cb025e897b9d92f9db470d0a057098adb0404f87
+tree=96748ddd7c0061d901bd96195da0fb704b43c4ab
+tracked_status=0 changed tracked files

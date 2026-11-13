@@ -1,0 +1,5 @@
+checked_at_utc=2026-11-13T06:41:51Z
+chromium_1248_processes=0
+runner_processes=0
+preview_closed_from_report=True
+browser_process_exit_from_report={'pid': 93648, 'exitCode': 0, 'signalCode': None, 'exited': True}

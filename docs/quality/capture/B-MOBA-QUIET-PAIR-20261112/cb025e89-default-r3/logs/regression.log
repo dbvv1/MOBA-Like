@@ -1,0 +1,20 @@
+
+> moba-like@0.1.0 test
+> vitest run tests/client/browser-smoke/harness.test.ts tests/client/browser-smoke/full-match.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90m<repo>[39m
+
+ [32m✓[39m tests/client/browser-smoke/harness.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1207[2mms[22m[39m
+   [33m[2m✓[22m[39m strict browser smoke helpers (no browser launched)[2m > [22mserves actual built files on loopback and closes its listener [33m 1135[2mms[22m[39m
+[90mstdout[2m | tests/client/browser-smoke/full-match.test.ts[2m > [22m[2mthe unmodified browser recipe reaches a real terminal with an idle player (no test hooks)
+[22m[39mIdle natural-match CPU outcome [33m9010[39m [33m300.3333333333333[39m redWin blueBaseDestroyed
+
+ [32m✓[39m tests/client/browser-smoke/full-match.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 8879[2mms[22m[39m
+   [33m[2m✓[22m[39m the unmodified browser recipe reaches a real terminal with an idle player (no test hooks) [33m 8837[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+[2m   Start at [22m 14:39:44
+[2m   Duration [22m 18.46s[2m (transform 889ms, setup 0ms, collect 1.20s, tests 10.09s, environment 1ms, prepare 1.47s)[22m
+

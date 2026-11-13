@@ -1,0 +1,46 @@
+{
+  "source": {
+    "commit": "b8a377078e15c0dd2fb7c367b0bf24adbee09468",
+    "tree": "66467272f24642230a31a7195b4b0b08a19bad82",
+    "dirty": false
+  },
+  "entry": {
+    "variant": "default",
+    "route": "/",
+    "contentVersion": 11,
+    "lighting": "forest-light-v1"
+  },
+  "startedAt": "2026-11-13T03:20:37.388Z",
+  "finishedAt": "2026-11-13T03:31:35.683Z",
+  "passed": false,
+  "rendererClass": "unknown",
+  "processExit": {
+    "pid": 94608,
+    "exitCode": 0,
+    "signalCode": null,
+    "exited": true
+  },
+  "previewClosed": true,
+  "files": [
+    {
+      "path": "failure.png",
+      "bytes": 54947,
+      "sha256": "fddbcdad85ab350c989a8cff152856031f1d8f2119f4c6a84f23fa9c91ce406a"
+    },
+    {
+      "path": "full-match-frames.json",
+      "bytes": 134107,
+      "sha256": "1e46ca0fa8a3b5a23d7074ffd46ebd0b842e5f4c71f79e99eae7c4360b030d16"
+    },
+    {
+      "path": "full-match-terminal.png",
+      "bytes": 1843714,
+      "sha256": "572b3211d61c3eac99355115ef7b1b28d1ecd5a9645a738b77ec4700f7e70e79"
+    },
+    {
+      "path": "legacy-v10-canvas.png",
+      "bytes": 240961,
+      "sha256": "4bdb8f09c98a37081efc097ab7bf8ee23886ad9efb4da8bfbcc4168ba682032d"
+    }
+  ]
+}

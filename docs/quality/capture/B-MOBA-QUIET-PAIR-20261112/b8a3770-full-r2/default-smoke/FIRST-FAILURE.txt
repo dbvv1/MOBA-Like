@@ -1,0 +1,7 @@
+default full-match smoke FIRST ATTEMPT
+started(utc)=2026-11-13T03:20:36Z
+finished(utc)=2026-11-13T03:31:35Z
+exit=1
+output=default-smoke
+full-match terminal: tick9010/redWin/blueBaseDestroyed; observer accepted (sameFrameExtraCallbacks=0)
+failure stage=initialize: save-choice dialog from the post-terminal restart autosave blocked entry initialization; 15s wait timeout

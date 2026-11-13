@@ -1,0 +1,63 @@
+
+> moba-like@0.1.0 build:web
+> npm run typecheck:web && vite build --config vite.config.ts
+
+
+> moba-like@0.1.0 typecheck:web
+> tsc -p tsconfig.web.json
+
+[36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 162 modules transformed.
+rendering chunks...
+computing gzip size...
+web-dist/build-identity.json                                 0.11 kB │ gzip:   0.11 kB
+web-dist/assets/hit-ClSpEb3w.ogg                             5.35 kB
+web-dist/assets/lane-ground-BkV_wW4P.glb                     5.47 kB
+web-dist/assets/skill-w-Bw6MZLIv.ogg                         5.96 kB
+web-dist/assets/skill-q-DUKtO6-G.ogg                         5.97 kB
+web-dist/legacy-v10.html                                     6.52 kB │ gzip:   2.56 kB
+web-dist/assets/shield-CiyT-Gb-.ogg                          7.65 kB
+web-dist/assets/rock-DnYfbnCK.glb                            8.26 kB
+web-dist/candidate.html                                      8.98 kB │ gzip:   3.28 kB
+web-dist/index.html                                          9.01 kB │ gzip:   3.28 kB
+web-dist/assets/tree-CawC7zP0.glb                            9.64 kB
+web-dist/assets/lane-rEqk0SD2.navmesh                       11.18 kB
+web-dist/assets/swing-B45xdEEZ.ogg                          15.53 kB
+web-dist/assets/cast-Ca76kIp9.ogg                           16.50 kB
+web-dist/assets/trace_02-KaZGZY6K.png                       39.39 kB
+web-dist/assets/wall-OZ-rAfB1.webp                          90.56 kB
+web-dist/assets/earth-BguK5Wlt.webp                        141.10 kB
+web-dist/assets/ranged-teal-B_rlZWgD.glb                   157.55 kB
+web-dist/assets/ranged-rust-rsnFKRRJ.glb                   157.56 kB
+web-dist/assets/tower-rust-B3YjHLZt.glb                    160.32 kB
+web-dist/assets/tower-teal-BQ2jCRMr.glb                    160.36 kB
+web-dist/assets/melee-teal-fyp_u-7O.glb                    164.59 kB
+web-dist/assets/melee-rust-DlZVcWSl.glb                    164.60 kB
+web-dist/assets/hero-teal-sUFSV1Mz.glb                     169.03 kB
+web-dist/assets/hero-rust-6hnVVH5H.glb                     169.89 kB
+web-dist/assets/veyra-teal-CpkKDg1w.glb                    181.65 kB
+web-dist/assets/veyra-rust-BSIRU2oZ.glb                    182.50 kB
+web-dist/assets/forest-CXN_0qP-.webp                       196.96 kB
+web-dist/assets/amber-B-DIcLhT.glb                         199.71 kB
+web-dist/assets/blue-reactions-CcPaxMLZ.glb                221.62 kB
+web-dist/assets/siege-teal-CsgCrOmN.glb                    226.24 kB
+web-dist/assets/siege-rust-1xQRoxFB.glb                    226.26 kB
+web-dist/assets/barracks-rust-ELYrhKWW.glb                 243.90 kB
+web-dist/assets/barracks-teal-DplTNS_l.glb                 243.93 kB
+web-dist/assets/earth-albedo-gB4RPNB7.webp                 244.15 kB
+web-dist/assets/base-rust-CiTXTXEl.glb                     324.62 kB
+web-dist/assets/base-teal-L4GVNWxZ.glb                     324.63 kB
+web-dist/assets/forest-albedo-CcYmo4k8.webp                330.63 kB
+web-dist/assets/client-Bk4W7ek4.css                          1.50 kB │ gzip:   0.63 kB
+web-dist/assets/legacy-h3VCeN-A.js                         116.95 kB │ gzip:  37.02 kB
+web-dist/assets/client-ob4zSf6H.js                         217.06 kB │ gzip:  69.43 kB
+web-dist/assets/recast-navigation.wasm-compat-Qa-X0_Ub.js  726.22 kB │ gzip: 219.84 kB
+web-dist/assets/targeted-BFY2tto5.js                       746.07 kB │ gzip: 178.15 kB
+
+[32m✓ built in 550ms[39m
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

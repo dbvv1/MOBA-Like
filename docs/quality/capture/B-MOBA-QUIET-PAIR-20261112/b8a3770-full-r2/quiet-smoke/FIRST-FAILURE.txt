@@ -1,0 +1,6 @@
+quiet full-match smoke FIRST ATTEMPT
+started(utc)=2026-11-13T03:42:55Z
+finished(utc)=2026-11-13T03:54:47Z
+exit=1
+full-match terminal tick9010 redWin blueBaseDestroyed; frames=1225; sameFrameExtraCallbacks=0
+failure stage=keyboard-and-resume: locator('footer details') matched both Controls & help and Runtime diagnostics (strict mode)
