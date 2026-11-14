@@ -4,8 +4,9 @@ import assert from 'node:assert/strict';
 // Both variants run the same full input/restart/save sequence, never a load-only probe.
 export function smokeEntry(env = process.env) {
   const variant=env.MOBA_SMOKE_VARIANT??'default';
-  if(!['default','quiet'].includes(variant))throw new Error('MOBA_SMOKE_VARIANT must be default or quiet');
-  return {variant,route:variant==='default'?'/':'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1',contentVersion:11,lighting:'forest-light-v1'};
+  if(!['default','quiet','forest-lane'].includes(variant))throw new Error('MOBA_SMOKE_VARIANT must be default, quiet or forest-lane');
+  const route=variant==='default'?'/':variant==='quiet'?'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1':'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1&scene=forest-lane-v1';
+  return {variant,route,contentVersion:11,lighting:'forest-light-v1',...(variant==='forest-lane'?{scene:'forest-lane-v1'}:{})};
 }
 
 export function assertSmokeEntry(state,entry,pageURL) {
@@ -19,6 +20,7 @@ export function assertSmokeEntry(state,entry,pageURL) {
   const material='quiet-family-v1';
   assert.equal(state.materials?.configured,material,'Actual loaded material family must match the selected entry');
   assert.equal(state.materials?.active,material,'Material family must have submitted a live frame');
+  if(entry.scene)assert.equal(state.scene?.active,entry.scene,'Scene dressing must have submitted a live frame');
 }
 
 export function assertRetiredLighting(state,noticeVisible) {

@@ -40,7 +40,8 @@ function lancetMask(kind:'body'|'trail'){
 }
 
 // Live snapshot entities only: removal is not interpreted as a hit or explosion.
-export function createEffects(scene:THREE.Scene){
+/** `towerLaunchY` is the tower muzzle height: 4.3 m for the reviewed towers, higher for forest-lane ruin crowns. */
+export function createEffects(scene:THREE.Scene,towerLaunchY=4.3){
   const root=new THREE.Group();root.name='snapshot-effects';scene.add(root);
   const projectileGeometry=new THREE.OctahedronGeometry(1);
   const headingGeometry=new THREE.ConeGeometry(.3,.8,3);
@@ -80,7 +81,7 @@ export function createEffects(scene:THREE.Scene){
     const seenProjectiles=new Set<number>(),seenZones=new Set<number>(),seenWarnings=new Set<number>();
     for(const entity of snapshot.projectiles){
       seenProjectiles.add(entity.id);let visual=projectiles.get(entity.id);
-      const to=new THREE.Vector3(entity.position.x,entity.basicAttack?(entity.basicAttack.sourceKind==='structure'?4.3:entity.basicAttack.sourceKind==='hero'?1.2:.7):entity.width+.1,entity.position.z);
+      const to=new THREE.Vector3(entity.position.x,entity.basicAttack?(entity.basicAttack.sourceKind==='structure'?towerLaunchY:entity.basicAttack.sourceKind==='hero'?1.2:.7):entity.width+.1,entity.position.z);
       if(entity.basicAttack&&visual){
         // Cosmetic vertical pursuit follows the same 2D flight, connecting the
         // launch socket to the selected target rather than vanishing overhead.
