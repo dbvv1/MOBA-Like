@@ -13,8 +13,14 @@ export async function createPlayableWorld(host:HTMLElement,catalog:ContentCatalo
   alive();let reason='';
   const forced=new URLSearchParams(options.search).get('renderer')==='canvas2d';
   if(!forced){
-    try{const world=await factories.webgl(host,catalog,{lighting:parseLightingStyle(options.search),materials:parseMaterialFamily(options.search),scene:parseSceneDressing(options.search),cameraFollow:options.cameraFollow,signal:options.signal});if(options.signal.aborted){world.dispose();alive();}return {world,backend:'three-webgl2',fallbackReason:'',cameraPolicy:options.cameraFollow};}
+    const requestedScene=parseSceneDressing(options.search);
+    let candidateLighting:ReturnType<typeof parseLightingStyle>|undefined,candidateMaterials:ReturnType<typeof parseMaterialFamily>|undefined;
+    try{candidateLighting=parseLightingStyle(options.search);candidateMaterials=parseMaterialFamily(options.search);const world=await factories.webgl(host,catalog,{lighting:candidateLighting,materials:candidateMaterials,scene:requestedScene,cameraFollow:options.cameraFollow,signal:options.signal});if(options.signal.aborted){world.dispose();alive();}return {world,backend:'three-webgl2',fallbackReason:'',cameraPolicy:options.cameraFollow};}
     catch(error){alive();reason=error instanceof Error?error.message:String(error);}
+    if(requestedScene!=='baseline'&&candidateLighting!==undefined&&candidateMaterials!==undefined){
+      try{const world=await factories.webgl(host,catalog,{lighting:candidateLighting,materials:candidateMaterials,scene:'baseline',cameraFollow:options.cameraFollow,signal:options.signal});if(options.signal.aborted){world.dispose();alive();}return {world,backend:'three-webgl2',fallbackReason:`Scene candidate unavailable; restored the default scene (Scene candidate unavailable; restored the default scene.). ${reason}`,cameraPolicy:options.cameraFollow};}
+      catch(error){alive();reason+=`; baseline scene: ${error instanceof Error?error.message:String(error)}`;}
+    }
     try{const world=await factories.webgl(host,catalog,{lighting:parseLightingStyle(options.defaultLightingSearch),cameraFollow:'baseline',signal:options.signal});if(options.signal.aborted){world.dispose();alive();}return {world,backend:'three-webgl2',fallbackReason:`Candidate renderer unavailable; restored default rendering. ${reason}`,cameraPolicy:'baseline' as const};}
     catch(error){alive();reason+=`; default renderer: ${error instanceof Error?error.message:String(error)}`;}
   }else reason='Canvas2D explicitly selected';

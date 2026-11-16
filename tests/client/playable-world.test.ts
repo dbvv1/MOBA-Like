@@ -8,9 +8,10 @@ import {Simulation} from '../../src/sim/simulation.js';
 import {createDetourNavigation} from '../../src/sim/navigation.js';
 const options=()=>({search:'?camera=hold-follow-v1',defaultLightingSearch:'?lighting=forest-light-v1',cameraFollow:'hold-follow-v1' as const,signal:new AbortController().signal});
 it('initialization failure retries default rendering and reports the downgrade',async()=>{
- const webgl=vi.fn().mockRejectedValueOnce(new Error('asset failure')).mockResolvedValueOnce({dispose:vi.fn()});const canvas=vi.fn();
- const result=await createPlayableWorld(document.createElement('main'),getContent(12),options(),{webgl,canvas} as any);
- expect(webgl.mock.calls[1]![2]).toMatchObject({lighting:'forest-light-v1',cameraFollow:'baseline'});expect(canvas).not.toHaveBeenCalled();expect(result.fallbackReason).toContain('asset failure');expect(result.cameraPolicy).toBe('baseline');
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('asset failure')).mockResolvedValueOnce({dispose:vi.fn()});const canvas=vi.fn();const base=options();
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),base,{webgl,canvas} as any);
+ expect(webgl.mock.calls[0]![2]).toEqual({lighting:'baseline',materials:'baseline',scene:'baseline',cameraFollow:'hold-follow-v1',signal:base.signal});
+ expect(webgl.mock.calls[1]![2]).toEqual({lighting:'forest-light-v1',cameraFollow:'baseline',signal:base.signal});expect(canvas).not.toHaveBeenCalled();expect(result.fallbackReason).toContain('asset failure');expect(result.cameraPolicy).toBe('baseline');
 });
 it('both WebGL failures select Canvas2D while abort never creates a fallback owner',async()=>{
  const webgl=vi.fn().mockRejectedValue(new Error('no WebGL2')),canvas=vi.fn().mockReturnValue({});
@@ -26,6 +27,25 @@ it('explicit Canvas2D avoids WebGL and keeps the normal simulation alive for 300
  const webgl=vi.fn(),canvas=vi.fn().mockReturnValue({});await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?renderer=canvas2d'},{webgl,canvas} as any);expect(webgl).not.toHaveBeenCalled();
 });
 
+it('scene candidate failure retries the default scene with the requested lighting and materials',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('scene asset failure')).mockResolvedValueOnce({dispose:vi.fn()});const canvas=vi.fn();
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?camera=hold-follow-v1&lighting=forest-light-v1&materials=quiet-family-v1&scene=forest-lane-v1'},{webgl,canvas} as any);
+ expect(webgl).toHaveBeenCalledTimes(2);
+ expect(webgl.mock.calls[0]![2]).toMatchObject({lighting:'forest-light-v1',materials:'quiet-family-v1',scene:'forest-lane-v1'});
+ expect(webgl.mock.calls[1]![2]).toMatchObject({lighting:'forest-light-v1',materials:'quiet-family-v1',scene:'baseline',cameraFollow:'hold-follow-v1'});
+ expect(canvas).not.toHaveBeenCalled();expect(result.backend).toBe('three-webgl2');expect(result.cameraPolicy).toBe('hold-follow-v1');
+ expect(result.fallbackReason).toContain('Scene candidate unavailable; restored the default scene.');expect(result.fallbackReason).toContain('scene asset failure');
+});
+it('failed scene retry returns to the unchanged default lighting chain',async()=>{
+ const webgl=vi.fn().mockRejectedValueOnce(new Error('scene asset failure')).mockRejectedValueOnce(new Error('scene baseline failure')).mockResolvedValueOnce({dispose:vi.fn()});const canvas=vi.fn();
+ const base=options();
+ const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...base,search:'?lighting=forest-light-v1&materials=quiet-family-v1&scene=forest-lane-v1'},{webgl,canvas} as any);
+ expect(webgl).toHaveBeenCalledTimes(3);
+ expect(webgl.mock.calls[2]![2]).toEqual({lighting:'forest-light-v1',cameraFollow:'baseline',signal:base.signal});
+ expect(webgl.mock.calls[2]![2].materials).toBeUndefined();expect(webgl.mock.calls[2]![2].scene).toBeUndefined();
+ expect(canvas).not.toHaveBeenCalled();expect(result.cameraPolicy).toBe('baseline');
+ expect(result.fallbackReason).toContain('scene asset failure');expect(result.fallbackReason).toContain('scene baseline failure');
+});
 it('quiet family is opt-in and a failed family retries baseline without candidate assets',async()=>{
  const webgl=vi.fn().mockRejectedValueOnce(new Error('Quiet material family unavailable')).mockResolvedValueOnce({dispose:vi.fn()});
  const result=await createPlayableWorld(document.createElement('main'),getContent(12),{...options(),search:'?materials=quiet-family-v1'},{webgl,canvas:vi.fn()} as any);
