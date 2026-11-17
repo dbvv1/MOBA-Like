@@ -6,7 +6,7 @@ export function smokeEntry(env = process.env) {
   const variant=env.MOBA_SMOKE_VARIANT??'default';
   if(!['default','quiet','forest-lane'].includes(variant))throw new Error('MOBA_SMOKE_VARIANT must be default, quiet or forest-lane');
   const route=variant==='default'?'/':variant==='quiet'?'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1':'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1&scene=forest-lane-v1';
-  return {variant,route,contentVersion:11,lighting:'forest-light-v1',...(variant==='forest-lane'?{scene:'forest-lane-v1'}:{})};
+  return {variant,route,contentVersion:11,lighting:'forest-light-v1',...(variant==='quiet'?{}:{scene:'forest-lane-v1'})};
 }
 
 export function assertSmokeEntry(state,entry,pageURL) {

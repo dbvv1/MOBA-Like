@@ -71,7 +71,7 @@ async function boot(mode:'prompt'|'new'='prompt'){
     soundButton.addEventListener('click',()=>{soundEnabled=!sound.enabled;sound.setEnabled(soundEnabled);soundButton.textContent=sound.enabled?'Sound on':'Sound off';soundButton.setAttribute('aria-pressed',String(sound.enabled));},{signal:soundEvents.signal});
     window.addEventListener('pointerdown',()=>void sound.unlock(),{signal:soundEvents.signal});
     window.addEventListener('keydown',()=>void sound.unlock(),{signal:soundEvents.signal});
-    const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'],document.documentElement.dataset['defaultMaterials']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
+    const rendered=await createPlayableWorld(stage,sim.catalog,{cameraFollow:cameraPolicy,search:entryLightingSearch(location.search,document.documentElement.dataset['defaultLighting'],document.documentElement.dataset['defaultMaterials'],document.documentElement.dataset['defaultScene']),defaultLightingSearch:'?lighting=forest-light-v1',signal:abort.signal});const world=rendered.world;lifetime.defer(()=>world.dispose());current();
     const initialTick=sim.snapshot().tick;activeCameraPolicy=rendered.cameraPolicy;refreshHelp();
     // Recovered historical events must not play again. Live events start with the next real tick.
     let snapshot={...sim.snapshot(),events:[] as ReturnType<typeof sim.snapshot>['events']};const playerId=snapshot.heroes.find(hero=>hero.team===0)?.id;

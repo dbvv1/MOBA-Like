@@ -5,6 +5,7 @@ import {join} from 'node:path';
 import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting} from './options.mjs';
 import {parseMaterialFamily} from '../../../src/render/quiet-family.js';
 import {parseLightingStyle} from '../../../src/render/lighting-style.js';
+import {parseSceneDressing} from '../../../src/render/scene-dressing.js';
 import {entryLightingSearch} from '../../../src/ui/entry-lighting.js';
 import {startServer} from './server.mjs';
 
@@ -17,6 +18,8 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     for(const variant of ['default','quiet']){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test');
       expect(parseMaterialFamily(entryLightingSearch(url.search,undefined,variant==='default'?'quiet-family-v1':undefined))).toBe('quiet-family-v1');
+      expect(parseSceneDressing(entryLightingSearch(url.search,undefined,undefined,variant==='default'?'forest-lane-v1':undefined))).toBe(variant==='default'?'forest-lane-v1':'baseline');
+      expect(entry.scene).toBe(variant==='default'?'forest-lane-v1':undefined);
       expect(parseLightingStyle(entryLightingSearch(url.search,variant==='default'?'forest-light-v1':undefined))).toBe(entry.lighting);
       expect(url.searchParams.has('commands')).toBe(false);
       expect(entry.contentVersion).toBe(11);
@@ -26,13 +29,14 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     }
   });
   it('rejects missing state, material recovery, Canvas and wrong lighting for either full sequence',()=>{
-    const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'}};
+    const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'},scene:{active:'forest-lane-v1'}};
     for(const variant of ['default','quiet']){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant});
       state.materials={configured:'quiet-family-v1',active:'quiet-family-v1'};
       expect(()=>assertSmokeEntry(state,entry,new URL(entry.route,'https://example.test').href)).not.toThrow();
       for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
-        {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
+        {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}},
+        ...(entry.scene?[{...state,scene:{active:null}},{...state,scene:undefined}]:[])]){
         expect(()=>assertSmokeEntry(bad,entry,new URL(entry.route,'https://example.test').href)).toThrow();
       }
     }
