@@ -55,9 +55,20 @@ npm run preview:web
 ```sh
 npm ci
 npm run sim -- --games 200 --seed 1
+# 跑测试前先准备 Veyra 原始素材快照（需要 Python 3）
+python3 asset-pipeline/veyra-death-contact/tools/baseline.py
 npm test
 npm run build
 ```
+
+只跑 `sim` 不需要素材快照。如果浅克隆提示原始提交不在本地，从项目的 `origin` 取回固定提交，再重跑准备命令：
+
+```sh
+git fetch --depth=1 --no-tags origin b489ed38592dc184fffe2ab9b3b186441c7dc9bb
+python3 asset-pipeline/veyra-death-contact/tools/baseline.py
+```
+
+准备脚本不会自行联网，也不会把当前角色素材当成原始快照。已有快照的校验与复用见 [Veyra 基线说明](asset-pipeline/veyra-death-contact/README.md#0-pin-the-b489ed3-baseline-before-overwriting-the-heroes-release)。
 
 `sim` 与网页新对局采用 v11 规则：普攻先准备再释放，远程弹体接触后才造成伤害；释放前移动或 Stop 可取消，释放后可走位或接技能，已发弹体继续飞行。小兵接战时仍会彼此让出有限空间。可用 `--content-version 1`、`2`、`7`、`8`、`9` 或 `10` 运行旧规则。回放记录自身版本，不随默认值改变。
 
