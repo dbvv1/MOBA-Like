@@ -26,6 +26,8 @@ PNG 直接来自实际 `world.canvas`，绘图缓冲必须为 **1280×720**。�
 
 ## 命令行消费者（仅在环境许可时）
 
+下面的全量 `npm test` 需要先按[无画面对局](../README.md#无画面对局)准备 Veyra 原始素材快照。只读取已返回的拍摄证据不需要这一步。
+
 ```sh
 npm ci
 npx tsc -p tsconfig.capture.json
