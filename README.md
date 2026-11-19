@@ -1,6 +1,8 @@
 ## Play Ashen Furrow
 
-The home entry uses the v11 game with forest lighting: clearer tower volume, shadows and grounding. The previous [v11 lighting](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/candidate.html?lighting=baseline) and [legacy v10 game](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/legacy-v10.html) remain in the **Game versions** links. The v11 game includes the attack windup / projectile / contact cycle, siege models, continuous terrain, editable keyboard controls and local Continue saved match. Player and bot inputs share stable-seat, next-tick ordering; compatible local saves remain readable. This is offline play, not online multiplayer. Command buffering remains an explicit trial, not the default.
+The [main game](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/) is an offline single-lane brawl on v11 rules, with forest lighting, quiet materials and forest lane dressing. [Compare without the forest dressing](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/?scene=baseline) to keep the same lighting, materials and game rules. For an older visual comparison, open the [v11 visual baseline](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/candidate.html?lighting=baseline), which also resets materials and scene dressing. The [legacy v10 game](https://dbvv1-moba-like.pretty-llama-9945.chatgpt.site/legacy-v10.html) is a separate ruleset.
+
+The v11 game includes the attack windup / projectile / contact cycle, siege models, continuous terrain, editable keyboard controls and local Continue saved match. Player and bot inputs share stable-seat, next-tick ordering; compatible local saves remain readable. This is offline play, not online multiplayer. Command buffering remains an explicit trial, not the default.
 
 # MOBA-Like
 
