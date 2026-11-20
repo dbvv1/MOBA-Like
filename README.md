@@ -12,9 +12,11 @@ The v11 game includes the attack windup / projectile / contact cycle, siege mode
 
 ## 运行
 
-需要 Node.js 22.12 或更新版本，以及桌面浏览器。WebGL 2 用于完整 3D 画面。
+需要 Git、Node.js 22.12 或更新版本，以及桌面浏览器。请用 Git 克隆，不要用 Download ZIP：网页启动和构建需要读取 Git 提交与源码树。WebGL 2 用于完整 3D 画面。
 
 ```sh
+git clone https://github.com/dbvv1/MOBA-Like.git
+cd MOBA-Like
 npm ci
 npm run dev
 ```
