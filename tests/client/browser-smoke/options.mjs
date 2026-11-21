@@ -23,6 +23,14 @@ export function assertSmokeEntry(state,entry,pageURL) {
   if(entry.scene)assert.equal(state.scene?.active,entry.scene,'Scene dressing must have submitted a live frame');
 }
 
+// Serialized by Playwright; keep this callback independent of module bindings.
+export function freshMorrowZoneReceipt(priorIds,snapshot=window.mobaClient?.snapshot()) {
+  if(!snapshot)return false;
+  const {tick,zones}=snapshot;
+  const zone=zones.find(z=>z.team===0&&z.abilityId==='morrow.e'&&!priorIds.includes(z.id)&&tick<=z.expiresTick);
+  return zone?{id:zone.id,tick,expiresTick:zone.expiresTick}:false;
+}
+
 export function assertRetiredLighting(state,noticeVisible) {
   assert.equal(state.ready,true);
   assert.equal(state.backend,'three-webgl2','Retirement probe must restore the real default renderer');

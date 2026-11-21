@@ -2,12 +2,14 @@ import {describe,it,expect} from 'vitest';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting} from './options.mjs';
+import {launchOptions,pixelEvidence,failureCategory,cleanup,smokeEntry,assertSmokeEntry,assertRetiredLighting,freshMorrowZoneReceipt} from './options.mjs';
 import {parseMaterialFamily} from '../../../src/render/quiet-family.js';
 import {parseLightingStyle} from '../../../src/render/lighting-style.js';
 import {parseSceneDressing} from '../../../src/render/scene-dressing.js';
 import {entryLightingSearch} from '../../../src/ui/entry-lighting.js';
 import {startServer} from './server.mjs';
+import {runInNewContext} from 'node:vm';
+import {hero,makeSim,perform,place,stepMany} from '../../helpers.js';
 
 describe('strict browser smoke helpers (no browser launched)',()=>{
   it('selects the real default when omitted and the existing quiet route explicitly',()=>{
@@ -51,6 +53,35 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
     expect(()=>assertSmokeEntry(ready,entry,'https://example.test/')).toThrow();
     expect(()=>assertSmokeEntry(ready,entry,'https://example.test/candidate.html')).toThrow();
     expect(()=>assertSmokeEntry(ready,entry,undefined)).toThrow();
+  });
+  it('serializes the Morrow E poll and rejects prior, enemy, unrelated and expired zones',()=>{
+    const snapshot={tick:100,zones:[
+      {id:1,team:0,abilityId:'morrow.e',expiresTick:120},
+      {id:2,team:1,abilityId:'morrow.e',expiresTick:120},
+      {id:3,team:0,abilityId:'veyra.e',expiresTick:120},
+      {id:4,team:0,abilityId:'morrow.e',expiresTick:99},
+    ]};
+    const poll=runInNewContext(`(${freshMorrowZoneReceipt})`,{window:{mobaClient:{snapshot:()=>snapshot}}});
+    expect(poll([1])).toBe(false);
+    snapshot.zones.push({id:5,team:0,abilityId:'morrow.e',expiresTick:100});
+    expect(poll([1])).toEqual({id:5,tick:100,expiresTick:100});
+    snapshot.tick++;
+    expect(poll([1])).toBe(false);
+  });
+  it('observes the real Morrow E zone after windup but not after its lifetime',async()=>{
+    const sim=await makeSim(11,17,{blueHero:'morrow'}),morrow=hero(sim,0);
+    place(morrow,{x:-4,z:0});
+    expect(perform(sim,{type:'cast',heroId:morrow.id,slot:'E',targetId:null,direction:null,point:{x:-1,z:0}}).accepted).toBe(true);
+    expect(sim.snapshot().stats.abilities['morrow.e']?.casts).toBe(1);
+    expect(freshMorrowZoneReceipt([],sim.snapshot())).toBe(false);
+    stepMany(sim,10);
+    const sampled=sim.snapshot(),zone=sampled.zones.find(z=>z.team===0&&z.abilityId==='morrow.e');
+    expect(zone).toBeDefined();
+    expect(freshMorrowZoneReceipt([],sampled)).toEqual({id:zone!.id,tick:sampled.tick,expiresTick:zone!.expiresTick});
+    stepMany(sim,zone!.expiresTick-sampled.tick);
+    expect(freshMorrowZoneReceipt([],sim.snapshot())).toEqual({id:zone!.id,tick:zone!.expiresTick,expiresTick:zone!.expiresTick});
+    sim.step([]);
+    expect(freshMorrowZoneReceipt([],sim.snapshot())).toBe(false);
   });
   it('treats retired stylized lighting as visible recovery, never an active variant',()=>{
     expect(()=>parseLightingStyle('?lighting=stylized-diffuse')).toThrow('retired');
