@@ -5,7 +5,7 @@ From a Git checkout root, install the locked dependencies with `npm ci`. The sho
 | Variant | Command | Literal route | Scene and smoke check |
 | --- | --- | --- | --- |
 | `default` | `npm run smoke` | `/` | Forest lane from the homepage default; asserts active `forest-lane-v1` after a submitted frame. |
-| `quiet` | `MOBA_SMOKE_VARIANT=quiet npm run smoke` | `/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1` | Flat (`baseline`) scene by routing; the smoke does not assert `scene.active` for this variant. |
+| `quiet` | `MOBA_SMOKE_VARIANT=quiet npm run smoke` | `/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1` | Flat scene; asserts `scene.requested=baseline` and `scene.active=null` (no active dressing). |
 | `forest-lane` | `MOBA_SMOKE_VARIANT=forest-lane npm run smoke` | `/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1&scene=forest-lane-v1` | Explicit forest lane; asserts active `forest-lane-v1` after a submitted frame. |
 
 Omitted variant means `default`; empty or unknown variants fail before the server or browser starts. All three use the same v11 simulation, forest lighting, quiet materials, baseline camera and baseline audio. The smoke checks the selected route and active lighting/materials for all three; none enables the separate v12 command-buffer or Camera + Q/W trial.

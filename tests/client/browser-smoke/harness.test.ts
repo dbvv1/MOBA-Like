@@ -12,16 +12,19 @@ import {runInNewContext} from 'node:vm';
 import {hero,makeSim,perform,place,stepMany} from '../../helpers.js';
 
 describe('strict browser smoke helpers (no browser launched)',()=>{
-  it('selects the real default when omitted and the existing quiet route explicitly',()=>{
+  const variants=[
+    {variant:'default',route:'/',scene:{requested:'forest-lane-v1',active:'forest-lane-v1'}},
+    {variant:'quiet',route:'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1',scene:{requested:'baseline',active:null}},
+    {variant:'forest-lane',route:'/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1&scene=forest-lane-v1',scene:{requested:'forest-lane-v1',active:'forest-lane-v1'}},
+  ];
+  const ready={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'},materials:{configured:'quiet-family-v1',active:'quiet-family-v1'}};
+  it('selects only the three existing routes and matches their production parsers',()=>{
     expect(smokeEntry({})).toEqual(smokeEntry({MOBA_SMOKE_VARIANT:'default'}));
-    expect(smokeEntry({}).route).toBe('/');
-    const quiet=smokeEntry({MOBA_SMOKE_VARIANT:'quiet'});
-    expect(quiet.route).toBe('/candidate.html?materials=quiet-family-v1&lighting=forest-light-v1');
-    for(const variant of ['default','quiet']){
+    for(const {variant,route,scene} of variants){
       const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test');
+      expect(entry.route).toBe(route);
       expect(parseMaterialFamily(entryLightingSearch(url.search,undefined,variant==='default'?'quiet-family-v1':undefined))).toBe('quiet-family-v1');
-      expect(parseSceneDressing(entryLightingSearch(url.search,undefined,undefined,variant==='default'?'forest-lane-v1':undefined))).toBe(variant==='default'?'forest-lane-v1':'baseline');
-      expect(entry.scene).toBe(variant==='default'?'forest-lane-v1':undefined);
+      expect(parseSceneDressing(entryLightingSearch(url.search,undefined,undefined,variant==='default'?'forest-lane-v1':undefined))).toBe(scene.requested);
       expect(parseLightingStyle(entryLightingSearch(url.search,variant==='default'?'forest-light-v1':undefined))).toBe(entry.lighting);
       expect(url.searchParams.has('commands')).toBe(false);
       expect(entry.contentVersion).toBe(11);
@@ -30,29 +33,35 @@ describe('strict browser smoke helpers (no browser launched)',()=>{
       expect(()=>smokeEntry({MOBA_SMOKE_VARIANT:variant})).toThrow('MOBA_SMOKE_VARIANT');
     }
   });
-  it('rejects missing state, material recovery, Canvas and wrong lighting for either full sequence',()=>{
-    const state={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'},scene:{active:'forest-lane-v1'}};
-    for(const variant of ['default','quiet']){
-      const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant});
-      state.materials={configured:'quiet-family-v1',active:'quiet-family-v1'};
-      expect(()=>assertSmokeEntry(state,entry,new URL(entry.route,'https://example.test').href)).not.toThrow();
-      for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
-        {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}},
-        ...(entry.scene?[{...state,scene:{active:null}},{...state,scene:undefined}]:[])]){
-        expect(()=>assertSmokeEntry(bad,entry,new URL(entry.route,'https://example.test').href)).toThrow();
-      }
+  it.each(variants)('rejects material recovery, Canvas and wrong lighting for $variant',({variant,scene})=>{
+    const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test').href;
+    const state={...ready,scene};
+    expect(()=>assertSmokeEntry(state,entry,url)).not.toThrow();
+    for(const bad of [{},{...state,ready:false},{...state,fallbackReason:'restored default rendering'},
+      {...state,materials:undefined},{...state,materials:{configured:'baseline',active:null}},{...state,materials:{configured:'quiet-family-v1',active:'baseline'}},{...state,backend:'canvas2d'},{...state,contentVersion:12},{...state,lighting:{active:'baseline'}}]){
+      expect(()=>assertSmokeEntry(bad,entry,url)).toThrow();
     }
+  });
+  it.each(variants)('requires both requested and active scene diagnostics for $variant',({variant,scene})=>{
+    const entry=smokeEntry({MOBA_SMOKE_VARIANT:variant}),url=new URL(entry.route,'https://example.test').href;
+    expect(()=>assertSmokeEntry({...ready,scene},entry,url)).not.toThrow();
+    expect(()=>assertSmokeEntry({...ready,scene:{...scene,requested:variant==='quiet'?'forest-lane-v1':'baseline'}},entry,url)).toThrow('Requested scene');
+    expect(()=>assertSmokeEntry({...ready,scene:{active:scene.active}},entry,url)).toThrow('Requested scene');
+    expect(()=>assertSmokeEntry(ready,entry,url)).toThrow('Requested scene');
+    expect(()=>assertSmokeEntry({...ready,scene:null},entry,url)).toThrow('Requested scene');
+    expect(()=>assertSmokeEntry({...ready,scene:{requested:scene.requested}},entry,url)).toThrow('Active scene');
+    expect(()=>assertSmokeEntry({...ready,scene:{...scene,active:variant==='quiet'?'forest-lane-v1':null}},entry,url)).toThrow('Active scene');
   });
   it.each(['Morrow selection','Morrow reset','Veyra return'])('rejects transient fallback or wrong URL at the %s restart',()=>{
     const entry=smokeEntry({MOBA_SMOKE_VARIANT:'quiet'}),url=new URL(entry.route,'https://example.test').href;
-    const ready={ready:true,backend:'three-webgl2',fallbackReason:'',contentVersion:11,lighting:{active:'forest-light-v1'},materials:{configured:'quiet-family-v1',active:'quiet-family-v1'}};
-    expect(()=>assertSmokeEntry(ready,entry,url)).not.toThrow();
+    const state={...ready,scene:{requested:'baseline',active:null}};
+    expect(()=>assertSmokeEntry(state,entry,url)).not.toThrow();
     // A later successful restart cannot make this intermediate failure acceptable.
-    expect(()=>assertSmokeEntry({...ready,fallbackReason:'restored default rendering'},entry,url)).toThrow();
-    expect(()=>assertSmokeEntry({...ready,backend:'canvas2d'},entry,url)).toThrow();
-    expect(()=>assertSmokeEntry(ready,entry,'https://example.test/')).toThrow();
-    expect(()=>assertSmokeEntry(ready,entry,'https://example.test/candidate.html')).toThrow();
-    expect(()=>assertSmokeEntry(ready,entry,undefined)).toThrow();
+    expect(()=>assertSmokeEntry({...state,fallbackReason:'restored default rendering'},entry,url)).toThrow();
+    expect(()=>assertSmokeEntry({...state,backend:'canvas2d'},entry,url)).toThrow();
+    expect(()=>assertSmokeEntry(state,entry,'https://example.test/')).toThrow();
+    expect(()=>assertSmokeEntry(state,entry,'https://example.test/candidate.html')).toThrow();
+    expect(()=>assertSmokeEntry(state,entry,undefined)).toThrow();
   });
   it('serializes the Morrow E poll and rejects prior, enemy, unrelated and expired zones',()=>{
     const snapshot={tick:100,zones:[
