@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
+import {readFileSync} from 'node:fs';
 import {BINDINGS_STORAGE_KEY,DEFAULT_BINDINGS,KeyboardBindings} from '../../src/input/bindings.js';
 import {controlsHelp,createKeyboardSettings} from '../../src/ui/keyboard-settings.js';
 import {createHud} from '../../src/ui/hud.js';
@@ -29,6 +30,21 @@ function fixture(initial?:string){
   const capture=(name:string,value:string)=>{const target=action(name);target.focus();target.click();key(value);};
   return {bindings,trigger,dialog,change,applied,editor,store,values,button,action,key,click,open,capture,status:()=>button('[data-binding-status]').textContent};
 }
+
+it('describes aimed and self-cast skills consistently in startup and remapped help',()=>{
+  const {bindings}=fixture();
+  const skillHelp='left-click for aimed skills; self-cast skills activate immediately';
+  const original=controlsHelp(bindings);
+  expect(original).toContain(`Skill keys Q/W/E/R: ${skillHelp}`);
+  for(const entry of ['index.html','candidate.html']){
+    const shell=new DOMParser().parseFromString(readFileSync(entry,'utf8'),'text/html');
+    expect(shell.querySelector('footer details p')?.textContent,entry).toBe(original);
+  }
+  expect(bindings.edit('W','f').ok).toBe(true);
+  expect(controlsHelp(bindings)).toBe(original); // draft is not active
+  expect(bindings.apply()).toBe(true);
+  expect(controlsHelp(bindings)).toContain(`Skill keys Q/F/E/R: ${skillHelp}`);
+});
 
 describe('keyboard settings editor uses one draft/effective binding owner',()=>{
   it('opens through the existing menu button, captures without applying and cancels back to the opener',()=>{
