@@ -21,7 +21,7 @@ npm ci
 npm run dev
 ```
 
-打开终端显示的本地地址。3D 不可用时，页面会提示 **Canvas2D recovery is active** 并切换到简化画面，仍可操作对局；完整 3D 需要支持 WebGL 2 的浏览器与图形环境。
+打开终端显示的本地地址。看到 **3D is unavailable. The match can continue in 2D.** 时，游戏已切换到简化 2D，仍可继续对局。若提示 **Some visual settings could not load. The match can continue with fallback rendering.**，则仍在 3D，只回退了部分画面设置。完整 3D 需要支持 WebGL 2 的浏览器与图形环境。
 
 构建并预览网页版本：
 
